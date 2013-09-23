@@ -1,0 +1,134 @@
+#!/bin/bash
+
+######## DEFAULT CONFIGURATION DEFINITION ########
+
+##################################################
+#### Script Common Configuration
+
+FLAG=6				# Set the number of total failures before shutdown. (default=6)
+					# allowed is 1 - 999
+
+SLEEP=180			# Numbers of seconds between each check/loop. (default=180, 3 min)
+					# allowed is 1 - 9999
+
+RANGE="2..254"   	# define a range of IPs which should be scanned, (default="2..254")
+					# via XXX.XXX.XXX.xxx last triple of IP address in a list
+					# The following scheme is mandatory
+					# "v..v+m,w,x..x+n,y+o..y,z"
+					# define an ip range :    <start>..<end> -> the two dots are mandatory
+					# define a single ip :   <ip>
+					# all list entries seperated by comma ','
+					# Please make sure to leave 1 and 255 out of the list !
+
+##################################################
+####  Check Clock to identify uptime ####
+CHECKCLOCKACTIVE="false"   	# parameter to activate or deactivate this feature (default="false")
+							# per default this is deactivated
+                     
+UPHOURS="06..20"		# define a range of hours, in which the system should stay up (default="6..20")
+						# without checking any other paramter to stay awake
+
+##################################################
+#### Network Socket Supervision Configuration
+NSOCKETNUMBERS="22,139,445,10000,49152"
+					# socket numbers to check for activity
+					# (default="21,22,80,139,445,3689,6991,9091,49152")
+					# Ports:
+					# 21 = FTP
+					# 22 = SSH
+					# 80 = Web
+					# 139 = NetBIOS
+					# 443 = HTTPS
+					# 445 = Samba-Filesharing
+					# 548 = AFP
+					# 3689 = iTunes, DAAP
+					# 6991 = Bittorrent
+					# 9091 = Transmission-Daemon-WebIF
+					# 10000 = Webmin WebIF
+					# 49152 = UPnP
+					# 51413 = Bittorrent
+
+##################################################
+#### Syslog Configuration ####
+SYSLOG="true"			# activate write to syslog (default="true")
+
+VERBOSE="false"			# use the verbose mode, with additional output on the command line (default="false")
+						# verbose includes DEBUG-Mode
+
+
+##################################
+####### EXPERT SETTINGS ##########
+##################################
+
+# You should know, what you are doing here
+
+# ----------------------------------------------------------------------------------------
+#### Process Supervision Configuration
+#LOADPROCNAMES="smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd,your_processes_here"
+                     # command names of processes with load dependent children
+                     # checked by default="proftpd,smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd")
+					 
+#TEMPPROCNAMES="in.tftpd"
+                     # command names of processes only started when active
+					 # checked with "top" AND "ps", so all processes are found, even such, which doesn't show up in top
+					 # like "lftp"
+                     # checked by default="in.tftpd")
+
+# if you want others, please uncomment the above lines and add your process at the end of the line
+# The following scheme is mandatory for both LOADPROCNAMES and TEMPPROCNAMES:
+# process1,process2
+# all processes separated by comma ','
+
+# ----------------------------------------------------------------------------------------
+
+# If you don't want to shutdown your PC, but go in hibernate/suspend: Define the command here
+# If nothing defined, it shuts down with "shutdown -h now"
+
+#SHUTDOWNCOMMAND="pm-hibernate"  # puts the PC in hibernate-mode
+# pm-suspend  # puts the PC in suspend-mode 
+# shutdown -h +5  # shuts the PC down 5 min after shutdown-command
+
+# ----------------------------------------------------------------------------------------
+
+#FAKE="true"
+# set it to "true" for a Fake-Mode: The script runs dry: You can test what happens, without shutting down your PC
+# This mode includes VERBOSE-output automatically.
+# Switching to FAKE-Mode is also possible through a switch in OMV-GUI. Setting it to "false" or if it is not set, the script will run normally.
+# With Fake-Mode ON, the script doesn't sleep 5 minutes after it starts.
+
+# ----------------------------------------------------------------------------------------
+
+# Here you can define a path to a file, which contains list of IPs that should be scanned
+# only one IP per line allowed - Format mmm.nnn.ooo.ppp
+# If this is uncommented, the IPs specified in "RANGE" or in GUI doesn't work
+#PINGLIST="PATH/TO/PINGLIST"
+
+# ----------------------------------------------------------------------------------------
+
+#NETSTATWORD="VERBUNDEN"    # Set specific word, which specifies the connection in netstat
+							# only needed for CLI-testing with VERBOSE!
+							# Read the README for further infos
+
+# ----------------------------------------------------------------------------------------
+
+####  Auto-Unrar Check ####
+#AUTOUNRARCHECK="true"      # Only activate this feature, when using autounrar script
+							# set it to "true" for a check, to "false" (or uncemmented) to skip the check
+                     # If an extraction-process is running, the NAS is not shut down
+					# AutoUnrar-Script: see https://sourceforge.net/projects/auto-unrar/
+
+#UNRARLOGDIR="/home/user"
+                     # Set the log-Dir of status.info
+                     # replace <your_directoy> with target directory of auto unrar logfile
+
+#UNRARLOG="status.info"      # Set the filename of "status.info" from autounrar
+
+# ----------------------------------------------------------------------------------------
+
+#### Statusfile Check ####
+#STATUSFILECHECK="true"  # Set this to true, if autoshutdown.sh should check for any *.status-File in $STATUSFILEDIR
+						# set it to "false" (or uncemmented) to skip the check
+						# if any file exists autoshutdown.sh doesn't shutdown the PC
+						# Useful for backupscripts -> See readme
+
+#STATUSFILEDIR="/home/user"

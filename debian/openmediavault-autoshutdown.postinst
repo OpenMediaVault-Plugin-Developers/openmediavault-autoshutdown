@@ -28,6 +28,28 @@ set -e
 
 case "$1" in
 	configure)
+
+	########################################################################
+		# Set the default settings of the autoshutdown package to those
+		# expected by OpenMediaVault.
+		########################################################################
+		update-rc.d autoshutdown defaults
+		if [ -z "$2" ]; then
+			echo "Updating init script links and actions"
+			invoke-rc.d --force autoshutdown stop
+			update-rc.d autoshutdown disable &>/dev/null
+		fi
+
+		if [ ! -f /etc/autoshutdown.conf ];
+		then
+			cp /etc/autoshutdown.default /etc/autoshutdown.conf
+		fi
+
+		if [ -f /etc/rsyslog.d/autoshutdownlog.conf ];
+		then
+			rm -f /etc/rsyslog.d/autoshutdownlog.conf
+		fi
+	
 		########################################################################
 		#  Update the configuration.
 		#	<config>

@@ -28,7 +28,7 @@ case "$1" in
 
 	purge|remove|failed-upgrade|abort-install|abort-upgrade|disappear)
 	;;
-
+		invoke-rc.d --quiet autoshutdown stop
 	upgrade)
 	;;
 

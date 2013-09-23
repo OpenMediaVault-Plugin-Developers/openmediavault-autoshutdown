@@ -1,0 +1,60 @@
+#! /bin/sh
+# /etc/init.d/autoshutdown
+#
+# AUTHOR:	BoldarBlood - K. Walde 21/03/2012
+# Correctly starts / stops / restarts Solo0815s Autoshutdown script at system startup
+
+### BEGIN INIT INFO
+# Provides:          autoshutdown
+# Required-Start:    $remote_fs $syslog $all
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+# Some things that run always
+
+set -e
+
+# Must be a valid filename
+NAME=autoshutdown
+PIDFILE=/var/run/$NAME.pid
+#This is the command to be run, give the full pathname
+DAEMON=/usr/local/bin/autoshutdown.sh
+DAEMON_OPTS=""
+
+export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
+
+case "$1" in
+	start)
+		echo -n "Starting $NAME : " $DAEMON
+		start-stop-daemon --start --quiet --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON 
+		echo "."
+		logger -t /etc/init.d/autoshutdown "Autoshutdown-script starting ..."
+		;;
+  
+	stop)
+		echo -n "Stopping $NAME : " $DAEMON
+		start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+		echo "."
+		logger -t /etc/init.d/autoshutdown "Autoshutdown-script starting ..."
+		;;
+
+	restart)
+		echo -n "Restarting $NAME : " $DAEMON
+		start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile $PIDFILE
+		start-stop-daemon --start --quiet --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON
+		echo "."
+		logger -t /etc/init.d/autoshutdown "Autoshutdown-script restarting ..."
+		;;
+
+	*)
+		echo "Usage: "$1" {start|stop|restart}"
+		exit 1
+		;;
+esac
+
+exit 0
+ 
