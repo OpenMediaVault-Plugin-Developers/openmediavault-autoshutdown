@@ -73,19 +73,6 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
         $object['fake'] = boolval($object['fake']);
 		$object['nw_intensesearch'] = boolval($object['nw_intensesearch']);
 		
-		// Get autoshutdown script version
-        $cmd = "dpkg -p autoshutdown | grep 'Version:' | sed -r 's/Version: //g'";
-        OMVUtil::exec($cmd, $output, $result);
-        
-		if ($result !== 0) {
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
-        }
-        
-		if (isset($output[0]))
-            $object['autoshutdown_version'] = $output[0];
-		else
-			$object['autoshutdown_version'] = "unknown";
-			
         return $object;
     }
 

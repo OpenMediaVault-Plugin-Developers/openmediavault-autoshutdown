@@ -146,13 +146,6 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 					ptype: "fieldinfo",
 					text: _("Please check the <a href='https://github.com/OMV-Plugins/autoshutdown/blob/master/src/README' target='_blank'>README</a> for more details.")
 				}]
-			},{
-				xtype: "textfield",
-				name: "autoshutdown_version",
-				fieldLabel: _("Autoshutdown Version"),
-				allowNone: true,
-				readOnly: true,
-				hiddenName: "autoshutdown_version"
 			}]
 		},{
 			xtype: "fieldset",
