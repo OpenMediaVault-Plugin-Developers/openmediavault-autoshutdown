@@ -4,7 +4,7 @@ openmediavault-autoshutdown (0.5.3) stable; urgency=low
 
  -- Aaron Murray <aaron@omv-extras.org>  Mon, 23 Sep 2013 11:34:26 -0500
 
- openmediavault-autoshutdown (0.5.2) stable; urgency=low
+openmediavault-autoshutdown (0.5.2) stable; urgency=low
 
   * Added script to plugin
 
