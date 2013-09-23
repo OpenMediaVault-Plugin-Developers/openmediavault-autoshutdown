@@ -1,0 +1,1 @@
+OpenMediaVault plugin for front end of autoshutdown script.
