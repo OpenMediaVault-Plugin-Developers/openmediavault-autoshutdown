@@ -102,7 +102,6 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
 				"verbose":{"type":"boolean"},
 				"fake":{"type":"boolean"},
 				"extraoptions":{"type":"string"},
-				"autoshutdown_version":{"type":"string"},
 				"range":{"type":"string"},
 				"custom_ports":{"type":"string"},
 				"nw_intensesearch":{"type":"boolean"}				
