@@ -1,0 +1,12 @@
+openmediavault-autoshutdown (0.5.1) stable; urgency=low
+
+  * Fixed typos
+
+ -- Aaron Murray <aaron@omv-extras.org>  Wed, 18 Sep 2013 7:47:26 -0500
+
+openmediavault-autoshutdown (0.5.0) stable; urgency=low
+
+  * Port to OpenMediaVault 0.5
+
+ -- Aaron Murray <aaron@omv-extras.org>  Fri, 06 Sep 2013 7:27:26 -0500
+ 

@@ -1,0 +1,13 @@
+Source: openmediavault-autoshutdown
+Section: net
+Priority: optional
+Maintainer: Aaron Murray <aaron@omv-extras.org>
+Build-Depends: debhelper (>> 7)
+Standards-Version: 3.9.3
+Homepage: http://omv-extras.org
+
+Package: openmediavault-autoshutdown
+Architecture: all
+Depends: ${misc:Depends}, openmediavault (>= 0.5), autoshutdown ( >= 0.3.3)
+Priority: optional
+Description: OpenMediaVault AutoShutdown Plugin

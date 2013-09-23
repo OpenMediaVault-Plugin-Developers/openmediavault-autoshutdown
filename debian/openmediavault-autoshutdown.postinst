@@ -1,0 +1,88 @@
+#!/bin/bash
+#
+# This file is part of OpenMediaVault-autoshutdown.
+#
+# @license	http://www.gnu.org/licenses/gpl.html GPL Version 3
+# @author	Aaron Murray <aaron@omv-extras.org>
+# @author	Marcel Beck <marcel.beck@mbeck.org>
+# @copyright Copyright (c) 2013 Aaron Murray
+# @copyright Copyright (c) 2012 Marcel Beck
+#
+# OpenMediaVault is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# OpenMediaVault is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+case "$1" in
+	configure)
+		########################################################################
+		#  Update the configuration.
+		#	<config>
+		#		<services>
+		#			<autoshutdown>
+		#				<enable>0</enable>
+		#				<flag>6</flag>
+		#				<sleep>180</sleep>
+		#				<range>2..254</range>
+		#				<checkclockactive>0</checkclockactive>
+		#				<uphours-begin>6</uphours-begin>
+		#				<uphours-end>20</uphours-end>
+		#				<custom_ports>22,139,445,10000,49152</custom_ports>
+		#				<syslog>0</syslog>
+		#				<verbose>0</verbose>
+		#				<fake>0</fake>
+		#				<nw_intensesearch>0</nw_intensesearch>
+		#				<extraoptions></extraoptions>
+		#			</autoshutdown>
+		#		</services>
+		#	</config>
+		########################################################################
+
+		# Remove old configuration data
+		omv_config_delete "/config/services/autoshutdown"
+
+		echo "Initialize configuration"
+			
+		object="<enable>0</enable>"
+		object="${object}<flag>6</flag>"
+		object="${object}<sleep>180</sleep>"
+		object="${object}<range>2..254</range>"
+		object="${object}<checkclockactive>0</checkclockactive>"
+		object="${object}<uphours-begin>6</uphours-begin>"
+		object="${object}<uphours-end>20</uphours-end>"
+		object="${object}<custom_ports>22,139,445,10000,49152</custom_ports>"
+		object="${object}<syslog>0</syslog>"
+		object="${object}<verbose>0</verbose>"
+		object="${object}<fake>0</fake>"
+		object="${object}<nw_intensesearch>0</nw_intensesearch>"
+		object="${object}<extraoptions></extraoptions>"
+			
+		omv_config_add_element "/config/services" "autoshutdown" "${object}" true
+			
+	;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+	;;
+
+	*)
+		echo "postinst called with unknown argument '$1'" >&2
+		exit 1
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0
