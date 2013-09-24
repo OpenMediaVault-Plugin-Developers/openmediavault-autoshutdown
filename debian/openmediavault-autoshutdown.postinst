@@ -75,7 +75,8 @@ case "$1" in
 
 		# Remove old configuration data
 		omv_config_delete "/config/services/autoshutdown"
-
+		omv_config_delete "/config/zeroconf/services/autoshutdown"
+		
 		echo "Initialize configuration"
 			
 		object="<enable>0</enable>"
