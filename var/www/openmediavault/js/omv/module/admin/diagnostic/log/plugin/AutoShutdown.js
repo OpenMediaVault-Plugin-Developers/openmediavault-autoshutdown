@@ -33,9 +33,7 @@ Ext.define("OMV.module.admin.diagnostic.log.plugin.AutoShutdown", {
 		sortable: true,
 		dataIndex: "date",
 		stateId: "date",
-		renderer: function(value, metaData, record) {
-			return record.get("date");
-		}
+		renderer: OMV.util.Format.localeTimeRenderer()
 	},{
 		text: _("Type"),
 		sortable: true,
@@ -55,7 +53,7 @@ Ext.define("OMV.module.admin.diagnostic.log.plugin.AutoShutdown", {
 	rpcFields: [
 		{ name: "date", type: "string" },
 		{ name: "type", type: "string" },
-		{ name: "event", type: "string" }
+		{ name: "log", type: "string" }
 	]
 });
 
