@@ -4,3 +4,9 @@ Source: https://github.com/OMV-Plugins/openmediavault-autoshutdown
 Copyright: 2013 Aaron Murray <aaron@omv-extras.org>
 Copyright: 2011,2012 Marcel Beck <marcel.beck@mbeck.org>
 License: GPL-3
+
+
+Files:	/var/www/openmediavault/images/autoshutdown.png
+	/var/www/openmediavault/images/autoshutdown.svg
+Copyright: WebHostingHub Glyphs
+<http://www.webhostinghub.com/glyphs/>
