@@ -27,8 +27,8 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 # Generate configuration files and reinitialize monit.
-omv-mkconf monit
-monit reload
+#omv-mkconf monit
+#monit reload
 
 case "$1" in
 	purge)

@@ -34,11 +34,11 @@ case "$1" in
 		# expected by OpenMediaVault.
 		########################################################################
 		update-rc.d autoshutdown defaults
-		if [ -z "$2" ]; then
-			echo "Updating init script links and actions"
-			invoke-rc.d --force autoshutdown stop
-			update-rc.d autoshutdown disable &>/dev/null
-		fi
+		#if [ -z "$2" ]; then
+		#	echo "Updating init script links and actions"
+		#	invoke-rc.d --force autoshutdown stop
+		#	update-rc.d autoshutdown disable &>/dev/null
+		#fi
 
 		if [ ! -f /etc/autoshutdown.conf ];
 		then
