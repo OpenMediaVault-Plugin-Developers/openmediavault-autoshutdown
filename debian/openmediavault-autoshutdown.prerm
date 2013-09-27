@@ -27,11 +27,11 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 # Generate configuration files and reinitialize monit.
-#omv-mkconf monit
-#monit reload
+omv-mkconf monit
+monit reload
 
-#invoke-rc.d --force autoshutdown stop 
-#update-rc.d autoshutdown disable &>/dev/null
+invoke-rc.d --force autoshutdown stop 
+update-rc.d autoshutdown disable &>/dev/null
 
 case "$1" in
 	purge)
