@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (0.5.7) stable; urgency=low
+
+  * Updated to latest script
+
+ -- Aaron Murray <aaron@omv-extras.org>  Fri, 27 Sep 2013 07:29:26 -0500
+
 openmediavault-autoshutdown (0.5.6) stable; urgency=low
 
   * fix log date rendering

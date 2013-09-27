@@ -1,0 +1,5 @@
+#!/bin/bash
+logger -s -t "$USER - : autoshutdown [$$]" "INFO: autoshutdown-script restart from /etc/pm/power.d/autoshutdown-restart"
+/etc/init.d/autoshutdown restart
+
+exit 0

@@ -63,15 +63,21 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
 		
         // Modify result data
 		$object['enable'] = boolval($object['enable']);
-        $object['flag'] = intval($object['flag']);
+        $object['cycles'] = intval($object['cycles']);
         $object['sleep'] = intval($object['sleep']);
+		
         $object['checkclockactive'] = boolval($object['checkclockactive']);
 		$object['uphours-begin'] = intval($object['uphours-begin']);
         $object['uphours-end'] = intval($object['uphours-end']);
+		
+		$object['uldlcheck'] = boolval($object['uldlcheck']);
+		$object['uldlrate'] = intval($object['uldlrate']);
+		$object['loadaveragecheck'] = boolval($object['loadaveragecheck']);
+		$object['loadaverage'] = intval($object['loadaverage']);
+		
         $object['syslog'] = boolval($object['syslog']);
         $object['verbose'] = boolval($object['verbose']);
         $object['fake'] = boolval($object['fake']);
-		$object['nw_intensesearch'] = boolval($object['nw_intensesearch']);
 		
         return $object;
     }
@@ -93,18 +99,21 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
 			"type":"object",
 			"properties":{
 				"enable":{"type":"boolean"},
-				"flag":{"type":"integer","minimum":1,"maximum":50},
-				"sleep":{"type":"integer","minimum":1,"maximum":3600},
+				"cycles":{"type":"integer","minimum":1,"maximum":999},
+				"sleep":{"type":"integer","minimum":1,"maximum":9999},
+				"range":{"type":"string"},
 				"checkclockactive":{"type":"boolean"},
 				"uphours-begin":{"type":"integer","minimum":0,"maximum":23},
 				"uphours-end":{"type":"integer","minimum":0,"maximum":23},
+				"nsocketnumbers":{"type":"string"},
+				"uldlcheck":{"type":"boolean"},
+				"uldlrate":{"type":"integer"},
+				"loadaveragecheck":{"type":"boolean"},
+				"loadaverage":{"type":"integer"},
 				"syslog":{"type":"boolean"},
 				"verbose":{"type":"boolean"},
 				"fake":{"type":"boolean"},
-				"extraoptions":{"type":"string"},
-				"range":{"type":"string"},
-				"custom_ports":{"type":"string"},
-				"nw_intensesearch":{"type":"boolean"}				
+				"extraoptions":{"type":"string"}
 			}
 		}');
 		
@@ -119,18 +128,21 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
         // Update the configuration.
         $object = array(
             "enable" => array_boolval($params, 'enable'),
-            "flag" => intval($params['flag']),
+            "cycles" => intval($params['cycles']),
             "sleep" => intval($params['sleep']),
+			"range" => $params['range'],
             "checkclockactive" => array_boolval($params, 'checkclockactive'),
             "uphours-begin" => intval($params['uphours-begin']),
             "uphours-end" => intval($params['uphours-end']),
+			"nsocketnumbers" => $params['nsocketnumbers'],
+			"uldlcheck" => array_boolval($params, 'uldlcheck'),
+			"uldlrate" => intval($params['uldlrate']),
+            "loadaveragecheck" => array_boolval($params, 'loadaveragecheck'),
+			"loadaverage" => intval($params['loadaverage']),
             "syslog" => array_boolval($params, 'syslog'),
             "verbose" => array_boolval($params, 'verbose'),
             "fake" => array_boolval($params, 'fake'),
-            "extraoptions" => $params['extraoptions'],
-            'range' => $params['range'],
-            'custom_ports' => $params['custom_ports'],
-            "nw_intensesearch" => array_boolval($params, 'nw_intensesearch')
+            "extraoptions" => $params['extraoptions']
         );
 
         // Set configuration object

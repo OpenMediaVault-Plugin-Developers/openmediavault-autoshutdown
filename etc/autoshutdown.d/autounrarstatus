@@ -1,0 +1,11 @@
+# Autoshutdown plugin-file for autounrar
+
+# In which folder is the file to look for
+folder="/home/user"
+
+# filename (can be expanded with regexes)
+file="backup.status"
+
+# Content of the file
+# If the content matches, the Server doesn't shut down
+content="processing job"

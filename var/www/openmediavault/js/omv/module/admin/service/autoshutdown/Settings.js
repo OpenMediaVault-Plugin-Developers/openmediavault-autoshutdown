@@ -27,7 +27,34 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 	rpcService: "AutoShutdown",
 	rpcGetMethod: "getSettings",
 	rpcSetMethod: "setSettings",
-
+	
+	plugins: [{
+		ptype: "linkedfields",
+		correlations: [{
+			name: [
+				"uldlrate"
+			],
+			conditions: [
+				{ name: "uldlcheck", value: true }
+			],
+			properties: [
+				"!readOnly",
+				"!allowBlank"
+			]
+		},{
+			name: [
+				"loadaverage"
+			],
+			conditions: [
+				{ name: "loadaveragecheck", value: true }
+			],
+			properties: [
+				"!readOnly",
+				"!allowBlank"
+			]
+		}]
+	}],
+	
 	getFormItems: function() {
 		var me = this;
 		return [{
@@ -43,29 +70,38 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				checked: false
 			},{
 				xtype: "numberfield",
-				name: "flag",
+				name: "cycles",
 				fieldLabel: _("Cycles"),
 				minValue: 1,
-				maxValue: 50,
+				maxValue: 999,
 				allowDecimals: false,
 				allowBlank: false,
 				value: 6,
 				plugins: [{
 					ptype: "fieldinfo",
-					text: _("Set the number of total failures before shutdown.")
+					text: _("Set the number of cycles with no result (no PC online, etc) before shutdown.")
 				}]
 			},{
 				xtype: "numberfield",
 				name: "sleep",
 				fieldLabel: _("Sleep"),
 				minValue: 1,
-				maxValue: 3600,
+				maxValue: 9999,
 				allowDecimals: false,
 				allowBlank: false,
 				value: 180,
 				plugins: [{
 					ptype: "fieldinfo",
-					text: _("Numbers of seconds between each check/loop.")
+					text: _("Numbers of seconds between each cycle.")
+				}]
+			},{
+				xtype: "textfield",
+				name: "range",
+				fieldLabel: _("IP-Range"),
+				value: "2..254",
+				plugins: [{
+					ptype: "fieldinfo",
+					text: _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list. <br />The following scheme is mandatory v..v+m,w,x..x+n,y+o..y,z <br />  - define an ip range : &lt;start&gt;..&lt;end&gt; -> the two dots are mandatory <br />  - define a single ip : &lt;ip&gt; <br />  - all list entries are seperated by comma ',' <br />Please make sure to leave 1 and 255 out of the list !")
 				}]
 			}]
 		},{
@@ -84,29 +120,101 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 					text: _("Check Clock to identify forced uptime.")
 				}]
 			},{
-				xtype: "numberfield",
-				name: "uphours-begin",
-				fieldLabel: _("Hours Begin"),
-				minValue: 0,
-				maxValue: 23,
-				allowDecimals: false,
-				allowBlank: false,					
-				width: 50,
-				value: 6
-			},{
-				xtype: "numberfield",
-				name: "uphours-end",
-				fieldLabel: _("Hours End"),
-				minValue: 0,
-				maxValue: 23,
-				allowDecimals: false,
-				allowBlank: false,					
-				width: 50,
-				value: 20
+				xtype: "fieldcontainer",
+				fieldLabel: "&nbsp;",
+				layout: "hbox",
+				items: [{
+					xtype: "numberfield",
+					name: "uphours-begin",
+					fieldLabel: _("Hours Begin"),
+					minValue: 0,
+					maxValue: 23,
+					allowDecimals: false,
+					allowBlank: false,					
+					width: 50,
+					value: 6
+				},{
+					xtype: "displayfield",
+					width: 14,
+					value: "-",
+					style: "text-align:center"
+				},{
+					xtype: "numberfield",
+					name: "uphours-end",
+					fieldLabel: _("Hours End"),
+					minValue: 0,
+					maxValue: 23,
+					allowDecimals: false,
+					allowBlank: false,					
+					width: 50,
+					value: 20
+				}]
 			}]
 		},{
 			xtype: "fieldset",
-			title: _("Experts"),
+			title: _("Network Socket Supervision Configuration"),
+			fieldDefaults: {
+				labelSeparator: ""
+			},
+			items: [{
+				xtype: "textfield",
+				name: "nsocketnumbers",
+				fieldLabel: _("Sockets"),
+				value: "21,22,80,139,445,3689,6991,9091,49152",
+				plugins: [{
+					ptype: "fieldinfo",
+					text: _("Socket number to check for activity.<br /><a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>List of Ports</a>")
+				}]
+			},{
+				xtype: "fieldcontainer",
+				fieldLabel: "&nbsp;",
+				layout: "hbox",
+				items: [{
+					xtype: "checkbox",
+					name: "uldlcheck",
+					fieldLabel: _("ULDL"),
+					checked: true
+				},{
+					xtype: "numberfield",
+					name: "uldlrate",
+					fieldLabel: _("ULDL Rate"),
+					minValue: 1,
+					maxValue: 9999,
+					allowDecimals: false,
+					allowBlank: false,
+					value: 50,
+					plugins: [{
+						ptype: "fieldinfo",
+						text: _("Define the network traffic in kB/s")
+					}]
+				}]
+			},{
+				xtype: "fieldcontainer",
+				fieldLabel: "&nbsp;",
+				layout: "hbox",
+				items: [{
+					xtype: "checkbox",
+					name: "loadaveragecheck",
+					fieldLabel: _("Load Average"),
+					checked: false
+				},{
+					xtype: "numberfield",
+					name: "loadaverage",
+					fieldLabel: _("Load Average"),
+					minValue: 1,
+					maxValue: 9999,
+					allowDecimals: false,
+					allowBlank: false,
+					value: 40,
+					plugins: [{
+						ptype: "fieldinfo",
+						text: _("Set this to the target loadaverage for the Server.")
+					}]
+				}]
+			}]
+		},{
+			xtype: "fieldset",
+			title: _("Syslog Configuration"),
 			fieldDefaults: {
 				labelSeparator: ""
 			},
@@ -114,7 +222,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				xtype: "checkbox",
 				name: "syslog",
 				fieldLabel: _("Log to Syslog"),
-				checked: false,
+				checked: true,
 				plugins: [{
 					ptype: "fieldinfo",
 					text: _("Write log informations to system logs.")
@@ -137,7 +245,14 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 					ptype: "fieldinfo",
 					text: _("Fake/Test mode."),
 				}]
-			},{
+			}]
+		},{
+			xtype: "fieldset",
+			title: _("Expert Settings"),
+			fieldDefaults: {
+				labelSeparator: ""
+			},
+			items: [{
 				xtype: "textarea",
 				name: "extraoptions",
 				fieldLabel: _("Extra options"),
@@ -145,40 +260,6 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				plugins: [{
 					ptype: "fieldinfo",
 					text: _("Please check the <a href='https://github.com/OMV-Plugins/autoshutdown/blob/master/src/README' target='_blank'>README</a> for more details.")
-				}]
-			}]
-		},{
-			xtype: "fieldset",
-			title: _("Network settings"),
-			fieldDefaults: {
-				labelSeparator: ""
-			},
-			items: [{
-				xtype: "checkbox",
-				name: "nw_intensesearch",
-				fieldLabel: _("Delayed Networks"),
-				checked: false,
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Waits for networks which are started after autoshutdown starts (example: on HP Microserver N40L). If autoshutdown doesn't find an IP for your OMV-Server, this may help.")
-				}]
-			},{
-				xtype: "textfield",
-				name: "range",
-				fieldLabel: _("IP-Range"),
-				value: "2..254",
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list. <br />The following scheme is mandatory v..v+m,w,x..x+n,y+o..y,z <br />  - define an ip range : &lt;start&gt;..&lt;end&gt; -> the two dots are mandatory <br />  - define a single ip : &lt;ip&gt; <br />  - all list entries are seperated by comma ',' <br />Please make sure to leave 1 and 255 out of the list !")
-				}]
-			},{
-				xtype: "textfield",
-				name: "custom_ports",
-				fieldLabel: _("Custom Ports"),
-				value: "",
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Define custom ports.  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>List of Ports</a>")
 				}]
 			}]
 		}];

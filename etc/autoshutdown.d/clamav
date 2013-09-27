@@ -1,0 +1,7 @@
+# Autoshutdown plugin-file for clamav
+
+# In which folder is the file to look for
+folder="/var/run/clamav"
+
+# filename (can be expanded with regexes)
+file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"

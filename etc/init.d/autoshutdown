@@ -1,8 +1,12 @@
-#! /bin/sh
+#!/bin/sh
 # /etc/init.d/autoshutdown
 #
 # AUTHOR:	BoldarBlood - K. Walde 21/03/2012
 # Correctly starts / stops / restarts Solo0815s Autoshutdown script at system startup
+ # changed by Solo0815 - 2013-09-20
+# - added status
+# - added functions
+# - removed set -e (from /etc/init.d/skeleton)
 
 ### BEGIN INIT INFO
 # Provides:          autoshutdown
@@ -10,13 +14,14 @@
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
+# Short-Description: Start autoshutdown at boot time
+# Description:       autoshutdown daemon
 ### END INIT INFO
 
 # Some things that run always
 
-set -e
+# Do NOT "set -e" -> from /etc/init.d/skeleton
+#set -e
 
 # Must be a valid filename
 NAME=autoshutdown
@@ -25,36 +30,84 @@ PIDFILE=/var/run/$NAME.pid
 DAEMON=/usr/local/bin/autoshutdown.sh
 DAEMON_OPTS=""
 
+# read LSB init-functions
+. /lib/lsb/init-functions
+
 export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+do_start() {
+	PID=$(cat $PIDFILE 2> /dev/null)
+	if [ -f "$PIDFILE" ] && ps $PID >/dev/null 2>&1; then 
+		echo "There seems to be a already running process with pid: $PID - $NAME: $DAEMON"
+		echo -n "starting ..." && log_end_msg 1
+		logger -t /etc/init.d/autoshutdown "Try to start: There seems to be a already running process with pid: $PID - $NAME: $DAEMON"
+		exit 1
+	fi
+
+	logger -t /etc/init.d/autoshutdown "$NAME starting ..."
+	start-stop-daemon --start --quiet --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON || return 1
+}
+
+do_stop() {
+	RETURNVALUE=1
+	if ps -ef | grep -v grep | grep /usr/local/bin/autoshutdown.sh > /dev/null 2>&1; then
+		logger -t /etc/init.d/autoshutdown "$NAME stopping ..."
+		start-stop-daemon --stop --quiet --retry 30 --oknodo --pidfile $PIDFILE && RETURNVALUE=0
+	else
+		logger -t /etc/init.d/autoshutdown "Try to stop: There seems to be no running process of $NAME: $DAEMON"
+		echo "There seems to be no running process of $NAME: $DAEMON"
+	fi
+	# Many daemons don't delete their pidfiles when they exit.
+	rm -f $PIDFILE >/dev/null 2>&1
+	return $RETURNVALUE
+}
+
+do_restart() {
+	echo "Restarting $NAME: $DAEMON"
+	logger -t /etc/init.d/autoshutdown "$NAME restarting ..."
+	do_stop
+	if [ $? -eq 0 ]; then
+		do_start
+	fi
+}
 
 case "$1" in
 	start)
-		echo -n "Starting $NAME : " $DAEMON
-		start-stop-daemon --start --quiet --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON 
+		do_start
+		if [ $? -ne 0 ]; then
+			logger -t /etc/init.d/autoshutdown "$NAME starting failed!"
+			echo -n "$NAME starting" && log_end_msg 1
+		else
+			logger -t /etc/init.d/autoshutdown "$NAME started successful!"
+			echo -n "$NAME starting" && log_end_msg 0
+		fi
 		echo "."
-		logger -t /etc/init.d/autoshutdown "Autoshutdown-script starting ..."
 		;;
-  
 	stop)
-		echo -n "Stopping $NAME : " $DAEMON
-		start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+		do_stop
+		if [ $? -ne 0 ]; then
+			logger -t /etc/init.d/autoshutdown "$NAME stopping failed!"
+			echo -n "$NAME stopping" && log_end_msg 1
+		else
+			logger -t /etc/init.d/autoshutdown "$NAME stopping successful!"
+			echo "$NAME stopping" && log_end_msg 0
+		fi
 		echo "."
-		logger -t /etc/init.d/autoshutdown "Autoshutdown-script starting ..."
 		;;
-
-	restart)
-		echo -n "Restarting $NAME : " $DAEMON
-		start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile $PIDFILE
-		start-stop-daemon --start --quiet --background --make-pidfile --pidfile $PIDFILE --exec $DAEMON
+	restart|reload)
+		do_restart
 		echo "."
-		logger -t /etc/init.d/autoshutdown "Autoshutdown-script restarting ..."
 		;;
-
+	status)
+		status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+		;;
 	*)
-		echo "Usage: "$1" {start|stop|restart}"
+		echo "Usage: "$1" {start|stop|restart|reload|status}"
 		exit 1
 		;;
 esac
 
 exit 0
- 
