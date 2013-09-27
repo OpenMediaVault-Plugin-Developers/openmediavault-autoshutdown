@@ -26,7 +26,11 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-invoke-rc.d --force autoshutdown stop
+# Generate configuration files and reinitialize monit.
+omv-mkconf monit
+monit reload
+
+invoke-rc.d --force autoshutdown stop 
 update-rc.d autoshutdown disable &>/dev/null
 
 case "$1" in
