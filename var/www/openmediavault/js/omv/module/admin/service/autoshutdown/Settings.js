@@ -115,9 +115,20 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				name: "checkclockactive",
 				fieldLabel: _("Check Clock"),
 				checked: false,
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Check Clock to identify forced uptime.")
+				boxLabel: _("Check Clock to identify forced uptime.")
+			},{
+				xtype: "fieldcontainer",
+				fieldLabel: "Uphours",
+				layout: "hbox",
+				items: [{
+					xtype: "numberfield",
+					name: "uphours-begin",
+					fieldLabel: _("Begin"),
+					minValue: 0,
+					maxValue: 23,
+					allowDecimals: false,
+					allowBlank: false,					
+					value: 6
 				}]
 			},{
 				xtype: "fieldcontainer",
@@ -125,28 +136,12 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				layout: "hbox",
 				items: [{
 					xtype: "numberfield",
-					name: "uphours-begin",
-					fieldLabel: _("Hours Begin"),
-					minValue: 0,
-					maxValue: 23,
-					allowDecimals: false,
-					allowBlank: false,					
-					width: 50,
-					value: 6
-				},{
-					xtype: "displayfield",
-					width: 14,
-					value: "-",
-					style: "text-align:center"
-				},{
-					xtype: "numberfield",
 					name: "uphours-end",
-					fieldLabel: _("Hours End"),
+					fieldLabel: _("End"),
 					minValue: 0,
 					maxValue: 23,
 					allowDecimals: false,
 					allowBlank: false,					
-					width: 50,
 					value: 20
 				}]
 			}]
@@ -163,22 +158,26 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				value: "21,22,80,139,445,3689,6991,9091,49152",
 				plugins: [{
 					ptype: "fieldinfo",
-					text: _("Socket number to check for activity.<br /><a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>List of Ports</a>")
+					text: _("Socket number to check for activity.  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>List of Ports</a>")
 				}]
 			},{
 				xtype: "fieldcontainer",
-				fieldLabel: "&nbsp;",
+				fieldLabel: "ULDL Rate",
 				layout: "hbox",
 				items: [{
 					xtype: "checkbox",
 					name: "uldlcheck",
-					fieldLabel: _("ULDL"),
+					fieldLabel: _(""),
 					checked: true
+				},{
+					xtype: "displayfield",
+					width: 25,
+					value: ""
 				},{
 					xtype: "numberfield",
 					name: "uldlrate",
-					fieldLabel: _("ULDL Rate"),
-					minValue: 1,
+					fieldLabel: _(""),
+					minValue: 0,
 					maxValue: 9999,
 					allowDecimals: false,
 					allowBlank: false,
@@ -190,18 +189,22 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				}]
 			},{
 				xtype: "fieldcontainer",
-				fieldLabel: "&nbsp;",
+				fieldLabel: "Load Average",
 				layout: "hbox",
 				items: [{
 					xtype: "checkbox",
 					name: "loadaveragecheck",
-					fieldLabel: _("Load Average"),
+					fieldLabel: _(""),
 					checked: false
+				},{
+					xtype: "displayfield",
+					width: 25,
+					value: ""
 				},{
 					xtype: "numberfield",
 					name: "loadaverage",
-					fieldLabel: _("Load Average"),
-					minValue: 1,
+					fieldLabel: _(""),
+					minValue: 0,
 					maxValue: 9999,
 					allowDecimals: false,
 					allowBlank: false,
@@ -223,28 +226,19 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 				name: "syslog",
 				fieldLabel: _("Log to Syslog"),
 				checked: true,
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Write log informations to system logs.")
-				}]
+				boxLabel: _("Write log informations to system logs.")
 			},{
 				xtype: "checkbox",
 				name: "verbose",
 				fieldLabel: _("Verbose"),
 				checked: false,
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Verbose mode."),
-				}]
+				boxLabel: _("Verbose mode.")
 			},{
 				xtype: "checkbox",
 				name: "fake",
 				fieldLabel: _("Fake"),
 				checked: false,
-				plugins: [{
-					ptype: "fieldinfo",
-					text: _("Fake/Test mode."),
-				}]
+				boxLabel: _("Fake/Test mode.")
 			}]
 		},{
 			xtype: "fieldset",

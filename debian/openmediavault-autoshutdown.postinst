@@ -49,24 +49,27 @@ case "$1" in
 		then
 			rm -f /etc/rsyslog.d/autoshutdownlog.conf
 		fi
-	
+
 		########################################################################
 		#  Update the configuration.
 		#	<config>
 		#		<services>
 		#			<autoshutdown>
 		#				<enable>0</enable>
-		#				<flag>6</flag>
+		#				<cycles>6</cycles>
 		#				<sleep>180</sleep>
 		#				<range>2..254</range>
 		#				<checkclockactive>0</checkclockactive>
 		#				<uphours-begin>6</uphours-begin>
 		#				<uphours-end>20</uphours-end>
-		#				<custom_ports>22,139,445,10000,49152</custom_ports>
-		#				<syslog>0</syslog>
+		#				<nsocketnumbers>21,22,80,139,445,3689,6991,9091,49152</nsocketnumbers>
+		#				<uldlcheck>1</uldlcheck>
+		#				<uldlrate>50</uldlrate>
+		#				<loadaveragecheck>0</loadaveragecheck>
+		#				<loadaverage>40</loadaverage>
+		#				<syslog>1</syslog>
 		#				<verbose>0</verbose>
 		#				<fake>0</fake>
-		#				<nw_intensesearch>0</nw_intensesearch>
 		#				<extraoptions></extraoptions>
 		#			</autoshutdown>
 		#		</services>
@@ -76,25 +79,28 @@ case "$1" in
 		# Remove old configuration data
 		omv_config_delete "/config/services/autoshutdown"
 		omv_config_delete "/config/zeroconf/services/autoshutdown"
-		
+
 		echo "Initialize configuration"
-			
+
 		object="<enable>0</enable>"
-		object="${object}<flag>6</flag>"
+		object="${object}<cycles>6</cycles>"
 		object="${object}<sleep>180</sleep>"
 		object="${object}<range>2..254</range>"
 		object="${object}<checkclockactive>0</checkclockactive>"
 		object="${object}<uphours-begin>6</uphours-begin>"
 		object="${object}<uphours-end>20</uphours-end>"
-		object="${object}<custom_ports>22,139,445,10000,49152</custom_ports>"
-		object="${object}<syslog>0</syslog>"
+		object="${object}<nsocketnumbers>21,22,80,139,445,3689,6991,9091,49152</nsocketnumbers>"
+		object="${object}<uldlcheck>1</uldlcheck>"
+		object="${object}<uldlrate>50</uldlrate>"
+		object="${object}<loadaveragecheck>0</loadaveragecheck>"
+		object="${object}<loadaverage>40</loadaverage>"
+		object="${object}<syslog>1</syslog>"
 		object="${object}<verbose>0</verbose>"
 		object="${object}<fake>0</fake>"
-		object="${object}<nw_intensesearch>0</nw_intensesearch>"
 		object="${object}<extraoptions></extraoptions>"
-			
+
 		omv_config_add_element "/config/services" "autoshutdown" "${object}" true
-			
+
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)
