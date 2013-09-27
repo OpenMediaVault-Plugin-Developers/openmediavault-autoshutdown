@@ -30,17 +30,19 @@ set -e
 omv-mkconf monit
 monit reload
 
+invoke-rc.d --force autoshutdown stop 
+update-rc.d autoshutdown disable &>/dev/null
+
 case "$1" in
 	purge)
-		# Remove the configuration data
-		omv_config_delete "/config/services/autoshutdown"
+
 	;;
 
 	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 	;;
 
 	*)
-		echo "postrm called with unknown argument '$1'" >&2
+		echo "prerm called with unknown argument '$1'" >&2
 		exit 1
 	;;
 esac
