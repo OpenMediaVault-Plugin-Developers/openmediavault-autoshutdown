@@ -1,3 +1,10 @@
+openmediavault-autoshutdown (0.5.8) stable; urgency=low
+
+  * Changed load average description
+  * Fixed typo in mkconf
+
+ -- Aaron Murray <aaron@omv-extras.org>  Fri, 27 Sep 2013 13:51:26 -0500
+
 openmediavault-autoshutdown (0.5.7) stable; urgency=low
 
   * Updated to latest script

@@ -211,7 +211,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 					value: 40,
 					plugins: [{
 						ptype: "fieldinfo",
-						text: _("Set this to the target loadaverage for the Server.")
+						text: _("If the load average of the server is above this value, then no shutdown.<br />Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
 					}]
 				}]
 			}]
