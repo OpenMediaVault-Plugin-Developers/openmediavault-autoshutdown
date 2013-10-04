@@ -141,4 +141,11 @@ FAKE="false"
 # PlugIns:
 # see Readme
 # You find sample plugins in /etc/autoshutdown.d
+<<<<<<< HEAD
+# see README
+
+#FORCE_NIC="eth1"
+# You can set NICs to look for a IP. This is useful, if you don't use eth0
+# make sure you insert a space between each NIC
+=======
 # see README

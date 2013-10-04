@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.3.9.2"         # script version information
+VERSION="0.3.9.6"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -182,6 +182,9 @@ _shutdown()
 
 	# write everything to disk/stick and shutdown, hibernate, $whatever is configured
 	if sync; then eval "$SHUTDOWNCOMMAND"; fi
+	# sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script and give the right log-message
+	# if we exit here immediately, there are errors in the log
+	sleep 5m
 	exit 0
 	}
 
@@ -436,50 +439,6 @@ _check_loadaverage()
 	return ${RVALUE}
 }
 
-
-# ################################################################
-# #
-# #   name         : _check_sabnzbd
-# #   parameter      : none
-# #   global return   : none
-# #   return         : 1      : if sabnzdb is downloading
-# #               : 0      : if sabnzdb is not downloading -> ready to shutdown
-# #
-# # This function checks sabnzbd to see if sabnzbd is currently downloading through the API
-# # Original script here: https://forums.sabnzbd.org/viewtopic.php?t=5462#p39170
-# #
-# _check_sabnzbd()
-# {
-# 	RVALUE=1
-# 	NICNR_SABRANGE="$1"
-# 	NOTRAFFIC="0.00"
-# 
-# 	if $DEBUG; then
-# 		_log "DEBUG: _check_sabnzbd(): Check for ${NIC[$NICNR_SABRANGE]} - ${CLASS[$NICNR_SABRANGE]}.${SERVERIP[$NICNR_SABRANGE]}"
-# 		_log "DEBUG: _check_sabnzbd(): SABPORT: $SABPORT"
-# 		_log "DEBUG: _check_sabnzbd(): SABAPIKEY: $SABAPIKEY"
-# 		_log "DEBUG: _check_sabnzbd(): NOTRAFFIC: $NOTRAFFIC"
-# 	fi
-# 
-# 	# Output to std-out, Timeout 5 sec (-T), retries 1 (-t)
-# 	SABTRAFFIC="$(wget -q -t 1 -T 5 "http://${CLIENTIP}:${SABPORT}/sabnzbd/api?mode=qstatus&output=xml&apikey=${SABAPIKEY}"  -O - | xmlstarlet sel -t -v qstatus/kbpersec 2&> /dev/null)"
-# 
-# 	if $DEBUG; then _log "DEBUG: _check_sabnzbd(): SABTRAFFIC: $SABTRAFFIC"; fi
-# 
-# 	if [ -z $SABTRAFFIC ]; then
-# 		_log "INFO: _check_sabnzbd(): couldn't find actual sabnzbd-traffic. Is sabnzbd running?"
-# 	elif [ "$SABTRAFFIC" = "$NOTRAFFIC" ]; then
-# 		_log "INFO: _check_sabnzbd(): no running downloads."
-# 	else
-# 		_log "INFO: Sabnzbd: download runniing with $SABTRAFFIC kb/s  - no shutdown."
-# 		let RVALUE--
-# 	fi
-# 	
-# 	if $DEBUG ; then _log "DEBUG: _check_sabnzbd(): RVALUE: $RVALUE" ; fi
-# 
-# 	return ${RVALUE}
-# }
-
 ################################################################
 #
 #   name         : _check_net_status
@@ -554,7 +513,7 @@ _check_net_status()
 	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -gt 0 ]
 	if [ $NUMPROC -gt 0 ]; then
 		if [ $(/usr/bin/smbstatus | grep -i "no locked" | wc -l) != "1" ]; then
-			_log "INFO: Samba connected -> no shutdown"
+			_log "INFO: Samba connected (reported by smbstatus) -> no shutdown"
 			let NUMPROC++
 		fi
 	fi
@@ -576,14 +535,10 @@ _check_net_status()
 #   return         : 1      : if no (not enough) network activity has been found
 #               : 0      : if enough network activity has been found
 #
-# Checks for activity in eth0. It compares the RX and TX bytes
-# every cycle to detect if they significantly changed.
-# If they haven't, it will force the system to sleep.
+# Checks for activity on given NIC. It compares the RX and TX bytes
+# in every cycle to detect if they significantly changed.
+# If they haven't, it will force the system to sleep or do the next check
 #
-
-#ToDo: 
-# - Bug-testing
-
 _check_ul_dl_rate()
 {
 	NICNR_ULDLCHECK="$1"
@@ -785,10 +740,6 @@ _check_config() {
 				PLUGINCHECK="false"; }
 	fi
 
-	[[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || { _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
-			_log "WARN: Set CHECKCLOCKACTIVE to false"
-			CHECKCLOCKACTIVE="false"; }
-
 	# Flag: 1 - 999 (cycles)
 	[[ "$CYCLES" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
 			_log "WARN: Invalid parameter format: Flag"
@@ -796,12 +747,21 @@ _check_config() {
 			_log "WARN: Setting CYCLES to 5"
 			CYCLES="5"; }
 
-	[[ "$UPHOURS" =~ ^(([0-1]?[0-9]|[2][0-3])\.{2}([0-1]?[0-9]|[2][0-3]))$ ]] || {
+	# CheckClockActive together with UPHOURS
+	[[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || { _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
+		_log "WARN: Set CHECKCLOCKACTIVE to false"
+		CHECKCLOCKACTIVE="false"; }
+
+	# Check UpHours only if CHECKCLOCKACTIVE is "true"
+	if [ "$CHECKCLOCKACTIVE" = "true" ]; then
+		[[ "$UPHOURS" =~ ^(([0-1]?[0-9]|[2][0-3])\.{2}([0-1]?[0-9]|[2][0-3]))$ ]] || {
 			_log "WARN: Invalid parameter list format: UPHOURS [hour1..hour2]"
 			_log "WARN: You set it to '$UPHOURS', which is not a correct syntax. Maybe it's empty?"
 			_log "WARN: Setting UPHOURS to 6..20"
 			UPHOURS="6..20"; }
+	fi
 
+	# Netstatword
 	if [ -z "$NETSTATWORD" ]; then
 		if $DEBUG; then
 			_log "INFO: NETSTATWORD not set in the config. The check for connections, like SSH (Port 22) will not work on the CLI until you set NETSTATWORD"
@@ -832,6 +792,7 @@ _check_config() {
 					exit 1; }
 	fi
 
+	#TempProcNames
 	if  [ "$TEMPPROCNAMES" = "-" ]; then
 			_log "INFO: TEMPPROCNAMES is disabled - No processes being checked"
 			TEMPPROCNAMES=""
@@ -854,6 +815,7 @@ _check_config() {
 			_log "WARN: Setting NSOCKETNUMBERS to 21,22 (FTP and SSH)"
 			NSOCKETNUMBERS="22"; }
 
+	# Pinglist
 	if [ -z $PINGLIST ]; then
 		[[ "$RANGE" =~ ^([1-9]{1}[0-9]{0,2})?([1-9]{1}[0-9]{0,2}\.{2}[1-9]{1}[0-9]{0,2})?(,[1-9]{1}[0-9]{0,2})*((,[1-9]{1}[0-9]{0,2})\.{2}[1-9]{1}[0-9]{0,2})*$ ]] || {
 				_log "WARN: Invalid parameter list format: RANGE [v..v+n,w,x+m..x,y,z..z+o]"
@@ -877,44 +839,6 @@ _check_config() {
 			_log "WARN: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
 			_log "WARN: Setting SLEEP to 180 sec"
 			SLEEP=180; }
-
-# 	# $SABNZBDCHECK" = "true"
-# 	if [ ! -z "$SABNZBDCHECK" ]; then
-# 		[[ "$SABNZBDCHECK" = "true" || "$SABNZBDCHECK" = "false" ]] || { _log "WARN: SABNZBDCHECK not set properly. It has to be 'true' or 'false'."
-# 				_log "WARN: Set SABNZBDCHECK to false"
-# 				SABNZBDCHECK="false"; }
-# 	fi
-# 
-# 	# SABPORT (max 5 digits)
-# 	[[ "$SABPORT" =~ ^([1-9]|[1-9][0-9]{1,4})$ ]] || {
-# 		if [ "$SABNZBDCHECK" = "true" ]; then
-# 			_log "WARN: Invalid parameter format: SABPORT"
-# 			_log "WARN: You set it to '$SABPORT', which is not a correct syntax. Maybe it's empty?"
-# 			if [ "$SABNZBDCHECK" = "true" ]; then
-# 				_log "WARN: Set SABNZBDCHECK to false, because of invalid portnumber"
-# 				SABNZBDCHECK="false"
-# 			fi
-# 		fi; }
-# 
-# 	# APIKEY
-# 	REGEX="^([A-Za-z0-9]{1,})"
-# 	if [ "$SABNZBDCHECK" = "true" ]; then
-# 		if [ "$SABAPIKEY" = "" ]; then
-# 				_log "WARN: APIKEY for sabnzbd is not set"
-# 				if [ "$SABNZBDCHECK" = "true" ]; then
-# 					_log "WARN: Set SABNZBDCHECK to false, because of missing APIKEY."
-# 					SABNZBDCHECK="false"
-# 				fi
-# 		else
-# 				[[ "$SABAPIKEY" =~ $REGEX ]] || {
-# 						_log "WARN: Invalid APIKEY"
-# 						_log "WARN: You set it to '$SABAPIKEY', which is not a correct syntax. Only a-zA-Z0-9 is allowed."
-# 						if [ "$SABNZBDCHECK" = "true" ]; then
-# 							_log "WARN: Set SABNZBDCHECK to false, because of invalid APIKEY"
-# 							SABNZBDCHECK="false"
-# 						fi; }
-# 		fi
-# 	fi
 
 	# $ULDLCHECK" = "true"
 	if [ ! -z "$ULDLCHECK" ]; then
@@ -973,6 +897,16 @@ _check_config() {
 		_log "WARN: Ignoring LOADAVERAGE"
 	fi
 
+	# FORCE_NIC
+	if [ ! -z "$FORCE_NIC" ]; then
+		[[ "$FORCE_NIC" =~ ^([a-z]{3,}[0-9]{1}|[a-z]{3,}[0-9]{1})+( [a-z]{3,}[0-9]{1})*$ ]]|| {
+			_log "WARN: Invalid parameter format: FORCE_NIC"
+			_log "WARN: You set it to '$FORCE_NIC', which is not a correct syntax. It has to match '[a-z]{3,}[0-9]{1}'"
+			_log "WARN: with spaces between every NIC: e.g. \"eth1 wlan0 usb3\""
+			_log "WARN: Unsetting FORCE_NIC"
+			unset FORCE_NIC; }
+	fi
+
 }
 
 ################################################################
@@ -987,18 +921,28 @@ _check_networkconfig() {
 	_log "INFO: Reading NICs ,IPs, ..."
 	NICNR=0
 	FOUNDIP=0
-	for NWADAPTERS in bond0 eth0 eth1; do
+
+	# check FORCE_NIC, if set, then set it to NIC[0]
+	if [ -z "$FORCE_NIC" ]; then
+		# set the default NICs
+		FORCE_NIC="bond 0 eth0 eth1"
+	else
+		_log "INFO: FORCE_NIC found: NIC is now $FORCE_NIC"
+		_log "INFO: If the following checks fail, then try to uncomment FORCE_NIC to do a normal network-check"
+	fi
+
+	for NWADAPTERS in $FORCE_NIC; do
 		let NICNR++
 		NIC[$NICNR]=$NWADAPTERS
 
-		if ip link show up | grep $NWADAPTERS > /dev/null; then
-			_log "INFO: NIC '$NWADAPTERS' found: try to get IP"
+		if ip link show up | grep ${NIC[$NICNR]} > /dev/null; then
+			_log "INFO: NIC '${NIC[$NICNR]}' found: try to get IP"
 
 			NW_WAIT=0
 			while true; do
 				let NW_WAIT++
 				if [ $NW_WAIT -le 5 ]; then
-					if ! ifconfig $NWADAPTERS | egrep -q "inet "; then
+					if ! ifconfig ${NIC[$NICNR]} | egrep -q "inet "; then
 						_log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: No internet-Adress found - wait 60 sec for initializing the network"
 						sleep 60
 					else
@@ -1006,28 +950,28 @@ _check_networkconfig() {
 						break
 					fi
 				else
-					_log "WARN: No internet-Adress for $NIC[$NICNR] found after 5 minutes - The script will not work maybe ..."
+					_log "WARN: No internet-Adress for ${NIC[$NICNR]} found after 5 minutes - The script will not work maybe ..."
 					break
 				fi
 			done
 
-			IPFROMIFCONFIG[$NICNR]="$(ifconfig $NWADAPTERS | egrep "inet " | sed 's/[ ]*Bcast.*//g; s/.*://g')"
+			IPFROMIFCONFIG[$NICNR]="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed 's/[ ]*Bcast.*//g; s/.*://g')"
 			SERVERIP[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/.*\.//g')"
 			CLASS[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/\(.*\..*\..*\)\..*/\1/g')"
-			_log "INFO: '$NWADAPTERS' has IP: ${IPFROMIFCONFIG[$NICNR]}"
+			_log "INFO: '${NIC[$NICNR]}' has IP: ${IPFROMIFCONFIG[$NICNR]}"
 
 			if $DEBUG; then
 				# ifconfig in extra variables for easier debugging
-				IPFROMIFCONFIG_DEBUG_1="$(ifconfig $NWADAPTERS | egrep "inet ")"
-				IPFROMIFCONFIG_DEBUG_2="$(ifconfig $NWADAPTERS | egrep "inet " | sed 's/[ ]*Bcast.*//g')"
+				IPFROMIFCONFIG_DEBUG_1="$(ifconfig ${NIC[$NICNR]} | egrep "inet ")"
+				IPFROMIFCONFIG_DEBUG_2="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed 's/[ ]*Bcast.*//g')"
 				# Log-Output all the stuff
-				_log "DEBUG: ifconfig $NWADAPTERS (Begin) ====================================="
+				_log "DEBUG: ifconfig ${NIC[$NICNR]} (Begin) ====================================="
 				# Output of ifconfig line for line
-				ifconfig $NWADAPTERS | while read IFCONFIGLINE
+				ifconfig ${NIC[$NICNR]} | while read IFCONFIGLINE
 				do
 					_log "DEBUG:           $IFCONFIGLINE"
 				done
-				_log "DEBUG: ifconfig $NWADAPTERS (End) ======================================="
+				_log "DEBUG: ifconfig ${NIC[$NICNR]} (End) ======================================="
 				_log "DEBUG: IPFROMIFCONFIG_DEBUG_1: $IPFROMIFCONFIG_DEBUG_1"
 				_log "DEBUG: IPFROMIFCONFIG_DEBUG_2: $IPFROMIFCONFIG_DEBUG_2"
 				_log "DEBUG: _check_networkconfig(): IPFROMIFCONFIG$NICNR: ${IPFROMIFCONFIG[$NICNR]}"
@@ -1040,8 +984,8 @@ _check_networkconfig() {
 				let FOUNDIP++
 
 				# bond0 has priority, even if there are eth0 and eth1
-				if [ "$NWADAPTERS" = "bond0" ]; then
-					_log "INFO: NIC '$NWADAPTERS' found, skipping all others. bond0 has priority"
+				if [ "${NIC[$NICNR]}" = "bond0" ]; then
+					_log "INFO: NIC '${NIC[$NICNR]}' found, skipping all others. bond0 has priority"
 					break
 				fi
 			fi
@@ -1051,19 +995,21 @@ _check_networkconfig() {
 				_log "WARN: Invalid parameter format: Class: nnn.nnn.nnn]"
 				_log "WARN: It is set to '${CLASS[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig ' did something wrong"
 				_log "WARN: Please report this Bug and the CLI-output of 'ifconfig'"
-				_log "WARN: unsetting  $NIC[$NICNR] ..."
+				_log "WARN: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
 				unset NIC[$NICNR]; }
 
 			[[ "${SERVERIP[$NICNR]}" =~ ^(25[0-4]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])$ ]] || {
 				_log "WARN: Invalid parameter format: SERVERIP [iii]"
 				_log "WARN: It is set to '${SERVERIP[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig' did something wrong"
 				_log "WARN: Please report this Bug and the CLI-output of 'ifconfig'"
-				_log "WARN: unsetting  $NIC[$NICNR] ..."
+				_log "WARN: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
 				unset NIC[$NICNR]; }
 
 		else
-			_log "INFO: NIC '$NWADAPTERS' not found, skipping '$NWADAPTERS'"
+			_log "INFO: NIC '${NIC[$NICNR]}' not found, skipping '${NIC[$NICNR]}'"
+			if $DEBUG; then _log "DEBUG: before unset: NIC[$NICNR]: ${NIC[$NICNR]}"; fi
 			unset NIC[$NICNR]
+			if $DEBUG; then _log "DEBUG: after unset: NIC[$NICNR]: ${NIC[$NICNR]}"; fi
 		fi
 	done
 
@@ -1158,23 +1104,6 @@ _check_system_active()
 			else
 				if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_ul_dl_rate not called -> CNT: $CNT "; fi
 			fi   # > if[ $CNT -eq 0 ]; then
-
-# 			if [ $CNT -eq 0 ]; then
-# 				# PRIO 4: Sabnzbd-traffic-checked
-# 				# Do a check for sabnzbd-downloading
-# 				# I've put it here, because every NIC should be checked for sabnzbd-activity
-# 				if [ "$SABNZBDCHECK" = "true" ] ; then
-# 					_check_sabnzbd $NICNR_CHECKSYSTEMACTIVE &&
-# 					{
-# 					let CNT++
-# 					}
-# 
-# 					if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_sabnzbd -> CNT: $CNT "; fi
-# 
-# 				fi
-# 			else
-# 				if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_sabnzbd not called -> CNT: $CNT "; fi
-# 			fi   # > if[ $CNT -eq 0 ]; then
 
 		fi # >  if [ ! -z "${NIC[$NICNR_CHECKSYSTEMACTIVE]}" ]; then
 
@@ -1277,15 +1206,10 @@ if $DEBUG ; then
 	_log "DEBUG: LOADPROCNAMES: $LOADPROCNAMES"
 	_log "DEBUG: NSOCKETNUMBERS: $NSOCKETNUMBERS"
 	_log "DEBUG: TEMPPROCNAMES: $TEMPPROCNAMES"
-# 	_log "DEBUG: STATUSFILECHECK: $STATUSFILECHECK"
-# 	_log "DEBUG: STATUSFILEDIR: $STATUSFILEDIR"
 	_log "DEBUG: VERBOSE: $VERBOSE"
 	_log "DEBUG: FAKE: $FAKE"
 	_log "DEBUG: SHUTDOWNCOMMAND: $SHUTDOWNCOMMAND"
 	_log "DEBUG: NETSTATWORD: $NETSTATWORD"
-# 	_log "DEBUG: SABNZBDCHECK: $SABNZBDCHECK"
-# 	_log "DEBUG: SABPORT: $SABPORT"
-# 	_log "DEBUG: SABAPIKEY: $SABAPIKEY"
 	_log "DEBUG: PLUGINCHECK: $PLUGINCHECK"
 	_log "DEBUG: ULDLCHECK: $ULDLCHECK"
 	_log "DEBUG: ULDLRATE: $ULDLRATE"
