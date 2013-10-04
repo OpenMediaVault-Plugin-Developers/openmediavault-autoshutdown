@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.3.9.6"         # script version information
+VERSION="0.3.9.7"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -816,12 +816,18 @@ _check_config() {
 			NSOCKETNUMBERS="22"; }
 
 	# Pinglist
+	IPCHECK=true
 	if [ -z $PINGLIST ]; then
-		[[ "$RANGE" =~ ^([1-9]{1}[0-9]{0,2})?([1-9]{1}[0-9]{0,2}\.{2}[1-9]{1}[0-9]{0,2})?(,[1-9]{1}[0-9]{0,2})*((,[1-9]{1}[0-9]{0,2})\.{2}[1-9]{1}[0-9]{0,2})*$ ]] || {
-				_log "WARN: Invalid parameter list format: RANGE [v..v+n,w,x+m..x,y,z..z+o]"
-				_log "WARN: You set it to '$RANGE', which is not a correct syntax."
-				_log "WARN: Setting RANGE to 2..254"
-				RANGE="2..254"; }
+		if [ "$RANGE" = "-" ]; then
+				_log "INFO: RANGE is set to '-' -> no IP-Check"
+				IPCHECK=false
+		else
+			[[ "$RANGE" =~ ^([1-9]{1}[0-9]{0,2})?([1-9]{1}[0-9]{0,2}\.{2}[1-9]{1}[0-9]{0,2})?(,[1-9]{1}[0-9]{0,2})*((,[1-9]{1}[0-9]{0,2})\.{2}[1-9]{1}[0-9]{0,2})*$ ]] || {
+					_log "WARN: Invalid parameter list format: RANGE [v..v+n,w,x+m..x,y,z..z+o]"
+					_log "WARN: You set it to '$RANGE', which is not a correct syntax."
+					_log "WARN: Setting RANGE to 2..254"
+					RANGE="2..254"; }
+		fi
 	else
 		if [ -f "$PINGLIST" ]; then
 			_log "INFO: PINGLIST is set in the conf, reading IPs from '$PINGLIST'"
@@ -1065,13 +1071,19 @@ _check_system_active()
 			if [ $CNT -eq 0 ]; then
 				## PRIO 1: Ping each IP address in parameter list. if we find one -> CNT != 0 we'll
 				# stop as there's really no point continuing to looking for more.
-				_ping_range $NICNR_CHECKSYSTEMACTIVE
-				PINGRANGERETURN="$?"
-				if [ "$PINGRANGERETURN" -gt 0 ]; then
-					let CNT++
-					if $DEBUG; then _log "DEBUG: _ping_range() -> RETURN: $PINGRANGERETURN"; fi
+
+				# only check IPs, if RANGE is not set to "-"
+				if [ $IPCHECK = "true" ]; then
+					_ping_range $NICNR_CHECKSYSTEMACTIVE
+					PINGRANGERETURN="$?"
+					if [ "$PINGRANGERETURN" -gt 0 ]; then
+						let CNT++
+						if $DEBUG; then _log "DEBUG: _ping_range() -> RETURN: $PINGRANGERETURN"; fi
+					fi
+					if $DEBUG ; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: $CNT "; fi
+				else
+					_log "INFO: No IPCHECK -> RANGE was set to '-' in the config"
 				fi
-				if $DEBUG ; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: $CNT "; fi
 			else
 				if $DEBUG ; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: $CNT "; fi
 			fi
@@ -1203,6 +1215,7 @@ if $DEBUG ; then
 	_log "DEBUG: SLEEP: $SLEEP"
 	_log "DEBUG: CHECKCLOCKACTIVE: $CHECKCLOCKACTIVE"
 	_log "DEBUG: UPHOURS: $UPHOURS"
+	_log "DEBUG: RANGE: $RANGE"
 	_log "DEBUG: LOADPROCNAMES: $LOADPROCNAMES"
 	_log "DEBUG: NSOCKETNUMBERS: $NSOCKETNUMBERS"
 	_log "DEBUG: TEMPPROCNAMES: $TEMPPROCNAMES"

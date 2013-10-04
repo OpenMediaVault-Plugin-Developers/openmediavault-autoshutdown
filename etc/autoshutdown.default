@@ -20,6 +20,8 @@ RANGE="2..254"
 # define a single ip :   <ip>
 # all list entries seperated by comma ','
 # Please make sure to leave 1 and 255 out of the list !
+# To disable a check for a IP, just set a "-"
+# -> RANGE="-"
 
 ##################################################
 ####  Check Clock to identify uptime ####
