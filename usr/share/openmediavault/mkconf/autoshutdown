@@ -30,11 +30,11 @@ xmlstarlet sel -t \
 	-m "//services/autoshutdown" \
 		-v "concat('CYCLES=',cycles)" -n \
 		-v "concat('SLEEP=',sleep)" -n \
-		-v "concat('RANGE="',range,'"')" -n \
+		-o 'RANGE="' -v "range" -o '"' -n\
 		-i "checkclockactive = 0" -o "CHECKCLOCKACTIVE=\"false\"" -n -b \
 		-i "checkclockactive = 1" -o "CHECKCLOCKACTIVE=\"true\"" -n -b \
-		-v "concat('UPHOURS="',uphours-begin,'..',uphours-end,'"')" -n \	  
-		-v "concat('NSOCKETNUMBERS="',nsocketnumbers,'"')" -n \
+		-o 'UPHOURS="' -v "uphours-begin" -o '..' -v "uphours-end" -o '"' -n \
+		-o 'NSOCKETNUMBERS="' -v "nsocketnumbers" -o '"' -n\
 		-i "uldlcheck = 0" -o "ULDLCHECK=\"false\"" -n -b \
 		-i "uldlcheck = 1" -o "ULDLCHECK=\"true\"" -n -b \
 		-v "concat('ULDLRATE=',uldlrate)" -n \
