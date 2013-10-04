@@ -11,3 +11,4 @@ Architecture: all
 Depends: ${misc:Depends}, openmediavault (>= 0.5), fping
 Priority: optional
 Description: OpenMediaVault AutoShutdown Plugin
+ Web interface for autoshutdown script.
