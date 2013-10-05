@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.3.9.7"         # script version information
+VERSION="0.5.0.0"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -931,7 +931,7 @@ _check_networkconfig() {
 	# check FORCE_NIC, if set, then set it to NIC[0]
 	if [ -z "$FORCE_NIC" ]; then
 		# set the default NICs
-		FORCE_NIC="bond 0 eth0 eth1"
+		FORCE_NIC="bond0 eth0 eth1"
 	else
 		_log "INFO: FORCE_NIC found: NIC is now $FORCE_NIC"
 		_log "INFO: If the following checks fail, then try to uncomment FORCE_NIC to do a normal network-check"

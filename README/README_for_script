@@ -1,6 +1,5 @@
 Autoshutdown-Script for OMV, Debian and Ubuntu:
 -----------------------------------------------
-Version 0.3.9.5
 
 Bugs and feature-requests:
 https://sourceforge.net/apps/phpbb/openmediavault/viewtopic.php?f=5&t=571&start=0
@@ -10,9 +9,6 @@ Automatic install in OMV:
 ------------------
 install the autoshutdown-plugin from #insert REPO here, if its ready
 
-Automatic install in Debian/Ubuntu:
-------------------
-run "./install.sh" on the CLI
 
 Manual Install:
 ---------------
@@ -24,126 +20,8 @@ then setup the config-file and do a
 
     sudo chmod +x autoshutdown.sh
 
-The script should run now. To start it @ boot, see http://www.debian-administration.org/articles/28
+The script should run now.
+don't forget to do
+update-rc.d autoshutdown defaults
 
-Setting in autoshutdown.conf
-
-FAKE
-set it to "true" for a Fake-Mode: The script runs dry: You can test what happens, without shutting down your PC
-This is also possible through a switch in OMV-GUI. Setting it to "false" or if it is not set, the script will run normally.
-With Fake-Mode ON, the script doesn't sleep 5 minutes after it starts.
-
-ULDLCHECK
-set it to "true" for a network-traffic check in autoshutdown. Then don't forget to set ULDLRATE also!
-
-ULDLRATE
-define the network traffic in kB/s
-in each cycle autoshutdown checks whether the network-traffic (upload or download) is over the set value
-under this value, no shutdown
-over this value, your PC shuts down
-
-LOADAVERAGECHECK
-set it to "true" for a check of loadaverage over the last minute in autoshutdown. If the system is over this value, then no shutdown is issued.
-If you set this to "true", don't forget to set LOADAVERAGE also!
-
-LOADAVERAGE
-Set this to the target loadaverage for autoshutdown.
-Make sure you leave the leading zeros and the dot out of the value!
-	Example:
-	LOADAVERAGE=50   # means a loadaverage of 0.50
-	LOADAVERAGE=8    # means a loadaverage of 0.08
-	LOADAVERAGE=220  # means a loadaverage of 2.20
-	and so on ...
-
-For the others, please have a look at the explanations in the autoshutdown.conf
-
-#########################################################################
-Expert Settings in autoshutdown.conf:
-
-LOADPROCNAMES
-command names of processes with load dependent children to check if they have something to do
-checked by default="proftpd,smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd")
-					 
-TEMPPROCNAMES
-command names of processes only started when active
-checked with "top" AND "ps", so all processes are found, even such, which doesn't show up in top
-like "lftp" - Beware: If the process shows up in "ps" when there is no connection, your PC won't shutdown!
-maybe you have to call the process like this: "lftp -do -something -here && exit"
-checked by default="in.tftpd")
-
-if you want other processes than the default ones, please uncomment the above lines and add your process at the end of the line
-to disable the process-check, set LOADPROCNAMES="-" or TEMPPROCNAMES="-"
-
-The following scheme is mandatory for both LOADPROCNAMES and TEMPPROCNAMES:
-process1,process2
-all processes separated by comma ','
-
-NETSTATWORD
-It is needed, if someone wants to test autoshutdown.sh on the CLI, because on the CLI the netstat-output is language-specific. At systemstart netstat-output is always english
-for german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n' on the CLI and you shoud see this output:
-
-	# Aktive Internetverbindungen (ohne Server)
-	# Proto Recv-Q Send-Q Local Address           Foreign Address         State      
-	# tcp        0      0 192.168.178.21:2049     192.168.178.23:753      VERBUNDEN  
-	# tcp        0      0 192.168.178.21:22       192.168.178.23:53099    VERBUNDEN
-
-now take the word under "State" -> "VERBUNDEN" and set it for NETSTATWORD
-
-SHUTDOWNCOMMAND
-If you don't want to shutdown your PC, but go in hibernate/suspend: Define the command here
-If nothing is defined, it shuts down with "shutdown -h now"
-
-# SHUTDOWNCOMMAND="pm-hibernate" => puts the PC in hibernate-mode
-# SHUTDOWNCOMMAND="pm-suspend"  => puts the PC in suspend-mode 
-# SHUTDOWNCOMMAND="shutdown -h +5"  => shuts the PC down 5 min after shutdown-command
-For more information and how to set up hibernate and suspend, look here:
-http://wiki.debian.org/Suspend
-http://wiki.debian.org/Hibernation
-
-PINGLIST
-With this, you can define a path to a file, which contains list of IPs that should be scanned
-only one IP per line is allowed - Format: mmm.nnn.ooo.ppp
-e.g.:
-192.168.1.45
-If this expert-setting is used, the IPs specified in "RANGE" or in GUI doesn't work
-
-PLUGINCHECK
-Set this to true, if autoshutdown.sh checks for PlugIns in /etc/autoshutdown.d
-set it to "false" (or uncemmented) to skip the check
-
-E.g.: When ClamAV does a check, the Server shouldn't shut down
-How to do that?
-Let's look at a example: in the clamav-plugin for autoshutdown (etc/autoshutdown.d/clamav) the following is set:
-
-   # In which folder is the file to look for
-   folder="/var/run/clamav"
-   # filename (can be expanded with regexes)
-   file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
-
-Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345 (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown
-
-also possible:
-    folder="/home/user"
-    file="backup.status"
-    content="processing job"
-
-If a file /home/user/backup.status exists with the content 'processing job', the Server isn't shutdow
-This is useful for backupscripts. It is not nice if the PC is shutting down while the backup-script is running. 
-In my backup-script i use a simple
-
-    echo "processing job" > /home/user/backup.status
-
-at the beginning and a
-
-    rm /home/user/backup.status
-
-at the end of the script. In the boot-Phase also a
-
-    rm /home/user/*.status
-
-to delete all *.status files, which are not deleted before (loss of power for example)
-
-Please have a look at the two example files in /etc/autoshutdown.d
-
-FORCE_NIC
-e.g. FORCE_NIC="eth1" forces autoshutdown to look for a IP first in the given device, after that all others are checked.
+please see the commented options in /etc/autoshutdown.default
