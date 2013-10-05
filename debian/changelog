@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (0.5.10) stable; urgency=low
+
+  * Update autoshutdownscript to 0.5.0.0
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.prg>  Sat, 05 Oct 2013 10:25:16 -0500
+
 openmediavault-autoshutdown (0.5.9) stable; urgency=low
 
   * Write config file using xmlstarlet
