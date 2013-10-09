@@ -1,4 +1,4 @@
-openmediavault-autoshutdown (0.5.11) stable; urgency=low
+openmediavault-autoshutdown (0.5.12) stable; urgency=low
 
   * Fix prerm script
 
