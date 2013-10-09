@@ -9,6 +9,7 @@ Homepage: http://omv-extras.org
 Package: openmediavault-autoshutdown
 Architecture: all
 Depends: ${misc:Depends}, openmediavault (>= 0.5), fping
+Conflicts: autoshutdown
 Priority: optional
 Description: OpenMediaVault AutoShutdown Plugin
  Web interface for autoshutdown script.
