@@ -29,10 +29,12 @@ set -e
 case "$1" in
 	configure)
 
-	########################################################################
+		########################################################################
 		# Set the default settings of the autoshutdown package to those
 		# expected by OpenMediaVault.
 		########################################################################
+		/bin/chmod +x /etc/init.d/autoshutdown
+		
 		update-rc.d autoshutdown defaults
 		if [ -z "$2" ]; then
 			echo "Updating init script links and actions"
