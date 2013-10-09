@@ -1,5 +1,11 @@
 openmediavault-autoshutdown (0.5.11) stable; urgency=low
 
+  * Fix prerm script
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 09 Oct 2013 14:01:06 -0500
+
+openmediavault-autoshutdown (0.5.11) stable; urgency=low
+
   * Add autoshutdown package as conflict
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 09 Oct 2013 11:17:06 -0500
