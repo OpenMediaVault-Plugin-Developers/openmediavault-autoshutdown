@@ -1,0 +1,137 @@
+# openmediavault-autoshutdown
+# Copyright (C) 2013
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# SpaceBrain <spacebrain.damage@gmail.com>, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-autoshutdown\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-28 08:58-0500\n"
+"PO-Revision-Date: 2013-10-30 20:42+0000\n"
+"Last-Translator: SpaceBrain <spacebrain.damage@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Autoshutdown"
+msgstr "Autoshutdown"
+
+msgid "AutoShutdown"
+msgstr "AutoShutdown"
+
+msgid "Begin"
+msgstr "Commencer"
+
+msgid "Check Clock"
+msgstr ""
+
+msgid "Check Clock to identify forced uptime."
+msgstr ""
+
+msgid "Cycles"
+msgstr "Cycles"
+
+msgid "Date & Time"
+msgstr "Date & Heure"
+
+msgid ""
+"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
+"triple of IP address in a list. <br />The following scheme is mandatory "
+"v..v+m,w,x..x+n,y+o..y,z <br />  - define an ip range : "
+"&lt;start&gt;..&lt;end&gt; -> the two dots are mandatory <br />  - define a "
+"single ip : &lt;ip&gt; <br />  - all list entries are seperated by comma ','"
+" <br />Please make sure to leave 1 and 255 out of the list !"
+msgstr ""
+
+msgid "Define the network traffic in kB/s"
+msgstr "Définissez le trafic du réseau en Ko/s"
+
+msgid "Enable"
+msgstr "Activer"
+
+msgid "End"
+msgstr "Terminer"
+
+msgid "Expert Settings"
+msgstr "Paramètres avancés"
+
+msgid "Extra options"
+msgstr "Options supplémentaires"
+
+msgid "Fake"
+msgstr "Faux"
+
+msgid "Fake/Test mode."
+msgstr "Faux/mode test"
+
+msgid "Forced Uptime"
+msgstr "Uptime forcé"
+
+msgid "General settings"
+msgstr "Paramètres généraux"
+
+msgid ""
+"If the load average of the server is above this value, then no shutdown.<br "
+"/>Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, "
+"220 means a loadaverage of 2.20"
+msgstr "Si la charge moyenne du serveur est supérieure à cette valeur, alors l'arrêt n'est pas possible.<br />Exemple: 50 équivaut à une charge moyenne de 0.50, 8 équivaut à une charge moyenne de 0.08 et 220 équivaut à une charge moyenne de 2.20"
+
+msgid "IP-Range"
+msgstr "Plage d'IP"
+
+msgid "Log"
+msgstr "Journal"
+
+msgid "Log to Syslog"
+msgstr "Consigner le journal à Syslog"
+
+msgid "Network Socket Supervision Configuration"
+msgstr "Configuration du contrôle du socket réseau"
+
+msgid "Numbers of seconds between each cycle."
+msgstr "Nombre de secondes entre chaque cycle."
+
+msgid ""
+"Please check the <a href='https://github.com/OMV-"
+"Plugins/autoshutdown/blob/master/src/README' target='_blank'>README</a> for "
+"more details."
+msgstr "Merci de consulter le <a href='https://github.com/OMV-Plugins/autoshutdown/blob/master/src/README' target='_blank'>README</a> pour plus de détails."
+
+msgid ""
+"Set the number of cycles with no result (no PC online, etc) before shutdown."
+msgstr "Définissez le nombre de cycles sans résultat (aucun poste en ligne, etc) avant l'arrêt."
+
+msgid "Settings"
+msgstr "Paramètres"
+
+msgid "Sleep"
+msgstr "Veille"
+
+msgid ""
+"Socket number to check for activity.  <a "
+"href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
+"target='_blank'>List of Ports</a>"
+msgstr ""
+
+msgid "Sockets"
+msgstr "Sockets"
+
+msgid "Syslog Configuration"
+msgstr "Configuration de Syslog"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Verbose"
+msgstr ""
+
+msgid "Verbose mode."
+msgstr ""
+
+msgid "Write log informations to system logs."
+msgstr "Inscrire les informations du journal d’événements au journal du système."
