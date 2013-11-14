@@ -1,5 +1,5 @@
-# openmediavault-autoshutdown
-# Copyright (C) 2013
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-28 08:58-0500\n"
-"PO-Revision-Date: 2013-10-30 20:42+0000\n"
-"Last-Translator: SpaceBrain <spacebrain.damage@gmail.com>\n"
+"POT-Creation-Date: 2013-11-14 10:38-0600\n"
+"PO-Revision-Date: 2013-11-14 16:45+0000\n"
+"Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Autoshutdown"
-msgstr "Autoshutdown"
-
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
+
+msgid "Autoshutdown"
+msgstr "Autoshutdown"
 
 msgid "Begin"
 msgstr "Commencer"
@@ -41,11 +41,7 @@ msgstr "Date & Heure"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list. <br />The following scheme is mandatory "
-"v..v+m,w,x..x+n,y+o..y,z <br />  - define an ip range : "
-"&lt;start&gt;..&lt;end&gt; -> the two dots are mandatory <br />  - define a "
-"single ip : &lt;ip&gt; <br />  - all list entries are seperated by comma ','"
-" <br />Please make sure to leave 1 and 255 out of the list !"
+"triple of IP address in a list."
 msgstr ""
 
 msgid "Define the network traffic in kB/s"
@@ -56,6 +52,11 @@ msgstr "Activer"
 
 msgid "End"
 msgstr "Terminer"
+
+msgid ""
+"Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
+"means a loadaverage of 2.20"
+msgstr ""
 
 msgid "Expert Settings"
 msgstr "Paramètres avancés"
@@ -75,14 +76,15 @@ msgstr "Uptime forcé"
 msgid "General settings"
 msgstr "Paramètres généraux"
 
-msgid ""
-"If the load average of the server is above this value, then no shutdown.<br "
-"/>Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, "
-"220 means a loadaverage of 2.20"
-msgstr "Si la charge moyenne du serveur est supérieure à cette valeur, alors l'arrêt n'est pas possible.<br />Exemple: 50 équivaut à une charge moyenne de 0.50, 8 équivaut à une charge moyenne de 0.08 et 220 équivaut à une charge moyenne de 2.20"
-
 msgid "IP-Range"
 msgstr "Plage d'IP"
+
+msgid ""
+"If the load average of the server is above this value, then no shutdown."
+msgstr ""
+
+msgid "List of Ports"
+msgstr ""
 
 msgid "Log"
 msgstr "Journal"
@@ -96,11 +98,14 @@ msgstr "Configuration du contrôle du socket réseau"
 msgid "Numbers of seconds between each cycle."
 msgstr "Nombre de secondes entre chaque cycle."
 
-msgid ""
-"Please check the <a href='https://github.com/OMV-"
-"Plugins/autoshutdown/blob/master/src/README' target='_blank'>README</a> for "
-"more details."
-msgstr "Merci de consulter le <a href='https://github.com/OMV-Plugins/autoshutdown/blob/master/src/README' target='_blank'>README</a> pour plus de détails."
+msgid "Please check the"
+msgstr ""
+
+msgid "Please make sure to leave 1 and 255 out of the list!"
+msgstr ""
+
+msgid "README"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -112,10 +117,7 @@ msgstr "Paramètres"
 msgid "Sleep"
 msgstr "Veille"
 
-msgid ""
-"Socket number to check for activity.  <a "
-"href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
-"target='_blank'>List of Ports</a>"
+msgid "Socket number to check for activity."
 msgstr ""
 
 msgid "Sockets"
@@ -123,6 +125,9 @@ msgstr "Sockets"
 
 msgid "Syslog Configuration"
 msgstr "Configuration de Syslog"
+
+msgid "The following scheme is mandatory"
+msgstr ""
 
 msgid "Type"
 msgstr "Type"
@@ -135,3 +140,15 @@ msgstr ""
 
 msgid "Write log informations to system logs."
 msgstr "Inscrire les informations du journal d’événements au journal du système."
+
+msgid "all list entries are seperated by comma ','"
+msgstr ""
+
+msgid "define a single ip : ip"
+msgstr ""
+
+msgid "define an ip range : start..end -> the two dots are mandatory"
+msgstr ""
+
+msgid "for more details."
+msgstr ""

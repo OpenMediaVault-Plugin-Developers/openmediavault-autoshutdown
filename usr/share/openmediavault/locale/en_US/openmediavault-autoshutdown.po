@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Cyryl Sochacki <cyrylsochacki@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
@@ -11,144 +10,144 @@ msgstr ""
 "POT-Creation-Date: 2013-11-14 10:38-0600\n"
 "PO-Revision-Date: 2013-11-14 16:45+0000\n"
 "Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
-"Language-Team: Polish (Poland) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/pl_PL/)\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl_PL\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
-msgstr "Automatyczne wyłączenie"
+msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
-msgstr "Automatyczne wyłączenie"
+msgstr "Autoshutdown"
 
 msgid "Begin"
-msgstr "Początek"
+msgstr "Begin"
 
 msgid "Check Clock"
-msgstr "Wybierz czas"
+msgstr "Check Clock"
 
 msgid "Check Clock to identify forced uptime."
-msgstr "Sprawdź zegar do identyfikacji wymuszonych przestojów."
+msgstr "Check Clock to identify forced uptime."
 
 msgid "Cycles"
-msgstr "Cykle"
+msgstr "Cycles"
 
 msgid "Date & Time"
-msgstr "Data i czas"
+msgstr "Date & Time"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list."
 
 msgid "Define the network traffic in kB/s"
-msgstr "Zdefiniuj ruch sieciowy w kB/s"
+msgstr "Define the network traffic in kB/s"
 
 msgid "Enable"
-msgstr "Włączone"
+msgstr "Enable"
 
 msgid "End"
-msgstr "Koniec"
+msgstr "End"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr ""
+msgstr "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20"
 
 msgid "Expert Settings"
-msgstr "Dodatkowe ustawienia"
+msgstr "Expert Settings"
 
 msgid "Extra options"
-msgstr "Dodatkowe opcje"
+msgstr "Extra options"
 
 msgid "Fake"
-msgstr "Fałsz"
+msgstr "Fake"
 
 msgid "Fake/Test mode."
-msgstr "Tryb Test/Fałszu"
+msgstr "Fake/Test mode."
 
 msgid "Forced Uptime"
-msgstr "Wymuszony uptime"
+msgstr "Forced Uptime"
 
 msgid "General settings"
-msgstr "Ustawienia główne"
+msgstr "General settings"
 
 msgid "IP-Range"
-msgstr "Zakres IP"
+msgstr "IP-Range"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "If the load average of the server is above this value, then no shutdown."
 
 msgid "List of Ports"
-msgstr ""
+msgstr "List of Ports"
 
 msgid "Log"
-msgstr "Logi"
+msgstr "Log"
 
 msgid "Log to Syslog"
-msgstr "Logi do Syslog-a"
+msgstr "Log to Syslog"
 
 msgid "Network Socket Supervision Configuration"
-msgstr "Konfiguracja gniazd sieci"
+msgstr "Network Socket Supervision Configuration"
 
 msgid "Numbers of seconds between each cycle."
-msgstr "Liczba sekund między każdym cyklem"
+msgstr "Numbers of seconds between each cycle."
 
 msgid "Please check the"
-msgstr ""
+msgstr "Please check the"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
+msgstr "Please make sure to leave 1 and 255 out of the list!"
 
 msgid "README"
-msgstr ""
+msgstr "README"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Ustaw liczbę cykli bez powodzenia (komputer nie jest online, itp) przed zamknięciem."
+msgstr "Set the number of cycles with no result (no PC online, etc) before shutdown."
 
 msgid "Settings"
-msgstr "Ustawienia"
+msgstr "Settings"
 
 msgid "Sleep"
-msgstr "Uśpij"
+msgstr "Sleep"
 
 msgid "Socket number to check for activity."
-msgstr ""
+msgstr "Socket number to check for activity."
 
 msgid "Sockets"
-msgstr "Gniazda"
+msgstr "Sockets"
 
 msgid "Syslog Configuration"
-msgstr "Konfiguracja Syslog-a"
+msgstr "Syslog Configuration"
 
 msgid "The following scheme is mandatory"
-msgstr ""
+msgstr "The following scheme is mandatory"
 
 msgid "Type"
-msgstr "Typ"
+msgstr "Type"
 
 msgid "Verbose"
-msgstr "Pełne"
+msgstr "Verbose"
 
 msgid "Verbose mode."
-msgstr "Tryb pełny."
+msgstr "Verbose mode."
 
 msgid "Write log informations to system logs."
-msgstr "Zapisać informacje do dziennika logów systemowych."
+msgstr "Write log informations to system logs."
 
 msgid "all list entries are seperated by comma ','"
-msgstr ""
+msgstr "all list entries are seperated by comma ','"
 
 msgid "define a single ip : ip"
-msgstr ""
+msgstr "define a single ip : ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr ""
+msgstr "define an ip range : start..end -> the two dots are mandatory"
 
 msgid "for more details."
-msgstr ""
+msgstr "for more details."
