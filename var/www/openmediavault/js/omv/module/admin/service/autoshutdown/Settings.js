@@ -1,5 +1,4 @@
 /**
- * This file is part of OpenMediaVault.
  *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * Copyright (C) 2013 OpenMediaVault Plugin Developers
@@ -14,39 +13,39 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+ * along with this file. If not, see <http://www.gnu.org/licenses/>.
  */
 // require("js/omv/WorkspaceManager.js")
 // require("js/omv/workspace/form/Panel.js")
 
 Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
-    extend: "OMV.workspace.form.Panel",
+    extend : "OMV.workspace.form.Panel",
 
-    rpcService: "AutoShutdown",
-    rpcGetMethod: "getSettings",
-    rpcSetMethod: "setSettings",
+    rpcService   : "AutoShutdown",
+    rpcGetMethod : "getSettings",
+    rpcSetMethod : "setSettings",
 
-    plugins: [{
-        ptype: "linkedfields",
-        correlations: [{
-            name: [
+    plugins      : [{
+        ptype        : "linkedfields",
+        correlations : [{
+            name       : [
                 "uldlrate"
             ],
-            conditions: [
-                { name: "uldlcheck", value: true }
+            conditions : [
+                { name  : "uldlcheck", value : true }
             ],
-            properties: [
+            properties : [
                 "!readOnly",
                 "!allowBlank"
             ]
         },{
-            name: [
+            name       : [
                 "loadaverage"
             ],
-            conditions: [
-                { name: "loadaveragecheck", value: true }
+            conditions : [
+                { name  : "loadaveragecheck", value : true }
             ],
-            properties: [
+            properties : [
                 "!readOnly",
                 "!allowBlank"
             ]
@@ -56,211 +55,211 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
     getFormItems: function() {
         var me = this;
         return [{
-            xtype: "fieldset",
-            title: _("General settings"),
-            fieldDefaults: {
+            xtype         : "fieldset",
+            title         : _("General settings"),
+            fieldDefaults : {
                 labelSeparator: ""
             },
-            items: [{
-                xtype: "checkbox",
-                name: "enable",
-                fieldLabel: _("Enable"),
-                checked: false
+            items         : [{
+                xtype      : "checkbox",
+                name       : "enable",
+                fieldLabel : _("Enable"),
+                checked    : false
             },{
-                xtype: "numberfield",
-                name: "cycles",
-                fieldLabel: _("Cycles"),
-                minValue: 1,
-                maxValue: 999,
-                allowDecimals: false,
-                allowBlank: false,
-                value: 6,
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Set the number of cycles with no result (no PC online, etc) before shutdown.")
+                xtype         : "numberfield",
+                name          : "cycles",
+                fieldLabel    : _("Cycles"),
+                minValue      : 1,
+                maxValue      : 999,
+                allowDecimals : false,
+                allowBlank    : false,
+                value         : 6,
+                plugins       : [{
+                    ptype : "fieldinfo",
+                    text  : _("Set the number of cycles with no result (no PC online, etc) before shutdown.")
                 }]
             },{
-                xtype: "numberfield",
-                name: "sleep",
-                fieldLabel: _("Sleep"),
-                minValue: 1,
-                maxValue: 9999,
-                allowDecimals: false,
-                allowBlank: false,
-                value: 180,
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Numbers of seconds between each cycle.")
+                xtype         : "numberfield",
+                name          : "sleep",
+                fieldLabel    : _("Sleep"),
+                minValue      : 1,
+                maxValue      : 9999,
+                allowDecimals : false,
+                allowBlank    : false,
+                value         : 180,
+                plugins       : [{
+                    ptype : "fieldinfo",
+                    text  : _("Numbers of seconds between each cycle.")
                 }]
             },{
-                xtype: "textfield",
-                name: "range",
-                fieldLabel: _("IP-Range"),
-                value: "2..254",
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
-                          _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
-                          _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
-                          _("define a single ip : ip") + "<br />" + "- " +
-                          _("all list entries are seperated by comma ','") + "<br />" +
-                          _("Please make sure to leave 1 and 255 out of the list!")
+                xtype      : "textfield",
+                name       : "range",
+                fieldLabel : _("IP-Range"),
+                value      : "2..254",
+                plugins    : [{
+                    ptype : "fieldinfo",
+                    text  : _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
+                            _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
+                            _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
+                            _("define a single ip : ip") + "<br />" + "- " +
+                            _("all list entries are seperated by comma ','") + "<br />" +
+                            _("Please make sure to leave 1 and 255 out of the list!")
                 }]
             }]
         },{
-            xtype: "fieldset",
-            title: _("Forced Uptime"),
-            fieldDefaults: {
-                labelSeparator: ""
+            xtype         : "fieldset",
+            title         : _("Forced Uptime"),
+            fieldDefaults : {
+                labelSeparator : ""
             },
-            items: [{
-                xtype: "checkbox",
-                name: "checkclockactive",
-                fieldLabel: _("Check Clock"),
-                checked: false,
-                boxLabel: _("Check Clock to identify forced uptime.")
+            items         : [{
+                xtype      : "checkbox",
+                name       : "checkclockactive",
+                fieldLabel : _("Check Clock"),
+                checked    : false,
+                boxLabel   : _("Check Clock to identify forced uptime.")
             },{
-                xtype: "fieldcontainer",
-                fieldLabel: "Uphours",
-                layout: "hbox",
-                items: [{
-                    xtype: "numberfield",
-                    name: "uphours-begin",
-                    fieldLabel: _("Begin"),
-                    minValue: 0,
-                    maxValue: 23,
-                    allowDecimals: false,
-                    allowBlank: false,
-                    value: 6
+                xtype      : "fieldcontainer",
+                fieldLabel : "Uphours",
+                layout     : "hbox",
+                items      : [{
+                    xtype         : "numberfield",
+                    name          : "uphours-begin",
+                    fieldLabel    : _("Begin"),
+                    minValue      : 0,
+                    maxValue      : 23,
+                    allowDecimals : false,
+                    allowBlank    : false,
+                    value         : 6
                 }]
             },{
-                xtype: "fieldcontainer",
-                fieldLabel: "&nbsp;",
-                layout: "hbox",
-                items: [{
-                    xtype: "numberfield",
-                    name: "uphours-end",
-                    fieldLabel: _("End"),
-                    minValue: 0,
-                    maxValue: 23,
-                    allowDecimals: false,
-                    allowBlank: false,
-                    value: 20
+                xtype      : "fieldcontainer",
+                fieldLabel : "&nbsp;",
+                layout     : "hbox",
+                items      : [{
+                    xtype         : "numberfield",
+                    name          : "uphours-end",
+                    fieldLabel    : _("End"),
+                    minValue      : 0,
+                    maxValue      : 23,
+                    allowDecimals : false,
+                    allowBlank    : false,
+                    value         : 20
                 }]
             }]
         },{
-            xtype: "fieldset",
-            title: _("Network Socket Supervision Configuration"),
-            fieldDefaults: {
-                labelSeparator: ""
+            xtype         : "fieldset",
+            title         : _("Network Socket Supervision Configuration"),
+            fieldDefaults : {
+                labelSeparator : ""
             },
-            items: [{
-                xtype: "textfield",
-                name: "nsocketnumbers",
-                fieldLabel: _("Sockets"),
-                value: "21,22,80,139,445,3689,6991,9091,49152",
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Socket number to check for activity.") + "  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>" +
-                          _("List of Ports") + "</a>"
+            items         : [{
+                xtype      : "textfield",
+                name       : "nsocketnumbers",
+                fieldLabel : _("Sockets"),
+                value      : "21,22,80,139,445,3689,6991,9091,49152",
+                plugins    : [{
+                    ptype : "fieldinfo",
+                    text  : _("Socket number to check for activity.") + "  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>" +
+                            _("List of Ports") + "</a>"
                 }]
             },{
-                xtype: "fieldcontainer",
-                fieldLabel: "ULDL Rate",
-                layout: "hbox",
-                items: [{
-                    xtype: "checkbox",
-                    name: "uldlcheck",
-                    fieldLabel: _(""),
-                    checked: true
+                xtype      : "fieldcontainer",
+                fieldLabel : "ULDL Rate",
+                layout     : "hbox",
+                items      : [{
+                    xtype      : "checkbox",
+                    name       : "uldlcheck",
+                    fieldLabel : _(""),
+                    checked    : true
                 },{
-                    xtype: "displayfield",
-                    width: 25,
-                    value: ""
+                    xtype : "displayfield",
+                    width : 25,
+                    value : ""
                 },{
-                    xtype: "numberfield",
-                    name: "uldlrate",
-                    fieldLabel: _(""),
-                    minValue: 0,
-                    maxValue: 9999,
-                    allowDecimals: false,
-                    allowBlank: false,
-                    value: 50,
-                    plugins: [{
-                        ptype: "fieldinfo",
-                        text: _("Define the network traffic in kB/s")
+                    xtype         : "numberfield",
+                    name          : "uldlrate",
+                    fieldLabel    : "",
+                    minValue      : 0,
+                    maxValue      : 9999,
+                    allowDecimals : false,
+                    allowBlank    : false,
+                    value         : 50,
+                    plugins       : [{
+                        ptype : "fieldinfo",
+                        text  : _("Define the network traffic in kB/s")
                     }]
                 }]
             },{
-                xtype: "fieldcontainer",
-                fieldLabel: "Load Average",
-                layout: "hbox",
-                items: [{
-                    xtype: "checkbox",
-                    name: "loadaveragecheck",
-                    fieldLabel: _(""),
-                    checked: false
+                xtype      : "fieldcontainer",
+                fieldLabel : "Load Average",
+                layout     : "hbox",
+                items      : [{
+                    xtype      : "checkbox",
+                    name       : "loadaveragecheck",
+                    fieldLabel : "",
+                    checked    : false
                 },{
-                    xtype: "displayfield",
-                    width: 25,
-                    value: ""
+                    xtype : "displayfield",
+                    width : 25,
+                    value : ""
                 },{
-                    xtype: "numberfield",
-                    name: "loadaverage",
-                    fieldLabel: _(""),
-                    minValue: 0,
-                    maxValue: 9999,
-                    allowDecimals: false,
-                    allowBlank: false,
-                    value: 40,
-                    plugins: [{
-                        ptype: "fieldinfo",
-                        text: _("If the load average of the server is above this value, then no shutdown.") + "<br />" +
-                              _("Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
+                    xtype         : "numberfield",
+                    name          : "loadaverage",
+                    fieldLabel    : "",
+                    minValue      : 0,
+                    maxValue      : 9999,
+                    allowDecimals : false,
+                    allowBlank    : false,
+                    value         : 40,
+                    plugins       : [{
+                        ptype : "fieldinfo",
+                        text  : _("If the load average of the server is above this value, then no shutdown.") + "<br />" +
+                                _("Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
                     }]
                 }]
             }]
         },{
-            xtype: "fieldset",
-            title: _("Syslog Configuration"),
-            fieldDefaults: {
-                labelSeparator: ""
+            xtype         : "fieldset",
+            title         : _("Syslog Configuration"),
+            fieldDefaults : {
+                labelSeparator : ""
             },
-            items: [{
-                xtype: "checkbox",
-                name: "syslog",
-                fieldLabel: _("Log to Syslog"),
-                checked: true,
-                boxLabel: _("Write log informations to system logs.")
+            items         : [{
+                xtype      : "checkbox",
+                name       : "syslog",
+                fieldLabel : _("Log to Syslog"),
+                checked    : true,
+                boxLabel   : _("Write log informations to system logs.")
             },{
-                xtype: "checkbox",
-                name: "verbose",
-                fieldLabel: _("Verbose"),
-                checked: false,
-                boxLabel: _("Verbose mode.")
+                xtype      : "checkbox",
+                name       : "verbose",
+                fieldLabel : _("Verbose"),
+                checked    : false,
+                boxLabel   : _("Verbose mode.")
             },{
-                xtype: "checkbox",
-                name: "fake",
-                fieldLabel: _("Fake"),
-                checked: false,
-                boxLabel: _("Fake/Test mode.")
+                xtype      : "checkbox",
+                name       : "fake",
+                fieldLabel : _("Fake"),
+                checked    : false,
+                boxLabel   : _("Fake/Test mode.")
             }]
         },{
-            xtype: "fieldset",
-            title: _("Expert Settings"),
-            fieldDefaults: {
-                labelSeparator: ""
+            xtype         : "fieldset",
+            title         : _("Expert Settings"),
+            fieldDefaults : {
+                labelSeparator : ""
             },
-            items: [{
-                xtype: "textarea",
-                name: "extraoptions",
-                fieldLabel: _("Extra options"),
-                allowBlank: true,
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Please check the") + " <a href='https://github.com/OMV-Plugins/autoshutdown/blob/master/src/README' target='_blank'>" +
-                          _("README") + "</a> " +
-                          _("for more details.")
+            items         : [{
+                xtype      : "textarea",
+                name       : "extraoptions",
+                fieldLabel : _("Extra options"),
+                allowBlank : true,
+                plugins    : [{
+                    ptype : "fieldinfo",
+                    text  : _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
+                            _("README") + "</a> " +
+                            _("for more details.")
                 }]
             }]
         }];
@@ -268,9 +267,9 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
 });
 
 OMV.WorkspaceManager.registerPanel({
-    id: "settings",
-    path: "/service/autoshutdown",
-    text: _("Settings"),
-    position: 10,
-    className: "OMV.module.admin.service.autoshutdown.Settings"
+    id        : "settings",
+    path      : "/service/autoshutdown",
+    text      : _("Settings"),
+    position  : 10,
+    className : "OMV.module.admin.service.autoshutdown.Settings"
 });

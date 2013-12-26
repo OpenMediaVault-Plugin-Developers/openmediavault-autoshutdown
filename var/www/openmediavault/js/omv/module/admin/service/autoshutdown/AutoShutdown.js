@@ -1,9 +1,7 @@
 /**
- * This file is part of OpenMediaVault.
  *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
- * @author    Aaron Murray <aaron@omv-extras.org>
- * @copyright Copyright (c) 2013 Aaron Murray
+ * Copyright (C) 2013 OpenMediaVault Plugin Developers
  *
  * OpenMediaVault is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +14,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+ * along with this file. If not, see <http://www.gnu.org/licenses/>.
  */
- 
 // require("js/omv/WorkspaceManager.js")
 
 OMV.WorkspaceManager.registerNode({
-	id: "autoshutdown",
-	path: "/service",
-	text: _("Autoshutdown"),
-	icon16: "images/autoshutdown.png",
+    id      : "autoshutdown",
+    path    : "/service",
+    text    : _("Autoshutdown"),
+    icon16  : "images/autoshutdown.png",
+    iconSvg : "images/autoshutdown.svg"
 });

@@ -1,7 +1,5 @@
 #!/bin/sh
 #
-# This file is part of OpenMediaVault.
-#
 # @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
@@ -29,9 +27,9 @@ omv-mkconf autoshutdown
 
 # Enable/disable service
 if [ "$(omv_config_get "//services/autoshutdown/enable")" = "0" ]; then
-	update-rc.d autoshutdown disable 2>&1
+    update-rc.d autoshutdown disable 2>&1
 else
-	update-rc.d autoshutdown enable 2>&1
+    update-rc.d autoshutdown enable 2>&1
 fi
 
 exit 0

@@ -1,10 +1,10 @@
 <?php
 /**
- * This file is part of OpenMediaVault-autoshutdown.
  *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Marcel Beck <marcel.beck@mbeck.org>
- * @copyright Copyright (c) 2012 Marcel Beck
+ * @copyright (c) 2012 Marcel Beck
+ * @copyright (c) 2013 OpenMediaVault Plugin Developers 
  *
  * OpenMediaVault is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+ * along with this file. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once("openmediavault/object.inc");
 require_once("openmediavault/config.inc");
@@ -27,58 +27,57 @@ require_once("openmediavault/rpcservice.inc");
 require_once("openmediavault/notify.inc");
 
 class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
-	/**
-	 * Get the RPC service name.
-	 */
-	public function getName() {
-		return "AutoShutdown";
-	}
+    /**
+     * Get the RPC service name.
+     */
+    public function getName() {
+        return "AutoShutdown";
+    }
 
-	/**
-	 * Initialize the RPC service.
-	 */
-	public function initialize() {
-		$this->registerMethod("getSettings");
-		$this->registerMethod("setSettings");
-	}
+    /**
+     * Initialize the RPC service.
+     */
+    public function initialize() {
+        $this->registerMethod("getSettings");
+        $this->registerMethod("setSettings");
+    }
 
     /**
      * Get configuration object.
      */
     function getSettings($params, $context)
     {
-		global $xmlConfig;
+        global $xmlConfig;
 
-		// Validate the RPC caller context.
-		$this->validateMethodContext($context, array(
-			  "role" => OMV_ROLE_ADMINISTRATOR
-		  ));
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+              "role" => OMV_ROLE_ADMINISTRATOR
+          ));
 
-		// Get configuration object
+        // Get configuration object
         $xpath  = "//services/autoshutdown";
         $object = $xmlConfig->get($xpath);
-        if (is_null($object)) {
+        if (is_null($object))
             throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
-        }
-		
+
         // Modify result data
-		$object['enable'] = boolval($object['enable']);
-        $object['cycles'] = intval($object['cycles']);
-        $object['sleep'] = intval($object['sleep']);
-		
+        $object['enable']           = boolval($object['enable']);
+        $object['cycles']           = intval($object['cycles']);
+        $object['sleep']            = intval($object['sleep']);
+
         $object['checkclockactive'] = boolval($object['checkclockactive']);
-		$object['uphours-begin'] = intval($object['uphours-begin']);
-        $object['uphours-end'] = intval($object['uphours-end']);
-		
-		$object['uldlcheck'] = boolval($object['uldlcheck']);
-		$object['uldlrate'] = intval($object['uldlrate']);
-		$object['loadaveragecheck'] = boolval($object['loadaveragecheck']);
-		$object['loadaverage'] = intval($object['loadaverage']);
-		
-        $object['syslog'] = boolval($object['syslog']);
-        $object['verbose'] = boolval($object['verbose']);
-        $object['fake'] = boolval($object['fake']);
-		
+        $object['uphours-begin']    = intval($object['uphours-begin']);
+        $object['uphours-end']      = intval($object['uphours-end']);
+
+        $object['uldlcheck']        = boolval($object['uldlcheck']);
+        $object['uldlrate']         = intval($object['uldlrate']);
+        $object['loadaveragecheck'] = boolval($object['loadaveragecheck']);
+        $object['loadaverage']      = intval($object['loadaverage']);
+
+        $object['syslog']           = boolval($object['syslog']);
+        $object['verbose']          = boolval($object['verbose']);
+        $object['fake']             = boolval($object['fake']);
+
         return $object;
     }
 
@@ -89,76 +88,72 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
     {
         global $xmlConfig;
 
-		// Validate the RPC caller context.
-		$this->validateMethodContext($context, array(
-			"role" => OMV_ROLE_ADMINISTRATOR
-		));
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
 
-		// Validate the parameters of the RPC service method.
-		$this->validateMethodParams($params, '{
-			"type":"object",
-			"properties":{
-				"enable":{"type":"boolean"},
-				"cycles":{"type":"integer","minimum":1,"maximum":999},
-				"sleep":{"type":"integer","minimum":1,"maximum":9999},
-				"range":{"type":"string"},
-				"checkclockactive":{"type":"boolean"},
-				"uphours-begin":{"type":"integer","minimum":0,"maximum":23},
-				"uphours-end":{"type":"integer","minimum":0,"maximum":23},
-				"nsocketnumbers":{"type":"string"},
-				"uldlcheck":{"type":"boolean"},
-				"uldlrate":{"type":"integer"},
-				"loadaveragecheck":{"type":"boolean"},
-				"loadaverage":{"type":"integer"},
-				"syslog":{"type":"boolean"},
-				"verbose":{"type":"boolean"},
-				"fake":{"type":"boolean"},
-				"extraoptions":{"type":"string"}
-			}
-		}');
-		
-		// Get the existing configuration object.
-		$xpath = "//services/autoshutdown";
-		$oldObject = $xmlConfig->get($xpath);
-		if(is_null($oldObject)) {
-			throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-			  $xpath);
-		}		
-		
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+            "properties" : {
+                "enable"           : { "type" : "boolean" },
+                "cycles"           : { "type" : "integer", "minimum" : 1, "maximum" : 999 },
+                "sleep"            : { "type" : "integer", "minimum" : 1, "maximum" : 9999 },
+                "range"            : { "type" : "string" },
+                "checkclockactive" : { "type" : "boolean" },
+                "uphours-begin"    : { "type" : "integer", "minimum" : 0, "maximum" : 23 },
+                "uphours-end"      : { "type" : "integer", "minimum" : 0, "maximum" : 23 },
+                "nsocketnumbers"   : { "type" : "string" },
+                "uldlcheck"        : { "type" : "boolean" },
+                "uldlrate"         : { "type" : "integer" },
+                "loadaveragecheck" : { "type" : "boolean" },
+                "loadaverage"      : { "type" : "integer" },
+                "syslog"           : { "type" : "boolean" },
+                "verbose"          : { "type" : "boolean" },
+                "fake"             : { "type" : "boolean" },
+                "extraoptions"     : { "type" : "string" }
+            }
+        }');
+
+        // Get the existing configuration object.
+        $xpath = "//services/autoshutdown";
+        $oldObject = $xmlConfig->get($xpath);
+        if(is_null($oldObject))
+            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
+
         // Update the configuration.
         $object = array(
-            "enable" => array_boolval($params, 'enable'),
-            "cycles" => intval($params['cycles']),
-            "sleep" => intval($params['sleep']),
-			"range" => $params['range'],
+            "enable"           => array_boolval($params, 'enable'),
+            "cycles"           => intval($params['cycles']),
+            "sleep"            => intval($params['sleep']),
+            "range"            => $params['range'],
             "checkclockactive" => array_boolval($params, 'checkclockactive'),
-            "uphours-begin" => intval($params['uphours-begin']),
-            "uphours-end" => intval($params['uphours-end']),
-			"nsocketnumbers" => $params['nsocketnumbers'],
-			"uldlcheck" => array_boolval($params, 'uldlcheck'),
-			"uldlrate" => intval($params['uldlrate']),
+            "uphours-begin"    => intval($params['uphours-begin']),
+            "uphours-end"      => intval($params['uphours-end']),
+            "nsocketnumbers"   => $params['nsocketnumbers'],
+            "uldlcheck"        => array_boolval($params, 'uldlcheck'),
+            "uldlrate"         => intval($params['uldlrate']),
             "loadaveragecheck" => array_boolval($params, 'loadaveragecheck'),
-			"loadaverage" => intval($params['loadaverage']),
-            "syslog" => array_boolval($params, 'syslog'),
-            "verbose" => array_boolval($params, 'verbose'),
-            "fake" => array_boolval($params, 'fake'),
-            "extraoptions" => $params['extraoptions']
+            "loadaverage"      => intval($params['loadaverage']),
+            "syslog"           => array_boolval($params, 'syslog'),
+            "verbose"          => array_boolval($params, 'verbose'),
+            "fake"             => array_boolval($params, 'fake'),
+            "extraoptions"     => $params['extraoptions']
         );
 
         // Set configuration object
-		if(FALSE === $xmlConfig->replace("//services/autoshutdown", $object)) {
-			throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
-		}
+        if(FALSE === $xmlConfig->replace("//services/autoshutdown", $object))
+            throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
 
-		// Notify configuration changes.
-		$dispatcher = &OMVNotifyDispatcher::getInstance();
-		$dispatcher->notify(OMV_NOTIFY_MODIFY,
-		  "org.openmediavault.services.autoshutdown", $object);
-		
-		// Return the configuration object.
-		return $object;		
+        // Notify configuration changes.
+        $dispatcher = &OMVNotifyDispatcher::getInstance();
+        $dispatcher->notify(OMV_NOTIFY_MODIFY,
+            "org.openmediavault.services.autoshutdown", $object);
+
+        // Return the configuration object.
+        return $object;
     }
-
 }
 
 // Register the RPC service.
