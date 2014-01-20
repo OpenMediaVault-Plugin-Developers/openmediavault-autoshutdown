@@ -3,153 +3,152 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Damtux <sun_lion@live.com>, 2013
-# polxmod <paolo.velati@gmail.com>, 2014
+# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-14 10:38-0600\n"
-"PO-Revision-Date: 2014-01-12 21:11+0000\n"
-"Last-Translator: polxmod <paolo.velati@gmail.com>\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/it/)\n"
+"PO-Revision-Date: 2014-01-17 09:09+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
-msgstr "Spegnimento Automatico"
+msgstr "Apagado Automático"
 
 msgid "Autoshutdown"
-msgstr "Spegnimento automatico"
+msgstr "Apagado Automático"
 
 msgid "Begin"
-msgstr "Inizio"
+msgstr "Comenzar"
 
 msgid "Check Clock"
-msgstr "Controlla l'Orario"
+msgstr "Revisar reloj"
 
 msgid "Check Clock to identify forced uptime."
-msgstr "Controlla l'Orario per identificare un uptime forzato."
+msgstr "Revisar reloj para conocer el tiempo en marcha."
 
 msgid "Cycles"
-msgstr "Cicli"
+msgstr "Ciclos"
 
 msgid "Date & Time"
-msgstr "Data & Ora"
+msgstr "Fecha y Hora"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr "Definisci un intervallo di indirizzi IP che devono essere scansionati, attraverso una lista di XXX.XXX.XXX.xxx ultime triple di indirizzi IP."
+msgstr "Defina el rango de IP que deben ser escaneadas en una lista XXX.XXX.XXX.xxx"
 
 msgid "Define the network traffic in kB/s"
-msgstr "Definisci il traffico di rete in kB/s"
+msgstr "Definir trafico de red en kB/s"
 
 msgid "Enable"
-msgstr "Abilita"
+msgstr "Habilitar"
 
 msgid "End"
-msgstr "Fine"
+msgstr "Fin"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "Esempio: 50 corrisponde a un carico medio di 0.50, 8 corrisponde a 0.08, 220 corrisponde a 2.20"
+msgstr "Ejemplo: 50 significa una carga media de 0,50 , 8 significa una carga media de 0,08 y 220 significa una carga media de 2,20"
 
 msgid "Expert Settings"
-msgstr "Impostazioni Avanzate"
+msgstr "Configuración experta"
 
 msgid "Extra options"
-msgstr "Opzioni extra"
+msgstr "Opciones extra"
 
 msgid "Fake"
-msgstr "Finto"
+msgstr "Falso"
 
 msgid "Fake/Test mode."
-msgstr "Finto/Modalità test"
+msgstr "Modo Test/Falso"
 
 msgid "Forced Uptime"
-msgstr "Uptime Forzato"
+msgstr "Tiempo arrancado"
 
 msgid "General settings"
-msgstr "Impostazioni generali"
+msgstr "Opciones"
 
 msgid "IP-Range"
-msgstr "Intervallo di IP"
+msgstr "Rango de IP"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr "Se il carico medio del server è superiore a questo valore, allora nessun spegnimento."
+msgstr "Si la carga media del servidor está por encima de este valor, entonces no apagar."
 
 msgid "List of Ports"
-msgstr "Elenco delle Porte"
+msgstr "Lista de puertos"
 
 msgid "Log"
 msgstr "Log"
 
 msgid "Log to Syslog"
-msgstr "Registra in Syslog"
+msgstr "Log to Syslog"
 
 msgid "Network Socket Supervision Configuration"
-msgstr "Configurazione Supervisione del Socket di Rete"
+msgstr "Configuración de la supervisión de sockets de red"
 
 msgid "Numbers of seconds between each cycle."
-msgstr "Numero di secondi tra ogni ciclo."
+msgstr "Numero de segundos entre cada ciclo."
 
 msgid "Please check the"
-msgstr "Per favore controlla il"
+msgstr "Por favor revise el"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "Assicurati di lasciare 1 e 255 fuori dalla lista!"
+msgstr "Por favor asegurese de que el 1 y el 255, no estén incluidos en la lista"
 
 msgid "README"
-msgstr "LEGGIMI"
+msgstr "Leame"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Imposta il numero di cicli senza risultati (nessun PC online, ecc) prima di spegnere."
+msgstr "Fijar el número de ciclos sin resultado (PC apagado, etc...) antes del apagado."
 
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Configuraciones"
 
 msgid "Sleep"
-msgstr "Modalità sleep"
+msgstr "Dormir"
 
 msgid "Socket number to check for activity."
-msgstr "Numero di socket per verificare l'attività."
+msgstr "Número de socket a revisar su actividad."
 
 msgid "Sockets"
 msgstr "Sockets"
 
 msgid "Syslog Configuration"
-msgstr "Configurazione Syslog"
+msgstr "Configuración del Syslog (log del sistema)"
 
 msgid "The following scheme is mandatory"
-msgstr "Lo schema seguente è obbligatorio"
+msgstr "El siguiente esquema tiene prioridad"
 
 msgid "Type"
 msgstr "Tipo"
 
 msgid "Verbose"
-msgstr "Verboso"
+msgstr "Info ampliada"
 
 msgid "Verbose mode."
-msgstr "Modalità verbosa."
+msgstr "Modo info ampliada."
 
 msgid "Write log informations to system logs."
-msgstr "Scrivi informazioni di registro nei registri di sistema."
+msgstr "Esccribir los Logs en el Log del sistema."
 
 msgid "all list entries are seperated by comma ','"
-msgstr "tutti gli elementi dell'elenco sono separati da una virgola ','"
+msgstr "Todas las entradas de la lista están separadas por coma  ','"
 
 msgid "define a single ip : ip"
-msgstr "definisci un singolo ip : ip"
+msgstr "definir una ip : ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "definisci un intervallo di ip : inizio..fine -> i due punti sono obbligatori"
+msgstr "definir un rango IP : inicial..final-> los dos puntos '..' son obligatorios"
 
 msgid "for more details."
-msgstr "per ulteriori dettagli."
+msgstr "para mas detalles."
