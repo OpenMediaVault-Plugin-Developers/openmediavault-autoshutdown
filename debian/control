@@ -1,15 +1,17 @@
 Source: openmediavault-autoshutdown
 Section: net
 Priority: optional
-Maintainer: Aaron Murray <aaron@omv-extras.org>
+Maintainer: OpenMediaVault Plugin Developers (plugins@omv-extras.org>
 Build-Depends: debhelper (>> 7)
 Standards-Version: 3.9.3
 Homepage: http://omv-extras.org
 
 Package: openmediavault-autoshutdown
 Architecture: all
-Depends: ${misc:Depends}, openmediavault (>= 0.5), fping
+Depends: ${misc:Depends}, openmediavault (>= 0.5), , openmediavault (<< 0.6), fping
 Conflicts: autoshutdown
 Priority: optional
 Description: OpenMediaVault AutoShutdown Plugin
  Web interface for autoshutdown script.
+ .
+ Allow system to be automatically shutdown based on use rather than a specified time.

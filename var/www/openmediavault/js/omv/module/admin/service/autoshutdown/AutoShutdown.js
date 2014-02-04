@@ -1,7 +1,7 @@
 /**
  *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
- * Copyright (C) 2013 OpenMediaVault Plugin Developers
+ * Copyright (C) 2013-2014 OpenMediaVault Plugin Developers
  *
  * OpenMediaVault is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

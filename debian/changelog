@@ -1,3 +1,11 @@
+openmediavault-autoshutdown (0.5.16) stable; urgency=low
+
+  * Update documentation
+  * Fix bugs
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 04 Feb 2014 14:27:27 -0500
+
 openmediavault-autoshutdown (0.5.15) stable; urgency=low
 
   * Fix documentation link

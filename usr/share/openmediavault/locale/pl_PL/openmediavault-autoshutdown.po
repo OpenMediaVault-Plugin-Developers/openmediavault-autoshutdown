@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Cyryl Sochacki <cyrylsochacki@gmail.com>, 2013
+# qba111 <j.ratajczak@eqba.pl>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-14 10:38-0600\n"
-"PO-Revision-Date: 2013-11-20 09:19+0000\n"
+"POT-Creation-Date: 2014-02-04 14:26-0600\n"
+"PO-Revision-Date: 2014-01-30 09:25+0000\n"
 "Last-Translator: Cyryl Sochacki <cyrylsochacki@gmail.com>\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/pl_PL/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +43,7 @@ msgstr "Data i czas"
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "Określ zakres IP które będą skanowane jako ostatnie 3 cyfry z szablony XXX.XXX.XXX.xxx"
 
 msgid "Define the network traffic in kB/s"
 msgstr "Zdefiniuj ruch sieciowy w kB/s"
@@ -56,7 +57,7 @@ msgstr "Koniec"
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr ""
+msgstr "Przykładowo: 50 oznacza loadaverage 0.50, 8 oznacza loadaverage 0.08, 220 oznacza loadaverage 2.20"
 
 msgid "Expert Settings"
 msgstr "Dodatkowe ustawienia"
@@ -81,7 +82,7 @@ msgstr "Zakres IP"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "Jeżeli loadaverage serwera jest powyżej tej wartości nie wykonuj wyłączenia. "
 
 msgid "List of Ports"
 msgstr "Lista portów"
@@ -102,7 +103,7 @@ msgid "Please check the"
 msgstr "Proszę sprawdzić"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
+msgstr "Upewnij się, że lista ta nie obejmuje 1 i 255!"
 
 msgid "README"
 msgstr "Przeczytaj mnie"
@@ -118,7 +119,7 @@ msgid "Sleep"
 msgstr "Uśpij"
 
 msgid "Socket number to check for activity."
-msgstr ""
+msgstr "Porty na których sprawdzamy aktywność."
 
 msgid "Sockets"
 msgstr "Gniazda"
@@ -127,7 +128,7 @@ msgid "Syslog Configuration"
 msgstr "Konfiguracja Syslog-a"
 
 msgid "The following scheme is mandatory"
-msgstr ""
+msgstr "Obowiązuje następujący schemat"
 
 msgid "Type"
 msgstr "Typ"
@@ -148,7 +149,7 @@ msgid "define a single ip : ip"
 msgstr "zdefiniuj pojedyncze ip : ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr ""
+msgstr "podaj zakres IP: start..koniec -> 2 kropki są obowiązkowe"
 
 msgid "for more details."
 msgstr " więcej informacji."

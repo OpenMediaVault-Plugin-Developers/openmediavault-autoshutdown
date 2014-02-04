@@ -1,0 +1,153 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-autoshutdown\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-04 14:26-0600\n"
+"PO-Revision-Date: 2014-01-31 12:32+0000\n"
+"Last-Translator: kansuke <kansuke4649@gmail.com>\n"
+"Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/ja_JP/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "AutoShutdown"
+msgstr "自動シャットダウン"
+
+msgid "Autoshutdown"
+msgstr "自動シャットダウン"
+
+msgid "Begin"
+msgstr "開始"
+
+msgid "Check Clock"
+msgstr "時計を確認"
+
+msgid "Check Clock to identify forced uptime."
+msgstr "強制アップタイムを識別するために時計を確認してください。"
+
+msgid "Cycles"
+msgstr "サイクル"
+
+msgid "Date & Time"
+msgstr "日付 & 時間"
+
+msgid ""
+"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
+"triple of IP address in a list."
+msgstr "スキャンするIPアドレスの範囲を定義してください。（XXX.XXX.XXX.xxx リスト内のIPアドレスの最後の3つの部分）"
+
+msgid "Define the network traffic in kB/s"
+msgstr "ネットワークトラフィックを kB/s で設定"
+
+msgid "Enable"
+msgstr "有効"
+
+msgid "End"
+msgstr "終了"
+
+msgid ""
+"Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
+"means a loadaverage of 2.20"
+msgstr "例: 50 は ロードアベレージの0.50という意味です。 8 はロードアベレージの0.08という意味です。 220 はロードアベレージの2.20という意味です。"
+
+msgid "Expert Settings"
+msgstr "エキスパート設定"
+
+msgid "Extra options"
+msgstr "特別なオプション"
+
+msgid "Fake"
+msgstr "フェイク"
+
+msgid "Fake/Test mode."
+msgstr "フェイク/テストモード"
+
+msgid "Forced Uptime"
+msgstr "強制アップタイム"
+
+msgid "General settings"
+msgstr "一般設定"
+
+msgid "IP-Range"
+msgstr "IPの範囲"
+
+msgid ""
+"If the load average of the server is above this value, then no shutdown."
+msgstr "サーバのロードアベレージがこの値より上である場合、シャットダウンしません。"
+
+msgid "List of Ports"
+msgstr "ポートのリスト"
+
+msgid "Log"
+msgstr "ログ"
+
+msgid "Log to Syslog"
+msgstr "ログをSyslogへ"
+
+msgid "Network Socket Supervision Configuration"
+msgstr "ネットワークソケット管理の設定"
+
+msgid "Numbers of seconds between each cycle."
+msgstr "各サイクル間の秒数。"
+
+msgid "Please check the"
+msgstr "確認してください"
+
+msgid "Please make sure to leave 1 and 255 out of the list!"
+msgstr "リストから1と255を残していることを確認してください！"
+
+msgid "README"
+msgstr "README"
+
+msgid ""
+"Set the number of cycles with no result (no PC online, etc) before shutdown."
+msgstr "シャットダウン前の無応答（PCがオフラインなど）のサイクル数を設定します。"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Sleep"
+msgstr "スリープ"
+
+msgid "Socket number to check for activity."
+msgstr "アクティビティをチェックするソケット番号。"
+
+msgid "Sockets"
+msgstr "ソケット"
+
+msgid "Syslog Configuration"
+msgstr "Syslog設定"
+
+msgid "The following scheme is mandatory"
+msgstr "以下のスキームは必須です"
+
+msgid "Type"
+msgstr "タイプ"
+
+msgid "Verbose"
+msgstr "冗長"
+
+msgid "Verbose mode."
+msgstr "冗長モード"
+
+msgid "Write log informations to system logs."
+msgstr "システムログへログ情報を書き込みます。"
+
+msgid "all list entries are seperated by comma ','"
+msgstr "すべてのリストエントリをカンマ ','で区切ります"
+
+msgid "define a single ip : ip"
+msgstr "シングルIPを定義 : ip"
+
+msgid "define an ip range : start..end -> the two dots are mandatory"
+msgstr "IP範囲を定義 : 開始..終了 -> 2つのドットは必須です"
+
+msgid "for more details."
+msgstr "詳細。"
