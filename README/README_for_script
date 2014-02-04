@@ -34,7 +34,7 @@ Autoshutdown, later called "ASD" does some checks on the network or on the serve
 
 A "cycle" is a set of checks. Between the cycles ASD goes into sleep for x seconds.
 
-These checks are:
+The checks have a different priority from 0 = high to 5 = low:
 0: Stayup-range: UPHOURS (is the server in the timerange, where it should stay online)
 1. IPs
 2. Ports (Network sockets)
@@ -42,13 +42,12 @@ These checks are:
 4. processes, daemons
 5. ASD-plugins
 
-The checks have a different priority from 0 = high to 5 = low
-If a check of a higher priority gives back a positive result, then no check
-with a lower priority is executed. The script reduces the cycles by one and goes to sleep for x seconds
-until the next cycle. If all cycles are 0 (zero) the server is shutting down.
+If a check with a higher priority gives back a positive result, then no check
+with a lower priority is executed. The script reduces the cycles by one and goes to 
+sleep for x seconds until the next cycle. If all cycles are 0 (zero) the server
+is shutting down.
 
 Let's have a look at a example:
-Example 1:
 --- autoshutdown.conf ---
 CYCLES=4
 SLEEP=180
@@ -65,20 +64,28 @@ VERBOSE="false"
 FAKE="false"
 TEMPPROCNAMES="-"
 
-It is 10:00 am. ASD does the first check with prio 0 => UPHOURS
-They are set to "6..20" which means 6am to 8pm. No further checks needed, the script sleeps until 8pm
+It is 10:00 am. ASD does the first check:
 
-It is 8:10 pm now and ASD does further checks:
-Prio 0: UPHOURS => negative, next check
+Prio 0: UPHOURS 
+They are set to "6..20" which means 06:00 - 08:00 (6am to 8pm). No further checks needed, the script sleeps until 8pm.
+
+It is 20:01 (8:01pm) now and ASD does further checks:
+
+Prio 0: UPHOURS
+The server is not in the (forced) stayup-range (6..20) => negative, next check
+
 Prio 1: IPs
 Let's assume, that only IP 137 is online, so the check is negative, next check
+
 Prio 2: Ports
 Let's assume, that there is no connection on any port to watch. The check is negative, next check
+
 Prio 3: UL/DL-Rate
 Maybe a DL is running with 238 kB/s over the last minute. The check is positive, no more checks needed.
 ASD goes to sleep for x seconds.
+
 Prio 4 and 5:
-not needed, because a check woth a higher priority is positive
+not needed, because a check with a higher priority is positive
 
 
 Expert Settings in autoshutdown.conf: (set it in "Expert settings" in the OMV-GUI)
