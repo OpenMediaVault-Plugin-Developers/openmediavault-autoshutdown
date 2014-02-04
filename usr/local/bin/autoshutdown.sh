@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.5.0.0"         # script version information
+VERSION="0.5.0.1"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -469,14 +469,17 @@ _check_net_status()
 			if $DEBUG ; then _log "DEBUG: _check_net_status(): netstat -n | grep ESTABLISHED | grep ${WORD}"; fi
 			LINES=$(netstat -n | grep ESTABLISHED | grep ${WORD})
 		else
-			if $DEBUG ; then _log "DEBUG: _check_net_status(): netstat -n | egrep "ESTABLISHED|${NETSTATWORD}" | grep ${WORD}"; fi
+			if $DEBUG ; then _log "DEBUG: _check_net_status(): netstat -n | egrep \"ESTABLISHED|${NETSTATWORD}\" | grep ${WORD}"; fi
 			LINES=$(netstat -n | egrep "ESTABLISHED|${NETSTATWORD}" | grep ${WORD})
 		fi
 
 		if $DEBUG ; then _log "DEBUG: _check_net_status(): Result: $LINES"; fi # changed LINE in LINES
 
 		#if $DEBUG ; then _log "DEBUG: _check_net_status(): echo ${LINES} | grep -c ${WORD2}"; fi
-		RESULT=$(echo ${LINES} | grep -c ${WORD})
+		
+		# had to add [[:space:]] because without it, this command also wrong values are found:
+		# searching for port 445 also finds port 44547
+		RESULT=$(echo ${LINES} | egrep -c "${WORD}[[:space:]]") 
 
 		let NUMPROC=$NUMPROC+$RESULT
 
