@@ -515,7 +515,7 @@ _check_net_status()
 
 	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -gt 0 ]
 	if [ $NUMPROC -gt 0 ]; then
-		if [ $(/usr/bin/smbstatus | grep -i "no locked" | wc -l) != "1" ]; then
+		if [ $(/usr/bin/smbstatus | egrep -i "no locked|sessionid.tdb not initialised" | wc -l) != "1" ]; then
 			_log "INFO: Samba connected (reported by smbstatus) -> no shutdown"
 			let NUMPROC++
 		fi
