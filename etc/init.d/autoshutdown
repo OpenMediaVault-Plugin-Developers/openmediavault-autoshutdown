@@ -69,9 +69,9 @@ do_restart() {
 	echo "Restarting $NAME: $DAEMON"
 	logger -t /etc/init.d/autoshutdown "$NAME restarting ..."
 	do_stop
-	if [ $? -eq 0 ]; then
+	#if [ $? -eq 0 ]; then
 		do_start
-	fi
+	#fi
 }
 
 case "$1" in

@@ -93,3 +93,6 @@ Changelog:
 2013/Oct/05		0.5.0.0	: small bug in new FORCE_NIC-function
 						: option to disable the IP-check with RANGE="-"
 						: version-number is now 0.5.0.0 to match the OMV-version
+						
+2014/Feb04		0.5.0.1	: small fixes
+						: updated the README

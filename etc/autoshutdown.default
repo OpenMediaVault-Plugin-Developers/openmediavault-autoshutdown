@@ -98,9 +98,9 @@ FAKE="false"
 ####### EXPERT SETTINGS ##########
 ##################################
 
-
-
-# You should know, what you are doing here
+# You should know, what you are doing
+# Add these settings to the "Expert Settings" textfield in the OMV-GUI
+# make sure # isn't the first character in the line if you add it
 
 # ----------------------------------------------------------------------------------------
 
