@@ -15,6 +15,8 @@ install:
 	dh_install
 	chmod +x $(CURDIR)/debian/openmediavault-autoshutdown/usr/share/openmediavault/mkconf/autoshutdown
 	chmod +x $(CURDIR)/debian/openmediavault-autoshutdown/etc/init.d/autoshutdown
+	chmod +x $(CURDIR)/debian/openmediavault-autoshutdown/etc/pm/power.d/autoshutdown-restart
+	chmod +x $(CURDIR)/debian/openmediavault-autoshutdown/etc/pm/sleep.d/autoshutdown-restart
 
 binary-indep: install omv_clean_scm
 	dh_testdir

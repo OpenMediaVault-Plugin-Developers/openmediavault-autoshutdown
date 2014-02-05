@@ -1,3 +1,10 @@
+openmediavault-autoshutdown (0.5.17) stable; urgency=low
+
+  * Make scripts executable
+  * Add pm-utils dependency
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 05 Feb 2014 11:47:27 -0500
+
 openmediavault-autoshutdown (0.5.16) stable; urgency=low
 
   * Update documentation
