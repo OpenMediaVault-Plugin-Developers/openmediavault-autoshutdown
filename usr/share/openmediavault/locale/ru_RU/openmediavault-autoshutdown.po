@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-04 14:26-0600\n"
-"PO-Revision-Date: 2013-11-20 09:19+0000\n"
+"POT-Creation-Date: 2014-02-06 10:04-0600\n"
+"PO-Revision-Date: 2014-02-06 16:05+0000\n"
 "Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,9 @@ msgstr ""
 msgid "General settings"
 msgstr ""
 
+msgid "Hibernate"
+msgstr ""
+
 msgid "IP-Range"
 msgstr ""
 
@@ -114,6 +117,12 @@ msgstr ""
 msgid "Settings"
 msgstr "Настройки"
 
+msgid "Shutdown"
+msgstr ""
+
+msgid "Shutdown Command"
+msgstr ""
+
 msgid "Sleep"
 msgstr ""
 
@@ -121,6 +130,9 @@ msgid "Socket number to check for activity."
 msgstr ""
 
 msgid "Sockets"
+msgstr ""
+
+msgid "Suspend"
 msgstr ""
 
 msgid "Syslog Configuration"

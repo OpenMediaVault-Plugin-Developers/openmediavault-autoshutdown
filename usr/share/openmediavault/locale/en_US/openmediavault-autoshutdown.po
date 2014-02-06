@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-04 14:26-0600\n"
-"PO-Revision-Date: 2013-11-20 09:19+0000\n"
+"POT-Creation-Date: 2014-02-06 10:04-0600\n"
+"PO-Revision-Date: 2014-02-06 16:05+0000\n"
 "Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -75,6 +75,9 @@ msgstr "Forced Uptime"
 msgid "General settings"
 msgstr "General settings"
 
+msgid "Hibernate"
+msgstr "Hibernate"
+
 msgid "IP-Range"
 msgstr "IP-Range"
 
@@ -113,6 +116,12 @@ msgstr "Set the number of cycles with no result (no PC online, etc) before shutd
 msgid "Settings"
 msgstr "Settings"
 
+msgid "Shutdown"
+msgstr "Shutdown"
+
+msgid "Shutdown Command"
+msgstr "Shutdown Command"
+
 msgid "Sleep"
 msgstr "Sleep"
 
@@ -121,6 +130,9 @@ msgstr "Socket number to check for activity."
 
 msgid "Sockets"
 msgstr "Sockets"
+
+msgid "Suspend"
+msgstr "Suspend"
 
 msgid "Syslog Configuration"
 msgstr "Syslog Configuration"

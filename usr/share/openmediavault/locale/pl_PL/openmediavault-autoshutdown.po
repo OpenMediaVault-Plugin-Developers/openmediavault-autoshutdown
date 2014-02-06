@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-04 14:26-0600\n"
-"PO-Revision-Date: 2014-01-30 09:25+0000\n"
-"Last-Translator: Cyryl Sochacki <cyrylsochacki@gmail.com>\n"
+"POT-Creation-Date: 2014-02-06 10:04-0600\n"
+"PO-Revision-Date: 2014-02-06 16:05+0000\n"
+"Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/pl_PL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,9 @@ msgstr "Wymuszony uptime"
 msgid "General settings"
 msgstr "Ustawienia główne"
 
+msgid "Hibernate"
+msgstr ""
+
 msgid "IP-Range"
 msgstr "Zakres IP"
 
@@ -115,6 +118,12 @@ msgstr "Ustaw liczbę cykli bez powodzenia (komputer nie jest online, itp) przed
 msgid "Settings"
 msgstr "Ustawienia"
 
+msgid "Shutdown"
+msgstr ""
+
+msgid "Shutdown Command"
+msgstr ""
+
 msgid "Sleep"
 msgstr "Uśpij"
 
@@ -123,6 +132,9 @@ msgstr "Porty na których sprawdzamy aktywność."
 
 msgid "Sockets"
 msgstr "Gniazda"
+
+msgid "Suspend"
+msgstr ""
 
 msgid "Syslog Configuration"
 msgstr "Konfiguracja Syslog-a"
