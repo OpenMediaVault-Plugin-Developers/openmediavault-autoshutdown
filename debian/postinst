@@ -87,7 +87,7 @@ case "$1" in
 		object="${object}<cycles>6</cycles>"
 		object="${object}<sleep>180</sleep>"
 		object="${object}<range>2..254</range>"
-        object="${object}<shutdowncommand>2..254</shutdowncommand>"
+        object="${object}<shutdowncommand>0</shutdowncommand>"
 		object="${object}<checkclockactive>0</checkclockactive>"
 		object="${object}<uphours-begin>6</uphours-begin>"
 		object="${object}<uphours-end>20</uphours-end>"
