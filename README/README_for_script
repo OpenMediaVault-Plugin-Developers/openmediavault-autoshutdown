@@ -119,18 +119,6 @@ for german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n' on the CLI
 
 now take the word under "State" -> "VERBUNDEN" and set it for NETSTATWORD
 
-SHUTDOWNCOMMAND
-If you don't want to shutdown your PC, but go in hibernate/suspend: Define the command here
-If nothing is defined, it shuts down with "shutdown -h now"
-
-# SHUTDOWNCOMMAND="pm-hibernate" => puts the PC in hibernate-mode
-# SHUTDOWNCOMMAND="pm-suspend" => puts the PC in suspend-mode
-# SHUTDOWNCOMMAND="shutdown -h +5" => shuts the PC down 5 min after shutdown-command
-For more information and how to set up hibernate and suspend, look here:
-http://wiki.debian.org/Suspend
-http://wiki.debian.org/Hibernation
-
-
 PINGLIST
 With this, you can define a path to a file, which contains list of IPs that should be scanned
 only one IP per line is allowed - Format: mmm.nnn.ooo.ppp
@@ -178,3 +166,15 @@ Please have a look at the two example files in /etc/autoshutdown.d
 
 FORCE_NIC
 e.g. FORCE_NIC="eth1" forces autoshutdown to look for a IP first in the given device, after that all others are checked.
+
+### Obsolete ###
+SHUTDOWNCOMMAND (you can set it in the OMV-GUI)
+If you don't want to shutdown your PC, but go in hibernate/suspend: Define the command here
+If nothing is defined, it shuts down with "shutdown -h now"
+
+# SHUTDOWNCOMMAND="pm-hibernate" => puts the PC in hibernate-mode
+# SHUTDOWNCOMMAND="pm-suspend" => puts the PC in suspend-mode
+# SHUTDOWNCOMMAND="shutdown -h +5" => shuts the PC down 5 min after shutdown-command
+For more information and how to set up hibernate and suspend, look here:
+http://wiki.debian.org/Suspend
+http://wiki.debian.org/Hibernation

@@ -24,14 +24,14 @@ RESULT=0               # declare reusable RESULT variable to check function retu
 LPREPEAT=5         	# number of test cycles for finding and active LOADPROCNAMES-Process (default=5)
 TPREPEAT=5         	# number of test cycles for finding and active TEMPPROCNAMES-Process (default=5)
 
-LOGGER="/usr/bin/logger"  	 # path and name of logger (default="/usr/bin/logger")
+LOGGER="/usr/bin/logger"  	# path and name of logger (default="/usr/bin/logger")
 FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 
 							# for a separate Log:
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.5.0.1"         # script version information
+VERSION="0.5.0.2"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -157,6 +157,7 @@ _shutdown()
    # defined in CYCLES shutdown & power off.
 
 	if [ -z "$SHUTDOWNCOMMAND" ]; then
+		_log "INFO: No shutdown command set: setting it to 'shutdown -h now'"
 		SHUTDOWNCOMMAND="shutdown -h now"
 	fi
 
@@ -871,19 +872,34 @@ _check_config() {
 	# SHUTDOWNCOMMAND - check acpi power states with pm-is-supported
 	# if SHUTDOWNCOMMAND is set
 	# Thx to http://wiki.ubuntuusers.de/pm-utils
+	PM_HIBERNATE=false
 	if [ ! -z $SHUTDOWNCOMMAND ]; then
+		_log "INFO: SHUTDOWNCOMMAND is set to '$SHUTDOWNCOMMAND'"
 		# check, if pm-utils is installed
 		if ! which pm-is-supported 1>/dev/null; then
 			_log "WARN: SHUTDOWNCOMMAND is set, but pm-is-supported not found"
-			_log "WARN: Please install the package pm-utils!"
+			_log "WARN: Please install the package pm-utils with 'apt-get install pm-utils'!"
 			_log "WARN: Unset SHUTDOWNCOMMAND -> do normal shutdown"
 			unset $SHUTDOWNCOMMAND
 		else
 			# check POWER MANAGEMENT MODES
 			_log "INFO: Your Kernel supports the following modes from pm-utils:"
-			pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)"
-			pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)"
+			pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)" && PM_SUSPEND=true
+			pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)" && PM_HIBERNATE=true
 			pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)"
+
+			# check, if pm-suspend is supported
+			if [ "$SHUTDOWNCOMMAND" = "pm-supend" -a ! $PM_SUSPEND ]; then
+				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
+				_log "WARN: Setting it to 'shutdown -h now'"
+				SHUTDOWNCOMMAND="shutdown -h now"
+			fi
+			# check, if pm-hibernate is supported
+			if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! $PM_HIBERNATE ]; then
+				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
+				_log "WARN: Setting it to 'shutdown -h now'"
+				SHUTDOWNCOMMAND="shutdown -h now"
+			fi
 		fi
 	fi
 
