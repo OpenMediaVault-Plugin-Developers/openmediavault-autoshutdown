@@ -3,20 +3,20 @@
 # @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @copyright 2009-2013 Volker Theile
-# @copyright 2013 OpenMediaVault Plugin Developers
+# @copyright 2013-2014 OpenMediaVault Plugin Developers
 #
-# This file is free software: you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # any later version.
 #
-# This file is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this file. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set -e
 
@@ -32,6 +32,9 @@ xmlstarlet sel -t \
         -v "concat('CYCLES=',cycles)" -n \
         -v "concat('SLEEP=',sleep)" -n \
         -o 'RANGE="' -v "range" -o '"' -n\
+        -i "shutdowncommand = 0" -o "SHUTDOWNCOMMAND=\"shutdown -h now\"" -n -b \
+        -i "shutdowncommand = 1" -o "SHUTDOWNCOMMAND=\"pm-hibernate\"" -n -b \
+        -i "shutdowncommand = 2" -o "SHUTDOWNCOMMAND=\"pm-suspend\"" -n -b \
         -i "checkclockactive = 0" -o "CHECKCLOCKACTIVE=\"false\"" -n -b \
         -i "checkclockactive = 1" -o "CHECKCLOCKACTIVE=\"true\"" -n -b \
         -o 'UPHOURS="' -v "uphours-begin" -o '..' -v "uphours-end" -o '"' -n \

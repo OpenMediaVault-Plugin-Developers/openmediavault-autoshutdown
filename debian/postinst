@@ -1,25 +1,23 @@
 #!/bin/bash
 #
-# This file is part of OpenMediaVault-autoshutdown.
-#
 # @license	http://www.gnu.org/licenses/gpl.html GPL Version 3
-# @author	Aaron Murray <aaron@omv-extras.org>
+# @author	OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @author	Marcel Beck <marcel.beck@mbeck.org>
-# @copyright Copyright (c) 2013 Aaron Murray
+# @copyright Copyright (c) 2013-2014 OpenMediaVault Plugin Developers
 # @copyright Copyright (c) 2012 Marcel Beck
 #
-# OpenMediaVault is free software: you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # any later version.
 #
-# OpenMediaVault is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 set -e
 
@@ -34,7 +32,7 @@ case "$1" in
 		# expected by OpenMediaVault.
 		########################################################################
 		/bin/chmod +x /etc/init.d/autoshutdown
-		
+
 		update-rc.d autoshutdown defaults
 		if [ -z "$2" ]; then
 			echo "Updating init script links and actions"
@@ -61,6 +59,7 @@ case "$1" in
 		#				<cycles>6</cycles>
 		#				<sleep>180</sleep>
 		#				<range>2..254</range>
+        #				<shutdowncommand>2..254</shutdowncommand>
 		#				<checkclockactive>0</checkclockactive>
 		#				<uphours-begin>6</uphours-begin>
 		#				<uphours-end>20</uphours-end>
@@ -88,6 +87,7 @@ case "$1" in
 		object="${object}<cycles>6</cycles>"
 		object="${object}<sleep>180</sleep>"
 		object="${object}<range>2..254</range>"
+        object="${object}<shutdowncommand>2..254</shutdowncommand>"
 		object="${object}<checkclockactive>0</checkclockactive>"
 		object="${object}<uphours-begin>6</uphours-begin>"
 		object="${object}<uphours-end>20</uphours-end>"
@@ -113,7 +113,5 @@ case "$1" in
 		exit 1
 	;;
 esac
-
-#DEBHELPER#
 
 exit 0

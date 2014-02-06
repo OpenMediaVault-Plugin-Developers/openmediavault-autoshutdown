@@ -1,7 +1,10 @@
 /**
- *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
- * Copyright (C) 2013-2014 OpenMediaVault Plugin Developers
+ * @author    Volker Theile <volker.theile@openmediavault.org>
+ * @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+ * @copyright Copyright (c) 2009-2013 Volker Theile
+ * @copyright Copyright (c) 2013-2014 OpenMediaVault Plugin Developers
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -105,6 +108,25 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                             _("all list entries are seperated by comma ','") + "<br />" +
                             _("Please make sure to leave 1 and 255 out of the list!")
                 }]
+            },{
+                xtype      : "combo",
+                name       : "shutdowncommand",
+                fieldLabel : _("Shutdown Command"),
+                mode       : "local",
+                store      : new Ext.data.SimpleStore({
+                    fields  : [ "value", "text" ],
+                    data    : [
+                        [ 0, _("Shutdown") ],
+                        [ 1, _("Hibernate") ],
+                        [ 2, _("Suspend") ]
+                    ]
+                }),
+                displayField  : "text",
+                valueField    : "value",
+                allowBlank    : false,
+                editable      : false,
+                triggerAction : "all",
+                value         : 0
             }]
         },{
             xtype         : "fieldset",

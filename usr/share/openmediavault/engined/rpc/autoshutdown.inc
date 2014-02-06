@@ -1,23 +1,22 @@
 <?php
 /**
- *
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Marcel Beck <marcel.beck@mbeck.org>
  * @copyright (c) 2012 Marcel Beck
- * @copyright (c) 2013 OpenMediaVault Plugin Developers 
+ * @copyright (c) 2013-2014 OpenMediaVault Plugin Developers
  *
- * OpenMediaVault is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
- * OpenMediaVault is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this file. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once("openmediavault/object.inc");
 require_once("openmediavault/config.inc");
@@ -45,14 +44,11 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
     /**
      * Get configuration object.
      */
-    function getSettings($params, $context)
-    {
+    function getSettings($params, $context) {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
-              "role" => OMV_ROLE_ADMINISTRATOR
-          ));
+        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
 
         // Get configuration object
         $xpath  = "//services/autoshutdown";
@@ -64,6 +60,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
         $object['enable']           = boolval($object['enable']);
         $object['cycles']           = intval($object['cycles']);
         $object['sleep']            = intval($object['sleep']);
+        $object['shutdowncommand']  = intval($object['shutdowncommand']);
 
         $object['checkclockactive'] = boolval($object['checkclockactive']);
         $object['uphours-begin']    = intval($object['uphours-begin']);
@@ -84,14 +81,11 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
     /**
      * Set configuration object.
      */
-    function setSettings($params, $context)
-    {
+    function setSettings($params, $context) {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ));
+        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
 
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, '{
@@ -101,6 +95,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
                 "cycles"           : { "type" : "integer", "minimum" : 1, "maximum" : 999 },
                 "sleep"            : { "type" : "integer", "minimum" : 1, "maximum" : 9999 },
                 "range"            : { "type" : "string" },
+                "shutdowncommand"  : { "type" : "integer", "minimum" : 0, "maximum" : 2 },
                 "checkclockactive" : { "type" : "boolean" },
                 "uphours-begin"    : { "type" : "integer", "minimum" : 0, "maximum" : 23 },
                 "uphours-end"      : { "type" : "integer", "minimum" : 0, "maximum" : 23 },
@@ -128,6 +123,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
             "cycles"           => intval($params['cycles']),
             "sleep"            => intval($params['sleep']),
             "range"            => $params['range'],
+            "shutdowncommand"  => intval($params['shutdowncommand']),
             "checkclockactive" => array_boolval($params, 'checkclockactive'),
             "uphours-begin"    => intval($params['uphours-begin']),
             "uphours-end"      => intval($params['uphours-end']),
