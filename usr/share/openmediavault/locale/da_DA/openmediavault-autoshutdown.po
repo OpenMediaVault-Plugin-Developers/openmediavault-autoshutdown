@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Stefan Thrane Overby <stoverby@gmail.com>, 2013
+# Stefan Thrane Overby <stoverby@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-02-06 10:04-0600\n"
-"PO-Revision-Date: 2014-02-06 16:05+0000\n"
-"Last-Translator: ryecoaaron <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2014-02-07 10:17+0000\n"
+"Last-Translator: Stefan Thrane Overby <stoverby@gmail.com>\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgid "General settings"
 msgstr "Generelle indstillinger"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Dvale"
 
 msgid "IP-Range"
 msgstr "IP-interval"
@@ -118,10 +118,10 @@ msgid "Settings"
 msgstr "Indstillinger"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Luk ned"
 
 msgid "Shutdown Command"
-msgstr ""
+msgstr "Luk ned Kommando"
 
 msgid "Sleep"
 msgstr "Dvale"
@@ -133,7 +133,7 @@ msgid "Sockets"
 msgstr "Sockets"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Udsæt"
 
 msgid "Syslog Configuration"
 msgstr "Syslog Konfiguration"
