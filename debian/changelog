@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (0.5.19) stable; urgency=low
+
+  * Code improvements
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 14 Feb 2014 06:37:27 -0500
+
 openmediavault-autoshutdown (0.5.18) stable; urgency=low
 
   * Add shutdown command

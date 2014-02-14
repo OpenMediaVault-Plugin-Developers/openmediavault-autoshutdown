@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# @license	http://www.gnu.org/licenses/gpl.html GPL Version 3
-# @author	OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-# @author	Marcel Beck <marcel.beck@mbeck.org>
+# @license  http://www.gnu.org/licenses/gpl.html GPL Version 3
+# @author   OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+# @author   Marcel Beck <marcel.beck@mbeck.org>
 # @copyright Copyright (c) 2013-2014 OpenMediaVault Plugin Developers
 # @copyright Copyright (c) 2012 Marcel Beck
 #
@@ -25,93 +25,60 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 case "$1" in
-	configure)
+    configure)
 
-		########################################################################
-		# Set the default settings of the autoshutdown package to those
-		# expected by OpenMediaVault.
-		########################################################################
-		/bin/chmod +x /etc/init.d/autoshutdown
+        ########################################################################
+        # Set the default settings of the autoshutdown package to those
+        # expected by OpenMediaVault.
+        ########################################################################
+        /bin/chmod +x /etc/init.d/autoshutdown
 
-		update-rc.d autoshutdown defaults
-		if [ -z "$2" ]; then
-			echo "Updating init script links and actions"
-			invoke-rc.d --force autoshutdown stop
-			update-rc.d autoshutdown disable &>/dev/null
-		fi
+        update-rc.d autoshutdown defaults
+        if [ -z "$2" ]; then
+            echo "Updating init script links and actions"
+            invoke-rc.d --force autoshutdown stop
+            update-rc.d autoshutdown disable &>/dev/null
+        fi
 
-		if [ ! -f /etc/autoshutdown.conf ];
-		then
-			cp /etc/autoshutdown.default /etc/autoshutdown.conf
-		fi
+        if [ -f /etc/rsyslog.d/autoshutdownlog.conf ];
+        then
+            rm -f /etc/rsyslog.d/autoshutdownlog.conf
+        fi
 
-		if [ -f /etc/rsyslog.d/autoshutdownlog.conf ];
-		then
-			rm -f /etc/rsyslog.d/autoshutdownlog.conf
-		fi
+        if ! omv_config_exists "/config/services/autoshutdown"; then
+            echo "Initialize configuration"
 
-		########################################################################
-		#  Update the configuration.
-		#	<config>
-		#		<services>
-		#			<autoshutdown>
-		#				<enable>0</enable>
-		#				<cycles>6</cycles>
-		#				<sleep>180</sleep>
-		#				<range>2..254</range>
-        #				<shutdowncommand>2..254</shutdowncommand>
-		#				<checkclockactive>0</checkclockactive>
-		#				<uphours-begin>6</uphours-begin>
-		#				<uphours-end>20</uphours-end>
-		#				<nsocketnumbers>21,22,80,139,445,3689,6991,9091,49152</nsocketnumbers>
-		#				<uldlcheck>1</uldlcheck>
-		#				<uldlrate>50</uldlrate>
-		#				<loadaveragecheck>0</loadaveragecheck>
-		#				<loadaverage>40</loadaverage>
-		#				<syslog>1</syslog>
-		#				<verbose>0</verbose>
-		#				<fake>0</fake>
-		#				<extraoptions></extraoptions>
-		#			</autoshutdown>
-		#		</services>
-		#	</config>
-		########################################################################
+            object="<enable>0</enable>"
+            object="${object}<cycles>6</cycles>"
+            object="${object}<sleep>180</sleep>"
+            object="${object}<range>2..254</range>"
+            object="${object}<shutdowncommand>0</shutdowncommand>"
+            object="${object}<checkclockactive>0</checkclockactive>"
+            object="${object}<uphours-begin>6</uphours-begin>"
+            object="${object}<uphours-end>20</uphours-end>"
+            object="${object}<nsocketnumbers>21,22,80,139,445,3689,6991,9091,49152</nsocketnumbers>"
+            object="${object}<uldlcheck>1</uldlcheck>"
+            object="${object}<uldlrate>50</uldlrate>"
+            object="${object}<loadaveragecheck>0</loadaveragecheck>"
+            object="${object}<loadaverage>40</loadaverage>"
+            object="${object}<syslog>1</syslog>"
+            object="${object}<verbose>0</verbose>"
+            object="${object}<fake>0</fake>"
+            object="${object}<extraoptions></extraoptions>"
 
-		# Remove old configuration data
-		omv_config_delete "/config/services/autoshutdown"
-		omv_config_delete "/config/zeroconf/services/autoshutdown"
+            omv_config_add_element "/config/services" "autoshutdown" "${object}" true
+        fi
 
-		echo "Initialize configuration"
+        omv-mkconf autoshutdown
+    ;;
 
-		object="<enable>0</enable>"
-		object="${object}<cycles>6</cycles>"
-		object="${object}<sleep>180</sleep>"
-		object="${object}<range>2..254</range>"
-        object="${object}<shutdowncommand>0</shutdowncommand>"
-		object="${object}<checkclockactive>0</checkclockactive>"
-		object="${object}<uphours-begin>6</uphours-begin>"
-		object="${object}<uphours-end>20</uphours-end>"
-		object="${object}<nsocketnumbers>21,22,80,139,445,3689,6991,9091,49152</nsocketnumbers>"
-		object="${object}<uldlcheck>1</uldlcheck>"
-		object="${object}<uldlrate>50</uldlrate>"
-		object="${object}<loadaveragecheck>0</loadaveragecheck>"
-		object="${object}<loadaverage>40</loadaverage>"
-		object="${object}<syslog>1</syslog>"
-		object="${object}<verbose>0</verbose>"
-		object="${object}<fake>0</fake>"
-		object="${object}<extraoptions></extraoptions>"
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
 
-		omv_config_add_element "/config/services" "autoshutdown" "${object}" true
-
-	;;
-
-	abort-upgrade|abort-remove|abort-deconfigure)
-	;;
-
-	*)
-		echo "postinst called with unknown argument '$1'" >&2
-		exit 1
-	;;
+    *)
+        echo "postinst called with unknown argument '$1'" >&2
+        exit 1
+    ;;
 esac
 
 exit 0
