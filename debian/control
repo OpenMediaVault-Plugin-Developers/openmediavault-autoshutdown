@@ -2,14 +2,13 @@ Source: openmediavault-autoshutdown
 Section: net
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers (plugins@omv-extras.org>
-Build-Depends: debhelper (>> 7)
+Build-Depends: debhelper (>= 9.0.0)
 Standards-Version: 3.9.3
 Homepage: http://omv-extras.org
 
 Package: openmediavault-autoshutdown
 Architecture: all
-Depends: ${misc:Depends}, openmediavault (>= 0.5), openmediavault (<< 0.6),
- fping, pm-utils
+Depends: ${misc:Depends}, openmediavault (>= 0.5.43), fping, pm-utils
 Conflicts: autoshutdown
 Priority: optional
 Description: OpenMediaVault AutoShutdown Plugin
