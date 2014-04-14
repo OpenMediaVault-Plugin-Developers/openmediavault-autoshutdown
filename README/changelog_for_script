@@ -94,5 +94,10 @@ Changelog:
 						: option to disable the IP-check with RANGE="-"
 						: version-number is now 0.5.0.0 to match the OMV-version
 						
-2014/Feb04		0.5.0.1	: small fixes
+2014/Feb/04		0.5.0.1	: small fixes
 						: updated the README
+						
+2014/Apr/14		0.5.9.7	: small fixes
+						: code cleanup
+						: added: check for connected users (on the CLI, users from SSH are already covered)
+						: changed: 'netstat' with 'ss' to make make sure it gives the right output if it is not run under "root"

@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.5.0.2"         # script version information
+VERSION="0.5.9.7"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -186,6 +186,10 @@ _shutdown()
 	# sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script and give the right log-message
 	# if we exit here immediately, there are errors in the log
 	sleep 5m
+	# we need this just for debugging - the system should be shutdown here
+	logger -s -t "$USER - : autoshutdown [$$]" "INFO: 5 minutes are over"
+	sleep 5m
+	logger -s -t "$USER - : autoshutdown [$$]" "INFO: another 5 minutes are over"
 	exit 0
 	}
 
@@ -458,29 +462,19 @@ _check_net_status()
 	# check for each given socket number in NSOCKETNUMBERS if it is currently stated active in "netstat"
 	for NSOCKET in ${NSOCKETNUMBERS//,/ } ; do
 		LP=0
-		WORD="${CLASS[$NICNR_NETSTATUS]}.${SERVERIP[$NICNR_NETSTATUS]}:$NSOCKET"
+		IPWORD="${CLASS[$NICNR_NETSTATUS]}.${SERVERIP[$NICNR_NETSTATUS]}:$NSOCKET"
 
-		if $DEBUG; then
-			_log "DEBUG: The following test for connections can fail, if 'autoshutdown' is running under the wrong user and NETSTATWORD not set in the config."
-			_log "DEBUG: See 'readme' for further information about that"
-		fi
+		if $DEBUG ; then _log "DEBUG: _check_net_status(): ss -n | grep ESTAB | grep ${IPWORD}"; fi
 
-		# NETSTATWORD is not set in autoshutdown.conf (only needed for CLI-testing the script
-		if [ -z $NETSTATWORD ]; then
-			if $DEBUG ; then _log "DEBUG: _check_net_status(): netstat -n | grep ESTABLISHED | grep ${WORD}"; fi
-			LINES=$(netstat -n | grep ESTABLISHED | grep ${WORD})
-		else
-			if $DEBUG ; then _log "DEBUG: _check_net_status(): netstat -n | egrep \"ESTABLISHED|${NETSTATWORD}\" | grep ${WORD}"; fi
-			LINES=$(netstat -n | egrep "ESTABLISHED|${NETSTATWORD}" | grep ${WORD})
-		fi
+		LINES=$(ss -n | grep ESTAB | grep ${IPWORD})
 
 		if $DEBUG ; then _log "DEBUG: _check_net_status(): Result: $LINES"; fi # changed LINE in LINES
 
 		#if $DEBUG ; then _log "DEBUG: _check_net_status(): echo ${LINES} | grep -c ${WORD2}"; fi
-		
+
 		# had to add [[:space:]] because without it, this command also wrong values are found:
 		# searching for port 445 also finds port 44547
-		RESULT=$(echo ${LINES} | egrep -c "${WORD}[[:space:]]") 
+		RESULT=$(echo ${LINES} | egrep -c "${IPWORD}[[:space:]]") 
 
 		let NUMPROC=$NUMPROC+$RESULT
 
@@ -514,15 +508,25 @@ _check_net_status()
 
 	done   # > NSOCKET in ${NSOCKETNAMES//,/ } ; do
 
-	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -gt 0 ]
-	if [ $NUMPROC -gt 0 ]; then
+	# Extra Check for connected users on the CLI if other processes are negative -> [ $NUMPROC -eq 0 ]
+	if [ $NUMPROC -eq 0 ]; then
+		USERSCONNECTED="$(w -h)"
+		if [ $(echo "$USERSCONNECTED" | wc -l) -gt 0 ]; then
+			_log "INFO: There is a user connected -> no shutdown"
+			_log "INFO: It is '$(echo "$USERCONNECTED" | awk '{print $1}')' from '$(echo "$USERCONNECTED" | awk '{print $3}')'"
+			let NUMPROC++
+		fi
+	fi
+	
+	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -eq 0 ]
+	if [ $NUMPROC -eq 0 ]; then
 		if [ $(/usr/bin/smbstatus | egrep -i "no locked|sessionid.tdb not initialised" | wc -l) != "1" ]; then
 			_log "INFO: Samba connected (reported by smbstatus) -> no shutdown"
 			let NUMPROC++
 		fi
 	fi
 
-	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active sockets in $NSOCKETNUMBERS" ; }; fi
+	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active sockets from Ports: $NSOCKETNUMBERS" ; }; fi
 
 	if $DEBUG ; then _log "DEBUG: _check_net_status(): $NUMPROC socket(s) active on ${NIC[$NICNR_NETSTATUS]}."; fi
 
@@ -765,21 +769,6 @@ _check_config() {
 			UPHOURS="6..20"; }
 	fi
 
-	# Netstatword
-	if [ -z "$NETSTATWORD" ]; then
-		if $DEBUG; then
-			_log "INFO: NETSTATWORD not set in the config. The check for connections, like SSH (Port 22) will not work on the CLI until you set NETSTATWORD"
-			_log "INFO: If you run this sript at systemstart with init.d it will work as expected"
-			_log "INFO: Read the README for further Infos"
-		fi
-	else
-		[[ "$NETSTATWORD" =~ ^([A-Z]{1,})$ ]] || {
-			_log "WARN: Invalid parameter list format: NETSTATWORD [A-Z]"
-			_log "WARN: You set it to '$NETSTATWORD', which is not a correct syntax, only UPPERCASE is allowed!"
-			_log "WARN: Unsetting NETSTATWORD"
-			unset NETSTATWORD; }
-	fi
-
 	# Had to define REGEX here, because the script doesn't work from systemstart, but from the CLI (WTF?)
 	REGEX="^([A-Za-z0-9_\.-]{1,})+(,[A-Za-z0-9_\.-]{1,})*$"
 	if  [ "$LOADPROCNAMES" = "-" ]; then
@@ -873,7 +862,7 @@ _check_config() {
 	# if SHUTDOWNCOMMAND is set
 	# Thx to http://wiki.ubuntuusers.de/pm-utils
 	PM_HIBERNATE=false
-	if [ ! -z $SHUTDOWNCOMMAND ]; then
+	if [ ! -z "$SHUTDOWNCOMMAND" ]; then
 		_log "INFO: SHUTDOWNCOMMAND is set to '$SHUTDOWNCOMMAND'"
 		# check, if pm-utils is installed
 		if ! which pm-is-supported 1>/dev/null; then
