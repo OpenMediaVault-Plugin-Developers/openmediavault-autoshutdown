@@ -1,3 +1,10 @@
+openmediavault-autoshutdown (0.6.1) stable; urgency=low
+
+  * Add enable to config file
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 14 Jun 2014 10:33:47 -0500
+
 openmediavault-autoshutdown (0.6.0) stable; urgency=low
 
   * Add kralizec compatibility
