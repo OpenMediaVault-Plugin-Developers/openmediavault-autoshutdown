@@ -49,6 +49,7 @@ is shutting down.
 
 Let's have a look at a example:
 --- autoshutdown.conf ---
+ENABLE=true
 CYCLES=4
 SLEEP=180
 RANGE="5..100"

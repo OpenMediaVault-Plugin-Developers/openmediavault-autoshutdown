@@ -3,6 +3,14 @@
 ##################################################
 #### Script Common Configuration
 
+# if the autoshutdown-script should be enabled or not
+# default = "true"
+#
+# note:
+# enabled/disabled does start the script on OMV, but then it checks, if the script
+# is enabled or disabled. If it is "disabled", then the script stops with a log-message
+ENABLE="true"
+
 CYCLES=6
 	# Set the number of cycles with no result (no PC online etc.) before shutdown. (default=6)
 	# allowed is 1 - 999

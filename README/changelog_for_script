@@ -101,3 +101,6 @@ Changelog:
 						: code cleanup
 						: added: check for connected users (on the CLI, users from SSH are already covered)
 						: changed: 'netstat' with 'ss' to make make sure it gives the right output if it is not run under "root"
+						
+2014/Jun/14		0.5.9.10: small fixes
+						: added enable/disable switch

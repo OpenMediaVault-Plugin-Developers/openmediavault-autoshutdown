@@ -1,5 +1,14 @@
 #!/bin/bash
-logger -s -t "$USER - : autoshutdown [$$]" "INFO: autoshutdown-script restart from /etc/pm/sleep.d/autoshutdown-restart"
-/etc/init.d/autoshutdown restart
-
-exit 0
+case "$1" in
+        hibernate|suspend)
+                logger -s -t "$USER autoshutdown [$$]" "hibernate/suspend: autoshutdown-script stop from /etc/pm/sleep.d/autoshutdown-restart"
+                /etc/init.d/autoshutdown stop
+                ;;
+        thaw|resume)
+                logger -s -t "$USER autoshutdown [$$]" "thaw/resume: autoshutdown-script restart from /etc/pm/sleep.d/autoshutdown-restart"
+                /etc/init.d/autoshutdown restart
+                ;;
+        *)
+				logger -s -t "$USER autoshutdown [$$]" "other: autoshutdown-script call from /etc/pm/sleep.d/autoshutdown-restart"
+                ;;
+esac

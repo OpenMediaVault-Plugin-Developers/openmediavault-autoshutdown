@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.5.9.7"         # script version information
+VERSION="0.5.9.10"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -182,7 +182,7 @@ _shutdown()
 	_log "INFO:   "
 
 	# write everything to disk/stick and shutdown, hibernate, $whatever is configured
-	if sync; then eval "$SHUTDOWNCOMMAND"; fi
+	if sync; then eval "$SHUTDOWNCOMMAND" && exit 0; fi
 	# sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script and give the right log-message
 	# if we exit here immediately, there are errors in the log
 	sleep 5m
@@ -511,9 +511,17 @@ _check_net_status()
 	# Extra Check for connected users on the CLI if other processes are negative -> [ $NUMPROC -eq 0 ]
 	if [ $NUMPROC -eq 0 ]; then
 		USERSCONNECTED="$(w -h)"
+		
+		if $DEBUG; then _log "DEBUG: _check_net_status(): USERSCONNECTED: '$USERSCONNECTED'"; fi
+		
 		if [ $(echo "$USERSCONNECTED" | wc -l) -gt 0 ]; then
-			_log "INFO: There is a user connected -> no shutdown"
-			_log "INFO: It is '$(echo "$USERCONNECTED" | awk '{print $1}')' from '$(echo "$USERCONNECTED" | awk '{print $3}')'"
+			_log "INFO: There is a user (locally) connected -> no shutdown"
+			ASD_CONNECTED_USER=$(echo "$USERSCONNECTED" | awk '{print $1}')
+			ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $3}')
+			# Check, if it is a local user
+			[[ "$ASD_CONNECTED_FROM" =~ ^.*:.*$ ]] && ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $2}')
+			
+			_log "INFO: It is '$ASD_CONNECTED_USER' on/from '$ASD_CONNECTED_FROM'"
 			let NUMPROC++
 		fi
 	fi
@@ -526,7 +534,7 @@ _check_net_status()
 		fi
 	fi
 
-	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active sockets from Ports: $NSOCKETNUMBERS" ; }; fi
+	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active socket(s) from Port(s): $NSOCKETNUMBERS" ; }; fi
 
 	if $DEBUG ; then _log "DEBUG: _check_net_status(): $NUMPROC socket(s) active on ${NIC[$NICNR_NETSTATUS]}."; fi
 
@@ -733,6 +741,10 @@ _check_config() {
 	_log "INFO: ------------------------------------------------------"
 	_log "INFO: Checking config"
 
+	[[ "$ENABLE" = "true" || "$ENABLE" = "false" ]] || { _log "WARN: ENABLE not set properly. It has to be 'true' or 'false'"
+			_log "WARN: Set ENABLE to false -> exiting here ..."
+			exit 0; }
+
 	if [ "$FAKE" = "true" ]; then
 		VERBOSE="true"; DEBUG="true"
 		_log "INFO: Fake-Mode in on"
@@ -878,13 +890,13 @@ _check_config() {
 			pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)"
 
 			# check, if pm-suspend is supported
-			if [ "$SHUTDOWNCOMMAND" = "pm-supend" -a ! $PM_SUSPEND ]; then
+			if [ "$SHUTDOWNCOMMAND" = "pm-supend" -a ! "$PM_SUSPEND" = "true" ]; then
 				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
 				_log "WARN: Setting it to 'shutdown -h now'"
 				SHUTDOWNCOMMAND="shutdown -h now"
 			fi
 			# check, if pm-hibernate is supported
-			if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! $PM_HIBERNATE ]; then
+			if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
 				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
 				_log "WARN: Setting it to 'shutdown -h now'"
 				SHUTDOWNCOMMAND="shutdown -h now"
@@ -1196,6 +1208,14 @@ else
 fi
 
 _check_config
+
+# enable / disable check here
+if ! $ENABLE; then
+	_log "INFO: script disabled by autoshutdown.conf"
+	_log "INFO: nothing to do. Exiting here ..."
+	exit 0
+fi
+
 _check_networkconfig
 
 #### Testing fping ####
