@@ -1,3 +1,10 @@
+openmediavault-autoshutdown (0.6.1.1) stable; urgency=low
+
+  * Remove service stop function
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Jun 2014 06:37:18 -0500
+
 openmediavault-autoshutdown (0.6.1) stable; urgency=low
 
   * Add enable to config file
