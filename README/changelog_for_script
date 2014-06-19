@@ -104,3 +104,5 @@ Changelog:
 						
 2014/Jun/14		0.5.9.10: small fixes
 						: added enable/disable switch
+						
+2014/Jun/19		0.5.9.11: fix for "check connected users" was always positive

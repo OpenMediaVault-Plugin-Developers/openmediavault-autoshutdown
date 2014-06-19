@@ -31,7 +31,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.5.9.10"         # script version information
+VERSION="0.5.9.11"         # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -510,22 +510,24 @@ _check_net_status()
 
 	# Extra Check for connected users on the CLI if other processes are negative -> [ $NUMPROC -eq 0 ]
 	if [ $NUMPROC -eq 0 ]; then
-		USERSCONNECTED="$(w -h)"
-		
+		# 'w -h' lists all connected users
+		# egrep -v '^\s*$' removes all empty lines
+		USERSCONNECTED="$(w -h | egrep -v '^\s*$')"
+
 		if $DEBUG; then _log "DEBUG: _check_net_status(): USERSCONNECTED: '$USERSCONNECTED'"; fi
-		
-		if [ $(echo "$USERSCONNECTED" | wc -l) -gt 0 ]; then
+
+		if [ $(echo "$USERSCONNECTED"  | egrep -v '^\s*$' | wc -l) -gt 0 ]; then
 			_log "INFO: There is a user (locally) connected -> no shutdown"
 			ASD_CONNECTED_USER=$(echo "$USERSCONNECTED" | awk '{print $1}')
 			ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $3}')
 			# Check, if it is a local user
 			[[ "$ASD_CONNECTED_FROM" =~ ^.*:.*$ ]] && ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $2}')
-			
+
 			_log "INFO: It is '$ASD_CONNECTED_USER' on/from '$ASD_CONNECTED_FROM'"
 			let NUMPROC++
 		fi
 	fi
-	
+
 	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -eq 0 ]
 	if [ $NUMPROC -eq 0 ]; then
 		if [ $(/usr/bin/smbstatus | egrep -i "no locked|sessionid.tdb not initialised" | wc -l) != "1" ]; then
