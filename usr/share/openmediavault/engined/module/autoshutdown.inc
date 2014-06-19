@@ -27,59 +27,21 @@ require_once("openmediavault/log.inc");
 class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
     implements OMVINotifyListener, OMVIModuleServiceStatus {
 
-    /**
-     * Get the module name.
-     */
     public function getName() {
         return "autoshutdown";
     }
 
-    /**
-     * Generate the configuration.
-     */
     public function applyConfig() {
         $cmd = "omv-mkconf autoshutdown 2>&1";
         if(0 !== $this->exec($cmd, $output))
             throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
     }
 
-    /**
-     * Stop the managed service.
-     */
-    public function stopService() {
-        $initd = new OMVSysVInitScript("autoshutdown", FALSE);
-        $initd->exec();
-
-        $cmd = "sudo /etc/init.d/autoshutdown stop 2>&1";
-        if(0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
-    }
-
-    /**
-     * Start the managed service.
-     * @throw E_CONFIG_GET_OBJECT_FAILED
-     */
     public function startService() {
-        global $xmlConfig;
-
-        $xpath = "//services/autoshutdown";
-        $object = $xmlConfig->get($xpath);
-        if(is_null($object))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
-
-        if(FALSE === boolval($object['enable']))
-            return;
-
         $initd = new OMVSysVInitScript("autoshutdown", TRUE);
         $initd->exec();
     }
 
-    /**
-     * Get the module status.
-     *
-     * @throws OMVException
-     * @return array
-     */
     public function getStatus() {
         global $xmlConfig;
 
@@ -102,8 +64,6 @@ class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
 
     /**
      * Bind listeners.
-     *
-     * @param \OMVNotifyDispatcher $dispatcher
      */
     function bindListeners(OMVNotifyDispatcher $dispatcher) {
         $dispatcher->addListener(

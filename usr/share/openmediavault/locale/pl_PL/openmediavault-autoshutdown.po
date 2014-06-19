@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Cyryl Sochacki <cyrylsochacki@gmail.com>, 2013-2014
-# qba111 <j.ratajczak@eqba.pl>, 2014
+# Jakub Ratajczak <j.ratajczak@eqba.pl>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
