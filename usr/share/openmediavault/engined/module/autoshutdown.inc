@@ -65,6 +65,7 @@ class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
                 $xPath
             );
+        }
 
         // Check if process is running. Init script does not support 'status'.
         $cmd = "ps --no-heading -C autoshutdown.sh";
