@@ -25,31 +25,46 @@ require_once("openmediavault/initscript.inc");
 require_once("openmediavault/log.inc");
 
 class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
-    implements OMVINotifyListener, OMVIModuleServiceStatus {
+    implements OMVINotifyListener, OMVIModuleServiceStatus
+{
 
-    public function getName() {
+    public function getName()
+    {
         return "autoshutdown";
     }
 
-    public function applyConfig() {
+    public function applyConfig()
+    {
         $cmd = "omv-mkconf autoshutdown 2>&1";
-        if(0 !== $this->exec($cmd, $output))
-            throw new OMVException(OMVErrorMsg::E_EXEC_FAILED, $cmd, implode("\n", $output));
+        if (0 !== $this->exec($cmd, $output))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_FAILED,
+                $cmd,
+                implode("\n", $output)
+            );
+        }
     }
 
-    public function startService() {
+    public function startService()
+    {
         $initd = new OMVSysVInitScript("autoshutdown", TRUE);
         $initd->exec();
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         global $xmlConfig;
 
         // Get the configuration object
-        $xpath  = "//services/autoshutdown";
-        $object = $xmlConfig->get($xpath);
+        $xPath  = "//services/autoshutdown";
+        $object = $xmlConfig->get($xPath);
         if (is_null($object))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $xPath
+            );
 
         // Check if process is running. Init script does not support 'status'.
         $cmd = "ps --no-heading -C autoshutdown.sh";
@@ -65,11 +80,13 @@ class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
     /**
      * Bind listeners.
      */
-    function bindListeners(OMVNotifyDispatcher $dispatcher) {
+    function bindListeners(OMVNotifyDispatcher $dispatcher)
+    {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
             "org.openmediavault.services.autoshutdown",
-            array($this, "setDirty"));
+            array($this, "setDirty")
+        );
     }
 }
 
@@ -94,5 +111,3 @@ OMVLogFile::registerType(
          )
     )
 );
-
-?>

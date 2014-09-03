@@ -4,13 +4,14 @@
 # 
 # Translators:
 # David Hönel <davidh1990@gmx.de>, 2013
+# Stephan Steiner, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-02-06 10:04-0600\n"
-"PO-Revision-Date: 2014-02-06 16:05+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2014-08-14 12:01+0000\n"
+"Last-Translator: Stephan Steiner\n"
 "Language-Team: German (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Ruhezustand"
 
 msgid "IP-Range"
 msgstr "IP Reichweite"
@@ -118,10 +119,10 @@ msgid "Settings"
 msgstr "Einstellungen"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Shutdown"
 
 msgid "Shutdown Command"
-msgstr ""
+msgstr "Shutdown Befehl"
 
 msgid "Sleep"
 msgstr "Schlafen"
@@ -133,7 +134,7 @@ msgid "Sockets"
 msgstr "Sockets"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Standby"
 
 msgid "Syslog Configuration"
 msgstr "Syslog Konfiguration"
