@@ -106,3 +106,6 @@ Changelog:
 						: added enable/disable switch
 						
 2014/Jun/19		0.5.9.11: fix for "check connected users" was always positive
+
+2014/Aug/10		0.9.9.1 : added check for HDD-IO
+						: code cleanup

@@ -109,6 +109,12 @@ The following scheme is mandatory for both LOADPROCNAMES and TEMPPROCNAMES:
 process1,process2
 all processes separated by comma ','
 
+HDDIOCHECK
+Set this to "true" and the script checks, if a HDD-IO (read/write) is over a defined value in kB/s (default: HDDIO_RATE=400) 
+and then don't shutdown the Server. This value is calculated with the SLEEP-time between every cycle of the script-checks.
+E.g.: You have defined HDDIO_RATE=2000 and SLEEP=100, then the HDD-IO (read or write) has to be over 200000kB (2000*100) within the
+last 100 sec to not shutdown the server.
+
 PINGLIST
 With this, you can define a path to a file, which contains list of IPs that should be scanned
 only one IP per line is allowed - Format: mmm.nnn.ooo.ppp
