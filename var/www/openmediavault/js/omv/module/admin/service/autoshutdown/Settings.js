@@ -106,20 +106,6 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     text  : _("Numbers of seconds between each cycle.")
                 }]
             },{
-                xtype      : "textfield",
-                name       : "range",
-                fieldLabel : _("IP-Range"),
-                value      : "2..254",
-                plugins    : [{
-                    ptype : "fieldinfo",
-                    text  : _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
-                            _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
-                            _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
-                            _("define a single ip : ip") + "<br />" + "- " +
-                            _("all list entries are seperated by comma ','") + "<br />" +
-                            _("Please make sure to leave 1 and 255 out of the list!")
-                }]
-            },{
                 xtype      : "combo",
                 name       : "shutdowncommand",
                 fieldLabel : _("Shutdown Command"),
@@ -182,11 +168,25 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             }]
         },{
             xtype         : "fieldset",
-            title         : _("Network Socket Supervision Configuration"),
+            title         : _("Supervision Configuration"),
             fieldDefaults : {
                 labelSeparator : ""
             },
             items         : [{
+                xtype      : "textfield",
+                name       : "range",
+                fieldLabel : _("IP-Range"),
+                value      : "2..254",
+                plugins    : [{
+                    ptype : "fieldinfo",
+                    text  : _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
+                            _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
+                            _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
+                            _("define a single ip : ip") + "<br />" + "- " +
+                            _("all list entries are seperated by comma ','") + "<br />" +
+                            _("Please make sure to leave 1 and 255 out of the list!")
+                }]
+            },{
                 xtype      : "textfield",
                 name       : "nsocketnumbers",
                 fieldLabel : _("Sockets"),
