@@ -218,6 +218,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals : false,
                     allowBlank    : false,
                     value         : 50,
+                    width         : 500,
                     plugins       : [{
                         ptype : "fieldinfo",
                         text  : _("Define the network traffic in kB/s")
@@ -245,6 +246,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals : false,
                     allowBlank    : false,
                     value         : 40,
+                    width         : 500,
                     plugins       : [{
                         ptype : "fieldinfo",
                         text  : _("If the load average of the server is above this value, then no shutdown.") + "<br />" +
@@ -273,6 +275,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals : false,
                     allowBlank    : false,
                     value         : 400,
+                    width         : 500,
                     plugins       : [{
                         ptype : "fieldinfo",
                         text  : _("If the HDD-IO-average of the server is above this value, then no shutdown.")
