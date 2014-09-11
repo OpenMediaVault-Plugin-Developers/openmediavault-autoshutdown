@@ -84,6 +84,14 @@ LOADAVERAGE=40
 	# LOADAVERAGE=8    # means a loadaverage of 0.08
 	# LOADAVERAGE=220  # means a loadaverage of 2.20
 	# and so on ...
+	
+HDDIOCHECK="true"
+	# set it to "true" for a check of HDD-IO over the last SLEEP-time in autoshutdown. If the system is 
+	# over this value, then no shutdown is issued.
+	# If you set this to "true", don't forget to set HDDIO-RATE also!
+	
+HDDIO_RATE=400
+	# Set this to the target HDDIO-rate in kB/s for the Server.
 
 ##################################################
 #### Syslog Configuration ####

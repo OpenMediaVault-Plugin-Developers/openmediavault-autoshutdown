@@ -61,6 +61,8 @@ case "$1" in
             object="${object}<uldlrate>50</uldlrate>"
             object="${object}<loadaveragecheck>0</loadaveragecheck>"
             object="${object}<loadaverage>40</loadaverage>"
+            object="${object}<hddiocheck>1</hddiocheck>"
+            object="${object}<hddiorate>401</hddiorate>"
             object="${object}<syslog>1</syslog>"
             object="${object}<verbose>0</verbose>"
             object="${object}<fake>0</fake>"

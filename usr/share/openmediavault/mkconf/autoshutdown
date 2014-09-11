@@ -48,6 +48,9 @@ xmlstarlet sel -t \
         -i "loadaveragecheck = 0" -o "LOADAVERAGECHECK=\"false\"" -n -b \
         -i "loadaveragecheck = 1" -o "LOADAVERAGECHECK=\"true\"" -n -b \
         -v "concat('LOADAVERAGE=',loadaverage)" -n \
+        -i "hddiocheck = 0" -o "HDDIOCHECK=\"false\"" -n -b \
+        -i "hddiocheck = 1" -o "HDDIOCHECK=\"true\"" -n -b \
+        -v "concat('HDDIO_RATE=',hddiorate)" -n \
         -i "syslog = 0" -o "SYSLOG=\"false\"" -n -b \
         -i "syslog = 1" -o "SYSLOG=\"true\"" -n -b \
         -i "verbose = 0" -o "VERBOSE=\"false\"" -n -b \

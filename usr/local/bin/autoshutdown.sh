@@ -31,17 +31,13 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.9.9.8"        	 # script version information
+VERSION="0.9.9.9"        	 # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
 
 # tmp-directory
 TMPDIR="/tmp/autoshutdown"
-
-#################################################
-# tmp entry to test
-HDDIOCHECK="true"
 
 ######## FUNCTION DECLARATION ########
 
@@ -757,7 +753,6 @@ _check_clock()
 #               	: 1      : if actual value of hddio is higher than the defined value, no shutdown
 #
 _check_hddio() {
-	HDDIO_RATE=400
 	HDDIO_CNT=0
 	HDDIO_FIRSTRUN=0
 
@@ -807,13 +802,6 @@ _check_hddio() {
 			_log "DEBUG: check_hddio() actual iostat-values: r: OMV_ASD_HDD_IN:  $OMV_ASD_HDD_IN"
 			_log "DEBUG: check_hddio() actual iostat-values: w: OMV_ASD_HDD_OUT: $OMV_ASD_HDD_OUT"
 		fi
-
-		# display the result only, when In/Out is not zero
-# 		if [ ! -z $OMV_ASD_HDD_IN ]; then
-# 			echo "/dev/${OMV_HDD}:"
-# 			echo "In:  $OMV_ASD_HDD_IN"
-# 			echo "Out: $OMV_ASD_HDD_OUT"
-# 		fi
 
 		if [ -f $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ]; then
 		
