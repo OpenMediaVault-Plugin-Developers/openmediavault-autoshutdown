@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-06 10:04-0600\n"
+"POT-Creation-Date: 2014-09-11 06:10-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,6 +75,9 @@ msgid "Hibernate"
 msgstr ""
 
 msgid "IP-Range"
+msgstr ""
+
+msgid "If the HDD-IO-average of the server is above this value, then no shutdown."
 msgstr ""
 
 msgid "If the load average of the server is above this value, then no shutdown."
