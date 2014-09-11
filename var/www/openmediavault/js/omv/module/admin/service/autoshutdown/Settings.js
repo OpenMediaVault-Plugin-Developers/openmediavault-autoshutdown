@@ -52,17 +52,17 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 "!readOnly",
                 "!allowBlank"
             ]
-		},{
-			name       : [
-				"hddiorate"
-			],
-		   conditions : [
-				{ name  : "hddiocheck", value : true }
-		   ],
-		   properties : [
-			"!readOnly",
-			"!allowBlank"
-		   ]
+        },{
+            name       : [
+                "hddiorate"
+            ],
+           conditions : [
+                { name  : "hddiocheck", value : true }
+           ],
+           properties : [
+            "!readOnly",
+            "!allowBlank"
+           ]
         }]
     }],
 
@@ -251,34 +251,34 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                                 _("Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
                     }]
                 }]
-			},{
-				xtype      : "fieldcontainer",
-				fieldLabel : "HDDIO Rate",
-				layout     : "hbox",
-				items      : [{
-					xtype      : "checkbox",
-					name       : "hddiocheck",
-					fieldLabel : _(""),
-					checked    : true
-				},{
-					xtype : "displayfield",
-					width : 25,
-					value : ""
-				},{
-					xtype         : "numberfield",
-					name          : "hddiorate",
-					fieldLabel    : "",
-					minValue      : 0,
-					maxValue      : 9999,
-					allowDecimals : false,
-					allowBlank    : false,
-					value         : 400,
-					plugins       : [{
-						ptype : "fieldinfo",
-						text  : _("If the HDD-IO-average of the server is above this value, then no shutdown.") 
-					}]
-				}]
-		   }]
+            },{
+                xtype      : "fieldcontainer",
+                fieldLabel : "HDDIO Rate",
+                layout     : "hbox",
+                items      : [{
+                    xtype      : "checkbox",
+                    name       : "hddiocheck",
+                    fieldLabel : _(""),
+                    checked    : true
+                },{
+                    xtype : "displayfield",
+                    width : 25,
+                    value : ""
+                },{
+                    xtype         : "numberfield",
+                    name          : "hddiorate",
+                    fieldLabel    : "",
+                    minValue      : 0,
+                    maxValue      : 9999,
+                    allowDecimals : false,
+                    allowBlank    : false,
+                    value         : 400,
+                    plugins       : [{
+                        ptype : "fieldinfo",
+                        text  : _("If the HDD-IO-average of the server is above this value, then no shutdown.")
+                    }]
+                }]
+            }]
         },{
             xtype         : "fieldset",
             title         : _("Syslog Configuration"),

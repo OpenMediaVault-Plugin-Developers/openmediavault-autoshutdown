@@ -27,12 +27,24 @@ require_once("openmediavault/notify.inc");
 
 class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
 {
-    /**
-     * Get the RPC service name.
-     */
     public function getName()
     {
         return "AutoShutdown";
+    }
+
+    private function getPluginName()
+    {
+        return strtolower( $this->getName() );
+    }
+
+    private function getXPath()
+    {
+        return sprintf( "//services/%s", $this->getPluginName() );
+    }
+
+    private function getEventMessagePath()
+    {
+        return sprintf( "org.openmediavault.services.%s", $this->getPluginName() );
     }
 
     /**
@@ -58,13 +70,12 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         );
 
         // Get configuration object
-        $xPath  = "//services/autoshutdown";
-        $object = $xmlConfig->get($xPath);
+        $object = $xmlConfig->get( $this->getXPath() );
         if (is_null($object))
         {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $xPath
+                $this->getXPath()
             );
         }
 
@@ -82,8 +93,8 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         $object['uldlrate']         = intval($object['uldlrate']);
         $object['loadaveragecheck'] = boolval($object['loadaveragecheck']);
         $object['loadaverage']      = intval($object['loadaverage']);
-        $object['hddiocheck']        = boolval($object['hddiocheck']);
-        $object['hddiorate']         = intval($object['hddiorate']);
+        $object['hddiocheck']       = boolval($object['hddiocheck']);
+        $object['hddiorate']        = intval($object['hddiorate']);
 
         $object['syslog']           = boolval($object['syslog']);
         $object['verbose']          = boolval($object['verbose']);
@@ -122,8 +133,8 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
                 "uldlrate"         : { "type" : "integer" },
                 "loadaveragecheck" : { "type" : "boolean" },
                 "loadaverage"      : { "type" : "integer" },
-                "hddiocheck"        : { "type" : "boolean" },
-                "hddiorate"         : { "type" : "integer" },
+                "hddiocheck"       : { "type" : "boolean" },
+                "hddiorate"        : { "type" : "integer" },
                 "syslog"           : { "type" : "boolean" },
                 "verbose"          : { "type" : "boolean" },
                 "fake"             : { "type" : "boolean" },
@@ -132,13 +143,12 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         }');
 
         // Get the existing configuration object.
-        $xPath = "//services/autoshutdown";
-        $oldObject = $xmlConfig->get($xPath);
+        $oldObject = $xmlConfig->get( $this->getXPath() );
         if (is_null($oldObject))
         {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $xPath
+                $this->getXPath()
             );
         }
 
@@ -157,8 +167,8 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
             "uldlrate"         => intval($params['uldlrate']),
             "loadaveragecheck" => array_boolval($params, 'loadaveragecheck'),
             "loadaverage"      => intval($params['loadaverage']),
-            "hddiocheck"        => array_boolval($params, 'hddiocheck'),
-            "hddiorate"         => intval($params['hddiorate']),
+            "hddiocheck"       => array_boolval($params, 'hddiocheck'),
+            "hddiorate"        => intval($params['hddiorate']),
             "syslog"           => array_boolval($params, 'syslog'),
             "verbose"          => array_boolval($params, 'verbose'),
             "fake"             => array_boolval($params, 'fake'),
@@ -166,7 +176,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         );
 
         // Set configuration object
-        if (FALSE === $xmlConfig->replace("//services/autoshutdown", $object))
+        if (FALSE === $xmlConfig->replace($this->getXPath(), $object))
         {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED
@@ -177,7 +187,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         $dispatcher = &OMVNotifyDispatcher::getInstance();
         $dispatcher->notify(
             OMV_NOTIFY_MODIFY,
-            "org.openmediavault.services.autoshutdown",
+            $this->getEventMessagePath(),
             $object
         );
 
