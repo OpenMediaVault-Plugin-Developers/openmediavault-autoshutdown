@@ -9,7 +9,9 @@
 #   DESCRIPTION:	shuts down a PC/Server - variable options
 #
 #  REQUIREMENTS:  	Debian / Ubuntu-based system
-#          BUGS:  	---
+#
+#          BUGS:  	if you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
+#
 #        AUTHOR:	Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes), it should work on any Debain-based System, too
 #					based on autoshutdown.sh v0.7.008 by chrikai, see:
 #					https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
@@ -31,7 +33,7 @@ FACILITY="local6"         	# facility to log to -> see rsyslog.conf
 							# Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.9.9.9"        	 # script version information
+VERSION="0.9.9.10"        	 # script version information
 #CTOPPARAM="-d 1 -n 1"         # define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
 CTOPPARAM="-b -d 1 -n 1"         # define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
 STOPPARAM="-i $CTOPPARAM"   # add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
@@ -266,12 +268,12 @@ _ident_num_proc()
 #
 _check_processes()
 {
+	# ## disabled for testing
+	# _log "DEBUG: _check_processes() disabled for testing"
+	# return 0
+	
 	NUMPROC=0
 	CHECK=0
-
-	## disabled for testing
-_log "DEBUG: _check_processes() disabled for testing"
-return 0
 	
 	# check for each given command name in LOADPROCNAMES if it is currently stated active in "top"
 	# i found, that for smbd, proftpd, nsfd, ... there are processes always present in "ps" or "top" output
@@ -422,6 +424,10 @@ _check_plugin()
 #
 _check_loadaverage()
 {
+	# ## disabled for testing
+	# _log "DEBUG: _check_loadaverage() disabled for testing"
+	# return 0
+
 	RVALUE=0
 	CURRENT_LOADAVERAGE_TEMP1="$(top -b -n 1 | grep 'load average')"
 	# old: not working, if uptime is more than 1 day
@@ -464,12 +470,12 @@ _check_loadaverage()
 #
 _check_net_status()
 {
+	# ## disabled for testing
+	# _log "DEBUG: _check_net_status() disabled for testing"
+	# return 0
+
 	NUMPROC=0
 	NICNR_NETSTATUS="$1"
-
-## disabled for testing
-_log "DEBUG: _check_net_status() disabled for testing"
-return 0
 
 	_log "INFO: Check Connections for '${NIC[${NICNR_NETSTATUS}]}'"
 
@@ -573,6 +579,10 @@ return 0
 #
 _check_ul_dl_rate()
 {
+	# ## disabled for testing
+	# _log "DEBUG: _check_ul_dl_rate() disabled for testing"
+	# return 0
+
 	NICNR_ULDLCHECK="$1"
 	
 	# creation of the directory is in the main script
@@ -752,7 +762,12 @@ _check_clock()
 #   return         	: 0      : if actual value of hddio is lower than the defined value, ready for shutdown
 #               	: 1      : if actual value of hddio is higher than the defined value, no shutdown
 #
-_check_hddio() {
+_check_hddio()
+{
+	# ## disabled for testing
+	# _log "DEBUG: _check_processes() disabled for testing"
+	# return 0
+
 	HDDIO_CNT=0
 	HDDIO_FIRSTRUN=0
 
@@ -774,12 +789,12 @@ _check_hddio() {
 	iostat -kd > $HDDIOTMPDIR/iostat.txt
 	
 	if $DEBUG; then
-			_log "DEBUG: ## iostat -kd ## Begin ----------"
-			while read line; do
-				_log "DEBUG: $line"
-			done < $HDDIOTMPDIR/iostat.txt
-			_log "DEBUG: ## iostat -kd ## End ----------"
-		fi
+		_log "DEBUG: ## iostat -kd ## Begin ----------"
+		while read line; do
+			_log "DEBUG: $line"
+		done < $HDDIOTMPDIR/iostat.txt
+		_log "DEBUG: ## iostat -kd ## End ----------"
+	fi
 	
 	for OMV_HDD in $(mount -l | grep /dev/sd | sed 's/.*\(sd.\).*/\1/g' | sort -u); do
 		OMV_IOSTAT="$(egrep ^${OMV_HDD} $HDDIOTMPDIR/iostat.txt)"		
@@ -905,7 +920,8 @@ _check_hddio() {
 #   return: 	none
 #
 
-_check_config() {
+_check_config()
+{
 	## Check Parameters from Config and setting default variables:
 	_log "INFO: ------------------------------------------------------"
 	_log "INFO: Checking config"
@@ -1140,7 +1156,8 @@ _check_config() {
 #   parameter : none
 #   return: 	none
 #
-_check_networkconfig() {
+_check_networkconfig()
+{
 	# Read IP-Adress and SERVERIP from e.g. 'ifconfig eth0'
 	_log "INFO: ------------------------------------------------------"
 	_log "INFO: Reading NICs ,IPs, ..."
