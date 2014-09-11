@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-06 10:04-0600\n"
-"PO-Revision-Date: 2014-02-06 16:05+0000\n"
+"POT-Creation-Date: 2014-09-11 06:15-0500\n"
+"PO-Revision-Date: 2014-09-11 11:17+0000\n"
 "Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -83,6 +83,10 @@ msgid "IP-Range"
 msgstr "Діапазон-IP"
 
 msgid ""
+"If the HDD-IO-average of the server is above this value, then no shutdown."
+msgstr ""
+
+msgid ""
 "If the load average of the server is above this value, then no shutdown."
 msgstr ""
 
@@ -93,9 +97,6 @@ msgid "Log"
 msgstr ""
 
 msgid "Log to Syslog"
-msgstr ""
-
-msgid "Network Socket Supervision Configuration"
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
@@ -131,6 +132,9 @@ msgstr "Номер роз'єму для перевірки активності.
 
 msgid "Sockets"
 msgstr "Розєми"
+
+msgid "Supervision Configuration"
+msgstr ""
 
 msgid "Suspend"
 msgstr ""

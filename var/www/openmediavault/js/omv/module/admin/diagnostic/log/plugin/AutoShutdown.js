@@ -23,6 +23,7 @@
 
 Ext.define("OMV.module.admin.diagnostic.log.plugin.AutoShutdown", {
     extend : "OMV.module.admin.diagnostic.log.plugin.Plugin",
+    alias  : "omv.plugin.diagnostic.log.autoshutdown",
 
     id       : "autoshutdown",
     text     : _("AutoShutdown"),
@@ -55,10 +56,4 @@ Ext.define("OMV.module.admin.diagnostic.log.plugin.AutoShutdown", {
         { name : "type", type : "string" },
         { name : "log", type : "string" }
     ]
-});
-
-OMV.PluginManager.register({
-    ptype     : "diagnostic",
-    id        : "log",
-    className : "OMV.module.admin.diagnostic.log.plugin.AutoShutdown"
 });

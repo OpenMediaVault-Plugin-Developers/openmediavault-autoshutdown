@@ -52,17 +52,17 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 "!readOnly",
                 "!allowBlank"
             ]
-		},{
-			name       : [
-				"hddiorate"
-			],
-		   conditions : [
-				{ name  : "hddiocheck", value : true }
-		   ],
-		   properties : [
-			"!readOnly",
-			"!allowBlank"
-		   ]
+        },{
+            name       : [
+                "hddiorate"
+            ],
+           conditions : [
+                { name  : "hddiocheck", value : true }
+           ],
+           properties : [
+            "!readOnly",
+            "!allowBlank"
+           ]
         }]
     }],
 
@@ -104,20 +104,6 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 plugins       : [{
                     ptype : "fieldinfo",
                     text  : _("Numbers of seconds between each cycle.")
-                }]
-            },{
-                xtype      : "textfield",
-                name       : "range",
-                fieldLabel : _("IP-Range"),
-                value      : "2..254",
-                plugins    : [{
-                    ptype : "fieldinfo",
-                    text  : _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
-                            _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
-                            _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
-                            _("define a single ip : ip") + "<br />" + "- " +
-                            _("all list entries are seperated by comma ','") + "<br />" +
-                            _("Please make sure to leave 1 and 255 out of the list!")
                 }]
             },{
                 xtype      : "combo",
@@ -182,11 +168,25 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             }]
         },{
             xtype         : "fieldset",
-            title         : _("Network Socket Supervision Configuration"),
+            title         : _("Supervision Configuration"),
             fieldDefaults : {
                 labelSeparator : ""
             },
             items         : [{
+                xtype      : "textfield",
+                name       : "range",
+                fieldLabel : _("IP-Range"),
+                value      : "2..254",
+                plugins    : [{
+                    ptype : "fieldinfo",
+                    text  : _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
+                            _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
+                            _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
+                            _("define a single ip : ip") + "<br />" + "- " +
+                            _("all list entries are seperated by comma ','") + "<br />" +
+                            _("Please make sure to leave 1 and 255 out of the list!")
+                }]
+            },{
                 xtype      : "textfield",
                 name       : "nsocketnumbers",
                 fieldLabel : _("Sockets"),
@@ -251,34 +251,34 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                                 _("Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
                     }]
                 }]
-			},{
-				xtype      : "fieldcontainer",
-				fieldLabel : "HDDIO Rate",
-				layout     : "hbox",
-				items      : [{
-					xtype      : "checkbox",
-					name       : "hddiocheck",
-					fieldLabel : _(""),
-					checked    : true
-				},{
-					xtype : "displayfield",
-					width : 25,
-					value : ""
-				},{
-					xtype         : "numberfield",
-					name          : "hddiorate",
-					fieldLabel    : "",
-					minValue      : 0,
-					maxValue      : 9999,
-					allowDecimals : false,
-					allowBlank    : false,
-					value         : 400,
-					plugins       : [{
-						ptype : "fieldinfo",
-						text  : _("If the HDD-IO-average of the server is above this value, then no shutdown.") 
-					}]
-				}]
-		   }]
+            },{
+                xtype      : "fieldcontainer",
+                fieldLabel : "HDDIO Rate",
+                layout     : "hbox",
+                items      : [{
+                    xtype      : "checkbox",
+                    name       : "hddiocheck",
+                    fieldLabel : _(""),
+                    checked    : true
+                },{
+                    xtype : "displayfield",
+                    width : 25,
+                    value : ""
+                },{
+                    xtype         : "numberfield",
+                    name          : "hddiorate",
+                    fieldLabel    : "",
+                    minValue      : 0,
+                    maxValue      : 9999,
+                    allowDecimals : false,
+                    allowBlank    : false,
+                    value         : 400,
+                    plugins       : [{
+                        ptype : "fieldinfo",
+                        text  : _("If the HDD-IO-average of the server is above this value, then no shutdown.")
+                    }]
+                }]
+            }]
         },{
             xtype         : "fieldset",
             title         : _("Syslog Configuration"),

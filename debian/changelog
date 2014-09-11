@@ -1,3 +1,17 @@
+openmediavault-autoshutdown (1.0.3) stable; urgency=low
+
+  * Rearrange user interface
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 11 Sep 2014 06:15:51 -0500
+
+openmediavault-autoshutdown (1.0.2) stable; urgency=low
+
+  * Add hard drive I/O check
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 11 Sep 2014 05:55:05 -0500
+
 openmediavault-autoshutdown (1.0.1) stable; urgency=low
 
   * Fix typo

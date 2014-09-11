@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-06 10:04-0600\n"
-"PO-Revision-Date: 2014-02-07 12:24+0000\n"
-"Last-Translator: songming <by@songming.me>\n"
+"POT-Creation-Date: 2014-09-11 06:15-0500\n"
+"PO-Revision-Date: 2014-09-11 11:17+0000\n"
+"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,6 +83,10 @@ msgid "IP-Range"
 msgstr "IP 范围"
 
 msgid ""
+"If the HDD-IO-average of the server is above this value, then no shutdown."
+msgstr ""
+
+msgid ""
 "If the load average of the server is above this value, then no shutdown."
 msgstr "如果平均负载高于此值系统便不会关机"
 
@@ -94,9 +98,6 @@ msgstr "日志"
 
 msgid "Log to Syslog"
 msgstr "记录到系统日志"
-
-msgid "Network Socket Supervision Configuration"
-msgstr "网络端口监控设置"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "多少秒作为每两个周期间隔。"
@@ -131,6 +132,9 @@ msgstr "检查活动端口"
 
 msgid "Sockets"
 msgstr "端口"
+
+msgid "Supervision Configuration"
+msgstr ""
 
 msgid "Suspend"
 msgstr "待机"
