@@ -25,18 +25,21 @@ require_once("openmediavault/util.inc");
 require_once("openmediavault/rpcservice.inc");
 require_once("openmediavault/notify.inc");
 
-class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
+class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
+{
     /**
      * Get the RPC service name.
      */
-    public function getName() {
+    public function getName()
+    {
         return "AutoShutdown";
     }
 
     /**
      * Initialize the RPC service.
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->registerMethod("getSettings");
         $this->registerMethod("setSettings");
     }
@@ -44,17 +47,26 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
     /**
      * Get configuration object.
      */
-    function getSettings($params, $context) {
+    function getSettings($params, $context)
+    {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
 
         // Get configuration object
-        $xpath  = "//services/autoshutdown";
-        $object = $xmlConfig->get($xpath);
+        $xPath  = "//services/autoshutdown";
+        $object = $xmlConfig->get($xPath);
         if (is_null($object))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $xPath
+            );
+        }
 
         // Modify result data
         $object['enable']           = boolval($object['enable']);
@@ -81,11 +93,15 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
     /**
      * Set configuration object.
      */
-    function setSettings($params, $context) {
+    function setSettings($params, $context)
+    {
         global $xmlConfig;
 
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, array( "role" => OMV_ROLE_ADMINISTRATOR ));
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
 
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, '{
@@ -112,10 +128,15 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
         }');
 
         // Get the existing configuration object.
-        $xpath = "//services/autoshutdown";
-        $oldObject = $xmlConfig->get($xpath);
-        if(is_null($oldObject))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED, $xpath);
+        $xPath = "//services/autoshutdown";
+        $oldObject = $xmlConfig->get($xPath);
+        if (is_null($oldObject))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $xPath
+            );
+        }
 
         // Update the configuration.
         $object = array(
@@ -139,13 +160,20 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
         );
 
         // Set configuration object
-        if(FALSE === $xmlConfig->replace("//services/autoshutdown", $object))
-            throw new OMVException(OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED);
+        if (FALSE === $xmlConfig->replace("//services/autoshutdown", $object))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED
+            );
+        }
 
         // Notify configuration changes.
         $dispatcher = &OMVNotifyDispatcher::getInstance();
-        $dispatcher->notify(OMV_NOTIFY_MODIFY,
-            "org.openmediavault.services.autoshutdown", $object);
+        $dispatcher->notify(
+            OMV_NOTIFY_MODIFY,
+            "org.openmediavault.services.autoshutdown",
+            $object
+        );
 
         // Return the configuration object.
         return $object;
@@ -155,4 +183,3 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract {
 // Register the RPC service.
 $rpcServiceMgr = &OMVRpcServiceMgr::getInstance();
 $rpcServiceMgr->registerService(new OMVRpcServiceAutoShutdown());
-?>
