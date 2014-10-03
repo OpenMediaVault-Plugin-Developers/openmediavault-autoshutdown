@@ -4,14 +4,15 @@
 # 
 # Translators:
 # David Hönel <davidh1990@gmx.de>, 2013
+# Ettore Atalan <atalanttore@googlemail.com>, 2014
 # Stephan Steiner, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-09-11 11:17+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2014-09-28 11:57+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,19 +21,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
-msgstr "Autoshutdown"
+msgstr "AutomatischHerunterfahren"
 
 msgid "Autoshutdown"
-msgstr "Autoshutdown"
+msgstr "AutomatischHerunterfahren"
 
 msgid "Begin"
 msgstr "Anfang"
 
 msgid "Check Clock"
-msgstr "Überprüfe Uhr"
+msgstr "Uhr überprüfen"
 
 msgid "Check Clock to identify forced uptime."
-msgstr "Überprüfe Uhr um die erzwungene Laufzeit zu identifizieren."
+msgstr "Uhr überprüfen, um die erzwungene Betriebszeit zu ermitteln."
 
 msgid "Cycles"
 msgstr "Durchläufe"
@@ -43,10 +44,10 @@ msgstr "Datum & Uhrzeit"
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr "Definiere eine Reichweite von IPs welche gescannt werden sollen. Gebe nur das Letzte Triplet der Adresse an."
+msgstr "Bestimmen Sie einen Bereich mit IP-Adressen, welcher abgesucht werden sollen, über die XXX.XXX.XXX.xxx letzte Dreiergruppe der Adresse."
 
 msgid "Define the network traffic in kB/s"
-msgstr "Definiere den Netzwerktraffic in kB/s"
+msgstr "Bestimmen Sie den Netzwerkverkehr in kB/s"
 
 msgid "Enable"
 msgstr "Aktivieren"
@@ -63,16 +64,16 @@ msgid "Expert Settings"
 msgstr "Experteneinstellungen"
 
 msgid "Extra options"
-msgstr "Extra Optionen"
+msgstr "Zusätzliche Optionen"
 
 msgid "Fake"
 msgstr "Fake"
 
 msgid "Fake/Test mode."
-msgstr "Fake/Test modus."
+msgstr "Fake-/Testmodus."
 
 msgid "Forced Uptime"
-msgstr "Erzwungene Laufzeit"
+msgstr "Erzwungene Betriebszeit"
 
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
@@ -81,7 +82,7 @@ msgid "Hibernate"
 msgstr "Ruhezustand"
 
 msgid "IP-Range"
-msgstr "IP Reichweite"
+msgstr "IP-Bereich"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -95,10 +96,10 @@ msgid "List of Ports"
 msgstr "Liste von Ports"
 
 msgid "Log"
-msgstr "Log"
+msgstr "Protokoll"
 
 msgid "Log to Syslog"
-msgstr "Log im Syslog"
+msgstr "Im Syslog protokollieren"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Anzahl der Sekunden zwischen jedem Durchlauf."
@@ -107,29 +108,29 @@ msgid "Please check the"
 msgstr "Bitte überprüfe die"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "Stelle sicher dass weder 1 noch 255 in dieser Liste auftauchen!"
+msgstr "Bitte stellen Sie sicher, dass weder 1 noch 255 in dieser Liste auftauchen!"
 
 msgid "README"
 msgstr "LIESMICH"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Setze die Anzahl der Durchläufe ohne Ergebnis (Kein PC online, etc.) bevor heruntergfahren wird."
+msgstr "Legen Sie die Anzahl der Durchläufe ohne Ergebnis (kein PC online, usw.) fest, bevor heruntergefahren wird."
 
 msgid "Settings"
 msgstr "Einstellungen"
 
 msgid "Shutdown"
-msgstr "Shutdown"
+msgstr "Herunterfahren"
 
 msgid "Shutdown Command"
-msgstr "Shutdown Befehl"
+msgstr "Herunterfahrenbefehl"
 
 msgid "Sleep"
 msgstr "Schlafen"
 
 msgid "Socket number to check for activity."
-msgstr "Socketnummer die auf aktivität überprüft werden soll."
+msgstr "Socketnummer, die auf Aktivität überprüft werden soll."
 
 msgid "Sockets"
 msgstr "Sockets"
@@ -138,10 +139,10 @@ msgid "Supervision Configuration"
 msgstr ""
 
 msgid "Suspend"
-msgstr "Standby"
+msgstr "Unterbrechen"
 
 msgid "Syslog Configuration"
-msgstr "Syslog Konfiguration"
+msgstr "Syslog-Konfiguration"
 
 msgid "The following scheme is mandatory"
 msgstr "Das folgende Schema ist zwingend erforderlich"
@@ -150,22 +151,22 @@ msgid "Type"
 msgstr "Typ"
 
 msgid "Verbose"
-msgstr "Verbose (detailiert)"
+msgstr "Ausführlich"
 
 msgid "Verbose mode."
-msgstr "Verbose (detailierter) Modus."
+msgstr "Ausführlicher Modus."
 
 msgid "Write log informations to system logs."
-msgstr "Schreibe Log Informationen in die System Logs."
+msgstr "Protokollinformationen in die Systemprotokolle schreiben."
 
 msgid "all list entries are seperated by comma ','"
 msgstr "Alle Einträge werden durch ein Komma ',' getrennt"
 
 msgid "define a single ip : ip"
-msgstr "Definiere eine einzelne IP : IP"
+msgstr "Bestimmen Sie eine einzelne IP : IP"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "Definiere eine IP Reichweite : anfang..ende -> die zwei Punkte sind zwingend erforderlich!"
+msgstr "Bestimmen Sie einen IP-Bereich : Anfang..Ende -> die zwei Punkte sind zwingend erforderlich!"
 
 msgid "for more details."
-msgstr "für mehr Details."
+msgstr "für weitere Details."

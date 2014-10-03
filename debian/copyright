@@ -5,8 +5,8 @@ Copyright: 2013-2014 OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 Copyright: 2011-2012 Marcel Beck <marcel.beck@mbeck.org>
 License: GPL-3
 
-
-Files:	/var/www/openmediavault/images/autoshutdown.png
-	/var/www/openmediavault/images/autoshutdown.svg
-Copyright: WebHostingHub Glyphs
-<http://www.webhostinghub.com/glyphs/>
+Files: /var/www/openmediavault/images/autoshutdown.png
+       /var/www/openmediavault/images/autoshutdown.svg
+Copyright: IcoMoon <http://www.icomoon.io>
+IcoMoon <http://www.icomoon.io>
+License: GPLv3
