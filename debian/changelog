@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (1.0.6) stable; urgency=low
+
+  * Fix icon
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 10 Oct 2014 06:08:36 -0500
+
 openmediavault-autoshutdown (1.0.5) stable; urgency=low
 
   * New icons
