@@ -3,168 +3,168 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# zubr139, 2013
+# kochin <kochinc@outlook.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-11-14 19:47+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: Ukrainian (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/uk/)\n"
+"PO-Revision-Date: 2014-11-20 19:35+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "AutoShutdown"
-msgstr ""
+msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
-msgstr ""
+msgstr "Autoshutdown"
 
 msgid "Begin"
-msgstr ""
+msgstr "開始"
 
 msgid "Check Clock"
-msgstr "Перевірте годинник"
+msgstr "檢查時鐘"
 
 msgid "Check Clock to identify forced uptime."
-msgstr ""
+msgstr "檢查時鐘來辨認強制的運行時間。"
 
 msgid "Cycles"
-msgstr "Цикли"
+msgstr "循環數"
 
 msgid "Date & Time"
-msgstr "Дата і Час"
+msgstr "日期與時間"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "定義一個所要掃瞄的 IP 範圍，在列表中使用 IP 地址 XXX.XXX.XXX.xxx 的最後三個數字。"
 
 msgid "Define the network traffic in kB/s"
-msgstr "Визначення мережевого трафіку в Кб/с"
+msgstr "以 kB/s 來定義網路流量"
 
 msgid "Enable"
-msgstr "Увімкнути"
+msgstr "啟用"
 
 msgid "End"
-msgstr "Кінець"
+msgstr "結束"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr ""
+msgstr "範例：50 表示平均負載為 0.50，8 表示平均負載為 0.08，220 表示平均負載為 2.20"
 
 msgid "Expert Settings"
-msgstr "Налаштування для експертів"
+msgstr "專家設定"
 
 msgid "Extra options"
-msgstr "Додаткові опції"
+msgstr "額外選項"
 
 msgid "Fake"
-msgstr ""
+msgstr "假冒"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "假冒/測試模式"
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "強制運行時間"
 
 msgid "General settings"
-msgstr "Загальні налаштування"
+msgstr "一般設定"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "休眠"
 
 msgid "IP-Range"
-msgstr "Діапазон-IP"
+msgstr "IP-範圍"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "如果伺服器的 HDD-IO-average 在這個數值以上，則不做關機。"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "如果伺服器的平均負載在這個數值以上，則不關機。"
 
 msgid "List of Ports"
-msgstr "Список портів"
+msgstr "通訊埠列表"
 
 msgid "Log"
-msgstr ""
+msgstr "日誌"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "記錄日誌到 Syslog"
 
 msgid "Numbers of seconds between each cycle."
-msgstr "Кількість секунд між кожним циклом."
+msgstr "每個週期之間的秒數。"
 
 msgid "Please check the"
-msgstr "Будь ласка, перевірте"
+msgstr "請查看"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
+msgstr "請確定 1 與 255 不在列表中！"
 
 msgid "README"
-msgstr ""
+msgstr "README"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "設定在關機之前，必須經過幾個沒結果(無電腦在線上...等等)的循環。"
 
 msgid "Settings"
-msgstr "Налаштування"
+msgstr "設定"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "關機"
 
 msgid "Shutdown Command"
-msgstr ""
+msgstr "關機指令"
 
 msgid "Sleep"
-msgstr "Cпати"
+msgstr "睡眠"
 
 msgid "Socket number to check for activity."
-msgstr "Номер роз'єму для перевірки активності."
+msgstr "用以檢查活動狀況的插槽號碼。"
 
 msgid "Sockets"
-msgstr "Розєми"
+msgstr "插槽"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "監督設定"
 
 msgid "Suspend"
-msgstr ""
+msgstr "暫停"
 
 msgid "Syslog Configuration"
-msgstr "Конфігурація Syslog"
+msgstr "Syslog 設置"
 
 msgid "The following scheme is mandatory"
-msgstr "Наступна схема є обов'язковою"
+msgstr "強制使用以下的格式 "
 
 msgid "Type"
-msgstr "Тип"
+msgstr "型式"
 
 msgid "Verbose"
-msgstr "Докладний"
+msgstr "詳盡"
 
 msgid "Verbose mode."
-msgstr "Докладний режим."
+msgstr "詳盡模式"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "將日誌資訊寫到系統日誌中。"
 
 msgid "all list entries are seperated by comma ','"
-msgstr ""
+msgstr "所有列表項目必須以逗號 ',' 分開"
 
 msgid "define a single ip : ip"
-msgstr ""
+msgstr "定義單一的 ip：ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "визначити діапазон IP: початок..кінець -> дві точок є обов'язковими"
+msgstr "定義一個 ip 範圍：啟始...結束 -> 兩個點是必要的"
 
 msgid "for more details."
-msgstr "для більш докладної інформації."
+msgstr "中的詳細內容。"

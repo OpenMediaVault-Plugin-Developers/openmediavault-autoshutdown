@@ -3,169 +3,168 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# songming <by@songming.me>, 2013-2014
-# Wei Ding <dyw.net@gmail.com>, 2014
+# Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-11-30 13:36+0000\n"
-"Last-Translator: Wei Ding <dyw.net@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/zh_CN/)\n"
+"PO-Revision-Date: 2014-11-22 13:19+0000\n"
+"Last-Translator: Hyeonkyu Chu <hyeonkyu@gmail.com>\n"
+"Language-Team: Korean (Korea) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
+"Language: ko_KR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "AutoShutdown"
-msgstr "自动关机"
+msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
-msgstr "自动关机"
+msgstr "AutoShutdown"
 
 msgid "Begin"
-msgstr "开始"
+msgstr "시작"
 
 msgid "Check Clock"
-msgstr "检查时间"
+msgstr "시각 확인"
 
 msgid "Check Clock to identify forced uptime."
-msgstr "强制运行时间"
+msgstr "강제 가동시간을 식별하는 시각을 확인합니다."
 
 msgid "Cycles"
-msgstr "周期"
+msgstr "주기"
 
 msgid "Date & Time"
-msgstr "日期和时间"
+msgstr "날짜 및 시간"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr "设定一个IP扫描范围，用 XXX.XXX.XXX.xxx表示，最后三位为地址变量"
+msgstr "목록의 IP 주소의 마지막 3자리 XXX.XXX.XXX.xxx를 통해, 조사해야 할 IP들의 범위를 정의합니다."
 
 msgid "Define the network traffic in kB/s"
-msgstr "设定网络速度单位kb/s"
+msgstr "KiB/s 단위의 네트워크 전송량을 정의"
 
 msgid "Enable"
-msgstr "启动"
+msgstr "활성화"
 
 msgid "End"
-msgstr "结束"
+msgstr "끝"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "例：50表示0.50的负载，8表示0.08的负载，220表示2.20的负载"
+msgstr "예 : 50은 부하-평균 0.50, 8은 부하-평균 0.08, 220은 부하-평균 2.20을 의미합니다."
 
 msgid "Expert Settings"
-msgstr "高级设置"
+msgstr "전문가 설정"
 
 msgid "Extra options"
-msgstr "附加选项"
+msgstr "추가 선택 사항"
 
 msgid "Fake"
-msgstr "模拟"
+msgstr "가상"
 
 msgid "Fake/Test mode."
-msgstr "模拟/测试模式"
+msgstr "가상/시험 방식."
 
 msgid "Forced Uptime"
-msgstr "强制运行时间"
+msgstr "강제 가동시간"
 
 msgid "General settings"
-msgstr "常规设置"
+msgstr "일반 설정"
 
 msgid "Hibernate"
-msgstr "休眠"
+msgstr "휴면"
 
 msgid "IP-Range"
-msgstr "IP 范围"
+msgstr "IP-범위"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "如果服务器的磁盘IO平均负载高于此值将不会关机。"
+msgstr "서버의 HDD 입출력 평균이 이 값 이상이면, 종료하지 않습니다."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr "如果平均负载高于此值系统便不会关机"
+msgstr "서버의 부하 평균이 이 값 이상이면, 종료하지 않습니다."
 
 msgid "List of Ports"
-msgstr "端口列表"
+msgstr "포트 목록"
 
 msgid "Log"
-msgstr "日志"
+msgstr "기록"
 
 msgid "Log to Syslog"
-msgstr "记录到系统日志"
+msgstr "Syslog에 기록"
 
 msgid "Numbers of seconds between each cycle."
-msgstr "多少秒作为每两个周期间隔。"
+msgstr "각 주기 사이의 초 단위 수"
 
 msgid "Please check the"
-msgstr "请阅读"
+msgstr "상세한 정보는 "
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "请确认在扫描范围排除1和255！"
+msgstr "목록에 1과 255는 없어야 합니다. 확인 바랍니다!"
 
 msgid "README"
-msgstr "说明"
+msgstr "읽어주세요"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "几个周期没客户端(局域网没客户端在线)就关机"
+msgstr "종료 전에 무효한 주기의 수(온라인이 아닌 PC, 기타)를 설정합니다."
 
 msgid "Settings"
-msgstr "设置"
+msgstr "설정"
 
 msgid "Shutdown"
-msgstr "关机"
+msgstr "종료"
 
 msgid "Shutdown Command"
-msgstr "关机命令"
+msgstr "종료 명령"
 
 msgid "Sleep"
-msgstr "睡眠"
+msgstr "수면"
 
 msgid "Socket number to check for activity."
-msgstr "检查活动端口"
+msgstr "소켓 번호가 활성인지 확인 바랍니다."
 
 msgid "Sockets"
-msgstr "端口"
+msgstr "소켓"
 
 msgid "Supervision Configuration"
-msgstr "监控设置"
+msgstr "감시 구성"
 
 msgid "Suspend"
-msgstr "待机"
+msgstr "대기"
 
 msgid "Syslog Configuration"
-msgstr "日志设置"
+msgstr "Syslog 구성"
 
 msgid "The following scheme is mandatory"
-msgstr "设定必须符合语法"
+msgstr "다음 구성은 필수입니다 "
 
 msgid "Type"
-msgstr "类型"
+msgstr "유형"
 
 msgid "Verbose"
-msgstr "详细"
+msgstr "상세한"
 
 msgid "Verbose mode."
-msgstr "详细记录"
+msgstr "상세한 방식."
 
 msgid "Write log informations to system logs."
-msgstr "记录到系统日志"
+msgstr "기록 정보를 Syslog에 씁니다."
 
 msgid "all list entries are seperated by comma ','"
-msgstr "多条设定必须以“，”分开"
+msgstr "모든 목록 항목은 쉼표','로 구분되어야 합니다."
 
 msgid "define a single ip : ip"
-msgstr "设定单一地址：IP"
+msgstr "단일 ip 지정 : ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "设定IP范围：开始地址..结束地址，中间两个点不能省略"
+msgstr "IP 범위 지정 : 시작..종료 -> 두개의 점은 필수입니다."
 
 msgid "for more details."
-msgstr "了解更多细节"
+msgstr "를 확인하세요."

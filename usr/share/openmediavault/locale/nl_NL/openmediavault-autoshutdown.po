@@ -3,18 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# okpail <okpail@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-11-14 19:47+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: English (United States) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/en_US/)\n"
+"PO-Revision-Date: 2014-11-14 22:37+0000\n"
+"Last-Translator: okpail <okpail@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_US\n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
@@ -24,146 +25,146 @@ msgid "Autoshutdown"
 msgstr "Autoshutdown"
 
 msgid "Begin"
-msgstr "Begin"
+msgstr "Starten"
 
 msgid "Check Clock"
-msgstr "Check Clock"
+msgstr "Klok instellingen"
 
 msgid "Check Clock to identify forced uptime."
-msgstr "Check Clock to identify forced uptime."
+msgstr "Controleer de klok op geforceerde uptime "
 
 msgid "Cycles"
 msgstr "Cycles"
 
 msgid "Date & Time"
-msgstr "Date & Time"
+msgstr "Datum & Tijd"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list."
+msgstr "Definieer een range van IP-nummers die gecontroleerd kan worden op het laatste triple van IP adres  XXX.XXX.XXX.xxx  "
 
 msgid "Define the network traffic in kB/s"
-msgstr "Define the network traffic in kB/s"
+msgstr "Definieer de bandbreedte grootte in kB/s"
 
 msgid "Enable"
-msgstr "Enable"
+msgstr "Aanzetten"
 
 msgid "End"
-msgstr "End"
+msgstr "Einde"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20"
+msgstr "Voorbeeld: 50 betekend een gemiddelde van 0.50, 8 betekend een belasting-gemiddelde van 0.08, 220 betekend een belasting-gemiddelde van 2.20"
 
 msgid "Expert Settings"
-msgstr "Expert Settings"
+msgstr "Geavanceerde Settings"
 
 msgid "Extra options"
-msgstr "Extra options"
+msgstr "Extra Opties"
 
 msgid "Fake"
-msgstr "Fake"
+msgstr "Schijn"
 
 msgid "Fake/Test mode."
-msgstr "Fake/Test mode."
+msgstr "Schijn/Test mode"
 
 msgid "Forced Uptime"
-msgstr "Forced Uptime"
+msgstr "Geforceerde Uptime"
 
 msgid "General settings"
-msgstr "General settings"
+msgstr "Algemene Instellingen"
 
 msgid "Hibernate"
-msgstr "Hibernate"
+msgstr "Slaapstand"
 
 msgid "IP-Range"
-msgstr "IP-Range"
+msgstr "IP-nummer range"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "If the HDD-IO-average of the server is above this value, then no shutdown."
+msgstr "Indien het  HDD-IO-gemiddelde van de server boven deze waarde komt, dan vindt er geen shutdown plaats"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr "If the load average of the server is above this value, then no shutdown."
+msgstr "Indien het  belasting-gemiddelde van de server boven deze waarde komt, dan vindt er geen shutdown plaats"
 
 msgid "List of Ports"
-msgstr "List of Ports"
+msgstr "Lijst van Poorten"
 
 msgid "Log"
 msgstr "Log"
 
 msgid "Log to Syslog"
-msgstr "Log to Syslog"
+msgstr "Log naar Syslog"
 
 msgid "Numbers of seconds between each cycle."
-msgstr "Numbers of seconds between each cycle."
+msgstr "Aantal seconden tussen elke cycle"
 
 msgid "Please check the"
-msgstr "Please check the"
+msgstr "Check de ..."
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "Please make sure to leave 1 and 255 out of the list!"
+msgstr "Zorg er voor dat de getallen 1 en 255 niet in de lijst voorkomen"
 
 msgid "README"
-msgstr "README"
+msgstr "Leesmij"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Set the number of cycles with no result (no PC online, etc) before shutdown."
+msgstr "Geef het aantal cycles op die geen resultaat opleveren (de PC is niet offline, etc) voordat het systeem uitschakelt"
 
 msgid "Settings"
-msgstr "Settings"
+msgstr "Instellingen"
 
 msgid "Shutdown"
-msgstr "Shutdown"
+msgstr "Uitschakelen"
 
 msgid "Shutdown Command"
-msgstr "Shutdown Command"
+msgstr "Uitschakel commando"
 
 msgid "Sleep"
-msgstr "Sleep"
+msgstr "Slaap"
 
 msgid "Socket number to check for activity."
-msgstr "Socket number to check for activity."
+msgstr "Het socket nummer wat gecheckt moet worden op activiteit"
 
 msgid "Sockets"
 msgstr "Sockets"
 
 msgid "Supervision Configuration"
-msgstr "Supervision Configuration"
+msgstr "Supervisie Configuratie"
 
 msgid "Suspend"
-msgstr "Suspend"
+msgstr "In Statis"
 
 msgid "Syslog Configuration"
-msgstr "Syslog Configuration"
+msgstr "Syslog Configuratie"
 
 msgid "The following scheme is mandatory"
-msgstr "The following scheme is mandatory"
+msgstr "Het volgende schema is verplicht"
 
 msgid "Type"
 msgstr "Type"
 
 msgid "Verbose"
-msgstr "Verbose"
+msgstr "Uitgebreid"
 
 msgid "Verbose mode."
-msgstr "Verbose mode."
+msgstr "Uitgebreide Modus"
 
 msgid "Write log informations to system logs."
-msgstr "Write log informations to system logs."
+msgstr "Schrijf log informatie naar systeem logs"
 
 msgid "all list entries are seperated by comma ','"
-msgstr "all list entries are seperated by comma ','"
+msgstr "Alle lijst items worden gescheiden door een komma ','"
 
 msgid "define a single ip : ip"
-msgstr "define a single ip : ip"
+msgstr "Definieer een enkel IP adres: ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "define an ip range : start..end -> the two dots are mandatory"
+msgstr "definieer een ip-nummer range: start..end -> de twee punten zijn verplicht"
 
 msgid "for more details."
-msgstr "for more details."
+msgstr "voor meer details"
