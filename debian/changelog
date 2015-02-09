@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (1.0.8) stable; urgency=low
 
   * Change to rsyslog to logrotate
+  * Update locales
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 09 Feb 2015 08:46:23 -0600
 
