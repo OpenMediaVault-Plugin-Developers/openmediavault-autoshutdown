@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Christophe Lherieau <skimpax@gmail.com>, 2015
 # Zacharie ARNAISE <spacebrain.damage@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-09-11 11:17+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/fr/)\n"
+"PO-Revision-Date: 2015-06-25 15:57+0000\n"
+"Last-Translator: Christophe Lherieau <skimpax@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,10 +29,10 @@ msgid "Begin"
 msgstr "Commencer"
 
 msgid "Check Clock"
-msgstr ""
+msgstr "Vérifier l'horloge"
 
 msgid "Check Clock to identify forced uptime."
-msgstr ""
+msgstr "Vérifier l'horloge pour identifier le forçage du uptime."
 
 msgid "Cycles"
 msgstr "Cycles"
@@ -42,7 +43,7 @@ msgstr "Date & Heure"
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "Défini la fourchette d'adresses IP qui doivent être scannées, via XXX.XXX.XXX.xxx avec xxx dans une liste."
 
 msgid "Define the network traffic in kB/s"
 msgstr "Définissez le trafic du réseau en Ko/s"
@@ -56,7 +57,7 @@ msgstr "Terminer"
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr ""
+msgstr "Exemple : 50 signifie une charge moyenne de 0.50, 8 signifie une charge moyenne de 0.08, 220 signifie une charge moyenne de 2.20"
 
 msgid "Expert Settings"
 msgstr "Paramètres avancés"
@@ -84,11 +85,11 @@ msgstr "Plage d'IP"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "Si la moyenne des IO du disque est au dessus de cette valeur, alors pas de shutdown."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "Si la charge du serveur est au dessus de cette valeur, alors pas de shutdown."
 
 msgid "List of Ports"
 msgstr "Liste des ports"
@@ -106,7 +107,7 @@ msgid "Please check the"
 msgstr "Veuillez vérifier le"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
+msgstr "Assurez-vous que 1 et 255 ne soient pas dans la liste !"
 
 msgid "README"
 msgstr "LISEZ-MOI"
@@ -128,13 +129,13 @@ msgid "Sleep"
 msgstr "Veille"
 
 msgid "Socket number to check for activity."
-msgstr ""
+msgstr "Numéro de socket à surveiller si activité."
 
 msgid "Sockets"
 msgstr "Sockets"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Configuration de la supervision"
 
 msgid "Suspend"
 msgstr "Suspendre"
@@ -143,7 +144,7 @@ msgid "Syslog Configuration"
 msgstr "Configuration de Syslog"
 
 msgid "The following scheme is mandatory"
-msgstr ""
+msgstr "La règle suivante est obligatoire"
 
 msgid "Type"
 msgstr "Type"
@@ -158,13 +159,13 @@ msgid "Write log informations to system logs."
 msgstr "Inscrire les informations du journal d’événements au journal du système."
 
 msgid "all list entries are seperated by comma ','"
-msgstr ""
+msgstr "toutes les entrées de la liste sont séparées par une virgule ','"
 
 msgid "define a single ip : ip"
-msgstr ""
+msgstr "définir une IP seule : ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr ""
+msgstr "définir une fourchette d'adresses IP : début..fin -> les deux points sont obligatoires"
 
 msgid "for more details."
 msgstr "pour plus de détails."

@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Miguel Anxo Bouzada <mbouzada@gmail.com>, 2014
+# Miguel Anxo Bouzada <mbouzada@gmail.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-12-07 08:02+0000\n"
+"PO-Revision-Date: 2015-02-15 07:45+0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/gl/)\n"
+"Language-Team: Galician (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,7 +42,7 @@ msgstr "Data e hora"
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr "Defina el rango de IP que deben ser analizadas, tendo en conta a última tripleta de IP nunha lista XXX.XXX.XXX.xxx"
+msgstr "Defina o intervalo rango de IP que deben ser analizadas, tendo en conta a última tripleta do IP nunha lista XXX.XXX.XXX.xxx"
 
 msgid "Define the network traffic in kB/s"
 msgstr "Definir o tráfico de rede en kB/s"
@@ -56,7 +56,7 @@ msgstr "Fin"
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "Exemplo: 50 significa unha carga media de 0,50 , 8 significa una carga media de 0,08 e 220 significa una carga media de 2,20"
+msgstr "Exemplo: 50 significa unha carga media de 0,50, 8 significa una carga media de 0,08 e 220 significa una carga media de 2,20"
 
 msgid "Expert Settings"
 msgstr "Axustes avanzados"
@@ -84,7 +84,7 @@ msgstr "Intervalo-IP"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "Se a media do valor E/S do disco do servidor está por riba deste valor, entón non apagar."
+msgstr "Se a media do valor de E/S do disco do servidor está por riba deste valor, entón non apagar."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -100,7 +100,7 @@ msgid "Log to Syslog"
 msgstr "Rexistrar no rexistro do sistema"
 
 msgid "Numbers of seconds between each cycle."
-msgstr "El número de segundos entre cada ciclo."
+msgstr "O número de segundos entre cada ciclo."
 
 msgid "Please check the"
 msgstr "Comprobe"

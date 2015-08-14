@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Pavel Borecki <pavel.borecki@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-11-14 19:47+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
-"Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/cs_CZ/)\n"
+"PO-Revision-Date: 2015-08-13 18:36+0000\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
+"Language-Team: Czech (Czech Republic) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,152 +19,152 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 msgid "AutoShutdown"
-msgstr ""
+msgstr "Samočinné vypnutí"
 
 msgid "Autoshutdown"
-msgstr ""
+msgstr "Odstavení z provozu v případě nečinnosti/nepotřebnosti"
 
 msgid "Begin"
-msgstr ""
+msgstr "Od"
 
 msgid "Check Clock"
-msgstr ""
+msgstr "Aktivovat"
 
 msgid "Check Clock to identify forced uptime."
-msgstr ""
+msgstr "(po níže nastavenou dobu nebude stroj s OpenMediaVault samočinně odstavován z provozu)"
 
 msgid "Cycles"
-msgstr ""
+msgstr "Kolikrát zjišťovat potřebnost:"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum a čas"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "Zadejte rozsah IP adres (vyjádřených jejich posledními trojčíslími) počítačů, u kterých bude zjišťováno, zda jsou zapnuté (a tedy nejspíš potřebují server)."
 
 msgid "Define the network traffic in kB/s"
-msgstr ""
+msgstr "V případě, že se síťový provoz na serveru pohybuje nad touto hodnotou (v kB/s), nebude odstaven z provozu."
 
 msgid "Enable"
-msgstr ""
+msgstr "Používat tuto funkci"
 
 msgid "End"
-msgstr ""
+msgstr "Do"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr ""
+msgstr "Příklad: 50 znamená průměrné vytížení 0.50, 8 znamená 0.08, 220 znamená 2.20"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Pokročilá nastavení"
 
 msgid "Extra options"
-msgstr ""
+msgstr "Další předvolby:"
 
 msgid "Fake"
-msgstr ""
+msgstr "Simulace"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "(režim simulace/testování)"
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Nikdy neodstavovat v době:"
 
 msgid "General settings"
-msgstr ""
+msgstr "Obecná nastavení"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Uspání na disk"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "Dosažitelnost IP adres klientských počítačů:"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "V případě, že průměrný vstupně/výstupní provoz na discích serveru pohybuje nad touto hodnotou, nebude odstaven z provozu."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "V případě, že se hodnota průměrného vytížení (loadaverage) serveru pohybuje nad touto hodnotu, nebude odstaven z provozu."
 
 msgid "List of Ports"
-msgstr ""
+msgstr "seznam portů"
 
 msgid "Log"
-msgstr ""
+msgstr "Záznam událostí"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Používat Syslog"
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Prodleva (v sekundách) mezi jednotlivými zjišťováními."
 
 msgid "Please check the"
-msgstr ""
+msgstr "Bližší informace naleznete v"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
+msgstr "Do seznamu neuvádějte hodnoty 1 a 255!"
 
 msgid "README"
-msgstr ""
+msgstr "CTIMNE"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Kolikrát za sebou musí být splněny níže uvedené podmínky nepotřebnosti běhu serveru s OpenMediaVault (např. žádný z klientských počítačů není zapnutý, atd), než bude odstaven z provozu."
 
 msgid "Settings"
-msgstr ""
+msgstr "Nastavení"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Vypnutí"
 
 msgid "Shutdown Command"
-msgstr ""
+msgstr "Způsob odstavení z provozu:"
 
 msgid "Sleep"
-msgstr ""
+msgstr "Prodleva opakování:"
 
 msgid "Socket number to check for activity."
-msgstr ""
+msgstr "Porty na IP adresách serveru (=sokety), na kterých hlídat aktivitu. Viz"
 
 msgid "Sockets"
-msgstr ""
+msgstr "Trvání spojení na tcp/udp porty serveru:"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Nastavení podmínek (ne)vypínání"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Uspání do paměti"
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Nastavení pro Syslog"
 
 msgid "The following scheme is mandatory"
-msgstr ""
+msgstr "Použijte k tomu následující formu zápisu: "
 
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 msgid "Verbose"
-msgstr ""
+msgstr "Obsáhlejší výstup"
 
 msgid "Verbose mode."
-msgstr ""
+msgstr "(zaznamenávat více podrobností)"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "(zapisovat události do systémového záznamu událostí)"
 
 msgid "all list entries are seperated by comma ','"
-msgstr ""
+msgstr "vícero položek oddělujte čárkou („,“)"
 
 msgid "define a single ip : ip"
-msgstr ""
+msgstr "jediná IP adresa: ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr ""
+msgstr "rozsah IP adres: začátek..konec (ony dvě tečky jsou nezbytné)"
 
 msgid "for more details."
-msgstr ""
+msgstr "(v angličtině)."
