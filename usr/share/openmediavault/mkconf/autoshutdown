@@ -38,6 +38,7 @@ xmlstarlet sel -t \
         -i "shutdowncommand = 0" -o "SHUTDOWNCOMMAND=\"shutdown -h now\"" -n -b \
         -i "shutdowncommand = 1" -o "SHUTDOWNCOMMAND=\"pm-hibernate\"" -n -b \
         -i "shutdowncommand = 2" -o "SHUTDOWNCOMMAND=\"pm-suspend\"" -n -b \
+        -i "shutdowncommand = 3" -o "SHUTDOWNCOMMAND=\"pm-suspend-hybrid\"" -n -b \
         -i "checkclockactive = 0" -o "CHECKCLOCKACTIVE=\"false\"" -n -b \
         -i "checkclockactive = 1" -o "CHECKCLOCKACTIVE=\"true\"" -n -b \
         -o 'UPHOURS="' -v "uphours-begin" -o '..' -v "uphours-end" -o '"' -n \
