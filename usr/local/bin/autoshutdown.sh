@@ -1102,7 +1102,7 @@ _check_config()
 			_log "INFO: Your Kernel supports the following modes from pm-utils:"
 			pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)" && PM_SUSPEND=true
 			pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)" && PM_HIBERNATE=true
-			pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)"
+			pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)" && PM_SUSPEND_HYBRID=true
 
 			# check, if pm-suspend is supported
 			if [ "$SHUTDOWNCOMMAND" = "pm-supend" -a ! "$PM_SUSPEND" = "true" ]; then
@@ -1113,6 +1113,12 @@ _check_config()
 			# check, if pm-hibernate is supported
 			if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
 				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
+				_log "WARN: Setting it to 'shutdown -h now'"
+				SHUTDOWNCOMMAND="shutdown -h now"
+			fi
+			# check, if pm-suspend-hybrid is supported
+			if [ "$SHUTDOWNCOMMAND" = "pm-suspend-hybrid" -a ! "$PM_SUSPEND_HYBRID" = "true" ]; then
+				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
 				_log "WARN: Setting it to 'shutdown -h now'"
 				SHUTDOWNCOMMAND="shutdown -h now"
 			fi
