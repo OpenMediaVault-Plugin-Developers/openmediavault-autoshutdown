@@ -124,7 +124,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
                 "cycles"           : { "type" : "integer", "minimum" : 1, "maximum" : 999 },
                 "sleep"            : { "type" : "integer", "minimum" : 1, "maximum" : 9999 },
                 "range"            : { "type" : "string" },
-                "shutdowncommand"  : { "type" : "integer", "minimum" : 0, "maximum" : 2 },
+                "shutdowncommand"  : { "type" : "integer", "minimum" : 0, "maximum" : 3 },
                 "checkclockactive" : { "type" : "boolean" },
                 "uphours-begin"    : { "type" : "integer", "minimum" : 0, "maximum" : 23 },
                 "uphours-end"      : { "type" : "integer", "minimum" : 0, "maximum" : 23 },
