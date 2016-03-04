@@ -1,43 +1,10 @@
 #!/usr/bin/make -f
 
-include ./openmediavault.mk
+%:
+	dh $@ --with systemd
 
-PLUGIN_NAME=autoshutdown
+override_dh_systemd_enable:
+	dh_systemd_enable --no-enable --name=autoshutdown
 
-clean:
-	dh_testdir
-	dh_testroot
-	dh_clean
-
-install:
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-	dh_install
-	chmod +x $(CURDIR)/debian/openmediavault-${PLUGIN_NAME}/usr/share/openmediavault/mkconf/${PLUGIN_NAME}
-	chmod +x $(CURDIR)/debian/openmediavault-${PLUGIN_NAME}/etc/init.d/${PLUGIN_NAME}
-	chmod +x $(CURDIR)/debian/openmediavault-${PLUGIN_NAME}/etc/pm/sleep.d/${PLUGIN_NAME}-restart
-
-binary-indep: install omv_clean_scm
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdebconf
-	dh_lintian
-	dh_link
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary-arch: install
-# We have nothing to do by default.
-
-build:
-# We have nothing to do by default.
-
-binary: binary-indep binary-arch
-.PHONY: clean binary-indep binary-arch binary install
+override_dh_systemd_start:
+	dh_systemd_start --no-start --name=autoshutdown

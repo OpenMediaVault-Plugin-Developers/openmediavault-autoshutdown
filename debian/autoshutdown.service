@@ -1,0 +1,11 @@
+[Unit]
+Description=autoshutdown
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/autoshutdown.pid
+ExecStart=/usr/sbin/autoshutdown.sh
+
+[Install]
+WantedBy=multi-user.target

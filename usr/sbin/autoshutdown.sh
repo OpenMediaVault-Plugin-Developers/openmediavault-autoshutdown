@@ -4,7 +4,7 @@
 #
 #          FILE:	autoshutdown.sh
 #
-#         USAGE:	copy this script to /usr/local/bin and the config-file to /etc
+#         USAGE:	copy this script to /usr/sbin and the config-file to /etc
 #
 #   DESCRIPTION:	shuts down a PC/Server - variable options
 #

@@ -3,7 +3,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Marcel Beck <marcel.beck@mbeck.org>
  * @copyright (c) 2012 Marcel Beck
- * @copyright (c) 2013-2014 OpenMediaVault Plugin Developers
+ * @copyright (c) 2013-2016 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
 
     private function getXPath()
     {
-        return sprintf( "//services/%s", $this->getPluginName() );
+        return sprintf( "/config/services/%s", $this->getPluginName() );
     }
 
     private function getEventMessagePath()
@@ -66,13 +66,12 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Get configuration object
         $object = $xmlConfig->get( $this->getXPath() );
-        if (is_null($object))
-        {
+        if (is_null($object)) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
                 $this->getXPath()
@@ -113,7 +112,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -144,8 +143,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
 
         // Get the existing configuration object.
         $oldObject = $xmlConfig->get( $this->getXPath() );
-        if (is_null($oldObject))
-        {
+        if (is_null($oldObject)) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
                 $this->getXPath()
@@ -153,7 +151,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         }
 
         // Update the configuration.
-        $object = array(
+        $object = [
             "enable"           => array_boolval($params, 'enable'),
             "cycles"           => intval($params['cycles']),
             "sleep"            => intval($params['sleep']),
@@ -173,11 +171,10 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
             "verbose"          => array_boolval($params, 'verbose'),
             "fake"             => array_boolval($params, 'fake'),
             "extraoptions"     => $params['extraoptions']
-        );
+        ];
 
         // Set configuration object
-        if (FALSE === $xmlConfig->replace($this->getXPath(), $object))
-        {
+        if (FALSE === $xmlConfig->replace($this->getXPath(), $object)) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED
             );

@@ -2,9 +2,7 @@
 #
 # @license  http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author   OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-# @author   Marcel Beck <marcel.beck@mbeck.org>
-# @copyright Copyright (c) 2013-2014 OpenMediaVault Plugin Developers
-# @copyright Copyright (c) 2012 Marcel Beck
+# @copyright Copyright (c) 2013-2016 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,48 +25,35 @@ set -e
 case "$1" in
     configure)
 
-        ########################################################################
-        # Set the default settings of the autoshutdown package to those
-        # expected by OpenMediaVault.
-        ########################################################################
-        /bin/chmod +x /etc/init.d/autoshutdown
+        SERVICE_XPATH_NAME="autoshutdown"
+        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
-        update-rc.d autoshutdown defaults
         if [ -z "$2" ]; then
-            echo "Updating init script links and actions"
-            invoke-rc.d --force autoshutdown stop
-            update-rc.d autoshutdown disable &>/dev/null
+            deb-systemd-helper disable ${SERVICE_XPATH_NAME}.service >/dev/null || true
+            deb-systemd-invoke stop ${SERVICE_XPATH_NAME}.service >/dev/null || true
         fi
 
-        if [ -f /etc/rsyslog.d/autoshutdownlog.conf ];
-        then
-            rm -f /etc/rsyslog.d/autoshutdownlog.conf
-        fi
-
-        if ! omv_config_exists "/config/services/autoshutdown"; then
-            echo "Initialize configuration"
-
-            object="<enable>0</enable>"
-            object="${object}<cycles>6</cycles>"
-            object="${object}<sleep>180</sleep>"
-            object="${object}<range>2..254</range>"
-            object="${object}<shutdowncommand>0</shutdowncommand>"
-            object="${object}<checkclockactive>0</checkclockactive>"
-            object="${object}<uphours-begin>6</uphours-begin>"
-            object="${object}<uphours-end>20</uphours-end>"
-            object="${object}<nsocketnumbers>21,22,80,139,445,3689,6991,9091,49152</nsocketnumbers>"
-            object="${object}<uldlcheck>1</uldlcheck>"
-            object="${object}<uldlrate>50</uldlrate>"
-            object="${object}<loadaveragecheck>0</loadaveragecheck>"
-            object="${object}<loadaverage>40</loadaverage>"
-            object="${object}<hddiocheck>1</hddiocheck>"
-            object="${object}<hddiorate>401</hddiorate>"
-            object="${object}<syslog>1</syslog>"
-            object="${object}<verbose>0</verbose>"
-            object="${object}<fake>0</fake>"
-            object="${object}<extraoptions></extraoptions>"
-
-            omv_config_add_element "/config/services" "autoshutdown" "${object}" true
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
+            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "cycles" "6"
+            omv_config_add_element "${SERVICE_XPATH}" "sleep" "180"
+            omv_config_add_element "${SERVICE_XPATH}" "range" "2..254"
+            omv_config_add_element "${SERVICE_XPATH}" "shutdowncommand" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "checkclockactive" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "uphours-begin" "6"
+            omv_config_add_element "${SERVICE_XPATH}" "uphours-end" "20"
+            omv_config_add_element "${SERVICE_XPATH}" "nsocketnumbers" "21,22,80,139,445,3689,6991,9091,49152"
+            omv_config_add_element "${SERVICE_XPATH}" "uldlcheck" "1"
+            omv_config_add_element "${SERVICE_XPATH}" "uldlrate" "50"
+            omv_config_add_element "${SERVICE_XPATH}" "loadaveragecheck" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "loadaverage" "40"
+            omv_config_add_element "${SERVICE_XPATH}" "hddiocheck" "1"
+            omv_config_add_element "${SERVICE_XPATH}" "hddiorate" "401"
+            omv_config_add_element "${SERVICE_XPATH}" "syslog" "1"
+            omv_config_add_element "${SERVICE_XPATH}" "verbose" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "fake" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "extraoptions" ""
         fi
 
         omv-mkconf autoshutdown
@@ -85,7 +70,5 @@ case "$1" in
         exit 1
     ;;
 esac
-
-#DEBHELPER#
 
 exit 0
