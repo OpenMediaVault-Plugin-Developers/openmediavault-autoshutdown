@@ -3,7 +3,7 @@
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
  * @copyright Copyright (c) 2009-2013 Volker Theile
- * @copyright Copyright (c) 2013-2014 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2013-2016 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 boxLabel   : _("Check Clock to identify forced uptime.")
             },{
                 xtype      : "fieldcontainer",
-                fieldLabel : "Uphours",
+                fieldLabel : _("Uphours"),
                 layout     : "hbox",
                 items      : [{
                     xtype         : "numberfield",
@@ -199,7 +199,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 }]
             },{
                 xtype      : "fieldcontainer",
-                fieldLabel : "ULDL Rate",
+                fieldLabel : _("ULDL Rate"),
                 layout     : "hbox",
                 items      : [{
                     xtype      : "checkbox",
@@ -227,7 +227,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 }]
             },{
                 xtype      : "fieldcontainer",
-                fieldLabel : "Load Average",
+                fieldLabel : _("Load Average"),
                 layout     : "hbox",
                 items      : [{
                     xtype      : "checkbox",
@@ -256,7 +256,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 }]
             },{
                 xtype      : "fieldcontainer",
-                fieldLabel : "HDDIO Rate",
+                fieldLabel : _("HDDIO Rate"),
                 layout     : "hbox",
                 items      : [{
                     xtype      : "checkbox",

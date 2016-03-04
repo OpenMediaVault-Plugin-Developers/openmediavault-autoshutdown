@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:06-0600\n"
+"POT-Creation-Date: 2016-03-04 12:11-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,6 +71,9 @@ msgstr ""
 msgid "General settings"
 msgstr ""
 
+msgid "HDDIO Rate"
+msgstr ""
+
 msgid "Hibernate"
 msgstr ""
 
@@ -84,6 +87,9 @@ msgid "If the load average of the server is above this value, then no shutdown."
 msgstr ""
 
 msgid "List of Ports"
+msgstr ""
+
+msgid "Load Average"
 msgstr ""
 
 msgid "Log"
@@ -141,6 +147,12 @@ msgid "The following scheme is mandatory"
 msgstr ""
 
 msgid "Type"
+msgstr ""
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Uphours"
 msgstr ""
 
 msgid "Verbose"

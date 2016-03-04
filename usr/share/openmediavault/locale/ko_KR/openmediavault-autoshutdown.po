@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:06-0600\n"
-"PO-Revision-Date: 2016-03-04 18:06+0000\n"
+"POT-Creation-Date: 2016-03-04 12:11-0600\n"
+"PO-Revision-Date: 2016-03-04 18:11+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,9 @@ msgstr "강제 가동시간"
 msgid "General settings"
 msgstr "일반 설정"
 
+msgid "HDDIO Rate"
+msgstr ""
+
 msgid "Hibernate"
 msgstr "휴면"
 
@@ -92,6 +95,9 @@ msgstr "서버의 부하 평균이 이 값 이상이면, 종료하지 않습니�
 
 msgid "List of Ports"
 msgstr "포트 목록"
+
+msgid "Load Average"
+msgstr ""
 
 msgid "Log"
 msgstr "기록"
@@ -150,6 +156,12 @@ msgstr "다음 구성은 필수입니다 "
 
 msgid "Type"
 msgstr "유형"
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Uphours"
+msgstr ""
 
 msgid "Verbose"
 msgstr "상세한"

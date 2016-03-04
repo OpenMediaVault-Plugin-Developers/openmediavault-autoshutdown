@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:06-0600\n"
-"PO-Revision-Date: 2016-03-04 18:06+0000\n"
+"POT-Creation-Date: 2016-03-04 12:11-0600\n"
+"PO-Revision-Date: 2016-03-04 18:11+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/pl_PL/)\n"
 "MIME-Version: 1.0\n"
@@ -77,6 +77,9 @@ msgstr "Wymuszony uptime"
 msgid "General settings"
 msgstr "Ustawienia główne"
 
+msgid "HDDIO Rate"
+msgstr ""
+
 msgid "Hibernate"
 msgstr "Hibernacja"
 
@@ -93,6 +96,9 @@ msgstr "Jeżeli loadaverage serwera jest powyżej tej wartości nie wykonuj wył
 
 msgid "List of Ports"
 msgstr "Lista portów"
+
+msgid "Load Average"
+msgstr ""
 
 msgid "Log"
 msgstr "Logi"
@@ -151,6 +157,12 @@ msgstr "Obowiązuje następujący schemat"
 
 msgid "Type"
 msgstr "Typ"
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Uphours"
+msgstr ""
 
 msgid "Verbose"
 msgstr "Pełne"

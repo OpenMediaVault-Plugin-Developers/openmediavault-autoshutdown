@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:06-0600\n"
-"PO-Revision-Date: 2016-03-04 18:06+0000\n"
+"POT-Creation-Date: 2016-03-04 12:11-0600\n"
+"PO-Revision-Date: 2016-03-04 18:11+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -76,6 +76,9 @@ msgstr "強制運行時間"
 msgid "General settings"
 msgstr "一般設定"
 
+msgid "HDDIO Rate"
+msgstr ""
+
 msgid "Hibernate"
 msgstr "休眠"
 
@@ -92,6 +95,9 @@ msgstr "如果伺服器的平均負載在這個數值以上，則不關機。"
 
 msgid "List of Ports"
 msgstr "通訊埠列表"
+
+msgid "Load Average"
+msgstr ""
 
 msgid "Log"
 msgstr "日誌"
@@ -150,6 +156,12 @@ msgstr "強制使用以下的格式 "
 
 msgid "Type"
 msgstr "型式"
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Uphours"
+msgstr ""
 
 msgid "Verbose"
 msgstr "詳盡"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:06-0600\n"
-"PO-Revision-Date: 2016-03-04 18:06+0000\n"
+"POT-Creation-Date: 2016-03-04 12:11-0600\n"
+"PO-Revision-Date: 2016-03-04 18:11+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -77,6 +77,9 @@ msgstr ""
 msgid "General settings"
 msgstr "Основные настройки"
 
+msgid "HDDIO Rate"
+msgstr ""
+
 msgid "Hibernate"
 msgstr ""
 
@@ -92,6 +95,9 @@ msgid ""
 msgstr ""
 
 msgid "List of Ports"
+msgstr ""
+
+msgid "Load Average"
 msgstr ""
 
 msgid "Log"
@@ -151,6 +157,12 @@ msgstr ""
 
 msgid "Type"
 msgstr "Тип"
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Uphours"
+msgstr ""
 
 msgid "Verbose"
 msgstr ""
