@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014
+# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014,2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-04 12:11-0600\n"
-"PO-Revision-Date: 2016-03-04 18:11+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2016-03-05 10:52+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgid "General settings"
 msgstr "Opciones"
 
 msgid "HDDIO Rate"
-msgstr ""
+msgstr "Velocidad HDDIO"
 
 msgid "Hibernate"
 msgstr "Hibernar"
@@ -97,7 +97,7 @@ msgid "List of Ports"
 msgstr "Lista de puertos"
 
 msgid "Load Average"
-msgstr ""
+msgstr "Carga media"
 
 msgid "Log"
 msgstr "Log"
@@ -146,7 +146,7 @@ msgid "Suspend"
 msgstr "Suspender"
 
 msgid "Suspend-Hybrid"
-msgstr ""
+msgstr "Suspensión-Híbrida"
 
 msgid "Syslog Configuration"
 msgstr "Configuración del Syslog (log del sistema)"
@@ -158,10 +158,10 @@ msgid "Type"
 msgstr "Tipo"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "Velocidad de Carga-Descarga"
 
 msgid "Uphours"
-msgstr ""
+msgstr "Horas encendido"
 
 msgid "Verbose"
 msgstr "Info ampliada"
