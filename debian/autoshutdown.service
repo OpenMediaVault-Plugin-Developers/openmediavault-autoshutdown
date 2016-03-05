@@ -3,7 +3,7 @@ Description=autoshutdown
 After=network.target
 
 [Service]
-Type=forking
+Type=simple
 PIDFile=/var/run/autoshutdown.pid
 ExecStart=/usr/sbin/autoshutdown.sh
 
