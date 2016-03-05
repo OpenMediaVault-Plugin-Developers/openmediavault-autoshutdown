@@ -3,7 +3,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @copyright (c) 2009-2013 Volker Theile
- * @copyright (c) 2013-2014 OpenMediaVault Plugin Developers
+ * @copyright (c) 2013-2016 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once("openmediavault/module.inc");
-require_once("openmediavault/config.inc");
-require_once("openmediavault/error.inc");
-require_once("openmediavault/initscript.inc");
+require_once 'openmediavault/config.inc';
+require_once 'openmediavault/error.inc';
 require_once("openmediavault/log.inc");
+require_once 'openmediavault/module.inc';
+require_once 'openmediavault/systemctl.inc';
 
 class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
     implements OMVINotifyListener, OMVIModuleServiceStatus
@@ -33,49 +33,75 @@ class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
         return "autoshutdown";
     }
 
+    private function getPluginName()
+    {
+        return strtolower( $this->getName() );
+    }
+
+    private function getXPath()
+    {
+        return sprintf( "/config/services/%s", $this->getPluginName() );
+    }
+
+    private function getEventMessagePath()
+    {
+        return sprintf( "org.openmediavault.services.%s", $this->getPluginName() );
+    }
+
     public function applyConfig()
     {
-        $cmd = "omv-mkconf autoshutdown 2>&1";
-        if (0 !== $this->exec($cmd, $output))
-        {
+        $cmd = sprintf("export LANG=C; omv-mkconf %s 2>&1",
+            $this->getPluginName()
+        );
+        if (0 !== $this->exec($cmd, $output)) {
             throw new OMVException(
                 OMVErrorMsg::E_EXEC_FAILED,
                 $cmd,
-                implode("\n", $output)
+                implode(PHP_EOL, $output)
             );
         }
     }
 
     public function startService()
     {
-        $initd = new OMVSysVInitScript("autoshutdown", TRUE);
-        $initd->exec();
+        global $xmlConfig;
+        $object = $xmlConfig->get( $this->getXPath() );
+        if (is_null($object)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+        if (!$object['enable']) {
+            return;
+        }
+        $systemCtl = new OMVSystemCtl($this->getPluginName());
+        $systemCtl->enable(true);
+    }
+
+    public function stopService()
+    {
+        $systemCtl = new OMVSystemCtl($this->getPluginName());
+        $systemCtl->disable(true);
     }
 
     public function getStatus()
     {
         global $xmlConfig;
-
-        // Get the configuration object
-        $xPath  = "//services/autoshutdown";
-        $object = $xmlConfig->get($xPath);
-        if (is_null($object))
-        {
+        $object = $xmlConfig->get( $this->getXPath() );
+        if (is_null($object)) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $xPath
+                $this->getXPath()
             );
         }
-
-        // Check if process is running. Init script does not support 'status'.
-        $cmd = "ps --no-heading -C autoshutdown.sh";
-        OMVUtil::exec($cmd, $output, $result);
-        return array(
-            "name"    => $this->getName(),
-            "title"   => gettext("AutoShutdown"),
-            "enabled" => boolval($object['enable']),
-            "running" => !empty($output[0])
-        );
+        $systemCtl = new OMVSystemCtl( $this->getPluginName() );
+        return [
+            'name'    => $this->getName(),
+            'title'   => gettext('Autoshutdown'),
+            'enabled' => boolval($object['enable']),
+            'running' => $systemCtl->isActive(),
+        ];
     }
 
     /**
@@ -85,8 +111,8 @@ class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
     {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            "org.openmediavault.services.autoshutdown",
-            array($this, "setDirty")
+            $this->getEventMessagePath(),
+            [ $this, "setDirty" ]
         );
     }
 }
@@ -98,17 +124,17 @@ $moduleMgr->registerModule(new OMVModuleAutoShutdown());
 // Register new logfile type
 OMVLogFile::registerType(
     "autoshutdown",
-    array(
+    [
         "filename" => "autoshutdown.log",
         "filepath" => "/var/log/autoshutdown.log",
         "regex"    => "/^(\S+\s+\d+\s+\S+)\s+.*\s+logger:\s+\S+:\s+(\S+):\s+(.*)$/",
-        "columns"  => array(
-            "date"  => array(
+        "columns"  => [
+            "date"  => [
                 "index" => 1,
                 "func"  => create_function('$v', 'return strpdate($v,"M j G:i:s");')
-             ),
+             ],
             "type"  => 2,
             "log"   => 3
-         )
-    )
+         ]
+    ]
 );
