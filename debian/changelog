@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (3.0.2) stable; urgency=low
+
+  * Fix permissions
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 11 Mar 2016 17:20:28 -0600
+
 openmediavault-autoshutdown (3.0.1) stable; urgency=low
 
   * Convert sysvinit lines to systemd
