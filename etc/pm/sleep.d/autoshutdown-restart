@@ -3,7 +3,6 @@
 case "$1" in
     hibernate|suspend)
         logger -s -t "$USER autoshutdown [$$]" "hibernate/suspend: autoshutdown-script stop from /etc/pm/sleep.d/autoshutdown-restart"
-        systemctl stop autoshutdown.service
     ;;
 
     thaw|resume)

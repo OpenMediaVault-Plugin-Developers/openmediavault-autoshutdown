@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (3.0.3) stable; urgency=low
+
+  * Fix pm-suspend
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 15 Mar 2016 06:32:32 -0500
+
 openmediavault-autoshutdown (3.0.2) stable; urgency=low
 
   * Fix permissions
