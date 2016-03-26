@@ -271,10 +271,10 @@ _check_processes()
 	# ## disabled for testing
 	# _log "DEBUG: _check_processes() disabled for testing"
 	# return 0
-	
+
 	NUMPROC=0
 	CHECK=0
-	
+
 	# check for each given command name in LOADPROCNAMES if it is currently stated active in "top"
 	# i found, that for smbd, proftpd, nsfd, ... there are processes always present in "ps" or "top" output
 	# this could be due to the "daemon" mechanism... Only chance to identify there is something happening with these
@@ -372,7 +372,7 @@ _check_plugin()
 
 		# When file exists (matches regex), no shutdown
 		if [ "$(find ${PLUGIN_folder[$ASD_pluginNR]} -regextype posix-egrep -regex '.*'${PLUGIN_file[$ASD_pluginNR]} 2> /dev/null | wc -l)" -gt 0 ]; then
-			
+
 			# Check, if PLUGIN_content for the plugin is defined
 			if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
 
@@ -447,7 +447,7 @@ _check_loadaverage()
 		_log "DEBUG: _check_loadaverage(): CURRENT_LOADAVERAGE_TEMP2: $CURRENT_LOADAVERAGE_TEMP2"
 		_log "DEBUG: _check_loadaverage(): CURRENT_LOADAVERAGE: $CURRENT_LOADAVERAGE"
 	fi
-	
+
 	if [ $CURRENT_LOADAVERAGE -gt $LOADAVERAGE ]; then
 		_log "INFO: Loadaverage ($CURRENT_LOADAVERAGE_TEMP2 -> $CURRENT_LOADAVERAGE) is higher than target ($LOADAVERAGE) - no shutdown"
 		let RVALUE++
@@ -494,7 +494,7 @@ _check_net_status()
 
 		# had to add [[:space:]] because without it, this command also wrong values are found:
 		# searching for port 445 also finds port 44547
-		RESULT=$(echo ${LINES} | egrep -c "${IPWORD}[[:space:]]") 
+		RESULT=$(echo ${LINES} | egrep -c "${IPWORD}[[:space:]]")
 
 		let NUMPROC=$NUMPROC+$RESULT
 
@@ -550,10 +550,12 @@ _check_net_status()
 
 	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -eq 0 ]
 	if [ $NUMPROC -eq 0 ]; then
-		if [ $(/usr/bin/smbstatus | egrep -i "no locked|sessionid.tdb not initialised|locking.tdb not initialised" | wc -l) != "1" ]; then
-			_log "INFO: Samba connected (reported by smbstatus) -> no shutdown"
-			let NUMPROC++
-		fi
+        if [ "$CHECK_SAMBA" = "true" ]; then
+            if [ $(/usr/bin/smbstatus | egrep -i "no locked|sessionid.tdb not initialised|locking.tdb not initialised" | wc -l) != "1" ]; then
+                _log "INFO: Samba connected (reported by smbstatus) -> no shutdown"
+                let NUMPROC++
+            fi
+        fi
 	fi
 
 	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active socket(s) from Port(s): $NSOCKETNUMBERS" ; }; fi
@@ -584,7 +586,7 @@ _check_ul_dl_rate()
 	# return 0
 
 	NICNR_ULDLCHECK="$1"
-	
+
 	# creation of the directory is in the main script
 
 	_log "INFO: ULDL-Traffic-Check for '${NIC[${NICNR_ULDLCHECK}]}'"
@@ -622,7 +624,7 @@ _check_ul_dl_rate()
 		diff_RX=$(expr $RX - $p_RX)
 		diff_TX=$(expr $TX - $p_TX)
 
-		# Calculate dl/ul-rate in kB/s - format xx.x		
+		# Calculate dl/ul-rate in kB/s - format xx.x
 		LAST_DL_RATE=$(echo $diff_RX $SLEEP | awk '{ printf("%.1f\n", ($1/$2) ) }')
 		LAST_UL_RATE=$(echo $diff_TX $SLEEP | awk '{ printf("%.1f\n", ($1/$2) ) }')
 
@@ -638,7 +640,7 @@ _check_ul_dl_rate()
 			_log "DEBUG: _check_ul_dl(): check: RX:$RX -le t_RX:$t_RX"
 			_log "DEBUG: _check_ul_dl(): check: TX:$TX -le t_TX:$t_TX"
 		fi
-		
+
 		if [ $RX -le $t_RX -a $TX -le $t_TX ]; then
 			_log "INFO: ${NIC[${NICNR_ULDLCHECK}]}: UL- and DL-Rate is under $ULDLRATE kB/s -> next check"
 			return 0 # return value -> shutdown
@@ -776,7 +778,7 @@ _check_hddio()
 		echo "r $OMV_ASD_HDD_IN" > $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ## Write new packets to hddio file
 		echo "w $OMV_ASD_HDD_OUT" >> $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ## Write new packets to hddio file
 	}
-	
+
 	# do this for every HDD mounted in OMV
 	if $DEBUG; then
 		_log "DEBUG: ls -l $HDDIOTMPDIR ## Begin ----------"
@@ -785,9 +787,9 @@ _check_hddio()
 		done
 		_log "DEBUG: ls -l $HDDIOTMPDIR ## End ----------"
 	fi
-	
+
 	iostat -kd > $HDDIOTMPDIR/iostat.txt
-	
+
 	if $DEBUG; then
 		_log "DEBUG: ## iostat -kd ## Begin ----------"
 		while read line; do
@@ -795,31 +797,31 @@ _check_hddio()
 		done < $HDDIOTMPDIR/iostat.txt
 		_log "DEBUG: ## iostat -kd ## End ----------"
 	fi
-	
+
 	for OMV_HDD in $(mount -l | grep /dev/sd | sed 's/.*\(sd.\).*/\1/g' | sort -u); do
-		OMV_IOSTAT="$(egrep ^${OMV_HDD} $HDDIOTMPDIR/iostat.txt)"		
-		
+		OMV_IOSTAT="$(egrep ^${OMV_HDD} $HDDIOTMPDIR/iostat.txt)"
+
 		OMV_ASD_HDD_IN="$(echo "$OMV_IOSTAT" | awk '{print $5}')"
 		OMV_ASD_HDD_OUT="$(echo "$OMV_IOSTAT" | awk '{print $6}')"
 
 		# is there any function to achieve this in OMV?
 		OMV_HDD_NAME="$( blkid | grep /dev/$OMV_HDD | grep LABEL | sed 's/.*LABEL="\(.*\)" UUID.*/\1/g')"
-		
+
 		if $DEBUG; then
 			_log "DEBUG: HDD-IO: ===== /dev/$OMV_HDD -> $OMV_HDD_NAME ====="
-			
+
 			_log "DEBUG: ## iostat -kd | egrep ^${OMV_HDD} ## Begin ----------"
 			cat $HDDIOTMPDIR/iostat.txt | egrep ^${OMV_HDD} | while read line; do
 				_log "DEBUG: $line"
 			done
 			_log "DEBUG: ## iostat -kd | egrep ^${OMV_HDD} ## End ----------"
-			
+
 			_log "DEBUG: check_hddio() actual iostat-values: r: OMV_ASD_HDD_IN:  $OMV_ASD_HDD_IN"
 			_log "DEBUG: check_hddio() actual iostat-values: w: OMV_ASD_HDD_OUT: $OMV_ASD_HDD_OUT"
 		fi
 
 		if [ -f $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ]; then
-		
+
 			HDDIO_DEV_TMP="$(cat $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp)"
 
 			if $DEBUG; then
@@ -835,7 +837,7 @@ _check_hddio()
 			# store previous READ value in p_HDDIO_READ
 			p_HDDIO_READ=$(echo "$HDDIO_DEV_TMP" | grep r | sed 's/^r //g')
 			#p_HDDIO_READ=$(cat $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp | grep r | sed 's/^r //g')
-			
+
 			# store previous WRITE value in p_HDDIO_WRITE
 			#p_HDDIO_WRITE=$(cat $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp | grep w | sed 's/^w //g')
 			p_HDDIO_WRITE=$(echo "$HDDIO_DEV_TMP" | grep w | sed 's/^w //g')
@@ -855,11 +857,11 @@ _check_hddio()
 				_log "WARN: Invalid value found in $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp"
 				_log "WARN: READ: '$p_HDDIO_READ' --- WRITE: '$p_HDDIO_WRITE'"
 				_log "WARN: Deleting and rewriting the file"
-				rm -f $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp 
+				rm -f $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp
 				f_check_hdd_io_write_to_file
 				continue # next HDD
 				}
-			
+
 			f_check_hdd_io_write_to_file
 
 			# Calculate threshold limit (defined kB/s multiplied with $SLEEP) to get the total value of kB over the $SLEEP-time
@@ -1038,10 +1040,10 @@ _check_config()
 
 	# HDDIO
 	if [ "$HDDIOCHECK" = "true" ]; then
-	
+
 		# check if iostat is executable and installed (package 'sysstat')
 		if which iostat > /dev/null 2>&1; then
-		
+
 			# HDDIO_RATE (max 6 digits -> 1 - 999999 kB/s)
 			[[ "$HDDIO_RATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
 				_log "WARN: Invalid parameter format: HDDIO_RATE"
@@ -1058,7 +1060,7 @@ _check_config()
 		_log "WARN: Ignoring HDDIO_RATE"
 		HDDIOCHECK="false"
 	fi
-	
+
 	# Sleep: 1 - 9999
 	[[ "$SLEEP" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
 			_log "WARN: Invalid parameter format: SLEEP (sec)"
@@ -1334,10 +1336,10 @@ _check_system_active()
 			# PRIO 2: Do a check for some active network sockets, maybe, one never knows...
 			# If there is at least one active, we leave this function with a 'bogus find'
 				_check_net_status $NICNR_CHECKSYSTEMACTIVE
-				
+
 				### Internal debugging
 				#echo "_check_net_status disabled for debugging!!!!"
-				
+
 				if [ $? -gt 0 ]; then
 					let CNT++
 				fi
@@ -1352,7 +1354,7 @@ _check_system_active()
 				# Do a check for ul-dl-rate
 				# I've put it here, because every NIC should be checked for uldl-rate
 				if [ "$ULDLCHECK" = "true" ] ; then
-					_check_ul_dl_rate $NICNR_CHECKSYSTEMACTIVE 
+					_check_ul_dl_rate $NICNR_CHECKSYSTEMACTIVE
 					if [ $? -gt 0 ]; then
 						let CNT++
 					fi
@@ -1382,7 +1384,7 @@ _check_system_active()
 	fi   # > if[ $CNT -eq 0 ]; then
 
 
-	
+
 	if [ $CNT -eq 0 ]; then
 		# PRIO 5: Do a check for some active processes, maybe, one never knows...
 		# If there is at least one active, we leave this function with a 'bogus find'
@@ -1409,7 +1411,7 @@ _check_system_active()
 	else
 		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_loadaverage not called -> CNT: $CNT "; fi
 	fi   # > if[ $CNT -eq 0 ]; then
-	
+
 	if [ $CNT -eq 0 ]; then
 		# PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
 		if [ "$PLUGINCHECK" = "true" ] ; then

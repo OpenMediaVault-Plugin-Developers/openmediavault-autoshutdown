@@ -72,7 +72,7 @@ ULDLRATE=50
 	# below this value, your PC shuts down, if all other checks are negative, too after the defined nr. of Cycles
 
 LOADAVERAGECHECK="true"
-	# set it to "true" for a check of loadaverage over the last minute in autoshutdown. If the system is 
+	# set it to "true" for a check of loadaverage over the last minute in autoshutdown. If the system is
 	# over this value, then no shutdown is issued.
 	# If you set this to "true", don't forget to set LOADAVERAGE also!
 
@@ -84,14 +84,17 @@ LOADAVERAGE=40
 	# LOADAVERAGE=8    # means a loadaverage of 0.08
 	# LOADAVERAGE=220  # means a loadaverage of 2.20
 	# and so on ...
-	
+
 HDDIOCHECK="true"
-	# set it to "true" for a check of HDD-IO over the last SLEEP-time in autoshutdown. If the system is 
+	# set it to "true" for a check of HDD-IO over the last SLEEP-time in autoshutdown. If the system is
 	# over this value, then no shutdown is issued.
 	# If you set this to "true", don't forget to set HDDIO-RATE also!
-	
+
 HDDIO_RATE=400
 	# Set this to the target HDDIO-rate in kB/s for the Server.
+
+CHECK_SAMBA="true"
+    # If set to true, smbstatus will be checked for connected clients.
 
 ##################################################
 #### Syslog Configuration ####
@@ -125,7 +128,7 @@ FAKE="false"
 #LOADPROCNAMES="smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd,your_processes_here"
                      # command names of processes with load dependent children
                      # checked by default="proftpd,smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd")
-					 
+
 #TEMPPROCNAMES="in.tftpd"
                      # command names of processes only started when active
 					 # checked with "top" AND "ps", so all processes are found, even such, which doesn't show up in top
@@ -143,7 +146,7 @@ FAKE="false"
 # ----------------------------------------------------------------------------------------
 
 #SHUTDOWNCOMMAND="pm-hibernate" # puts the PC in hibernate-mode
-								# pm-suspend  # puts the PC in suspend-mode 
+								# pm-suspend  # puts the PC in suspend-mode
 								# shutdown -h +5  # shuts the PC down 5 min after shutdown-command
 
 	# If you don't want to shutdown your PC, but go in hibernate/suspend: Define the command here
@@ -168,13 +171,13 @@ FAKE="false"
 #NETSTATWORD="VERBUNDEN"    # Set specific word, which specifies the connection in netstat
 							# only needed for CLI-testing with VERBOSE!
 
-	# It is needed, if someone wants to test autoshutdown.sh on the CLI, because on the CLI the netstat-output is language-specific. 
-	# At systemstart netstat-output is always english. For german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n' 
+	# It is needed, if someone wants to test autoshutdown.sh on the CLI, because on the CLI the netstat-output is language-specific.
+	# At systemstart netstat-output is always english. For german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n'
 	# on the CLI and you shoud see this output:
 
 		# Aktive Internetverbindungen (ohne Server)
-		# Proto Recv-Q Send-Q Local Address           Foreign Address         State      
-		# tcp        0      0 192.168.178.21:2049     192.168.178.23:753      VERBUNDEN  
+		# Proto Recv-Q Send-Q Local Address           Foreign Address         State
+		# tcp        0      0 192.168.178.21:2049     192.168.178.23:753      VERBUNDEN
 		# tcp        0      0 192.168.178.21:22       192.168.178.23:53099    VERBUNDEN
 
 	# now take the word under "State" -> "VERBUNDEN" and set it for NETSTATWORD
@@ -186,39 +189,39 @@ FAKE="false"
 	# PlugIns: You find sample plugins in /etc/autoshutdown.d
 	# Set this to true, if autoshutdown.sh checks for PlugIns in /etc/autoshutdown.d
 	# set it to "false" (or uncemmented) to skip the check
-	# 
+	#
 	# E.g.: When ClamAV does a check, the Server shouldn't shut down
 	# How to do that?
 	# Let's look at a example: in the clamav-plugin for autoshutdown (etc/autoshutdown.d/clamav) the following is set:
-	# 
+	#
 	#    # In which folder is the file to look for
 	#    folder="/var/run/clamav"
 	#    # filename (can be expanded with regexes)
 	#    file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
-	# 
+	#
 	# Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345 (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown
-	# 
+	#
 	# also possible:
 	#     folder="/home/user"
 	#     file="backup.status"
 	#     content="processing job"
-	# 
+	#
 	# If a file /home/user/backup.status exists with the content 'processing job', the Server isn't shutdow
-	# This is useful for backupscripts. It is not nice if the PC is shutting down while the backup-script is running. 
+	# This is useful for backupscripts. It is not nice if the PC is shutting down while the backup-script is running.
 	# In my backup-script i use a simple
-	# 
+	#
 	#     echo "processing job" > /home/user/backup.status
-	# 
+	#
 	# at the beginning and a
-	# 
+	#
 	#     rm /home/user/backup.status
-	# 
+	#
 	# at the end of the script. In the boot-Phase also a
-	# 
+	#
 	#     rm /home/user/*.status
-	# 
+	#
 	# to delete all *.status files, which are not deleted before (loss of power for example)
-	# 
+	#
 	# Please have a look at the two example files in /etc/autoshutdown.d
 
 #FORCE_NIC="eth1"

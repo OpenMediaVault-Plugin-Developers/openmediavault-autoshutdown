@@ -283,6 +283,12 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                         text  : _("If the HDD-IO-average of the server is above this value, then no shutdown.")
                     }]
                 }]
+            },{
+                xtype      : "checkbox",
+                name       : "checksamba",
+                fieldLabel : _("Check smbstatus"),
+                checked    : true,
+                boxLabel   : _("Check smbstatus for connected clients.")
             }]
         },{
             xtype         : "fieldset",
