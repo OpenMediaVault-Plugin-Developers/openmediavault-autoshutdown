@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Stefan Thrane Overby <stoverby@gmail.com>, 2013-2014
+# Stefan Thrane Overby <stoverby@gmail.com>, 2013-2014,2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:11-0600\n"
-"PO-Revision-Date: 2016-03-04 18:11+0000\n"
+"POT-Creation-Date: 2016-03-26 08:48-0500\n"
+"PO-Revision-Date: 2016-03-26 13:48+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Danish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -53,6 +53,9 @@ msgstr "Aktiver"
 msgid "End"
 msgstr "Slut"
 
+msgid "Enter a single dash '-' in the field to disable check."
+msgstr ""
+
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
@@ -77,7 +80,7 @@ msgid "General settings"
 msgstr "Generelle indstillinger"
 
 msgid "HDDIO Rate"
-msgstr ""
+msgstr "HDDIO Hastighed"
 
 msgid "Hibernate"
 msgstr "Dvale"
@@ -97,7 +100,7 @@ msgid "List of Ports"
 msgstr "Portliste"
 
 msgid "Load Average"
-msgstr ""
+msgstr "Belastnings Gennemsnit"
 
 msgid "Log"
 msgstr "Log"
@@ -146,7 +149,7 @@ msgid "Suspend"
 msgstr "Udsæt"
 
 msgid "Suspend-Hybrid"
-msgstr ""
+msgstr "Udsæt-Hybrid"
 
 msgid "Syslog Configuration"
 msgstr "Syslog Konfiguration"
@@ -158,10 +161,10 @@ msgid "Type"
 msgstr "Type"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "ULDL Hastighed"
 
 msgid "Uphours"
-msgstr ""
+msgstr "Oppetid"
 
 msgid "Verbose"
 msgstr "Detaljeret"

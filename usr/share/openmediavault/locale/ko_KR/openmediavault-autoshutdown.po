@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014
+# Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014,2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-04 12:11-0600\n"
-"PO-Revision-Date: 2016-03-04 18:11+0000\n"
+"POT-Creation-Date: 2016-03-26 08:48-0500\n"
+"PO-Revision-Date: 2016-03-26 13:48+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
@@ -53,6 +53,9 @@ msgstr "활성화"
 msgid "End"
 msgstr "끝"
 
+msgid "Enter a single dash '-' in the field to disable check."
+msgstr ""
+
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
@@ -77,7 +80,7 @@ msgid "General settings"
 msgstr "일반 설정"
 
 msgid "HDDIO Rate"
-msgstr ""
+msgstr "HDDIO 비율"
 
 msgid "Hibernate"
 msgstr "휴면"
@@ -97,7 +100,7 @@ msgid "List of Ports"
 msgstr "포트 목록"
 
 msgid "Load Average"
-msgstr ""
+msgstr "적재 평균"
 
 msgid "Log"
 msgstr "기록"
@@ -146,7 +149,7 @@ msgid "Suspend"
 msgstr "대기"
 
 msgid "Suspend-Hybrid"
-msgstr ""
+msgstr "하이브리드-대기"
 
 msgid "Syslog Configuration"
 msgstr "Syslog 구성"
@@ -158,10 +161,10 @@ msgid "Type"
 msgstr "유형"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "ULDL 비율"
 
 msgid "Uphours"
-msgstr ""
+msgstr "경과시간"
 
 msgid "Verbose"
 msgstr "상세한"
