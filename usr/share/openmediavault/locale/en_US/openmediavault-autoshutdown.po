@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-26 08:48-0500\n"
-"PO-Revision-Date: 2016-03-26 13:48+0000\n"
+"POT-Creation-Date: 2016-03-26 09:09-0500\n"
+"PO-Revision-Date: 2016-03-26 14:09+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: English (United States) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,12 @@ msgstr "Check Clock"
 
 msgid "Check Clock to identify forced uptime."
 msgstr "Check Clock to identify forced uptime."
+
+msgid "Check smbstatus"
+msgstr "Check smbstatus"
+
+msgid "Check smbstatus for connected clients."
+msgstr "Check smbstatus for connected clients."
 
 msgid "Cycles"
 msgstr "Cycles"
