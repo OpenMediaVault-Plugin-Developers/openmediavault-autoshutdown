@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# songming <by@songming.me>, 2013-2014
+# songming <by@songming.me>, 2013-2014,2016
 # Wei Ding <dyw.net@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-26 09:09-0500\n"
-"PO-Revision-Date: 2016-03-26 14:09+0000\n"
+"POT-Creation-Date: 2016-03-26 09:25-0500\n"
+"PO-Revision-Date: 2016-03-26 14:25+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -34,11 +34,17 @@ msgstr "检查时间"
 msgid "Check Clock to identify forced uptime."
 msgstr "强制运行时间"
 
-msgid "Check smbstatus"
+msgid "Check Users"
 msgstr ""
 
-msgid "Check smbstatus for connected clients."
+msgid "Check for connected users."
 msgstr ""
+
+msgid "Check smbstatus"
+msgstr "检查SMB状态"
+
+msgid "Check smbstatus for connected clients."
+msgstr "检查SMB客户端联机状态。"
 
 msgid "Cycles"
 msgstr "周期"
@@ -61,7 +67,7 @@ msgid "End"
 msgstr "结束"
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
+msgstr "输入符号'-'禁用检查。"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -87,7 +93,7 @@ msgid "General settings"
 msgstr "常规设置"
 
 msgid "HDDIO Rate"
-msgstr ""
+msgstr "HDD IO率"
 
 msgid "Hibernate"
 msgstr "休眠"
@@ -107,7 +113,7 @@ msgid "List of Ports"
 msgstr "端口列表"
 
 msgid "Load Average"
-msgstr ""
+msgstr "平均负载"
 
 msgid "Log"
 msgstr "日志"
@@ -156,7 +162,7 @@ msgid "Suspend"
 msgstr "待机"
 
 msgid "Suspend-Hybrid"
-msgstr ""
+msgstr "混合待机"
 
 msgid "Syslog Configuration"
 msgstr "日志设置"
@@ -168,10 +174,10 @@ msgid "Type"
 msgstr "类型"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "ULDL 率"
 
 msgid "Uphours"
-msgstr ""
+msgstr "在线时间"
 
 msgid "Verbose"
 msgstr "详细"

@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (3.0.4) stable; urgency=low
 
   * Add ability to disable smbstatus check
+  * Add ability to disable check for connected users
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 26 Mar 2016 09:13:45 -0500
 
