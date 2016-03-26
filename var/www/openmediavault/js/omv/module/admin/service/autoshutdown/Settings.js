@@ -185,7 +185,8 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                             _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
                             _("define a single ip : ip") + "<br />" + "- " +
                             _("all list entries are seperated by comma ','") + "<br />" +
-                            _("Please make sure to leave 1 and 255 out of the list!")
+                            _("Please make sure to leave 1 and 255 out of the list!") + "<br />" +
+                            _("Enter a single dash '-' in the field to disable check.")
                 }]
             },{
                 xtype      : "textfield",
