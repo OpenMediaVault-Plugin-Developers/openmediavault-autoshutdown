@@ -94,6 +94,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
         $object['loadaverage']      = intval($object['loadaverage']);
         $object['hddiocheck']       = boolval($object['hddiocheck']);
         $object['hddiorate']        = intval($object['hddiorate']);
+        $object['checksamba']       = boolval($object['checksamba']);
 
         $object['syslog']           = boolval($object['syslog']);
         $object['verbose']          = boolval($object['verbose']);
@@ -134,6 +135,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
                 "loadaverage"      : { "type" : "integer" },
                 "hddiocheck"       : { "type" : "boolean" },
                 "hddiorate"        : { "type" : "integer" },
+                "checksamba"       : { "type" : "boolean" },
                 "syslog"           : { "type" : "boolean" },
                 "verbose"          : { "type" : "boolean" },
                 "fake"             : { "type" : "boolean" },
@@ -167,6 +169,7 @@ class OMVRpcServiceAutoShutdown extends OMVRpcServiceAbstract
             "loadaverage"      => intval($params['loadaverage']),
             "hddiocheck"       => array_boolval($params, 'hddiocheck'),
             "hddiorate"        => intval($params['hddiorate']),
+            "checksamba"       => array_boolval($params, 'checksamba'),
             "syslog"           => array_boolval($params, 'syslog'),
             "verbose"          => array_boolval($params, 'verbose'),
             "fake"             => array_boolval($params, 'fake'),
