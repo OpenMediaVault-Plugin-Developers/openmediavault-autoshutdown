@@ -530,22 +530,24 @@ _check_net_status()
 
 	# Extra Check for connected users on the CLI if other processes are negative -> [ $NUMPROC -eq 0 ]
 	if [ $NUMPROC -eq 0 ]; then
-		# 'w -h' lists all connected users
-		# egrep -v '^\s*$' removes all empty lines
-		USERSCONNECTED="$(w -h | egrep -v '^\s*$')"
+        if [ "$CHECK_CLI" = "true" ]; then
+            # 'w -h' lists all connected users
+            # egrep -v '^\s*$' removes all empty lines
+            USERSCONNECTED="$(w -h | egrep -v '^\s*$')"
 
-		if $DEBUG; then _log "DEBUG: _check_net_status(): USERSCONNECTED: '$USERSCONNECTED'"; fi
+            if $DEBUG; then _log "DEBUG: _check_net_status(): USERSCONNECTED: '$USERSCONNECTED'"; fi
 
-		if [ $(echo "$USERSCONNECTED"  | egrep -v '^\s*$' | wc -l) -gt 0 ]; then
-			_log "INFO: There is a user (locally) connected -> no shutdown"
-			ASD_CONNECTED_USER=$(echo "$USERSCONNECTED" | awk '{print $1}')
-			ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $3}')
-			# Check, if it is a local user
-			[[ "$ASD_CONNECTED_FROM" =~ ^.*:.*$ ]] && ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $2}')
+            if [ $(echo "$USERSCONNECTED"  | egrep -v '^\s*$' | wc -l) -gt 0 ]; then
+                _log "INFO: There is a user (locally) connected -> no shutdown"
+                ASD_CONNECTED_USER=$(echo "$USERSCONNECTED" | awk '{print $1}')
+                ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $3}')
+                # Check, if it is a local user
+                [[ "$ASD_CONNECTED_FROM" =~ ^.*:.*$ ]] && ASD_CONNECTED_FROM=$(echo "$USERSCONNECTED" | awk '{print $2}')
 
-			_log "INFO: It is '$ASD_CONNECTED_USER' on/from '$ASD_CONNECTED_FROM'"
-			let NUMPROC++
-		fi
+                _log "INFO: It is '$ASD_CONNECTED_USER' on/from '$ASD_CONNECTED_FROM'"
+                let NUMPROC++
+            fi
+        fi
 	fi
 
 	# Extra Samba-Check for connected Clients only if other processes are negative -> [ $NUMPROC -eq 0 ]

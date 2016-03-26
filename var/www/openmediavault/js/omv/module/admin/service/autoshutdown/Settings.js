@@ -289,6 +289,12 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 fieldLabel : _("Check smbstatus"),
                 checked    : true,
                 boxLabel   : _("Check smbstatus for connected clients.")
+            },{
+                xtype      : "checkbox",
+                name       : "checkcli",
+                fieldLabel : _("Check Users"),
+                checked    : true,
+                boxLabel   : _("Check for connected users.")
             }]
         },{
             xtype         : "fieldset",

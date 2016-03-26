@@ -54,6 +54,8 @@ xmlstarlet sel -t \
         -v "concat('HDDIO_RATE=',hddiorate)" -n \
         -i "checksamba = 0" -o "CHECK_SAMBA=\"false\"" -n -b \
         -i "checksamba = 1" -o "CHECK_SAMBA=\"true\"" -n -b \
+        -i "checkcli = 0" -o "CHECK_CLI=\"false\"" -n -b \
+        -i "checkcli = 1" -o "CHECK_CLI=\"true\"" -n -b \
         -i "syslog = 0" -o "SYSLOG=\"false\"" -n -b \
         -i "syslog = 1" -o "SYSLOG=\"true\"" -n -b \
         -i "verbose = 0" -o "VERBOSE=\"false\"" -n -b \
