@@ -18,123 +18,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'openmediavault/config.inc';
-require_once 'openmediavault/error.inc';
-require_once("openmediavault/log.inc");
-require_once 'openmediavault/module.inc';
-require_once 'openmediavault/systemctl.inc';
 
-class OMVModuleAutoShutdown extends OMVModuleServiceAbstract
-    implements OMVINotifyListener, OMVIModuleServiceStatus
+class OMVModuleAutoShutdown extends \OMV\Engine\Module\ServiceAbstract
+    implements \OMV\Engine\Notify\IListener, \OMV\Engine\Module\IServiceStatus
 {
-
     public function getName()
     {
         return "autoshutdown";
     }
 
-    private function getPluginName()
-    {
-        return strtolower( $this->getName() );
-    }
-
-    private function getXPath()
-    {
-        return sprintf( "/config/services/%s", $this->getPluginName() );
-    }
-
-    private function getEventMessagePath()
-    {
-        return sprintf( "org.openmediavault.services.%s", $this->getPluginName() );
-    }
-
     public function applyConfig()
     {
-        $cmd = sprintf("export LANG=C; omv-mkconf %s 2>&1",
-            $this->getPluginName()
-        );
-        if (0 !== $this->exec($cmd, $output)) {
-            throw new OMVException(
-                OMVErrorMsg::E_EXEC_FAILED,
-                $cmd,
-                implode(PHP_EOL, $output)
-            );
-        }
+        $cmd = new \OMV\System\Process("omv-mkconf", "autoshutdown");
+        $cmd->setRedirect2to1();
+        $cmd->execute();
     }
 
     public function startService()
     {
-        global $xmlConfig;
-        $object = $xmlConfig->get( $this->getXPath() );
-        if (is_null($object)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXPath()
-            );
-        }
-        if (!$object['enable']) {
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.autoshutdown");
+        if (TRUE !== $object->get("enable"))
             return;
-        }
-        $systemCtl = new OMVSystemCtl($this->getPluginName());
-        $systemCtl->enable(true);
+        // Start this service and enable the unit file.
+        $systemCtl = new \OMV\System\SystemCtl("autoshutdown");
+        $systemCtl->enable(TRUE);
     }
 
     public function stopService()
     {
-        $systemCtl = new OMVSystemCtl($this->getPluginName());
-        $systemCtl->disable(true);
+        $systemCtl = new \OMV\System\SystemCtl("autoshutdown");
+        $systemCtl->disable(TRUE);
     }
 
     public function getStatus()
     {
-        global $xmlConfig;
-        $object = $xmlConfig->get( $this->getXPath() );
-        if (is_null($object)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getXPath()
-            );
-        }
-        $systemCtl = new OMVSystemCtl( $this->getPluginName() );
-        return [
-            'name'    => $this->getName(),
-            'title'   => gettext('Autoshutdown'),
-            'enabled' => boolval($object['enable']),
-            'running' => $systemCtl->isActive(),
-        ];
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.autoshutdown");
+        $systemCtl = new \OMV\System\SystemCtl("autoshutdown");
+        return array(
+            "name" => $this->getName(),
+            "title" => gettext("AutoShutdown"),
+            "enabled" => $object->get("enable"),
+            "running" => $systemCtl->isActive()
+        );
     }
 
-    /**
-     * Bind listeners.
-     */
-    function bindListeners(OMVNotifyDispatcher $dispatcher)
+    function bindListeners(\OMV\Engine\Notify\Dispatcher $dispatcher)
     {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            $this->getEventMessagePath(),
+            "org.openmediavault.services.autoshutdown",
             [ $this, "setDirty" ]
         );
     }
 }
-
-// Register module
-$moduleMgr = &OMVModuleMgr::getInstance();
-$moduleMgr->registerModule(new OMVModuleAutoShutdown());
-
-// Register new logfile type
-OMVLogFile::registerType(
-    "autoshutdown",
-    [
-        "filename" => "autoshutdown.log",
-        "filepath" => "/var/log/autoshutdown.log",
-        "regex"    => "/^(\S+\s+\d+\s+\S+)\s+.*\s+logger:\s+\S+:\s+(\S+):\s+(.*)$/",
-        "columns"  => [
-            "date"  => [
-                "index" => 1,
-                "func"  => create_function('$v', 'return strpdate($v,"M j G:i:s");')
-             ],
-            "type"  => 2,
-            "log"   => 3
-         ]
-    ]
-);

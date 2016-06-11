@@ -1,0 +1,109 @@
+{
+	"type": "rpc",
+	"id": "rpc.autoshutdown.setsettings",
+	"params": {
+		"type": "object",
+		"properties": {
+			"enable": {
+				"type": "boolean",
+				"required": true
+			},
+			"cycles": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 999,
+				"required": true
+			},
+			"sleep": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 9999,
+				"required": true
+			},
+			"range": {
+				"type": "string",
+				"required": true
+			},
+			"shutdowncommand": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 3,
+				"required": true
+			},
+			"checkclockactive": {
+				"type": "boolean",
+				"required": true
+			},
+			"uphours-begin": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 23,
+				"required": true
+			},
+			"uphours-end": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 23,
+				"required": true
+			},
+			"nsocketnumbers": {
+				"type": "string",
+				"required": true
+			},
+			"uldlcheck": {
+				"type": "boolean",
+				"required": true
+			},
+			"uldlrate": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 65535,
+				"required": true
+			},
+			"loadaveragecheck": {
+				"type": "boolean",
+				"required": true
+			},
+			"loadaverage": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 65535,
+				"required": true
+			},
+			"hddiocheck": {
+				"type": "boolean",
+				"required": true
+			},
+			"hddiorate": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 65535,
+				"required": true
+			},
+			"checksamba": {
+				"type": "boolean",
+				"required": true
+			},
+			"checkcli": {
+				"type": "boolean",
+				"required": true
+			},
+			"syslog": {
+				"type": "boolean",
+				"required": true
+			},
+			"verbose": {
+				"type": "boolean",
+				"required": true
+			},
+			"fake": {
+				"type": "boolean",
+				"required": true
+			},
+			"extraoptions": {
+				"type": "string",
+				"required": true
+			}
+		}
+	}
+}
