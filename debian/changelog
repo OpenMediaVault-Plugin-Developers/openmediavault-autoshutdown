@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (3.1.1) stable; urgency=low
+
+  * Fix typo
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 11 Jun 2016 10:00:30 -0500
+
 openmediavault-autoshutdown (3.1) stable; urgency=low
 
   * Update for datamodels and auto notifications

@@ -53,6 +53,5 @@ class OMVRpcServiceAutoShutdown extends \OMV\Rpc\ServiceAbstract
         $db->set($object);
         // Return the configuration object.
         return $object->getAssoc();
-
     }
 }

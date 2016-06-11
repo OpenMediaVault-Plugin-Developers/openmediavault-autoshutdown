@@ -68,7 +68,7 @@ class OMVModuleAutoShutdown extends \OMV\Engine\Module\ServiceAbstract
     {
         $dispatcher->addListener(
             OMV_NOTIFY_MODIFY,
-            "org.openmediavault.services.autoshutdown",
+            "org.openmediavault.conf.service.autoshutdown",
             [ $this, "setDirty" ]
         );
     }
