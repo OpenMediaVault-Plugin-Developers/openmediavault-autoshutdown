@@ -432,7 +432,7 @@ _check_loadaverage()
 	CURRENT_LOADAVERAGE_TEMP1="$(top -b -n 1 | grep 'load average')"
 	# old: not working, if uptime is more than 1 day
 	#CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | awk '{print $11}' | sed 's/,//g')"
-	CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | sed 's/.*load average: //g' |awk '{print $1}' | sed 's/,//g')"
+	CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | sed 's/.*load average: //g' |awk '{print $1}' | sed 's/,//g' | sed 's/.//g;s/\.//g')"
 
 	if [ "$CURRENT_LOADAVERAGE_TEMP2" = "0.00" ]; then
 		CURRENT_LOADAVERAGE=0
