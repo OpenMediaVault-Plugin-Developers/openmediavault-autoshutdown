@@ -434,7 +434,7 @@ _check_loadaverage()
 	#CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | awk '{print $11}' | sed 's/,//g')"
 	CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | sed 's/.*load average: //g' |awk '{print $1}' | sed 's/,//g')"
 
-	if [ "$CURRENT_LOADAVERAGE_TEMP2" = "0.00" ]; then
+	if [ "$CURRENT_LOADAVERAGE_TEMP2" = "000" ]; then
 		CURRENT_LOADAVERAGE=0
 	else
 		CURRENT_LOADAVERAGE=$(echo $CURRENT_LOADAVERAGE_TEMP2 | sed 's/[,.]//g' | sed 's/^0*//g')
