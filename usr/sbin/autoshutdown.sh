@@ -1109,7 +1109,7 @@ _check_config()
 			pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)" && PM_SUSPEND_HYBRID=true
 
 			# check, if pm-suspend is supported
-			if [ "$SHUTDOWNCOMMAND" = "pm-supend" -a ! "$PM_SUSPEND" = "true" ]; then
+			if [ "$SHUTDOWNCOMMAND" = "pm-suspend" -a ! "$PM_SUSPEND" = "true" ]; then
 				_log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
 				_log "WARN: Setting it to 'shutdown -h now'"
 				SHUTDOWNCOMMAND="shutdown -h now"
