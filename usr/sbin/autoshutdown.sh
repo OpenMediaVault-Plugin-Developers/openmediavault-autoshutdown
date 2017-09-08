@@ -504,7 +504,7 @@ _check_net_status()
 		# old:
 		# CONIP=$(netstat -an | grep ${WORD1} | echo ${WORD2} | awk '{print $5}'| sed 's/\.[0-9]*$//g' | uniq)
 
-		[[ $(echo ${LINES} | awk '{print $5}') =~ (.*):[0-9]*$ ]] && CONIP=${BASH_REMATCH[1]}
+		[[ $(echo ${LINES} | awk '{print $6}') =~ (.*):[0-9]*$ ]] && CONIP=${BASH_REMATCH[1]}
 
 		# Set PORTPROTOCOL - only default ports are defined here
 		case $NSOCKET in
