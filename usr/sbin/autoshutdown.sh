@@ -1148,16 +1148,19 @@ _check_config()
 		_log "WARN: Ignoring LOADAVERAGE"
 	fi
 
-	# FORCE_NIC
-	if [ ! -z "$FORCE_NIC" ]; then
-		[[ "$FORCE_NIC" =~ ^([a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,}|[a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,})+( [a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,})*$ ]]|| {
-			_log "WARN: Invalid parameter format: FORCE_NIC"
-			_log "WARN: You set it to '$FORCE_NIC', which is not a correct syntax. It has to match '[a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,}'"
-			_log "WARN: with spaces between every NIC: e.g. \"eth1 wlan0 usb3 eth1.2\""
-			_log "WARN: Unsetting FORCE_NIC"
-			unset FORCE_NIC; }
-	fi
-
+	# Check $FORCE_NIC env only on wheezy/jessie since starting with stretch 'predictable interface names' make regex a bit unpredictable
+	case ${lsb_release -cs) in
+		wheezy|jessie)
+			if [ ! -z "$FORCE_NIC" ]; then
+				[[ "$FORCE_NIC" =~ ^([a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,}|[a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,})+( [a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,})*$ ]]|| {
+					_log "WARN: Invalid parameter format: FORCE_NIC"
+					_log "WARN: You set it to '$FORCE_NIC', which is not a correct syntax. It has to match '[a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,}'"
+					_log "WARN: with spaces between every NIC: e.g. \"eth1 wlan0 usb3 eth1.2\""
+					_log "WARN: Unsetting FORCE_NIC"
+					unset FORCE_NIC; }
+			fi
+		;;
+	esac
 }
 
 ################################################################
