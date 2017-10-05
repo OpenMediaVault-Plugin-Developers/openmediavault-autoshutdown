@@ -1148,7 +1148,7 @@ _check_config()
 		_log "WARN: Ignoring LOADAVERAGE"
 	fi
 
-	# Validite $FORCE_NIC env (only on wheezy/jessie since starting with stretch 'predictable interface names' make things harder)
+	# Check $FORCE_NIC env only on wheezy/jessie since starting with stretch 'predictable interface names' make regex a bit unpredictable
 	case ${lsb_release -cs) in
 		wheezy|jessie)
 			if [ ! -z "$FORCE_NIC" ]; then
