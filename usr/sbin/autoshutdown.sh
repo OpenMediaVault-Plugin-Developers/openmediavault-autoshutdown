@@ -594,10 +594,10 @@ _check_ul_dl_rate()
 	_log "INFO: ULDL-Traffic-Check for '${NIC[${NICNR_ULDLCHECK}]}'"
 
 	# RX in kB
-    RX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep RX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
+    	RX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep RX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
 
 	# TX in kB
-    TX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep TX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
+    	TX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep TX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
 
 	# Check if RX/TX Files Exist
 	if [ -f $RXTXTMPDIR/rx.tmp ] && [ -f $RXTXTMPDIR/tx.tmp ]; then
