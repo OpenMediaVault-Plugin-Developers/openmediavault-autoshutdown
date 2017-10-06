@@ -504,7 +504,7 @@ _check_net_status()
 		# old:
 		# CONIP=$(netstat -an | grep ${WORD1} | echo ${WORD2} | awk '{print $5}'| sed 's/\.[0-9]*$//g' | uniq)
 
-		[[ $(echo ${LINES} | awk '{print $5}') =~ (.*):[0-9]*$ ]] && CONIP=${BASH_REMATCH[1]}
+		[[ $(echo ${LINES} | awk '{print $6}') =~ (.*):[0-9]*$ ]] && CONIP=${BASH_REMATCH[1]}
 
 		# Set PORTPROTOCOL - only default ports are defined here
 		case $NSOCKET in
@@ -594,10 +594,10 @@ _check_ul_dl_rate()
 	_log "INFO: ULDL-Traffic-Check for '${NIC[${NICNR_ULDLCHECK}]}'"
 
 	# RX in kB
-	RX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep bytes | awk '{print $2}' | sed 's/bytes://g' | awk '{ printf("%.0f\n", ($1/1024)) }')
+    	RX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep RX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
 
 	# TX in kB
-	TX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep bytes | awk '{print $6}' | sed 's/bytes://g' | awk '{ printf("%.0f\n", ($1/1024)) }')
+    	TX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep TX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
 
 	# Check if RX/TX Files Exist
 	if [ -f $RXTXTMPDIR/rx.tmp ] && [ -f $RXTXTMPDIR/tx.tmp ]; then
@@ -1210,7 +1210,7 @@ _check_networkconfig()
 				fi
 			done
 
-			IPFROMIFCONFIG[$NICNR]="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed 's/[ ]*Bcast.*//g; s/.*://g')"
+			IPFROMIFCONFIG[$NICNR]="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed -r 's/[ ]*(Bcast|netmask).*//g; s/[ ]*inet[ ](adr:)?//g')"
 			SERVERIP[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/.*\.//g')"
 			CLASS[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/\(.*\..*\..*\)\..*/\1/g')"
 			_log "INFO: '${NIC[$NICNR]}' has IP: ${IPFROMIFCONFIG[$NICNR]}"
