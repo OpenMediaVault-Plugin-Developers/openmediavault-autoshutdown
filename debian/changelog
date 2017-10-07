@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (4.0.2) stable; urgency=low
+
+  * Remove non-stretch code
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 07 Oct 2017 08:56:03 -0500
+
 openmediavault-autoshutdown (4.0.1) stable; urgency=low
 
   * Fix typo
