@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (4.0.1) stable; urgency=low
+
+  * Fix typo
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 07 Oct 2017 08:02:20 -0500
+
 openmediavault-autoshutdown (4.0) stable; urgency=low
 
   * Add support for more network interface names

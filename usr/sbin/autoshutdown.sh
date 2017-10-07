@@ -1149,7 +1149,7 @@ _check_config()
 	fi
 
 	# Check $FORCE_NIC env only on wheezy/jessie since starting with stretch 'predictable interface names' make regex a bit unpredictable
-	case ${lsb_release -cs) in
+	case $(lsb_release -cs) in
 		wheezy|jessie)
 			if [ ! -z "$FORCE_NIC" ]; then
 				[[ "$FORCE_NIC" =~ ^([a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,}|[a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,})+( [a-z]{3,}[0-9]{1}\.{0,1}[0-9]{0,})*$ ]]|| {
