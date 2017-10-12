@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
 # Toshihiro Kan <kansuke4649@gmail.com>, 2014,2016
@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-26 09:25-0500\n"
-"PO-Revision-Date: 2016-03-26 14:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"POT-Creation-Date: 2017-10-12 08:09-0500\n"
+"PO-Revision-Date: 2017-09-19 23:41+0000\n"
+"Last-Translator: Toshihiro Kan <kansuke4649@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,16 +34,16 @@ msgid "Check Clock to identify forced uptime."
 msgstr "強制アップタイムを識別するために時計を確認してください。"
 
 msgid "Check Users"
-msgstr ""
+msgstr "ユーザーのチェック"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "接続済みのユーザーをチェックします。"
 
 msgid "Check smbstatus"
-msgstr ""
+msgstr "smbstatusをチェック"
 
 msgid "Check smbstatus for connected clients."
-msgstr ""
+msgstr "接続済みクライアントのsmbstatusをチェックします。"
 
 msgid "Cycles"
 msgstr "サイクル"
@@ -66,7 +66,7 @@ msgid "End"
 msgstr "終了"
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
+msgstr "一つだけのダッシュ'-' をフィールドに入力するとチェックを無効にします。"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "

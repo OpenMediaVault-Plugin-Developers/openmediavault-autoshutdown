@@ -1,17 +1,17 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
 # Damtux, 2013
-# Paolo Velati <paolo.velati@gmail.com>, 2014-2015
+# Paolo Velati <paolo.velati@gmail.com>, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-26 09:25-0500\n"
-"PO-Revision-Date: 2016-03-26 14:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"POT-Creation-Date: 2017-10-12 08:09-0500\n"
+"PO-Revision-Date: 2017-09-19 22:18+0000\n"
+"Last-Translator: Paolo Velati <paolo.velati@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,16 +35,16 @@ msgid "Check Clock to identify forced uptime."
 msgstr "Controlla l'Orario per identificare un uptime forzato."
 
 msgid "Check Users"
-msgstr ""
+msgstr "Verifica Utenti"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Verifica gli utenti collegati."
 
 msgid "Check smbstatus"
-msgstr ""
+msgstr "Verifica smbstatus"
 
 msgid "Check smbstatus for connected clients."
-msgstr ""
+msgstr "Verifica smbstatus per i client collegati."
 
 msgid "Cycles"
 msgstr "Cicli"
@@ -67,7 +67,7 @@ msgid "End"
 msgstr "Fine"
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
+msgstr "Inserisci il carattere '-' nel campo per disabilitare la verifica"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -93,7 +93,7 @@ msgid "General settings"
 msgstr "Impostazioni generali"
 
 msgid "HDDIO Rate"
-msgstr ""
+msgstr "Velocità HDDIO "
 
 msgid "Hibernate"
 msgstr "Ibernazione"
@@ -113,7 +113,7 @@ msgid "List of Ports"
 msgstr "Elenco delle Porte"
 
 msgid "Load Average"
-msgstr ""
+msgstr "Carico Medio"
 
 msgid "Log"
 msgstr "Log"
@@ -162,7 +162,7 @@ msgid "Suspend"
 msgstr "Sospensione"
 
 msgid "Suspend-Hybrid"
-msgstr ""
+msgstr "Sospensione-Ibrida"
 
 msgid "Syslog Configuration"
 msgstr "Configurazione Syslog"
@@ -174,10 +174,10 @@ msgid "Type"
 msgstr "Tipo"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "Velocità ULDL"
 
 msgid "Uphours"
-msgstr ""
+msgstr "Ore di continuità"
 
 msgid "Verbose"
 msgstr "Verboso"

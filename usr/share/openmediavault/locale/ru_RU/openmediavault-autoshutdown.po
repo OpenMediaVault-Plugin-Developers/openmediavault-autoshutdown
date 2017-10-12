@@ -1,17 +1,18 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
 # Alexander Savchenko, 2013
 # Alexander Savchenko, 2014
+# Артур Мудрых <arturmon82@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-26 09:25-0500\n"
-"PO-Revision-Date: 2016-03-26 14:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"POT-Creation-Date: 2017-10-12 08:09-0500\n"
+"PO-Revision-Date: 2017-09-19 20:49+0000\n"
+"Last-Translator: Артур Мудрых <arturmon82@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,34 +21,34 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 msgid "AutoShutdown"
-msgstr ""
+msgstr "Автовыключение"
 
 msgid "Autoshutdown"
-msgstr ""
+msgstr "Автовыключение"
 
 msgid "Begin"
-msgstr ""
+msgstr "Начать"
 
 msgid "Check Clock"
-msgstr ""
+msgstr "Проверить часы"
 
 msgid "Check Clock to identify forced uptime."
-msgstr ""
+msgstr "Проверьте часы, чтобы определить принудительное время безотказной работы."
 
 msgid "Check Users"
-msgstr ""
+msgstr "Проверить пользователей"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Проверьте подключенных пользователей."
 
 msgid "Check smbstatus"
-msgstr ""
+msgstr "Проверьте smbstatus"
 
 msgid "Check smbstatus for connected clients."
-msgstr ""
+msgstr "Проверьте smbstatus для подключенных клиентов."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Циклы"
 
 msgid "Date & Time"
 msgstr "Дата и Время"
@@ -55,24 +56,24 @@ msgstr "Дата и Время"
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "Определите диапазон IP-адресов, которые следует отсканировать, используя XXX.XXX.XXX.xxx последнюю тройку IP-адресов в списке."
 
 msgid "Define the network traffic in kB/s"
-msgstr ""
+msgstr "Определить сетевой трафик в kB/s"
 
 msgid "Enable"
 msgstr "Включить"
 
 msgid "End"
-msgstr ""
+msgstr "Конец"
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
+msgstr "Введите одно тире '-' в поле, чтобы отключить проверку."
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr ""
+msgstr "Пример: 50 означает среднее значение нагрузки, равное 0,50, 8 означает среднее значение нагрузки 0,08, 220 означает среднее значение нагрузки 2,20"
 
 msgid "Expert Settings"
 msgstr "Раширенные настройки"
@@ -81,10 +82,10 @@ msgid "Extra options"
 msgstr "Дополнительные опции"
 
 msgid "Fake"
-msgstr ""
+msgstr "Не настоящий"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Фальшивый /Тестовый режим."
 
 msgid "Forced Uptime"
 msgstr ""
@@ -99,39 +100,39 @@ msgid "Hibernate"
 msgstr ""
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP-диапазон"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "Если среднее значение HDD-IO на сервере выше этого значения, то нет выключать."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr ""
+msgstr "Если средняя нагрузка на сервер выше этого значения, то нет выключать."
 
 msgid "List of Ports"
-msgstr ""
+msgstr "Список портов"
 
 msgid "Load Average"
-msgstr ""
+msgstr "Средняя нагрузка"
 
 msgid "Log"
-msgstr ""
+msgstr "Журнал"
 
 msgid "Log to Syslog"
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Количество секунд между циклами."
 
 msgid "Please check the"
-msgstr ""
+msgstr "Пожалуйста, проверьте"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr ""
 
 msgid "README"
-msgstr ""
+msgstr "ПРОЧТИ МЕНЯ"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -144,22 +145,22 @@ msgid "Shutdown"
 msgstr "Выключить"
 
 msgid "Shutdown Command"
-msgstr ""
+msgstr "Команда выключения"
 
 msgid "Sleep"
-msgstr ""
+msgstr "Спать"
 
 msgid "Socket number to check for activity."
-msgstr ""
+msgstr "Номер сокета для проверки активности."
 
 msgid "Sockets"
-msgstr ""
+msgstr "Сокеты"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Конфигурация контроля"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Приостановить"
 
 msgid "Suspend-Hybrid"
 msgstr ""
@@ -168,7 +169,7 @@ msgid "Syslog Configuration"
 msgstr ""
 
 msgid "The following scheme is mandatory"
-msgstr ""
+msgstr "Следующая схема обязательна"
 
 msgid "Type"
 msgstr "Тип"
@@ -177,25 +178,25 @@ msgid "ULDL Rate"
 msgstr ""
 
 msgid "Uphours"
-msgstr ""
+msgstr "Время работы"
 
 msgid "Verbose"
-msgstr ""
+msgstr "Подробный"
 
 msgid "Verbose mode."
-msgstr ""
+msgstr "Подробный режим."
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "Запись журнальной информации в системный журнал."
 
 msgid "all list entries are seperated by comma ','"
-msgstr ""
+msgstr "Все записи списка разделяются запятой ','"
 
 msgid "define a single ip : ip"
-msgstr ""
+msgstr "Определить одиночный ip: ip"
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr ""
+msgstr "Определить диапазон ip: start..end -> две точки являются обязательными"
 
 msgid "for more details."
-msgstr ""
+msgstr "Больше подробностей."

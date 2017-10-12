@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
 # Stefan Thrane Overby <stoverby@gmail.com>, 2013-2014,2016
@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-26 09:25-0500\n"
-"PO-Revision-Date: 2016-03-26 14:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"POT-Creation-Date: 2017-10-12 08:09-0500\n"
+"PO-Revision-Date: 2017-09-19 20:51+0000\n"
+"Last-Translator: Stefan Thrane Overby <stoverby@gmail.com>\n"
 "Language-Team: Danish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,16 +34,16 @@ msgid "Check Clock to identify forced uptime."
 msgstr "Kontroller Ur for at bestemme tvunget oppetid."
 
 msgid "Check Users"
-msgstr ""
+msgstr "Kontroller Brugere"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Kontroller for forbundne brugere."
 
 msgid "Check smbstatus"
-msgstr ""
+msgstr "Kontroller smbstatus"
 
 msgid "Check smbstatus for connected clients."
-msgstr ""
+msgstr "Kontroller smbstatus for forbundne klienter."
 
 msgid "Cycles"
 msgstr "Cyklusser"
@@ -66,7 +66,7 @@ msgid "End"
 msgstr "Slut"
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
+msgstr "Indtast en bindestreg '-' i feltet for, at deaktivere kontrol."
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "

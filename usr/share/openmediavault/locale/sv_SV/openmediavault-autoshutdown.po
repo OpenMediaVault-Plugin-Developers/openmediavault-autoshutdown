@@ -3,198 +3,197 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# kochin <kochinc@outlook.com>, 2014,2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-12 08:09-0500\n"
-"PO-Revision-Date: 2017-09-21 14:00+0000\n"
-"Last-Translator: kochin <kochinc@outlook.com>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
+"PO-Revision-Date: 2013-10-28 14:43+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
-msgstr "AutoShutdown"
+msgstr ""
 
 msgid "Autoshutdown"
-msgstr "Autoshutdown"
+msgstr ""
 
 msgid "Begin"
-msgstr "開始"
+msgstr ""
 
 msgid "Check Clock"
-msgstr "檢查時鐘"
+msgstr ""
 
 msgid "Check Clock to identify forced uptime."
-msgstr "檢查時鐘來辨認強制的運行時間。"
+msgstr ""
 
 msgid "Check Users"
-msgstr "檢查使用者"
+msgstr ""
 
 msgid "Check for connected users."
-msgstr "檢查已連接之使用者"
+msgstr ""
 
 msgid "Check smbstatus"
-msgstr "檢查 smbstatus"
+msgstr ""
 
 msgid "Check smbstatus for connected clients."
-msgstr "檢查已連接使用者之 smbstatus"
+msgstr ""
 
 msgid "Cycles"
-msgstr "循環數"
+msgstr ""
 
 msgid "Date & Time"
-msgstr "日期與時間"
+msgstr ""
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr "定義一個所要掃瞄的 IP 範圍，在列表中使用 IP 地址 XXX.XXX.XXX.xxx 的最後三個數字。"
+msgstr ""
 
 msgid "Define the network traffic in kB/s"
-msgstr "以 kB/s 來定義網路流量"
+msgstr ""
 
 msgid "Enable"
-msgstr "啟用"
+msgstr ""
 
 msgid "End"
-msgstr "結束"
+msgstr ""
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr "在欄位中輸入單一 '-' 來停止檢查。"
+msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "範例：50 表示平均負載為 0.50，8 表示平均負載為 0.08，220 表示平均負載為 2.20"
+msgstr ""
 
 msgid "Expert Settings"
-msgstr "專家設定"
+msgstr ""
 
 msgid "Extra options"
-msgstr "額外選項"
+msgstr ""
 
 msgid "Fake"
-msgstr "假冒"
+msgstr ""
 
 msgid "Fake/Test mode."
-msgstr "假冒/測試模式"
+msgstr ""
 
 msgid "Forced Uptime"
-msgstr "強制運行時間"
+msgstr ""
 
 msgid "General settings"
-msgstr "一般設定"
+msgstr ""
 
 msgid "HDDIO Rate"
-msgstr "HDDIO 速率"
+msgstr ""
 
 msgid "Hibernate"
-msgstr "休眠"
+msgstr ""
 
 msgid "IP-Range"
-msgstr "IP-範圍"
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "如果伺服器的 HDD-IO-average 在這個數值以上，則不做關機。"
+msgstr ""
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr "如果伺服器的平均負載在這個數值以上，則不關機。"
+msgstr ""
 
 msgid "List of Ports"
-msgstr "通訊埠列表"
+msgstr ""
 
 msgid "Load Average"
-msgstr "負載平均值"
+msgstr ""
 
 msgid "Log"
-msgstr "日誌"
+msgstr ""
 
 msgid "Log to Syslog"
-msgstr "記錄日誌到 Syslog"
+msgstr ""
 
 msgid "Numbers of seconds between each cycle."
-msgstr "每個週期之間的秒數。"
+msgstr ""
 
 msgid "Please check the"
-msgstr "請查看"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "請確定 1 與 255 不在列表中！"
+msgstr ""
 
 msgid "README"
-msgstr "README"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "設定在關機之前，必須經過幾個沒結果(無電腦在線上...等等)的循環。"
+msgstr ""
 
 msgid "Settings"
-msgstr "設定"
+msgstr ""
 
 msgid "Shutdown"
-msgstr "關機"
+msgstr ""
 
 msgid "Shutdown Command"
-msgstr "關機指令"
+msgstr ""
 
 msgid "Sleep"
-msgstr "睡眠"
+msgstr ""
 
 msgid "Socket number to check for activity."
-msgstr "用以檢查活動狀況的插槽號碼。"
+msgstr ""
 
 msgid "Sockets"
-msgstr "插槽"
+msgstr ""
 
 msgid "Supervision Configuration"
-msgstr "監督設定"
+msgstr ""
 
 msgid "Suspend"
-msgstr "暫停"
+msgstr ""
 
 msgid "Suspend-Hybrid"
-msgstr "暫停-混合"
+msgstr ""
 
 msgid "Syslog Configuration"
-msgstr "Syslog 設置"
+msgstr ""
 
 msgid "The following scheme is mandatory"
-msgstr "強制使用以下的格式 "
+msgstr ""
 
 msgid "Type"
-msgstr "型式"
+msgstr ""
 
 msgid "ULDL Rate"
-msgstr "ULDL 速率"
+msgstr ""
 
 msgid "Uphours"
-msgstr "運作時數"
+msgstr ""
 
 msgid "Verbose"
-msgstr "詳盡"
+msgstr ""
 
 msgid "Verbose mode."
-msgstr "詳盡模式"
+msgstr ""
 
 msgid "Write log informations to system logs."
-msgstr "將日誌資訊寫到系統日誌中。"
+msgstr ""
 
 msgid "all list entries are seperated by comma ','"
-msgstr "所有列表項目必須以逗號 ',' 分開"
+msgstr ""
 
 msgid "define a single ip : ip"
-msgstr "定義單一的 ip：ip"
+msgstr ""
 
 msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "定義一個 ip 範圍：啟始...結束 -> 兩個點是必要的"
+msgstr ""
 
 msgid "for more details."
-msgstr "中的詳細內容。"
+msgstr ""
