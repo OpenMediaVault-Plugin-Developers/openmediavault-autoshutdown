@@ -1,11 +1,20 @@
 [Unit]
-Description=autoshutdown
+Description=Run autoshutdown script
 After=network.target
+After=suspend.target
+After=hibernate.target
+After=hybrid-sleep.target
 
 [Service]
 Type=simple
+Restart=always
+RestartSec=3
 PIDFile=/var/run/autoshutdown.pid
 ExecStart=/usr/sbin/autoshutdown.sh
 
 [Install]
 WantedBy=multi-user.target
+WantedBy=suspend.target
+WantedBy=hibernate.target
+WantedBy=hybrid-sleep.target
+
