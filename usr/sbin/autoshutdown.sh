@@ -1196,7 +1196,7 @@ _check_networkconfig()
 				fi
 			done
 
-			IPFROMIFCONFIG[$NICNR]="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed -r 's/[ ]*(Bcast|netmask).*//g; s/[ ]*inet[ ](adr:)?//g')"
+			IPFROMIFCONFIG[$NICNR]="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed -r 's/[ ]*(Bcast|netmask).*//g; s/[ ]*inet[ ](ad[d]r:)?//g')"
 			SERVERIP[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/.*\.//g')"
 			CLASS[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/\(.*\..*\..*\)\..*/\1/g')"
 			_log "INFO: '${NIC[$NICNR]}' has IP: ${IPFROMIFCONFIG[$NICNR]}"
