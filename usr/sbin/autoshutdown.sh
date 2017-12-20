@@ -948,6 +948,12 @@ _check_config()
 				_log "WARN: Set PLUGINCHECK to false"
 				PLUGINCHECK="false"; }
 	fi
+	
+	if [ ! -z "$TRANSMISSIONDOWNLOAD" ]; then
+		[[ "$TRANSMISSIONDOWNLOAD" = "true" || "$TRANSMISSIONDOWNLOAD" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+				_log "WARN: Set TRANSMISSIONDOWNLOAD to false"
+				TRANSMISSIONDOWNLOAD="false"; }
+	fi
 
 	# Flag: 1 - 999 (cycles)
 	[[ "$CYCLES" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
