@@ -460,6 +460,51 @@ _check_loadaverage()
 	return ${RVALUE}
 }
 
+
+################################################################
+#
+#   name         : _check_transmission
+#   parameter      : none
+#   global return   : none
+#   return         : 1      : if transmission-daemon is downloading torrents, no shutdown
+#               : 0      : if transmission-daemon is seeding only
+#
+# This script use transmission-remote from transmission-cli package
+
+_check_transmission()
+{
+	
+	RVALUE=0
+	
+	if [ "$TRANSMISSIONDOWNLOAD" = "true" ];
+		# auth if needed
+		auth="" #"--auth username:password"
+		torrentlist="transmission-remote --list "$auth
+		
+		count=$($torrentlist | cut -c25-31 | sed -e '/^Done/ d; /^Unknown/ d; 1d; $d')
+		
+		if $DEBUG; then
+			_log "DEBUG: -------------------------------------------"
+			_log "DEBUG: _check_transmission(): count downloading torrents: $count"
+			
+		fi
+		
+		if [ -z "$count" ]; then
+			_log "INFO: Transmission no active downloads"
+			
+		else
+			_log "INFO: Transmission is downloading now"
+			let RVALUE++
+		fi
+	
+	fi
+	
+	return ${RVALUE}
+	
+	
+}
+
+
 ################################################################
 #
 #   name         : _check_net_status
