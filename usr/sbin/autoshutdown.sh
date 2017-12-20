@@ -476,7 +476,7 @@ _check_transmission()
 	
 	RVALUE=0
 	
-	if [ "$TRANSMISSIONDOWNLOAD" = "true" ];
+	if [ "$TRANSMISSIONDOWNLOAD" = "true" ] ; then
 		# auth if needed
 		auth="" #"--auth username:password"
 		torrentlist="transmission-remote --list "$auth
@@ -1453,7 +1453,9 @@ _check_system_active()
 	else
 		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_loadaverage not called -> CNT: $CNT "; fi
 	fi   # > if[ $CNT -eq 0 ]; then
-
+	
+	
+	
 	if [ $CNT -eq 0 ]; then
 		# PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
 		if [ "$PLUGINCHECK" = "true" ] ; then
@@ -1467,6 +1469,20 @@ _check_system_active()
 	else
 		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_plugin not called -> CNT: $CNT "; fi
 	fi   # > if[ $CNT -eq 0 ]; then
+	
+	if [ $CNT -eq 0 ]; then
+		# PRIO 8: Do a TRANSMISSION-Check
+		if [ "$TRANSMISSIONDOWNLOAD" = "true" ] ; then
+			_check_transmission
+			if [ $? -gt 0 ]; then
+				let CNT++
+			fi
+
+			if $DEBUG ; then _log "DEBUG: _check_transmission(): call _check_transmission -> CNT: $CNT "; fi
+		fi
+	else
+		if $DEBUG ; then _log "DEBUG: _check_transmission(): _check_transmission not called -> CNT: $CNT "; fi
+	fi   
 
 	return ${CNT};
 }
