@@ -87,6 +87,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"transmissiondownload": {
+			"type": "boolean",
+			"default": false
+		},
 		"checkcli": {
 			"type": "boolean",
 			"default": true
