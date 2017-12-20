@@ -96,6 +96,9 @@ HDDIO_RATE=400
 CHECK_SAMBA="true"
     # If set to true, smbstatus will be checked for connected clients.
 
+TRANSMISSIONDOWNLOAD="false"
+	# Check transmission
+	
 CHECK_CLI="true"
     # If set to true, will check for connected users.
 
