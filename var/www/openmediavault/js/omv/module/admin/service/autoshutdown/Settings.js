@@ -291,7 +291,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 boxLabel   : _("Check smbstatus for connected clients.")
 			},{
                 xtype      : "checkbox",
-                name       : "transmissiondownload",
+                name       : "transmissioncheck",
                 fieldLabel : _("Check transmission"),
                 checked    : true,
                 boxLabel   : _("Check transmission for downloading torrents.")
