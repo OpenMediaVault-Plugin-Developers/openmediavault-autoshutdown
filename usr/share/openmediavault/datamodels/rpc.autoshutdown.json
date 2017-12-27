@@ -84,7 +84,7 @@
 				"type": "boolean",
 				"required": true
 			},
-			"transmissiondownload": {
+			"transmissioncheck": {
 			"type": "boolean",
 			"default": false
 			},
