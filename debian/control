@@ -13,7 +13,6 @@ Depends: fping,
          openmediavault (>= 3.0.40),
          pm-utils,
          sysstat,
-		 transmission-cli,
          ${misc:Depends}
 Conflicts: autoshutdown
 Priority: optional
