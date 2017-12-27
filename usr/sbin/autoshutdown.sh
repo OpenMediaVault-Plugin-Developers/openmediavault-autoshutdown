@@ -477,24 +477,30 @@ _check_transmission()
 	RVALUE=0
 	
 	if [ "$TRANSMISSIONDOWNLOAD" = "true" ] ; then
-		# auth if needed
-		auth="" #"--auth username:password"
-		torrentlist="transmission-remote --list "$auth
 		
-		count=$($torrentlist | cut -c25-31 | sed -e '/^Done/ d; /^Unknown/ d; 1d; $d')
-		
-		if $DEBUG; then
-			_log "DEBUG: -------------------------------------------"
-			_log "DEBUG: _check_transmission(): count downloading torrents: $count"
+		if [ -f /usr/bin/transmission-remote ]; then
+			# auth if needed
+			auth="" #"--auth username:password"
+			torrentlist="transmission-remote --list "$auth
 			
-		fi
-		
-		if [ -z "$count" ]; then
-			_log "INFO: Transmission no active downloads"
+			count=$($torrentlist | cut -c25-31 | sed -e '/^Done/ d; /^Unknown/ d; 1d; $d')
 			
+			if $DEBUG; then
+				_log "DEBUG: -------------------------------------------"
+				_log "DEBUG: _check_transmission(): count: $count"
+				
+			fi
+			
+			if [ -z "$count" ]; then
+				_log "INFO: Transmission no active downloads"
+				
+			else
+				_log "INFO: Transmission is downloading now"
+				let RVALUE++
+			fi
 		else
-			_log "INFO: Transmission is downloading now"
-			let RVALUE++
+			_log "INFO: Transmission check disabled. Not found /usr/bin/transmission-remote. Install transmission-cli package"
+			
 		fi
 	
 	fi
