@@ -293,7 +293,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 xtype      : "checkbox",
                 name       : "transmissioncheck",
                 fieldLabel : _("Check transmission"),
-                checked    : true,
+                checked    : false,
                 boxLabel   : _("Check transmission for downloading torrents.")
             },{
                 xtype      : "checkbox",
