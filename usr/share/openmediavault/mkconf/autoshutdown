@@ -63,7 +63,7 @@ xmlstarlet sel -t \
         -i "fake = 0" -o "FAKE=\"false\"" -n -b \
         -i "fake = 1" -o "FAKE=\"true\"" -n -b \
         -i "string-length(extraoptions) > 0" -v "extraoptions" -n -b \
-		-i "transmissiondownload = 0" -o "TRANSMISSIONDOWNLOAD=\"false\"" -n -b \
-        -i "transmissiondownload = 1" -o "TRANSMISSIONDOWNLOAD=\"true\"" -n -b \
+		-i "transmissioncheck = 0" -o "TRANSMISSION_CHECK=\"false\"" -n -b \
+        -i "transmissioncheck = 1" -o "TRANSMISSION_CHECK=\"true\"" -n -b \
     -b \
     ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${AUTOSHUTDOWN_CONFIG}
