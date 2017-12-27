@@ -460,6 +460,57 @@ _check_loadaverage()
 	return ${RVALUE}
 }
 
+
+################################################################
+#
+#   name         : _check_transmission
+#   parameter      : none
+#   global return   : none
+#   return         : 1      : if transmission-daemon is downloading torrents, no shutdown
+#               : 0      : if transmission-daemon is seeding only
+#
+# This script use transmission-remote from transmission-cli package
+
+_check_transmission()
+{
+	
+	RVALUE=0
+	
+	if [ "$TRANSMISSION_CHECK" = "true" ] ; then
+		
+		if [ -f /usr/bin/transmission-remote ]; then
+			# auth if needed
+			auth="" #"--auth username:password"
+			torrentlist="transmission-remote --list "$auth
+			
+			count=$($torrentlist | cut -c25-31 | sed -e '/^Done/ d; /^Unknown/ d; 1d; $d')
+			
+			if $DEBUG; then
+				_log "DEBUG: -------------------------------------------"
+				_log "DEBUG: _check_transmission(): count: $count"
+				
+			fi
+			
+			if [ -z "$count" ]; then
+				_log "INFO: Transmission no active downloads"
+				
+			else
+				_log "INFO: Transmission is downloading now"
+				let RVALUE++
+			fi
+		else
+			_log "INFO: Transmission check disabled. Not found /usr/bin/transmission-remote. Install transmission-cli package"
+			
+		fi
+	
+	fi
+	
+	return ${RVALUE}
+	
+	
+}
+
+
 ################################################################
 #
 #   name         : _check_net_status
@@ -948,6 +999,12 @@ _check_config()
 				_log "WARN: Set PLUGINCHECK to false"
 				PLUGINCHECK="false"; }
 	fi
+	
+	if [ ! -z "$TRANSMISSION_CHECK" ]; then
+		[[ "$TRANSMISSION_CHECK" = "true" || "$TRANSMISSION_CHECK" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+				_log "WARN: Set TRANSMISSION_CHECK to false"
+				TRANSMISSION_CHECK="false"; }
+	fi
 
 	# Flag: 1 - 999 (cycles)
 	[[ "$CYCLES" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
@@ -1402,7 +1459,9 @@ _check_system_active()
 	else
 		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_loadaverage not called -> CNT: $CNT "; fi
 	fi   # > if[ $CNT -eq 0 ]; then
-
+	
+	
+	
 	if [ $CNT -eq 0 ]; then
 		# PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
 		if [ "$PLUGINCHECK" = "true" ] ; then
@@ -1416,6 +1475,20 @@ _check_system_active()
 	else
 		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_plugin not called -> CNT: $CNT "; fi
 	fi   # > if[ $CNT -eq 0 ]; then
+	
+	if [ $CNT -eq 0 ]; then
+		# PRIO 8: Do a TRANSMISSION-Check
+		if [ "$TRANSMISSION_CHECK" = "true" ] ; then
+			_check_transmission
+			if [ $? -gt 0 ]; then
+				let CNT++
+			fi
+
+			if $DEBUG ; then _log "DEBUG: _check_transmission(): call _check_transmission -> CNT: $CNT "; fi
+		fi
+	else
+		if $DEBUG ; then _log "DEBUG: _check_transmission(): _check_transmission not called -> CNT: $CNT "; fi
+	fi   
 
 	return ${CNT};
 }
