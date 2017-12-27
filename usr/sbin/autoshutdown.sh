@@ -476,7 +476,7 @@ _check_transmission()
 	
 	RVALUE=0
 	
-	if [ "$TRANSMISSIONDOWNLOAD" = "true" ] ; then
+	if [ "$TRANSMISSION_CHECK" = "true" ] ; then
 		
 		if [ -f /usr/bin/transmission-remote ]; then
 			# auth if needed
@@ -1000,10 +1000,10 @@ _check_config()
 				PLUGINCHECK="false"; }
 	fi
 	
-	if [ ! -z "$TRANSMISSIONDOWNLOAD" ]; then
-		[[ "$TRANSMISSIONDOWNLOAD" = "true" || "$TRANSMISSIONDOWNLOAD" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
-				_log "WARN: Set TRANSMISSIONDOWNLOAD to false"
-				TRANSMISSIONDOWNLOAD="false"; }
+	if [ ! -z "$TRANSMISSION_CHECK" ]; then
+		[[ "$TRANSMISSION_CHECK" = "true" || "$TRANSMISSION_CHECK" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+				_log "WARN: Set TRANSMISSION_CHECK to false"
+				TRANSMISSION_CHECK="false"; }
 	fi
 
 	# Flag: 1 - 999 (cycles)
@@ -1478,7 +1478,7 @@ _check_system_active()
 	
 	if [ $CNT -eq 0 ]; then
 		# PRIO 8: Do a TRANSMISSION-Check
-		if [ "$TRANSMISSIONDOWNLOAD" = "true" ] ; then
+		if [ "$TRANSMISSION_CHECK" = "true" ] ; then
 			_check_transmission
 			if [ $? -gt 0 ]; then
 				let CNT++
