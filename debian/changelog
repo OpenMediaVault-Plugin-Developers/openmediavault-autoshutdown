@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (4.0.3-1) stable; urgency=low
+
+  * Update package dependencies.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 13 Jan 2018 17:34:36 +0100
+
 openmediavault-autoshutdown (4.0.2) stable; urgency=low
 
   * Remove non-stretch code
@@ -297,4 +303,3 @@ openmediavault-autoshutdown (0.5.0) stable; urgency=low
   * Port to OpenMediaVault 0.5
 
  -- Aaron Murray <aaron@omv-extras.org>  Fri, 06 Sep 2013 7:27:26 -0500
-
