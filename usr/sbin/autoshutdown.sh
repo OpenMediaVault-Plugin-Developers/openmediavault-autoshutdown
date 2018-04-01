@@ -345,13 +345,18 @@ _check_processes()
 # If it exists, the machine won't shutdown
 # You find sample plugins in /etc/autoshutdown.d
 #
-_check_plugin()
+_check_standard_plugin()
 {
 	FOUNDVALUE_checkplugin=0
 	RVALUE=0
 
 	ASD_pluginNR=0
 	for ASD_plugin in /etc/autoshutdown.d/*; do
+	    if [ -d "$ASD_plugin" ]; then
+	        if $DEBUG ; then _log "DEBUG: _check_standard_plugin(): ${ASD_plugin} is no plugin, it's a directory" ; fi
+            continue
+        fi
+
 		let ASD_pluginNR++
 
 		PLUGIN_name[$ASD_pluginNR]="${ASD_plugin##*/}"
@@ -361,12 +366,12 @@ _check_plugin()
 
 		if $DEBUG; then
 			_log "DEBUG: -------------------------------------------"
-			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: ASD_PLUGIN-file: $ASD_plugin"
-			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_name[$ASD_pluginNR]: ${PLUGIN_name[$ASD_pluginNR]}"
-			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_folder[$ASD_pluginNR]: ${PLUGIN_folder[$ASD_pluginNR]}"
-			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_file[$ASD_pluginNR]: ${PLUGIN_file[$ASD_pluginNR]}"
+			_log "DEBUG: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: ASD_PLUGIN-file: $ASD_plugin"
+			_log "DEBUG: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_name[$ASD_pluginNR]: ${PLUGIN_name[$ASD_pluginNR]}"
+			_log "DEBUG: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_folder[$ASD_pluginNR]: ${PLUGIN_folder[$ASD_pluginNR]}"
+			_log "DEBUG: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_file[$ASD_pluginNR]: ${PLUGIN_file[$ASD_pluginNR]}"
 			if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
-				_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_content[$ASD_pluginNR]: ${PLUGIN_content[$ASD_pluginNR]}"
+				_log "DEBUG: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_content[$ASD_pluginNR]: ${PLUGIN_content[$ASD_pluginNR]}"
 			fi
 		fi
 
@@ -378,35 +383,126 @@ _check_plugin()
 
 				# content found
 				if [ $(egrep -c "${PLUGIN_content[$ASD_pluginNR]}" "${PLUGIN_folder[$ASD_pluginNR]}/${PLUGIN_file[$ASD_pluginNR]}") -gt 0 ]; then
-					_log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content found (${PLUGIN_content[$ASD_pluginNR]}) - no shutdown."
+					_log "INFO: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content found (${PLUGIN_content[$ASD_pluginNR]}) - no shutdown."
 					let FOUNDVALUE_checkplugin++
 				else
 					# content not found
-					_log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content not found (${PLUGIN_content[$ASD_pluginNR]})"
+					_log "INFO: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content not found (${PLUGIN_content[$ASD_pluginNR]})"
 				fi
 
 			# content not defined and file found
 			else
-				_log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> File found - no shutdown."
+				_log "INFO: _check_standard_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> File found - no shutdown."
 				let FOUNDVALUE_checkplugin++
 			fi
 		else
 			# If file doesn't exist -> shutdown
-			_log "INFO: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} - File not found"
+			_log "INFO: _check_standard_plugin(): ${PLUGIN_name[$ASD_pluginNR]} - File not found"
 		fi
 
-		if $DEBUG ; then _log "DEBUG: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
+		if $DEBUG ; then _log "DEBUG: _check_standard_plugin(): ${PLUGIN_name[$ASD_pluginNR]} FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
 
 	done
 
-	if $DEBUG ; then _log "DEBUG: _check_plugin(): All PlugIns processed - FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
+	if $DEBUG ; then _log "DEBUG: _check_standard_plugin(): All PlugIns processed - FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
 
 	if [ $FOUNDVALUE_checkplugin -gt 0 ]; then
 		let RVALUE++
 	fi
-	if $DEBUG ; then _log "DEBUG: _check_plugin(): after all plugin-checks: RVALUE: $RVALUE" ; fi
+	if $DEBUG ; then _log "DEBUG: _check_standard_plugin(): after all plugin-checks: RVALUE: $RVALUE" ; fi
 
 	return ${RVALUE}
+}
+
+
+################################################################
+#
+#   name 			: _check_extended_plugin
+#   parameter		: none
+#   global return   : none
+#   return			: 0      : if a script returns idle (exit code 0)
+#   				: 1      : if a script returns busy (exit code 1)
+#
+# With this extended plugin-system everyone can check if a something want to prevent the shutdown.
+# If a script exits with 1, the machine won't shutdown
+# You find sample plugins in /etc/autoshutdown.d
+#
+_check_extended_plugin()
+{
+    //#!/bin/bash
+    for ASD_extendedPlugin in /etc/autoshutdown.d/extended.d/*.plugin.sh; do
+         if [ -d "${ASD_extendedPlugin}" ]; then
+	        if $DEBUG ; then _log "DEBUG: _check_extended_plugin(): ${ASD_extendedPlugin} is no plugin, it's a directory" ; fi
+            continue
+        fi
+
+        local EXTENDED_PLUGIN_name=""
+        _log "INFO: _check_extended_plugin(): checking ${EXTENDED_PLUGIN_name}"
+
+    done
+
+#	FOUNDVALUE_checkplugin=0
+#	RVALUE=0
+#
+#	ASD_pluginNR=0
+#	for ASD_plugin in /etc/autoshutdown.d/*; do
+#		let ASD_pluginNR++
+#
+#		PLUGIN_name[$ASD_pluginNR]="${ASD_plugin##*/}"
+#		PLUGIN_folder[$ASD_pluginNR]="$(egrep 'folder=' $ASD_plugin | sed 's/folder=//g; s/"//g')"
+#		PLUGIN_file[$ASD_pluginNR]="$(egrep 'file=' $ASD_plugin | sed 's/file=//g; s/"//g')"
+#		PLUGIN_content[$ASD_pluginNR]="$(egrep 'content=' $ASD_plugin | sed 's/content=//g; s/"//g')"
+#
+#		if $DEBUG; then
+#			_log "DEBUG: -------------------------------------------"
+#			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: ASD_PLUGIN-file: $ASD_plugin"
+#			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_name[$ASD_pluginNR]: ${PLUGIN_name[$ASD_pluginNR]}"
+#			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_folder[$ASD_pluginNR]: ${PLUGIN_folder[$ASD_pluginNR]}"
+#			_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_file[$ASD_pluginNR]: ${PLUGIN_file[$ASD_pluginNR]}"
+#			if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
+#				_log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_content[$ASD_pluginNR]: ${PLUGIN_content[$ASD_pluginNR]}"
+#			fi
+#		fi
+#
+#		# When file exists (matches regex), no shutdown
+#		if [ "$(find ${PLUGIN_folder[$ASD_pluginNR]} -regextype posix-egrep -regex '.*'${PLUGIN_file[$ASD_pluginNR]} 2> /dev/null | wc -l)" -gt 0 ]; then
+#
+#			# Check, if PLUGIN_content for the plugin is defined
+#			if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
+#
+#				# content found
+#				if [ $(egrep -c "${PLUGIN_content[$ASD_pluginNR]}" "${PLUGIN_folder[$ASD_pluginNR]}/${PLUGIN_file[$ASD_pluginNR]}") -gt 0 ]; then
+#					_log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content found (${PLUGIN_content[$ASD_pluginNR]}) - no shutdown."
+#					let FOUNDVALUE_checkplugin++
+#				else
+#					# content not found
+#					_log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content not found (${PLUGIN_content[$ASD_pluginNR]})"
+#				fi
+#
+#			# content not defined and file found
+#			else
+#				_log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> File found - no shutdown."
+#				let FOUNDVALUE_checkplugin++
+#			fi
+#		else
+#			# If file doesn't exist -> shutdown
+#			_log "INFO: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} - File not found"
+#		fi
+#
+#		if $DEBUG ; then _log "DEBUG: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
+#
+#	done
+#
+#	if $DEBUG ; then _log "DEBUG: _check_plugin(): All PlugIns processed - FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
+#
+#	if [ $FOUNDVALUE_checkplugin -gt 0 ]; then
+#		let RVALUE++
+#	fi
+#	if $DEBUG ; then _log "DEBUG: _check_plugin(): after all plugin-checks: RVALUE: $RVALUE" ; fi
+#
+#	return ${RVALUE}
+
+    return 0
 }
 
 
@@ -1406,7 +1502,7 @@ _check_system_active()
 	if [ $CNT -eq 0 ]; then
 		# PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
 		if [ "$PLUGINCHECK" = "true" ] ; then
-			_check_plugin
+			_check_standard_plugin
 			if [ $? -gt 0 ]; then
 				let CNT++
 			fi
