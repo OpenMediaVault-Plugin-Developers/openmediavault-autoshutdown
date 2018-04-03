@@ -1587,12 +1587,19 @@ if $DEBUG ; then
 	_log "DEBUG: LOADAVERAGE: $LOADAVERAGE"
 	_log "DEBUG: TMPDIR: $TMPDIR"
 	_log "DEBUG: PLUGINCHECK: $PLUGINCHECK"
-	_log "DEBUG: SCRIPTPLUGINSCHECK: $SCRIPTPLUGINSCHECK"
 	# List all PlugIns
 	_log "DEBUG: PlugIns found in /etc/autoshutdown.d:"
 	for ASD_plugin_firstcheck in /etc/autoshutdown.d/*; do
 		_log "DEBUG: Plugin: $ASD_plugin_firstcheck"
 	done
+
+	_log "DEBUG: SCRIPTPLUGINSCHECK: $SCRIPTPLUGINSCHECK"
+	# List all script PlugIns
+	_log "DEBUG: Script PlugIns found in /etc/autoshutdown.d/scripts.d:"
+	for ASD_script_plugin_firstcheck in /etc/autoshutdown.d/scripts.d/*.plugin.sh; do
+		_log "DEBUG: Script Plugin: $ASD_script_plugin_firstcheck"
+	done
+
 fi   # > if $DEBUG ;then
 
 _log "INFO:---------------- script started ----------------------"
