@@ -1473,7 +1473,7 @@ _check_system_active()
 	fi   # > if[ $CNT -eq 0 ]; then
 
 	if [ $CNT -eq 0 ]; then
-		# PRIO 7: Do a FileContent PlugIn-Check for any existing files, setup in plugins
+		# PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
 		if [ "$PLUGINCHECK" = "true" ] ; then
 			_check_plugin
 			if [ $? -gt 0 ]; then
