@@ -445,7 +445,7 @@ _check_script_plugins()
 
         if $DEBUG; then
 			_log "DEBUG: -------------------------------------------"
-			_log "DEBUG: _check_script_plugins(): found extended plugin file '${SCRIPT_PLUGINS_file}'"
+			_log "DEBUG: _check_script_plugins(): found script plugin file '${SCRIPT_PLUGINS_file}'"
             _log "DEBUG: _check_script_plugins(): checking '${SCRIPT_PLUGINS_name}'"
 		fi
 
@@ -453,15 +453,15 @@ _check_script_plugins()
         SCRIPT_PLUGINS_output=$(bash ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file} 2>&1)
         local SCRIPT_PLUGINS_scriptExitCode=$?
 
-        if $DEBUG ; then _log "DEBUG: _check_script_plugins(): plugin output:\n${SCRIPT_PLUGINS_output}" ; fi
-        _log "INFO: _check_script_plugins(): plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
+        if $DEBUG ; then _log "DEBUG: _check_script_plugins(): script plugin output:\n${SCRIPT_PLUGINS_output}" ; fi
+        _log "INFO: _check_script_plugins(): script plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
 
         if [ ${SCRIPT_PLUGINS_scriptExitCode} -eq 1 ] ; then
             SCRIPT_PLUGINS_exitCode=$((${SCRIPT_PLUGINS_exitCode} + 1))
         fi
     done
 
-    if $DEBUG ; then _log "DEBUG: _check_script_plugins(): after all script-checks: SCRIPT_PLUGINS_exitCode: ${SCRIPT_PLUGINS_exitCode}" ; fi
+    if $DEBUG ; then _log "DEBUG: _check_script_plugins(): after all script plugin checks: SCRIPT_PLUGINS_exitCode: ${SCRIPT_PLUGINS_exitCode}" ; fi
 
     if [ ${SCRIPT_PLUGINS_exitCode} -gt 0 ] ; then
         _log "INFO: _check_script_plugins(): some plugins prevents shutdown"
