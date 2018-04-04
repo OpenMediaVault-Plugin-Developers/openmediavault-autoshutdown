@@ -432,8 +432,6 @@ _check_plugin()
 #
 _check_script_plugins()
 {
-    ##!/bin/bash
-
     local SCRIPT_PLUGINS_searchPath=/etc/autoshutdown.d/scripts.d/
     local SCRIPT_PLUGINS_exitCode=0
 
