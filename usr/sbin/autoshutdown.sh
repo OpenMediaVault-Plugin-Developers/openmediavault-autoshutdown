@@ -453,7 +453,11 @@ _check_script_plugins()
         SCRIPT_PLUGINS_output=$(bash ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file} 2>&1)
         local SCRIPT_PLUGINS_scriptExitCode=$?
 
-        if $DEBUG ; then _log "DEBUG: _check_script_plugins(): script plugin output:\n${SCRIPT_PLUGINS_output}" ; fi
+        if $DEBUG ; then
+            _log "DEBUG: _check_script_plugins(): script plugin output >>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            _log "${SCRIPT_PLUGINS_output}"
+            _log "DEBUG: _check_script_plugins(): script plugin output <<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+        fi
         _log "INFO: _check_script_plugins(): script plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
 
         if [ ${SCRIPT_PLUGINS_scriptExitCode} -eq 1 ] ; then
@@ -464,9 +468,9 @@ _check_script_plugins()
     if $DEBUG ; then _log "DEBUG: _check_script_plugins(): after all script plugin checks: SCRIPT_PLUGINS_exitCode: ${SCRIPT_PLUGINS_exitCode}" ; fi
 
     if [ ${SCRIPT_PLUGINS_exitCode} -gt 0 ] ; then
-        _log "INFO: _check_script_plugins(): some plugins prevents shutdown"
+        _log "INFO: _check_script_plugins(): some script plugins prevents shutdown"
     else
-        _log "INFO: _check_script_plugins(): no plugin prevents shutdown"
+        _log "INFO: _check_script_plugins(): no script plugin prevents shutdown"
     fi
 
     return ${SCRIPT_PLUGINS_exitCode}
