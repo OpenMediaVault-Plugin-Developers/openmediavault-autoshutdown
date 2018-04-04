@@ -470,9 +470,9 @@ _check_script_plugins()
     if $DEBUG ; then _log "DEBUG: _check_script_plugins(): after all script plugin checks: SCRIPT_PLUGINS_exitCode: ${SCRIPT_PLUGINS_exitCode}" ; fi
 
     if [ ${SCRIPT_PLUGINS_exitCode} -gt 0 ] ; then
-        _log "INFO: _check_script_plugins(): some script plugins prevents shutdown"
+        _log "INFO: _check_script_plugins(): some script plugins prevent shutdown"
     else
-        _log "INFO: _check_script_plugins(): no script plugin prevents shutdown"
+        _log "INFO: _check_script_plugins(): no script plugins prevent shutdown"
     fi
 
     return ${SCRIPT_PLUGINS_exitCode}
