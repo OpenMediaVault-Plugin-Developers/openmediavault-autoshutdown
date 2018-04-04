@@ -51,6 +51,9 @@ TMPDIR="/tmp/autoshutdown"
 #
 _log()
 {
+    local PRIORITY
+    local LOGMESSAGE
+
 	[[ "$*" =~ ^([A-Za-z]*):(.*) ]] &&
 		{
 			PRIORITY=${BASH_REMATCH[1]}
@@ -454,7 +457,7 @@ _check_script_plugins()
 
         if $DEBUG ; then
             _log "DEBUG: _check_script_plugins(): script plugin output >>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            _log "${SCRIPT_PLUGINS_output}"
+            _log "DEBUG: ${SCRIPT_PLUGINS_output}"
             _log "DEBUG: _check_script_plugins(): script plugin output <<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
         fi
         _log "INFO: _check_script_plugins(): script plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
