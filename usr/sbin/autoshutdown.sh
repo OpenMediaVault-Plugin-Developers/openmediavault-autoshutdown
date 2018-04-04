@@ -444,7 +444,6 @@ _check_script_plugins()
         local SCRIPT_PLUGINS_name="${SCRIPT_PLUGINS_file%.plugin.sh}"
 
         if $DEBUG; then
-			_log "DEBUG: -------------------------------------------"
 			_log "DEBUG: _check_script_plugins(): found script plugin file '${SCRIPT_PLUGINS_file}'"
             _log "DEBUG: _check_script_plugins(): checking '${SCRIPT_PLUGINS_name}'"
 		fi
