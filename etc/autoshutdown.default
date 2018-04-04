@@ -230,7 +230,7 @@ FAKE="false"
 #SCRIPTPLUGINSCHECK="true"
     # Script PlugIns: You find sample plugins in /etc/autoshutdown.d/scripts.d/
     # Set this to true, if autoshutdown.sh checks for Script PlugIns in /etc/autoshutdown.d/scripts.d/
-    # set it to "false" (or uncemmented) to skip the check
+    # set it to "false" (or uncommented) to skip the check
 
 #FORCE_NIC="eth1"
 	# You can set NICs to look for a IP. This is useful, if you don't use eth0
