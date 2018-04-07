@@ -450,7 +450,7 @@ _check_script_plugins()
 		fi
 
         local SCRIPT_PLUGINS_output
-        SCRIPT_PLUGINS_output=$(bash ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file} 2>&1)
+        SCRIPT_PLUGINS_output=$(bash -c "source $AUTOSHUTDOWN_CONF; source ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file}")
         local SCRIPT_PLUGINS_scriptExitCode=$?
 
         if $DEBUG ; then
@@ -1517,9 +1517,11 @@ logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info
 logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' X Version: $VERSION'"
 logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' Initialize logging to $FACILITY'"
 
-if [ -f /etc/autoshutdown.conf ]; then
-	. /etc/autoshutdown.conf
-	_log "INFO: /etc/autoshutdown.conf loaded"
+AUTOSHUTDOWN_CONF="/etc/autoshutdown.conf"
+
+if [ -f ${AUTOSHUTDOWN_CONF} ]; then
+	. ${AUTOSHUTDOWN_CONF}
+	_log "INFO: ${AUTOSHUTDOWN_CONF} loaded"
 else
 	_log "WARN: cfg-File not found! Please check Path /etc for autoshutdown.conf"
 	exit 1
