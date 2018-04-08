@@ -1,1 +1,3 @@
 All files in this directory with the pattern *.plugin.sh will be used by the script plugin-system.
+
+Look at the file 'example.plugin-disabled.sh' for more script plugin details.
