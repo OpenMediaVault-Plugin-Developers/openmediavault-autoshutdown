@@ -432,12 +432,12 @@ _check_plugin()
 #
 _check_script_plugins()
 {
-    local SCRIPT_PLUGINS_searchPath=/etc/autoshutdown.d/scripts.d/
+    local SCRIPT_PLUGINS_searchPath=/etc/autoshutdown.d/scripts.d
     local SCRIPT_PLUGINS_exitCode=0
 
     for ASD_scriptPlugin in ${SCRIPT_PLUGINS_searchPath}/*.plugin.sh; do
-         if [ -d "${ASD_scriptPlugin}" ]; then
-	        if $DEBUG ; then _log "DEBUG: _check_script_plugins(): ${ASD_scriptPlugin} is no plugin, it's a directory" ; fi
+         if [ ! -e "${ASD_scriptPlugin}" ]; then
+	        if $DEBUG ; then _log "DEBUG: _check_script_plugins(): ${ASD_scriptPlugin} is no plugin. Maybe it's a directory or no plugins exists" ; fi
             continue
         fi
 
