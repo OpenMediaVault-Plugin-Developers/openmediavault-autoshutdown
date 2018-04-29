@@ -432,6 +432,8 @@ _check_plugin()
 #
 _check_script_plugins()
 {
+    _log "INFO: _check_script_plugins(): version 1.0'"
+
     local SCRIPT_PLUGINS_searchPath=/etc/autoshutdown.d/scripts.d
     local SCRIPT_PLUGINS_exitCode=0
 
