@@ -456,12 +456,12 @@ _check_script_plugins()
         local SCRIPT_PLUGINS_scriptExitCode=$?
 
         if $DEBUG ; then
-            _log "DEBUG: _check_script_plugins(): script plugin output >>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            _log "DEBUG: _check_script_plugins(): >>>>>>>>>>>> output '${SCRIPT_PLUGINS_name}' >>>>>>>>>>>>"
             echo "${SCRIPT_PLUGINS_output}" | while read line
             do
                  _log "DEBUG: ${line}"
             done
-            _log "DEBUG: _check_script_plugins(): script plugin output <<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+            _log "DEBUG: _check_script_plugins(): <<<<<<<<<<<< output '${SCRIPT_PLUGINS_name}' <<<<<<<<<<<<"
         fi
         _log "INFO: _check_script_plugins(): script plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
 
