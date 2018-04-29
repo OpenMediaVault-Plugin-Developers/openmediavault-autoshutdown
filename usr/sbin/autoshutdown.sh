@@ -457,7 +457,7 @@ _check_script_plugins()
 
         if $DEBUG ; then
             _log "DEBUG: _check_script_plugins(): script plugin output >>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            echo ${SCRIPT_PLUGINS_output} | while read line
+            echo "${SCRIPT_PLUGINS_output}" | while read line
             do
                  _log "DEBUG: ${line}"
             done
