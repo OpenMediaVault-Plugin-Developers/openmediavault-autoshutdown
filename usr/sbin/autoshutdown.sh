@@ -432,6 +432,8 @@ _check_plugin()
 #
 _check_script_plugins()
 {
+    _log "INFO: _check_script_plugins(): version 1.0'"
+
     local SCRIPT_PLUGINS_searchPath=/etc/autoshutdown.d/scripts.d
     local SCRIPT_PLUGINS_exitCode=0
 
@@ -450,13 +452,16 @@ _check_script_plugins()
 		fi
 
         local SCRIPT_PLUGINS_output
-        SCRIPT_PLUGINS_output=$(bash -c "source $AUTOSHUTDOWN_CONF; source ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file}")
+        SCRIPT_PLUGINS_output="$(bash -c "source $AUTOSHUTDOWN_CONF; source ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file}")"
         local SCRIPT_PLUGINS_scriptExitCode=$?
 
         if $DEBUG ; then
-            _log "DEBUG: _check_script_plugins(): script plugin output >>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            _log "DEBUG: ${SCRIPT_PLUGINS_output}"
-            _log "DEBUG: _check_script_plugins(): script plugin output <<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+            _log "DEBUG: _check_script_plugins(): >>>>>>>>>>>> output '${SCRIPT_PLUGINS_name}' >>>>>>>>>>>>"
+            echo "${SCRIPT_PLUGINS_output}" | while read line
+            do
+                 _log "DEBUG: ${line}"
+            done
+            _log "DEBUG: _check_script_plugins(): <<<<<<<<<<<< output '${SCRIPT_PLUGINS_name}' <<<<<<<<<<<<"
         fi
         _log "INFO: _check_script_plugins(): script plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
 
