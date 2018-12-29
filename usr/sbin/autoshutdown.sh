@@ -800,7 +800,7 @@ _check_hddio()
 		_log "DEBUG: ## iostat -kd ## End ----------"
 	fi
 
-	for OMV_HDD in $(mount -l | grep /dev/sd | sed 's/.*\(sd.\).*/\1/g' | sort -u); do
+	for OMV_HDD in $(lsblk --output MOUNTPOINT,PKNAME | grep "/" | sed 's/.*\(sd.\).*/\1/g' | sort -u); do
 		OMV_IOSTAT="$(egrep ^${OMV_HDD} $HDDIOTMPDIR/iostat.txt)"
 
 		OMV_ASD_HDD_IN="$(echo "$OMV_IOSTAT" | awk '{print $5}')"
