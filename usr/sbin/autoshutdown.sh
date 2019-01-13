@@ -429,30 +429,27 @@ _check_loadaverage()
 	# return 0
 
 	RVALUE=0
-	CURRENT_LOADAVERAGE_TEMP1="$(top -b -n 1 | grep 'load average')"
-	# old: not working, if uptime is more than 1 day
-	#CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | awk '{print $11}' | sed 's/,//g')"
-	CURRENT_LOADAVERAGE_TEMP2="$(echo $CURRENT_LOADAVERAGE_TEMP1 | sed 's/.*load average: //g' |awk '{print $1}' | sed 's/,//g' | sed 's/.//g;s/\.//g')"
-
-	if [ "$CURRENT_LOADAVERAGE_TEMP2" = "0.00" ]; then
-		CURRENT_LOADAVERAGE=0
-	else
-		CURRENT_LOADAVERAGE=$(echo $CURRENT_LOADAVERAGE_TEMP2 | sed 's/[,.]//g' | sed 's/^0*//g')
-	fi
+	# grab first line, with the load averages; use C-locale to avoid internationalization issues
+	CURRENT_LOAD_AVERAGE_LINE=$(LC_ALL=C top -b -n 1 | head -1)
+	# grab first value, with the one-minute load average in decimal notation
+	CURRENT_LOAD_AVERAGE_DECIMAL=$(echo $CURRENT_LOAD_AVERAGE_LINE | sed -E 's/.*load average: ([0-9.]+).*/\1/')
+    # convert to integer value by removing decimal point and assuming two fixed decimal places;
+    # for pretty display, remove leading zeros
+    CURRENT_LOAD_AVERAGE=$(printf "%d" $(echo $CURRENT_LOAD_AVERAGE_DECIMAL | sed 's/[.]//'))
 
 	if $DEBUG; then
 		_log "DEBUG: -------------------------------------------"
-		_log "DEBUG: _check_loadaverage(): Output of: 'top -b -n 1 | grep 'load average'"
-		_log "DEBUG: _check_loadaverage(): '$CURRENT_LOADAVERAGE_TEMP1'"
-		_log "DEBUG: _check_loadaverage(): CURRENT_LOADAVERAGE_TEMP2: $CURRENT_LOADAVERAGE_TEMP2"
-		_log "DEBUG: _check_loadaverage(): CURRENT_LOADAVERAGE: $CURRENT_LOADAVERAGE"
+		_log "DEBUG: _check_loadaverage(): First line of output from 'top' command:"
+		_log "DEBUG: _check_loadaverage(): '$CURRENT_LOAD_AVERAGE_LINE'"
+		_log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE_DECIMAL: $CURRENT_LOAD_AVERAGE_DECIMAL"
+		_log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE: $CURRENT_LOAD_AVERAGE"
 	fi
 
-	if [ $CURRENT_LOADAVERAGE -gt $LOADAVERAGE ]; then
-		_log "INFO: Loadaverage ($CURRENT_LOADAVERAGE_TEMP2 -> $CURRENT_LOADAVERAGE) is higher than target ($LOADAVERAGE) - no shutdown"
+	if [ $CURRENT_LOAD_AVERAGE -gt $LOADAVERAGE ]; then
+		_log "INFO: Load average ($CURRENT_LOAD_AVERAGE_DECIMAL -> $CURRENT_LOAD_AVERAGE) is higher than target ($LOADAVERAGE) - no shutdown"
 		let RVALUE++
 	else
-		_log "INFO: Loadaverage ($CURRENT_LOADAVERAGE_TEMP2 -> $CURRENT_LOADAVERAGE) is lower than target ($LOADAVERAGE)"
+		_log "INFO: Load average ($CURRENT_LOAD_AVERAGE_DECIMAL -> $CURRENT_LOAD_AVERAGE) is lower than target ($LOADAVERAGE)"
 	fi
 
 	if $DEBUG ; then _log "DEBUG: _check_loadaverage(): RVALUE: $RVALUE" ; fi
