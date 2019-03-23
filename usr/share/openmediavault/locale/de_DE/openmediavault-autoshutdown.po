@@ -75,7 +75,7 @@ msgstr "Geben Sie einen einzelnen Bindestrich \"-\" im Feld ein um die Überprü
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "Beispiel: 50 bedeutet eine Durschnittslast von 0.50, 8 bedeutet eine Durchschnittslast von 0.08, 220 bedeutet eine Durchschnittslast von 2.20."
+msgstr "Beispiel: 50 bedeutet eine Durchschnittslast von 0.50, 8 bedeutet eine Durchschnittslast von 0.08, 220 bedeutet eine Durchschnittslast von 2.20."
 
 msgid "Expert Settings"
 msgstr "Experteneinstellungen"
