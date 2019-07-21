@@ -597,13 +597,15 @@ _check_ul_dl_rate()
     	TX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep TX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
 
 	# Check if RX/TX Files Exist
-	if [ -f $RXTXTMPDIR/rx.tmp ] && [ -f $RXTXTMPDIR/tx.tmp ]; then
-		if $DEBUG; then _log "DEBUG: _check_ul_dl(): rx.tmp and tx.tmp are existing"; fi
-		p_RX=$(cat $RXTXTMPDIR/rx.tmp) ## store previous RX value in p_RX
-		p_TX=$(cat $RXTXTMPDIR/tx.tmp) ## store previous TX value in p_TX
+	RX_FILE=$RXTXTMPDIR/rx-${NICNR_ULDLCHECK}.tmp
+	TX_FILE=$RXTXTMPDIR/tx-${NICNR_ULDLCHECK}.tmp
+	if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
+		if $DEBUG; then _log "DEBUG: _check_ul_dl(): $RX_FILE and $TX_FILE are existing"; fi
+		p_RX=$(cat $RX_FILE) ## store previous RX value in p_RX
+		p_TX=$(cat $TX_FILE) ## store previous TX value in p_TX
 
-		echo $RX > $RXTXTMPDIR/rx.tmp ## Write new packets to RX file
-		echo $TX > $RXTXTMPDIR/tx.tmp ## Write new packets to TX file
+		echo $RX > $RX_FILE ## Write new packets to RX file
+		echo $TX > $TX_FILE ## Write new packets to TX file
 
 		if $DEBUG; then
 			_log "DEBUG: _check_ul_dl(): actual     RX: $RX"
@@ -650,14 +652,14 @@ _check_ul_dl_rate()
 
 	# RX/TX-Files doesn't Exist
 	else
-		echo $RX > $RXTXTMPDIR/rx.tmp ## Write new packets to RX file
-		echo $TX > $RXTXTMPDIR/tx.tmp ## Write new packets to TX file
+		echo $RX > $RX_FILE ## Write new packets to RX file
+		echo $TX > $TX_FILE ## Write new packets to TX file
 
 		_log "INFO: rx.tmp and/or tx.tmp doesn't exist - writing values to files"
 
 		# This is the obviously the first run, because of tx.tmp and/or rx.tmp doesn't exist
 		return 0
-	fi # > # if [ -f $RXTXTMPDIR/rx.tmp ] && [ -f $RXTXTMPDIR/tx.tmp ]; then
+	fi # > # if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
 
 	_log "INFO: _check_ul_dl_rate: This should not happen - Exit 42"
 	exit 42
@@ -1514,16 +1516,13 @@ _log "INFO: ${CYCLES} test cycles until shutdown is issued."
 # Creation of the dir for ULDLCHECK
 RXTXTMPDIR="$TMPDIR/txrx"
 if [ "$ULDLCHECK" = "true" ]; then
-	if [ ! -d $RXTXTMPDIR ]; then
-			if $DEBUG ; then _log "DEBUG: _check_ul_dl_rate(): creating tmpdir: $RXTXTMPDIR"; fi
-			mkdir $RXTXTMPDIR && _log "DEBUG: _check_ul_dl_rate(): $RXTXTMPDIR created successfully"
-		else
-			if $DEBUG ; then _log "DEBUG: _check_ul_dl_rate(): tmpdir: $RXTXTMPDIR exists"; fi
-	fi
 	# clearing for the first run of ULDLCHECK
-	if [ -f $RXTXTMPDIR/tx.tmp -o -f $RXTXTMPDIR/rx.tmp ]; then
-		rm $RXTXTMPDIR/tx.tmp >/dev/null 2>&1 && if $DEBUG; then _log "DEBUG: $RXTXTMPDIR/tx.tmp deleted @ start of script"; fi
-		rm $RXTXTMPDIR/rx.tmp >/dev/null 2>&1 && if $DEBUG; then _log "DEBUG: $RXTXTMPDIR/rx.tmp deleted @ start of script"; fi
+	if [ -d $RXTXTMPDIR ]; then
+		if $DEBUG; then _log "DEBUG: _check_ul_dl_rate(): tmpdir: $RXTXTMPDIR exists"; fi
+		rm $RXTXTMPDIR/*.tmp >/dev/null 2>&1 && if $DEBUG; then _log "DEBUG: $RXTXTMPDIR/*.tmp deleted @ start of script"; fi
+	else
+		if $DEBUG ; then _log "DEBUG: _check_ul_dl_rate(): creating tmpdir: $RXTXTMPDIR"; fi
+		mkdir $RXTXTMPDIR && _log "DEBUG: _check_ul_dl_rate(): $RXTXTMPDIR created successfully"
 	fi
 fi
 
