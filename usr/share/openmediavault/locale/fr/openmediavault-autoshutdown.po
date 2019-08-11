@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Axel Cantenys <clexanis@gmail.com>, 2017
+# Axel Cantenys, 2017
 # Christophe Lherieau <skimpax@gmail.com>, 2015
 # Julien ROCH <jroch74@live.fr>, 2017
 # niko2 <nicolas@zosk.fr>, 2017
