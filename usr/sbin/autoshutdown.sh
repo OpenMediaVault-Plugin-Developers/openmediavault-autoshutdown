@@ -799,14 +799,28 @@ _check_hddio()
 		_log "DEBUG: ## iostat -kd ## End ----------"
 	fi
 
-	for OMV_HDD in $(mount -l | grep /dev/sd | sed 's/.*\(sd.\).*/\1/g' | sort -u); do
+	OMV_UNENCRYPTED_MNT_DEV_LIST=$(mount -l | grep /dev/sd | sed 's/.*\(sd.\).*/\1/g' | sort -u)
+	OMV_ENCRYPTED_MNT_DEV_LIST=$(mount -l | grep /dev/mapper/ | sed 's/.*\(mapper[^ ]*\).*/\1/g' | sort -u)
+	if [[ ! -z "${OMV_ENCRYPTED_MNT_DEV_LIST}" ]]; then
+		OMV_MNT_DEV_LIST="${OMV_UNENCRYPTED_MNT_DEV_LIST} ${OMV_ENCRYPTED_MNT_DEV_LIST}"
+	else
+		OMV_MNT_DEV_LIST="${OMV_UNENCRYPTED_MNT_DEV_LIST}"
+	fi
+
+	for OMV_MNT_DEV in ${OMV_MNT_DEV_LIST}; do
+		if [[ "${OMV_MNT_DEV}" == sd* ]]; then
+			OMV_HDD="${OMV_MNT_DEV}"
+		else
+			OMV_HDD=$(readlink -f /dev/${OMV_MNT_DEV} | sed 's|^/dev/||')
+		fi
+
 		OMV_IOSTAT="$(egrep ^${OMV_HDD} $HDDIOTMPDIR/iostat.txt)"
 
 		OMV_ASD_HDD_IN="$(echo "$OMV_IOSTAT" | awk '{print $5}')"
 		OMV_ASD_HDD_OUT="$(echo "$OMV_IOSTAT" | awk '{print $6}')"
 
 		# is there any function to achieve this in OMV?
-		OMV_HDD_NAME="$( blkid | grep /dev/$OMV_HDD | grep LABEL | sed 's/.*LABEL="\(.*\)" UUID.*/\1/g')"
+		OMV_HDD_NAME="$(blkid | grep /dev/${OMV_MNT_DEV} | grep LABEL | sed 's/.*LABEL="\(.*\)" UUID.*/\1/g')"
 
 		if $DEBUG; then
 			_log "DEBUG: HDD-IO: ===== /dev/$OMV_HDD -> $OMV_HDD_NAME ====="
