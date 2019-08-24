@@ -4,6 +4,12 @@ openmediavault-autoshutdown (5.0) stable; urgency=low
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 24 Aug 2019 16:26:15 -0500
 
+openmediavault-autoshutdown (4.0.5) stable; urgency=low
+
+  * Fix for multiple network adapters.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 11 Aug 2019 07:43:47 -0500
+
 openmediavault-autoshutdown (4.0.4) stable; urgency=low
 
   * Fix log regex
