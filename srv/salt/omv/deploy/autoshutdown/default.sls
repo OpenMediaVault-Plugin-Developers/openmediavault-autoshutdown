@@ -17,8 +17,6 @@
 
 {% set config = salt['omv_conf.get']('conf.service.autoshutdown') %}
 
-{% if config.enable | to_bool %}
-
 configure_autoshutdown:
   file.managed:
     - name: "/etc/autoshutdown.conf"
@@ -30,6 +28,8 @@ configure_autoshutdown:
     - user: root
     - group: root
     - mode: 644
+
+{% if config.enable | to_bool %}
 
 start_autoshutdown_service:
   service.running:
