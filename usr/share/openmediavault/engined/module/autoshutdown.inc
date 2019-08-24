@@ -3,7 +3,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @copyright (c) 2009-2013 Volker Theile
- * @copyright (c) 2013-2016 OpenMediaVault Plugin Developers
+ * @copyright (c) 2013-2019 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,30 +25,6 @@ class OMVModuleAutoShutdown extends \OMV\Engine\Module\ServiceAbstract
     public function getName()
     {
         return "autoshutdown";
-    }
-
-    public function applyConfig()
-    {
-        $cmd = new \OMV\System\Process("omv-mkconf", "autoshutdown");
-        $cmd->setRedirect2to1();
-        $cmd->execute();
-    }
-
-    public function startService()
-    {
-        $db = \OMV\Config\Database::getInstance();
-        $object = $db->get("conf.service.autoshutdown");
-        if (TRUE !== $object->get("enable"))
-            return;
-        // Start this service and enable the unit file.
-        $systemCtl = new \OMV\System\SystemCtl("autoshutdown");
-        $systemCtl->enable(TRUE);
-    }
-
-    public function stopService()
-    {
-        $systemCtl = new \OMV\System\SystemCtl("autoshutdown");
-        $systemCtl->disable(TRUE);
     }
 
     public function getStatus()

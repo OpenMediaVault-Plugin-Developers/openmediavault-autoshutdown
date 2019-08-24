@@ -1,4 +1,5 @@
-usr/share/openmediavault/*  usr/share/openmediavault
-var/www/openmediavault/*    var/www/openmediavault
-etc/*                       etc
-usr/sbin/*                  usr/sbin
+etc/* etc
+srv/* srv
+usr/share/openmediavault/* usr/share/openmediavault
+usr/sbin/* usr/sbin
+var/www/openmediavault/* var/www/openmediavault

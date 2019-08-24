@@ -1,10 +1,6 @@
-#!/bin/sh
-#
 # @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
-# @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-# @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2019 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,34 +15,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set -e
+{% set config = salt['omv_conf.get']('conf.service.autoshutdown') %}
 
-. /etc/default/openmediavault
-. /usr/share/openmediavault/scripts/helper-functions
+{% if config.enable | to_bool %}
 
-remove_action() {
-    dpkg-trigger update-fixperms
-}
+configure_autoshutdown:
+  file.managed:
+    - name: "/etc/autoshutdown.conf"
+    - source:
+      - salt://{{ slspath }}/files/etc-autoshutdown_conf.j2
+    - template: jinja
+    - context:
+        config: {{ config | json }}
+    - user: root
+    - group: root
+    - mode: 644
 
-case "$1" in
-    purge)
-        remove_action
-        # Remove the configuration data
-        omv_config_delete "/config/services/autoshutdown"
-    ;;
-    remove)
-        remove_action
-    ;;
+start_autoshutdown_service:
+  service.running:
+    - name: autoshutdown
+    - enable: True
+    - watch:
+      - file: configure_autoshutdown
 
-    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-    ;;
+{% else %}
 
-    *)
-        echo "postrm called with unknown argument '$1'" >&2
-        exit 1
-    ;;
-esac
+stop_autoshutdown_service:
+  service.dead:
+    - name: autoshutdown
+    - enable: False
 
-#DEBHELPER#
-
-exit 0
+{% endif %}

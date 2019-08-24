@@ -2,7 +2,7 @@
 #
 # @license  http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author   OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-# @copyright Copyright (c) 2013-2016 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,43 +25,24 @@ set -e
 case "$1" in
     configure)
 
-        SERVICE_XPATH_NAME="autoshutdown"
-        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
-
         if [ -z "$2" ]; then
-            deb-systemd-helper disable ${SERVICE_XPATH_NAME}.service >/dev/null || true
-            deb-systemd-invoke stop ${SERVICE_XPATH_NAME}.service >/dev/null || true
+            deb-systemd-helper disable autoshutdown.service >/dev/null || true
+            deb-systemd-invoke stop autoshutdown.service >/dev/null || true
         fi
 
-        if ! omv_config_exists "${SERVICE_XPATH}"; then
-            omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
-            omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "cycles" "6"
-            omv_config_add_key "${SERVICE_XPATH}" "sleep" "180"
-            omv_config_add_key "${SERVICE_XPATH}" "range" "2..254"
-            omv_config_add_key "${SERVICE_XPATH}" "shutdowncommand" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "checkclockactive" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "uphours-begin" "6"
-            omv_config_add_key "${SERVICE_XPATH}" "uphours-end" "20"
-            omv_config_add_key "${SERVICE_XPATH}" "nsocketnumbers" "21,22,80,139,445,3689,6991,9091,49152"
-            omv_config_add_key "${SERVICE_XPATH}" "uldlcheck" "1"
-            omv_config_add_key "${SERVICE_XPATH}" "uldlrate" "50"
-            omv_config_add_key "${SERVICE_XPATH}" "loadaveragecheck" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "loadaverage" "40"
-            omv_config_add_key "${SERVICE_XPATH}" "hddiocheck" "1"
-            omv_config_add_key "${SERVICE_XPATH}" "hddiorate" "401"
-            omv_config_add_key "${SERVICE_XPATH}" "checksamba" "1"
-            omv_config_add_key "${SERVICE_XPATH}" "checkcli" "1"
-            omv_config_add_key "${SERVICE_XPATH}" "syslog" "1"
-            omv_config_add_key "${SERVICE_XPATH}" "verbose" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "fake" "0"
-            omv_config_add_key "${SERVICE_XPATH}" "extraoptions" ""
-        fi
-
-        omv-mkconf autoshutdown
-
+        # Activate package triggers.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
+
+        # Initialize and migrate configuration database.
+        echo "Updating configuration database ..."
+        omv-confdbadm create "conf.service.autoshutdown"
+        if [ -n "$2" ]; then
+            omv-confdbadm migrate "conf.system.autoshutdown" "${2}"
+        fi
+
+	# create repo files
+        omv-salt deploy run --quiet autoshutdown
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
