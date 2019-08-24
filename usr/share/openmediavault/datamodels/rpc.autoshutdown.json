@@ -34,13 +34,13 @@
 				"type": "boolean",
 				"required": true
 			},
-			"uphours-begin": {
+			"uphours_begin": {
 				"type": "integer",
 				"minimum": 0,
 				"maximum": 23,
 				"required": true
 			},
-			"uphours-end": {
+			"uphours_end": {
 				"type": "integer",
 				"minimum": 0,
 				"maximum": 23,

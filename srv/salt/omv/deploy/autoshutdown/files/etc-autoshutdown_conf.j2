@@ -4,17 +4,17 @@ ENABLE="{{ 'true' if config.enable | to_bool else 'false' }}"
 CYCLES={{ config.cycles }}
 SLEEP={{ config.sleep }}
 RANGE="{{ config.range }}"
-{%- if config.autoshutdown == 0 %}
+{%- if config.shutdowncommand == 0 %}
 SHUTDOWNCOMMAND="shutdown -h now"
-{%- elif config.autoshutdown == 1 %}
+{%- elif config.shutdowncommand == 1 %}
 SHUTDOWNCOMMAND="systemctl hibernate"
-{%- elif config.autoshutdown == 2 %}
+{%- elif config.shutdowncommand == 2 %}
 SHUTDOWNCOMMAND="systemctl suspend"
-{%- elif config.autoshutdown == 3 %}
+{%- elif config.shutdowncommand == 3 %}
 SHUTDOWNCOMMAND="systemctl hybrid"
 {%- endif %}
 CHECKCLOCKACTIVE="{{ 'true' if config.checkclockactive | to_bool else 'false' }}"
-UPHOURS="{{ config.uphours-begin }}..{{ config.uphours-end }}"
+UPHOURS="{{ config.uphours_begin }}..{{ config.uphours_end }}"
 NSOCKETNUMBERS="{{ config.nsocketnumbers }}"
 ULDLCHECK="{{ 'true' if config.uldlcheck | to_bool else 'false' }}"
 ULDLRATE={{ config.uldlrate }}

@@ -144,7 +144,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 layout: "hbox",
                 items: [{
                     xtype: "numberfield",
-                    name: "uphours-begin",
+                    name: "uphours_begin",
                     fieldLabel: _("Begin"),
                     minValue: 0,
                     maxValue: 23,
@@ -158,7 +158,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 layout: "hbox",
                 items: [{
                     xtype: "numberfield",
-                    name: "uphours-end",
+                    name: "uphours_end",
                     fieldLabel: _("End"),
                     minValue: 0,
                     maxValue: 23,
