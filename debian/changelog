@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.0.1) stable; urgency=low
+
+  * Fix install script
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 24 Aug 2019 21:17:11 -0500
+
 openmediavault-autoshutdown (5.0) stable; urgency=low
 
   * Update for OMV 5.x

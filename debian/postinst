@@ -38,7 +38,7 @@ case "$1" in
         echo "Updating configuration database ..."
         omv-confdbadm create "conf.service.autoshutdown"
         if [ -n "$2" ]; then
-            omv-confdbadm migrate "conf.system.autoshutdown" "${2}"
+            omv-confdbadm migrate "conf.service.autoshutdown" "${2}"
         fi
 
 	# create repo files
