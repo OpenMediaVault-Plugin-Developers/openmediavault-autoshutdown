@@ -245,7 +245,7 @@ _ident_num_proc()
 				;;
 
 		*)
-				_log "WARN: _ident_num_proc() This should not happen. Exit 42"
+				_log "ERROR: _ident_num_proc() This should not happen. Exit 42"
 				;;
 	esac
 
@@ -600,7 +600,7 @@ _check_ul_dl_rate()
 	RX_FILE=$RXTXTMPDIR/rx-${NICNR_ULDLCHECK}.tmp
 	TX_FILE=$RXTXTMPDIR/tx-${NICNR_ULDLCHECK}.tmp
 	if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
-		if $DEBUG; then _log "DEBUG: _check_ul_dl(): $RX_FILE and $TX_FILE are existing"; fi
+		if $DEBUG; then _log "DEBUG: _check_ul_dl(): $RX_FILE and $TX_FILE exist"; fi
 		p_RX=$(cat $RX_FILE) ## store previous RX value in p_RX
 		p_TX=$(cat $TX_FILE) ## store previous TX value in p_TX
 
@@ -655,13 +655,15 @@ _check_ul_dl_rate()
 		echo $RX > $RX_FILE ## Write new packets to RX file
 		echo $TX > $TX_FILE ## Write new packets to TX file
 
-		_log "INFO: rx.tmp and/or tx.tmp doesn't exist - writing values to files"
+		if $DEBUG; then
+			_log "DEBUG: rx.tmp and/or tx.tmp do not exist - writing values to files"
+		fi
 
 		# This is the obviously the first run, because of tx.tmp and/or rx.tmp doesn't exist
 		return 0
 	fi # > # if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
 
-	_log "INFO: _check_ul_dl_rate: This should not happen - Exit 42"
+	_log "ERROR: _check_ul_dl_rate: This should not happen - Exit 42"
 	exit 42
 }
 
@@ -907,7 +909,9 @@ _check_hddio()
 		else
 			f_check_hdd_io_write_to_file
 			# This is the obviously the first run, because of dev_$OMV_HDD.tmp doesn't exist
-			_log "INFO: hddio_dev_$OMV_HDD.tmp doesn't exist - writing values to file"
+			if $DEBUG; then
+				_log "DEBUG: hddio_dev_$OMV_HDD.tmp doesn't exist - writing values to file"
+			fi
 		fi # > # if [ -f $TMPDIR/hddio_dev_$OMV_HDD.tmp ]; then
 
 	done
@@ -1522,7 +1526,7 @@ if [ "$ULDLCHECK" = "true" ]; then
 		rm $RXTXTMPDIR/*.tmp >/dev/null 2>&1 && if $DEBUG; then _log "DEBUG: $RXTXTMPDIR/*.tmp deleted @ start of script"; fi
 	else
 		if $DEBUG ; then _log "DEBUG: _check_ul_dl_rate(): creating tmpdir: $RXTXTMPDIR"; fi
-		mkdir $RXTXTMPDIR && _log "DEBUG: _check_ul_dl_rate(): $RXTXTMPDIR created successfully"
+		mkdir $RXTXTMPDIR && if $DEBUG; then _log "DEBUG: _check_ul_dl_rate(): $RXTXTMPDIR created successfully"; fi
 	fi
 fi
 
@@ -1531,7 +1535,7 @@ HDDIOTMPDIR="$TMPDIR/hddio"
 if [ "$HDDIOCHECK" = "true" ]; then
         if [ ! -d $HDDIOTMPDIR ]; then
                         if $DEBUG ; then _log "DEBUG: _check_hddio(): creating tmpdir: $HDDIOTMPDIR"; fi
-                        mkdir $HDDIOTMPDIR && _log "DEBUG: _check_hddio(): $HDDIOTMPDIR created successfully"
+                        mkdir $HDDIOTMPDIR && if $DEBUG; then _log "DEBUG: _check_hddio(): $HDDIOTMPDIR created successfully"; fi
                 else
                         if $DEBUG ; then _log "DEBUG: _check_hddio(): tmpdir: $HDDIOTMPDIR exists"; fi
         fi
