@@ -9,7 +9,7 @@ After=hybrid-sleep.target
 Type=simple
 Restart=always
 RestartSec=3
-PIDFile=/var/run/autoshutdown.pid
+PIDFile=/run/autoshutdown.pid
 ExecStart=/usr/sbin/autoshutdown.sh
 
 [Install]

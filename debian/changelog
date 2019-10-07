@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.0.2) stable; urgency=low
+
+  * Stop removing linefeed in configuration file
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Oct 2019 06:58:02 -0500
+
 openmediavault-autoshutdown (5.0.1) stable; urgency=low
 
   * Fix install script

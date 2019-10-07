@@ -27,6 +27,6 @@ CHECK_CLI="{{ 'true' if config.checkcli | to_bool else 'false' }}"
 SYSLOG="{{ 'true' if config.syslog | to_bool else 'false' }}"
 VERBOSE="{{ 'true' if config.verbose | to_bool else 'false' }}"
 FAKE="{{ 'true' if config.fake | to_bool else 'false' }}"
-{%- if config.extraoptions | length > 0 -%}
+{%- if config.extraoptions | length > 0 %}
 {{ config.extraoptions }}
 {%- endif %}
