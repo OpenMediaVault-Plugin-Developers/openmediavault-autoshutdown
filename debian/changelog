@@ -1,3 +1,39 @@
+openmediavault-autoshutdown (5.0.2) stable; urgency=low
+
+  * Stop removing linefeed in configuration file
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Oct 2019 06:58:02 -0500
+
+openmediavault-autoshutdown (5.0.1) stable; urgency=low
+
+  * Fix install script
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 24 Aug 2019 21:17:11 -0500
+
+openmediavault-autoshutdown (5.0) stable; urgency=low
+
+  * Update for OMV 5.x
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 24 Aug 2019 16:26:15 -0500
+
+openmediavault-autoshutdown (4.0.5) stable; urgency=low
+
+  * Fix for multiple network adapters.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 11 Aug 2019 07:43:47 -0500
+
+openmediavault-autoshutdown (4.0.4) stable; urgency=low
+
+  * Fix log regex
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jun 2018 17:49:50 -0500
+
+openmediavault-autoshutdown (4.0.3) stable; urgency=low
+
+  * Update package dependencies.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 13 Jan 2018 17:34:36 +0100
+
 openmediavault-autoshutdown (4.0.2) stable; urgency=low
 
   * Remove non-stretch code
@@ -297,4 +333,3 @@ openmediavault-autoshutdown (0.5.0) stable; urgency=low
   * Port to OpenMediaVault 0.5
 
  -- Aaron Murray <aaron@omv-extras.org>  Fri, 06 Sep 2013 7:27:26 -0500
-

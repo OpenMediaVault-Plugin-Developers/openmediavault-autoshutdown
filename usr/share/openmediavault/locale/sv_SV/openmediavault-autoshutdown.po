@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
+# Jonatan Nyberg, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-12 08:09-0500\n"
-"PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2018-02-21 07:24-0600\n"
+"PO-Revision-Date: 2018-11-24 02:14+0000\n"
+"Last-Translator: Jonatan Nyberg\n"
 "Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,54 +19,54 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
-msgstr ""
+msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
-msgstr ""
+msgstr "Autoshutdown"
 
 msgid "Begin"
-msgstr ""
+msgstr "Börja"
 
 msgid "Check Clock"
-msgstr ""
+msgstr "Kontrollera klockan"
 
 msgid "Check Clock to identify forced uptime."
-msgstr ""
+msgstr "Kontrollera klockan för att identifiera tvingad upptid."
 
 msgid "Check Users"
-msgstr ""
+msgstr "Kontrollera användare"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Kontrollera efter anslutna användare."
 
 msgid "Check smbstatus"
-msgstr ""
+msgstr "Kontrollera smbstatus"
 
 msgid "Check smbstatus for connected clients."
-msgstr ""
+msgstr "Kontrollera smbstatus för anslutna klienter."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Cykler"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum & tid"
 
 msgid ""
 "Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
 "triple of IP address in a list."
-msgstr ""
+msgstr "Definiera en rad IP-adresser som ska skannas via XXX.XXX.XXX.xxx sista trippeln av IP-adressen i en lista."
 
 msgid "Define the network traffic in kB/s"
-msgstr ""
+msgstr "Definiera nätverkstrafiken i kB/s"
 
 msgid "Enable"
-msgstr ""
+msgstr "Aktivera"
 
 msgid "End"
 msgstr ""
 
 msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
+msgstr "Ange ett enda streck \"-\" i fältet för att inaktivera kontrollen."
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -73,13 +74,13 @@ msgid ""
 msgstr ""
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Expertinställningar"
 
 msgid "Extra options"
-msgstr ""
+msgstr "Extra alternativ"
 
 msgid "Fake"
-msgstr ""
+msgstr "Falsk"
 
 msgid "Fake/Test mode."
 msgstr ""
@@ -88,7 +89,7 @@ msgid "Forced Uptime"
 msgstr ""
 
 msgid "General settings"
-msgstr ""
+msgstr "Allmänna Inställningar"
 
 msgid "HDDIO Rate"
 msgstr ""
@@ -108,13 +109,13 @@ msgid ""
 msgstr ""
 
 msgid "List of Ports"
-msgstr ""
+msgstr "Lista över portar"
 
 msgid "Load Average"
 msgstr ""
 
 msgid "Log"
-msgstr ""
+msgstr "Logg"
 
 msgid "Log to Syslog"
 msgstr ""
@@ -129,23 +130,23 @@ msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr ""
 
 msgid "README"
-msgstr ""
+msgstr "README"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
 msgstr ""
 
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Avstängning"
 
 msgid "Shutdown Command"
 msgstr ""
 
 msgid "Sleep"
-msgstr ""
+msgstr "Sov"
 
 msgid "Socket number to check for activity."
 msgstr ""
@@ -169,7 +170,7 @@ msgid "The following scheme is mandatory"
 msgstr ""
 
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 msgid "ULDL Rate"
 msgstr ""
@@ -196,4 +197,4 @@ msgid "define an ip range : start..end -> the two dots are mandatory"
 msgstr ""
 
 msgid "for more details."
-msgstr ""
+msgstr "för mer detaljer."

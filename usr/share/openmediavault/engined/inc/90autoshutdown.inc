@@ -1,7 +1,7 @@
 <?php
 /**
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
- * @copyright Copyright (c) 2013-2016 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 \OMV\System\LogFileSpec::registerSpecification("autoshutdown", [
     "filename" => "autoshutdown.log",
     "filepath" => "/var/log/autoshutdown.log",
-    "regex"    => "/^(\S+\s+\d+\s+\S+)\s+.*\s+logger:\s+\S+:\s+(\S+):\s+(.*)$/",
+    "regex"    => "/^(\S+\s+\d+\s+\S+)\s+.*\s+(?:logger|root): autoshutdown\S+:\s+(\S+):\s+(.*)$/",
     "columns"  => [
         "date"  => [
             "index" => 1,

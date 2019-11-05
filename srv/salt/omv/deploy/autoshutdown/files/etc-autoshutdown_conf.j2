@@ -1,0 +1,32 @@
+{{ pillar['headers']['multiline'] }}
+
+ENABLE="{{ 'true' if config.enable | to_bool else 'false' }}"
+CYCLES={{ config.cycles }}
+SLEEP={{ config.sleep }}
+RANGE="{{ config.range }}"
+{%- if config.shutdowncommand == 0 %}
+SHUTDOWNCOMMAND="shutdown -h now"
+{%- elif config.shutdowncommand == 1 %}
+SHUTDOWNCOMMAND="systemctl hibernate"
+{%- elif config.shutdowncommand == 2 %}
+SHUTDOWNCOMMAND="systemctl suspend"
+{%- elif config.shutdowncommand == 3 %}
+SHUTDOWNCOMMAND="systemctl hybrid"
+{%- endif %}
+CHECKCLOCKACTIVE="{{ 'true' if config.checkclockactive | to_bool else 'false' }}"
+UPHOURS="{{ config.uphours_begin }}..{{ config.uphours_end }}"
+NSOCKETNUMBERS="{{ config.nsocketnumbers }}"
+ULDLCHECK="{{ 'true' if config.uldlcheck | to_bool else 'false' }}"
+ULDLRATE={{ config.uldlrate }}
+LOADAVERAGECHECK="{{ 'true' if config.loadaveragecheck | to_bool else 'false' }}"
+LOADAVERAGE={{ config.loadaverage }}
+HDDIOCHECK="{{ 'true' if config.hddiocheck | to_bool else 'false' }}"
+HDDIO_RATE={{ config.hddiorate }}
+CHECK_SAMBA="{{ 'true' if config.checksamba | to_bool else 'false' }}"
+CHECK_CLI="{{ 'true' if config.checkcli | to_bool else 'false' }}"
+SYSLOG="{{ 'true' if config.syslog | to_bool else 'false' }}"
+VERBOSE="{{ 'true' if config.verbose | to_bool else 'false' }}"
+FAKE="{{ 'true' if config.fake | to_bool else 'false' }}"
+{%- if config.extraoptions | length > 0 %}
+{{ config.extraoptions }}
+{%- endif %}

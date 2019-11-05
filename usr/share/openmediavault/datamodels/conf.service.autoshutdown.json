@@ -37,13 +37,13 @@
 			"type": "boolean",
 			"default": false
 		},
-		"uphours-begin": {
+		"uphours_begin": {
 			"type": "integer",
 			"minimum": 0,
 			"maximum": 23,
 			"default": 6
 		},
-		"uphours-end": {
+		"uphours_end": {
 			"type": "integer",
 			"minimum": 0,
 			"maximum": 23,
