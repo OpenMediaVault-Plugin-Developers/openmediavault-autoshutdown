@@ -1169,7 +1169,8 @@ _check_networkconfig()
 	# check FORCE_NIC, if set, then set it to NIC[0]
 	if [ -z "$FORCE_NIC" ]; then
 		# set the default NICs
-		FORCE_NIC="$(ip link | awk -F': ' '/: en|: eth|: wlan|: bond|: usb/ {print $2}')"
+		# make sure that we filter out any suffixes for sub interfaces when using VLANs and stuff (i.e. "eth0.3@eth0" becomes "eth0.3" only).
+		FORCE_NIC="$(ip link | awk -F': ' '/: en|: eth|: wlan|: bond|: usb/ {print $2}' | sed 's/\@.*//g')"
 	else
 		_log "INFO: FORCE_NIC found: NIC is now $FORCE_NIC"
 		_log "INFO: If the following checks fail, then try to uncomment FORCE_NIC to do a normal network-check"
