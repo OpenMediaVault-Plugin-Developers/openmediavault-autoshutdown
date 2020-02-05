@@ -478,30 +478,18 @@ _check_net_status()
 
 	# check for each given socket number in NSOCKETNUMBERS if it is currently stated active in "netstat"
 	for NSOCKET in ${NSOCKETNUMBERS//,/ } ; do
-		LP=0
-		IPWORD="${CLASS[$NICNR_NETSTATUS]}.${SERVERIP[$NICNR_NETSTATUS]}:$NSOCKET"
+		IP="${CLASS[$NICNR_NETSTATUS]}.${SERVERIP[$NICNR_NETSTATUS]}"
 
-		if $DEBUG ; then _log "DEBUG: _check_net_status(): ss -n | grep ESTAB | grep ${IPWORD}"; fi
-
-		LINES=$(ss -n | grep ESTAB | grep ${IPWORD})
+		LINES="$(ss -n | awk -v regex="^([[]::ffff:)?${IP}[]]?:${NSOCKET}$" '$2 ~ /^ESTAB$/ && $5 ~ regex')"
 
 		if $DEBUG ; then _log "DEBUG: _check_net_status(): Result: $LINES"; fi # changed LINE in LINES
 
-		#if $DEBUG ; then _log "DEBUG: _check_net_status(): echo ${LINES} | grep -c ${WORD2}"; fi
+		let NUMPROC+="$([ -n "${LINES}" ] && wc -l <<< "${LINES}" || echo -n "0")"
 
-		# had to add [[:space:]] because without it, this command also wrong values are found:
-		# searching for port 445 also finds port 44547
-		RESULT=$(echo ${LINES} | egrep -c "${IPWORD}[[:space:]]")
+		if $DEBUG ; then _log "DEBUG: _check_net_status(): Is socket present: $([ -n "${LINES}" ] && echo -n "true" || echo -n "false")"; fi
 
-		let NUMPROC=$NUMPROC+$RESULT
-
-		if $DEBUG ; then _log "DEBUG: _check_net_status(): Is socket present: $RESULT"; fi
-
-		# Check which IP is connected on the specified Port
-		# old:
-		# CONIP=$(netstat -an | grep ${WORD1} | echo ${WORD2} | awk '{print $5}'| sed 's/\.[0-9]*$//g' | uniq)
-
-		[[ $(echo ${LINES} | awk '{print $6}') =~ (.*):[0-9]*$ ]] && CONIP=${BASH_REMATCH[1]}
+		CONIPS="$(awk '{gsub(/^([[]::ffff:)?/,"",$6);gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${LINES}" |
+					sort -u)"
 
 		# Set PORTPROTOCOL - only default ports are defined here
 		case $NSOCKET in
@@ -521,9 +509,13 @@ _check_net_status()
 			*)      PORTPROTOCOL="unknown" ;;
 		esac
 
-		if [ $RESULT -gt 0 ]; then _log "INFO: _check_net_status(): Found active connection on port $NSOCKET ($PORTPROTOCOL) from $CONIP"; fi
+		if [ -n "${LINES}" ]; then _log "INFO: _check_net_status(): Found active connection on port $NSOCKET ($PORTPROTOCOL) from ${CONIPS//$'\n'/, }"; fi
 
 	done   # > NSOCKET in ${NSOCKETNAMES//,/ } ; do
+
+	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active socket(s) from Port(s): $NSOCKETNUMBERS" ; }; fi
+
+	if $DEBUG ; then _log "DEBUG: _check_net_status(): $NUMPROC socket(s) active on ${NIC[$NICNR_NETSTATUS]}."; fi
 
 	# Extra Check for connected users on the CLI if other processes are negative -> [ $NUMPROC -eq 0 ]
 	if [ $NUMPROC -eq 0 ]; then
@@ -556,10 +548,6 @@ _check_net_status()
             fi
         fi
 	fi
-
-	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active socket(s) from Port(s): $NSOCKETNUMBERS" ; }; fi
-
-	if $DEBUG ; then _log "DEBUG: _check_net_status(): $NUMPROC socket(s) active on ${NIC[$NICNR_NETSTATUS]}."; fi
 
 	# return the number of processes we found
 	return $NUMPROC
