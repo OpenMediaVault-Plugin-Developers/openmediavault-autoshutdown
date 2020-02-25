@@ -21,7 +21,7 @@ configure_autoshutdown:
   file.managed:
     - name: "/etc/autoshutdown.conf"
     - source:
-      - salt://{{ slspath }}/files/etc-autoshutdown_conf.j2
+      - salt://{{ tpldir }}/files/etc-autoshutdown_conf.j2
     - template: jinja
     - context:
         config: {{ config | json }}

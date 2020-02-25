@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.0.3) stable; urgency=low
+
+  * Replace 'slspath' with 'tpldir' for saltstack 3000
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 25 Feb 2020 07:24:47 -0600
+
 openmediavault-autoshutdown (5.0.2) stable; urgency=low
 
   * Stop removing linefeed in configuration file
