@@ -87,6 +87,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"transmissioncheck": {
+			"type": "boolean",
+			"default": false
+		},
 		"checkcli": {
 			"type": "boolean",
 			"default": true
