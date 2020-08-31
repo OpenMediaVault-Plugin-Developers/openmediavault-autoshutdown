@@ -41,7 +41,7 @@ case "$1" in
             omv-confdbadm migrate "conf.service.autoshutdown" "${2}"
         fi
 
-	# create repo files
+        # create repo files
         omv-salt deploy run --quiet autoshutdown
     ;;
 
