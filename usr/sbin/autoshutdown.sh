@@ -513,6 +513,10 @@ _check_net_status()
 
 	done   # > NSOCKET in ${NSOCKETNAMES//,/ } ; do
 
+	# Extra check to detect established connection in a container from a host port.
+	_check_docker_status
+	let NUMPROC+=${?}
+
 	if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active socket(s) from Port(s): $NSOCKETNUMBERS" ; }; fi
 
 	if $DEBUG ; then _log "DEBUG: _check_net_status(): $NUMPROC socket(s) active on ${NIC[$NICNR_NETSTATUS]}."; fi
@@ -552,6 +556,64 @@ _check_net_status()
 	# return the number of processes we found
 	return $NUMPROC
 
+}
+
+################################################################
+#
+#   name	        : _check_docker_status
+#   parameter       : none
+#   global return   : none
+#   return          : 0         : if no active socket has been found, ready for shutdown
+#			        : 1 or more : if at least one active socket has been found, no shutdown
+#
+_check_docker_status()
+{
+	command -v docker &>- || return 0
+	local active=0
+	for container in $(docker ps --format "{{ .Names }}"); do
+		local details; read -ra details <<< "$(docker inspect --format \
+			'{{ .State.Pid }} {{ .NetworkSettings.IPAddress }}
+			 {{- ""}} {{ range $key, $value := .NetworkSettings.Ports }}
+				{{- ""}}{{ range . }}{{ .HostPort }}:{{ index (split $key "/") 0 }}
+				{{- ""}}{{ end }}
+			 {{- ""}} {{ end }}' \
+			"${container}")"
+		[[ "${#details[@]}" -eq 0 || ! ("${details[*]}" =~ :) ]] && continue
+		local port_map=()
+		for ports in "${details[@]: -2}"; do
+			if [[ "${ports}" =~ - ]]; then
+				local host_map;
+				mapfile -t host_map < <(seq $(sed 's:-: :' <<< "${ports%:*}"))
+				local con_map;
+				mapfile -t con_map < <(seq $(sed 's:-: :' <<< "${ports#*:}"))
+				for index in "${!host_map[@]}"; do
+					[[ "${NSOCKETNUMBERS}," == *",${host_map["${index}"]},"* ]] &&
+						port_map["${host_map["${index}"]}"]="${con_map["${index}"]}";
+				done
+				continue
+			fi
+			[[ "${NSOCKETNUMBERS}," == *",${ports#*:},"* ]] &&
+				port_map["${ports%:*}"]="${ports#*:}"
+		done
+		[ "${#port_map[@]}" -eq 0 ] && continue
+		for target in "${!port_map[@]}"; do
+			local lines; lines="$(
+				nsenter -t "${details[0]}" -n ss -n |
+				awk -v \
+					regex="^([[]::ffff:)?${details[1]}[]]?:${port_map[${target}]}$" \
+					'$2 ~ /^ESTAB$/ && $5 ~ regex' ||
+				true)"
+			local con_ips; con_ips="$(
+				awk '{gsub(/^([[]::ffff:)?/,"",$6);
+					  gsub(/[]]?:[0-9]+$/,"",$6);
+					  print $6}' <<< "${lines}" |
+				sort -u)"
+			[ -n "${lines}" ] &&
+				{ (( active+="$(wc -l <<< "${lines}")" ));
+				  _log "INFO: _check_docker_status(): Found active connection on port ${target} (${container}) from ${con_ips//$'\n'/, }"; }
+		done
+	done
+	return "${active}"
 }
 
 ################################################################
