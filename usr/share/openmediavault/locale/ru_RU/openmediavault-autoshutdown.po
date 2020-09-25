@@ -5,13 +5,13 @@
 # Translators:
 # Alexander Savchenko, 2013
 # Alexander Savchenko, 2014
-# Артур Мудрых <arturmon82@gmail.com>, 2017
+# Артур Мудрых <arturmon82@gmail.com>, 2017,2019
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-19 20:49+0000\n"
+"PO-Revision-Date: 2019-11-04 12:20+0000\n"
 "Last-Translator: Артур Мудрых <arturmon82@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -88,16 +88,16 @@ msgid "Fake/Test mode."
 msgstr "Фальшивый /Тестовый режим."
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Принудительное время работы"
 
 msgid "General settings"
 msgstr "Основные настройки"
 
 msgid "HDDIO Rate"
-msgstr ""
+msgstr "Оценить HDDIO"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Hibernate"
 
 msgid "IP-Range"
 msgstr "IP-диапазон"
@@ -120,7 +120,7 @@ msgid "Log"
 msgstr "Журнал"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Лог в Syslog"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Количество секунд между циклами."
@@ -129,14 +129,14 @@ msgid "Please check the"
 msgstr "Пожалуйста, проверьте"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
+msgstr "Пожалуйста, не забудьте вставить 1 и 255 из списка!"
 
 msgid "README"
 msgstr "ПРОЧТИ МЕНЯ"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Установите количество циклов без результата (нет ПК в сети и т. д.) Перед выключением."
 
 msgid "Settings"
 msgstr "Настройки"
@@ -163,10 +163,10 @@ msgid "Suspend"
 msgstr "Приостановить"
 
 msgid "Suspend-Hybrid"
-msgstr ""
+msgstr "Suspend-Hybrid"
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Настройка Syslog"
 
 msgid "The following scheme is mandatory"
 msgstr "Следующая схема обязательна"
@@ -175,7 +175,7 @@ msgid "Type"
 msgstr "Тип"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "Оценить ULDL"
 
 msgid "Uphours"
 msgstr "Время работы"
