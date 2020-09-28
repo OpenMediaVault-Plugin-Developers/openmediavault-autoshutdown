@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.0.6) stable; urgency=low
+
+  * Fix regression in logging
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 28 Sep 2020 20:00:51 +0100
+
 openmediavault-autoshutdown (5.0.5) stable; urgency=low
 
   * Fix indentation: debian/postinst
