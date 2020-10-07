@@ -51,6 +51,9 @@ TMPDIR="/tmp/autoshutdown"
 #
 _log()
 {
+    local PRIORITY
+    local LOGMESSAGE
+
 	[[ "$*" =~ ^([A-Za-z]*):(.*) ]] &&
 		{
 			PRIORITY=${BASH_REMATCH[1]}
@@ -352,6 +355,11 @@ _check_plugin()
 
 	ASD_pluginNR=0
 	for ASD_plugin in /etc/autoshutdown.d/*; do
+	    if [ -d "$ASD_plugin" ]; then
+	        if $DEBUG ; then _log "DEBUG: _check_plugin(): ${ASD_plugin} is no plugin, it's a directory" ; fi
+            continue
+        fi
+
 		let ASD_pluginNR++
 
 		PLUGIN_name[$ASD_pluginNR]="${ASD_plugin##*/}"
@@ -407,6 +415,70 @@ _check_plugin()
 	if $DEBUG ; then _log "DEBUG: _check_plugin(): after all plugin-checks: RVALUE: $RVALUE" ; fi
 
 	return ${RVALUE}
+}
+
+
+################################################################
+#
+#   name 			: _check_script_plugins
+#   parameter		: none
+#   global return   : none
+#   return			: 0      : if a script returns idle (exit code 0)
+#   				: 1      : if a script returns busy (exit code 1)
+#
+# With this extended script plugin-system everyone can check if a something want to prevent the shutdown.
+# If a script exits with 1, the machine won't shutdown
+# You find sample plugins in /etc/autoshutdown.d/scripts.d/
+#
+_check_script_plugins()
+{
+    _log "INFO: _check_script_plugins(): version 1.0'"
+
+    local SCRIPT_PLUGINS_searchPath=/etc/autoshutdown.d/scripts.d
+    local SCRIPT_PLUGINS_exitCode=0
+
+    for ASD_scriptPlugin in ${SCRIPT_PLUGINS_searchPath}/*.plugin.sh; do
+         if [ ! -e "${ASD_scriptPlugin}" ]; then
+	        if $DEBUG ; then _log "DEBUG: _check_script_plugins(): ${ASD_scriptPlugin} is no plugin. Maybe it's a directory or no plugins exists" ; fi
+            continue
+        fi
+
+        local SCRIPT_PLUGINS_file=$(basename ${ASD_scriptPlugin})
+        local SCRIPT_PLUGINS_name="${SCRIPT_PLUGINS_file%.plugin.sh}"
+
+        if $DEBUG; then
+			_log "DEBUG: _check_script_plugins(): found script plugin file '${SCRIPT_PLUGINS_file}'"
+            _log "DEBUG: _check_script_plugins(): checking '${SCRIPT_PLUGINS_name}'"
+		fi
+
+        local SCRIPT_PLUGINS_output
+        SCRIPT_PLUGINS_output="$(bash -c "source $AUTOSHUTDOWN_CONF; source ${SCRIPT_PLUGINS_searchPath}/${SCRIPT_PLUGINS_file}")"
+        local SCRIPT_PLUGINS_scriptExitCode=$?
+
+        if $DEBUG ; then
+            _log "DEBUG: _check_script_plugins(): >>>>>>>>>>>> output '${SCRIPT_PLUGINS_name}' >>>>>>>>>>>>"
+            echo "${SCRIPT_PLUGINS_output}" | while read line
+            do
+                 _log "DEBUG: ${line}"
+            done
+            _log "DEBUG: _check_script_plugins(): <<<<<<<<<<<< output '${SCRIPT_PLUGINS_name}' <<<<<<<<<<<<"
+        fi
+        _log "INFO: _check_script_plugins(): script plugin returned with exit code '${SCRIPT_PLUGINS_scriptExitCode}'"
+
+        if [ ${SCRIPT_PLUGINS_scriptExitCode} -eq 1 ] ; then
+            SCRIPT_PLUGINS_exitCode=$((${SCRIPT_PLUGINS_exitCode} + 1))
+        fi
+    done
+
+    if $DEBUG ; then _log "DEBUG: _check_script_plugins(): after all script plugin checks: SCRIPT_PLUGINS_exitCode: ${SCRIPT_PLUGINS_exitCode}" ; fi
+
+    if [ ${SCRIPT_PLUGINS_exitCode} -gt 0 ] ; then
+        _log "INFO: _check_script_plugins(): some script plugins prevent shutdown"
+    else
+        _log "INFO: _check_script_plugins(): no script plugins prevent shutdown"
+    fi
+
+    return ${SCRIPT_PLUGINS_exitCode}
 }
 
 
@@ -997,9 +1069,15 @@ _check_config()
 	fi
 
 	if [ ! -z "$PLUGINCHECK" ]; then
-		[[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+		[[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || { _log "WARN: PLUGINCHECK not set properly. It has to be 'true' or 'false'."
 				_log "WARN: Set PLUGINCHECK to false"
 				PLUGINCHECK="false"; }
+	fi
+
+	if [ ! -z "$SCRIPTPLUGINSCHECK" ]; then
+		[[ "$SCRIPTPLUGINSCHECK" = "true" || "$SCRIPTPLUGINSCHECK" = "false" ]] || { _log "WARN: SCRIPTPLUGINSCHECK not set properly. It has to be 'true' or 'false'."
+				_log "WARN: Set SCRIPTPLUGINSCHECK to false"
+				SCRIPTPLUGINSCHECK="false"; }
 	fi
 
 	# Flag: 1 - 999 (cycles)
@@ -1471,6 +1549,20 @@ _check_system_active()
 		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_plugin not called -> CNT: $CNT "; fi
 	fi   # > if[ $CNT -eq 0 ]; then
 
+	if [ $CNT -eq 0 ]; then
+		# PRIO 8: Do a Script PlugIn-Check for any existing files, setup in plugins
+		if [ "$SCRIPTPLUGINSCHECK" = "true" ] ; then
+			_check_script_plugins
+			if [ $? -gt 0 ]; then
+				let CNT++
+			fi
+
+			if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_script_plugins -> CNT: $CNT "; fi
+		fi
+	else
+		if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_script_plugins not called -> CNT: $CNT "; fi
+	fi   # > if[ $CNT -eq 0 ]; then
+
 	return ${CNT};
 }
 
@@ -1484,9 +1576,11 @@ logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info
 logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' X Version: $VERSION'"
 logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' Initialize logging to $FACILITY'"
 
-if [ -f /etc/autoshutdown.conf ]; then
-	. /etc/autoshutdown.conf
-	_log "INFO: /etc/autoshutdown.conf loaded"
+AUTOSHUTDOWN_CONF="/etc/autoshutdown.conf"
+
+if [ -f ${AUTOSHUTDOWN_CONF} ]; then
+	. ${AUTOSHUTDOWN_CONF}
+	_log "INFO: ${AUTOSHUTDOWN_CONF} loaded"
 else
 	_log "WARN: cfg-File not found! Please check Path /etc for autoshutdown.conf"
 	exit 1
@@ -1557,12 +1651,23 @@ if $DEBUG ; then
 	_log "DEBUG: LOADAVERAGECHECK: $LOADAVERAGECHECK"
 	_log "DEBUG: LOADAVERAGE: $LOADAVERAGE"
 	_log "DEBUG: TMPDIR: $TMPDIR"
+
 	_log "DEBUG: PLUGINCHECK: $PLUGINCHECK"
 	# List all PlugIns
 	_log "DEBUG: PlugIns found in /etc/autoshutdown.d:"
 	for ASD_plugin_firstcheck in /etc/autoshutdown.d/*; do
-		_log "DEBUG: Plugin: $ASD_plugin_firstcheck"
+	    [ -f ${ASD_plugin_firstcheck} ] || continue
+		_log "DEBUG: Plugin: ${ASD_plugin_firstcheck}"
 	done
+
+	_log "DEBUG: SCRIPTPLUGINSCHECK: $SCRIPTPLUGINSCHECK"
+	# List all script PlugIns
+	_log "DEBUG: Script PlugIns found in /etc/autoshutdown.d/scripts.d:"
+	for ASD_script_plugin_firstcheck in /etc/autoshutdown.d/scripts.d/*.plugin.sh; do
+	    [ -f ${ASD_script_plugin_firstcheck} ] || continue
+		_log "DEBUG: Script Plugin: ${ASD_script_plugin_firstcheck}"
+	done
+
 fi   # > if $DEBUG ;then
 
 _log "INFO:---------------- script started ----------------------"
