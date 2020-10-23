@@ -412,15 +412,15 @@ _check_plugin()
 
 ################################################################
 #
-#   name         : _check_loadaverage
-#   parameter      : none
-#   global return   : none
-#   return         : 1      : if loadaverage is higher (greater) than $LOADAVERAGE, no shutdown
-#               : 0      : if loadaverage is lower (less) than $LOADAVERAGE
+#   name          : _check_loadaverage
+#   parameter     : none
+#   global return : none
+#   return        : 1 : If loadaverage is higher (greater) than $LOADAVERAGE, no shutdown
+#                 : 0 : If loadaverage is lower (less) than $LOADAVERAGE
 #
 # This script checks if the loadaverage is higher than $LOADAVERAGE over the last 1 minute
 # if yes -> no shutdown, next cycle
-# if no -> next check and shutdown if all cycles failed
+# if no  -> next check and shutdown if all cycles failed
 #
 _check_loadaverage()
 {
@@ -428,34 +428,38 @@ _check_loadaverage()
 	# _log "DEBUG: _check_loadaverage() disabled for testing"
 	# return 0
 
-	RVALUE=0
-	# grab first line, with the load averages; use C-locale to avoid internationalization issues
-	CURRENT_LOAD_AVERAGE_LINE=$(LC_ALL=C top -b -n 1 | head -1)
-	# grab first value, with the one-minute load average in decimal notation
-	CURRENT_LOAD_AVERAGE_DECIMAL=$(echo $CURRENT_LOAD_AVERAGE_LINE | sed -E 's/.*load average: ([0-9.]+).*/\1/')
-    # convert to integer value by removing decimal point and assuming two fixed decimal places;
-    # for pretty display, remove leading zeros
-    CURRENT_LOAD_AVERAGE=$(printf "%d" $(echo $CURRENT_LOAD_AVERAGE_DECIMAL | sed 's/[.]//'))
+	local RVALUE=0
+	# Get the load averages.
+	local CURRENT_LOAD_AVERAGE_LINE
+	CURRENT_LOAD_AVERAGE_LINE="$(LC_ALL=C cat "/proc/loadavg")"
+	# Get load average in decimal notation.
+	local CURRENT_LOAD_AVERAGE_DECIMAL
+	CURRENT_LOAD_AVERAGE_DECIMAL="$(awk '{print $1}' <<< "${CURRENT_LOAD_AVERAGE_LINE}")"
+	# Convert to integer value by removing decimal point and assuming two fixed decimal places.
+	local CURRENT_LOAD_AVERAGE
+	CURRENT_LOAD_AVERAGE="$(sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${CURRENT_LOAD_AVERAGE_DECIMAL}")"
 
-	if $DEBUG; then
-		_log "DEBUG: -------------------------------------------"
-		_log "DEBUG: _check_loadaverage(): First line of output from 'top' command:"
-		_log "DEBUG: _check_loadaverage(): '$CURRENT_LOAD_AVERAGE_LINE'"
-		_log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE_DECIMAL: $CURRENT_LOAD_AVERAGE_DECIMAL"
-		_log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE: $CURRENT_LOAD_AVERAGE"
+	if "${DEBUG}"; then
+		_log "DEBUG: ------------------------------------------------------"
+		_log "DEBUG: _check_loadaverage(): Output from '/proc/loadavg': ${CURRENT_LOAD_AVERAGE_LINE}"
+		_log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE_DECIMAL: ${CURRENT_LOAD_AVERAGE_DECIMAL}"
+		_log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE: ${CURRENT_LOAD_AVERAGE}"
 	fi
 
-	if [ $CURRENT_LOAD_AVERAGE -gt $LOADAVERAGE ]; then
-		_log "INFO: Load average ($CURRENT_LOAD_AVERAGE_DECIMAL -> $CURRENT_LOAD_AVERAGE) is higher than target ($LOADAVERAGE) - no shutdown"
-		let RVALUE++
+	local MSG="INFO: _check_loadaverage(): Load average (${CURRENT_LOAD_AVERAGE_DECIMAL} -> ${CURRENT_LOAD_AVERAGE}) is"
+	if [ "${CURRENT_LOAD_AVERAGE}" -gt "${LOADAVERAGE}" ]; then
+		MSG+=" higher than target (${LOADAVERAGE}) - no shutdown"
+		RVALUE=1
 	else
-		_log "INFO: Load average ($CURRENT_LOAD_AVERAGE_DECIMAL -> $CURRENT_LOAD_AVERAGE) is lower than target ($LOADAVERAGE)"
+		MSG+=" lower than target (${LOADAVERAGE})"
 	fi
+	_log "${MSG}"
 
-	if $DEBUG ; then _log "DEBUG: _check_loadaverage(): RVALUE: $RVALUE" ; fi
+	if "${DEBUG}"; then _log "DEBUG: _check_loadaverage(): RVALUE: ${RVALUE}"; fi
 
-	return ${RVALUE}
+	return "${RVALUE}"
 }
+
 
 ################################################################
 #
