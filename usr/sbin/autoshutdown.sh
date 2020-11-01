@@ -1107,21 +1107,12 @@ _check_config()
 
     # HDDIO
     if [ "$HDDIOCHECK" = "true" ]; then
-
-        # check if iostat is executable and installed (package 'sysstat')
-        if which iostat > /dev/null 2>&1; then
-
-            # HDDIO_RATE (max 6 digits -> 1 - 999999 kB/s)
-            [[ "$HDDIO_RATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
-                _log "WARN: Invalid parameter format: HDDIO_RATE"
-                _log "WARN: You set it to '$HDDIO_RATE', which is not a correct syntax. Maybe it's empty?"
-                _log "WARN: Set HDDIO_RATE to 500"
-                HDDIO_RATE=500; }
-        else
-            _log "WARN: iostat is not found! Please install it with 'apt-get install sysstat'"
-            _log "WARN: HDDIOCHECK is set to false"
-            HDDIOCHECK="false"
-        fi
+        # HDDIO_RATE (max 6 digits -> 1 - 999999 kB/s)
+        [[ "$HDDIO_RATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
+            _log "WARN: Invalid parameter format: HDDIO_RATE"
+            _log "WARN: You set it to '$HDDIO_RATE', which is not a correct syntax. Maybe it's empty?"
+            _log "WARN: Set HDDIO_RATE to 500"
+            HDDIO_RATE=500; }
     else
         _log "WARN: HDDIOCHECK is set to false"
         _log "WARN: Ignoring HDDIO_RATE"
@@ -1161,37 +1152,29 @@ _check_config()
     PM_HIBERNATE=false
     if [ ! -z "$SHUTDOWNCOMMAND" ]; then
         _log "INFO: SHUTDOWNCOMMAND is set to '$SHUTDOWNCOMMAND'"
-        # check, if pm-utils is installed
-        if ! which pm-is-supported 1>/dev/null; then
-            _log "WARN: SHUTDOWNCOMMAND is set, but pm-is-supported not found"
-            _log "WARN: Please install the package pm-utils with 'apt-get install pm-utils'!"
-            _log "WARN: Unset SHUTDOWNCOMMAND -> do normal shutdown"
-            unset $SHUTDOWNCOMMAND
-        else
-            # check POWER MANAGEMENT MODES
-            _log "INFO: Your Kernel supports the following modes from pm-utils:"
-            pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)" && PM_SUSPEND=true
-            pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)" && PM_HIBERNATE=true
-            pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)" && PM_SUSPEND_HYBRID=true
+        # check POWER MANAGEMENT MODES
+        _log "INFO: Your Kernel supports the following modes from pm-utils:"
+        pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)" && PM_SUSPEND=true
+        pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)" && PM_HIBERNATE=true
+        pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)" && PM_SUSPEND_HYBRID=true
 
-            # check, if pm-suspend is supported
-            if [ "$SHUTDOWNCOMMAND" = "pm-suspend" -a ! "$PM_SUSPEND" = "true" ]; then
-                _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
-                _log "WARN: Setting it to 'shutdown -h now'"
-                SHUTDOWNCOMMAND="shutdown -h now"
-            fi
-            # check, if pm-hibernate is supported
-            if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
-                _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
-                _log "WARN: Setting it to 'shutdown -h now'"
-                SHUTDOWNCOMMAND="shutdown -h now"
-            fi
-            # check, if pm-suspend-hybrid is supported
-            if [ "$SHUTDOWNCOMMAND" = "pm-suspend-hybrid" -a ! "$PM_SUSPEND_HYBRID" = "true" ]; then
-                _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
-                _log "WARN: Setting it to 'shutdown -h now'"
-                SHUTDOWNCOMMAND="shutdown -h now"
-            fi
+        # check, if pm-suspend is supported
+        if [ "$SHUTDOWNCOMMAND" = "pm-suspend" -a ! "$PM_SUSPEND" = "true" ]; then
+            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
+            _log "WARN: Setting it to 'shutdown -h now'"
+            SHUTDOWNCOMMAND="shutdown -h now"
+        fi
+        # check, if pm-hibernate is supported
+        if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
+            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
+            _log "WARN: Setting it to 'shutdown -h now'"
+            SHUTDOWNCOMMAND="shutdown -h now"
+        fi
+        # check, if pm-suspend-hybrid is supported
+        if [ "$SHUTDOWNCOMMAND" = "pm-suspend-hybrid" -a ! "$PM_SUSPEND_HYBRID" = "true" ]; then
+            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
+            _log "WARN: Setting it to 'shutdown -h now'"
+            SHUTDOWNCOMMAND="shutdown -h now"
         fi
     fi
 
@@ -1524,13 +1507,6 @@ if ! $ENABLE; then
 fi
 
 _check_networkconfig
-
-#### Testing fping ####
-if ! which fping > /dev/null; then
-    echo "WARN: fping not found! Please install it with 'apt-get install fping'"
-    _log "WARN: fping not found! Please install it with 'apt-get install fping'"
-    exit 1
-fi
 
 # If the tmp-dir doesn't exist, create it
 if [ ! -d $TMPDIR ]; then
