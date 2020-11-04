@@ -990,7 +990,8 @@ _check_config()
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Checking config"
 
-    [[ "$ENABLE" = "true" || "$ENABLE" = "false" ]] || { _log "WARN: ENABLE not set properly. It has to be 'true' or 'false'"
+    [[ "$ENABLE" = "true" || "$ENABLE" = "false" ]] || {
+        _log "WARN: ENABLE not set properly. It has to be 'true' or 'false'"
         _log "WARN: Set ENABLE to false -> exiting here ..."
         exit 0; }
 
@@ -998,13 +999,15 @@ _check_config()
         VERBOSE="true"; DEBUG="true"
         _log "INFO: Fake-Mode in on"
     else
-        [[ "$FAKE" = "true" || "$FAKE" = "false" || "$FAKE" = "" ]] || { _log "WARN: FAKE not set properly. It has to be 'true', 'false' or empty."
+        [[ "$FAKE" = "true" || "$FAKE" = "false" || "$FAKE" = "" ]] || {
+            _log "WARN: FAKE not set properly. It has to be 'true', 'false' or empty."
             _log "WARN: Set FAKE to true -> Testmode with VERBOSE on"
             FAKE="true"; VERBOSE="true"; DEBUG="TRUE"; }
     fi
 
     if [ ! -z "$PLUGINCHECK" ]; then
-        [[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+        [[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || {
+            _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
             _log "WARN: Set PLUGINCHECK to false"
             PLUGINCHECK="false"; }
     fi
@@ -1017,7 +1020,8 @@ _check_config()
         CYCLES="5"; }
 
     # CheckClockActive together with UPHOURS
-    [[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || { _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
+    [[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || {
+        _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
         _log "WARN: Set CHECKCLOCKACTIVE to false"
         CHECKCLOCKACTIVE="false"; }
 
@@ -1095,9 +1099,10 @@ _check_config()
 
     # $HDDIOCHECK" = "true"
     if [ ! -z "$HDDIOCHECK" ]; then
-        [[ "$HDDIOCHECK" = "true" || "$HDDIOCHECK" = "false" ]] || { _log "WARN: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
-                _log "WARN: Set HDDIOCHECK to false"
-                HDDIOCHECK="false"; }
+        [[ "$HDDIOCHECK" = "true" || "$HDDIOCHECK" = "false" ]] || {
+            _log "WARN: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARN: Set HDDIOCHECK to false"
+            HDDIOCHECK="false"; }
     fi
 
     # HDDIO
@@ -1125,16 +1130,17 @@ _check_config()
 
     # Sleep: 1 - 9999
     [[ "$SLEEP" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
-            _log "WARN: Invalid parameter format: SLEEP (sec)"
-            _log "WARN: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
-            _log "WARN: Setting SLEEP to 180 sec"
-            SLEEP=180; }
+        _log "WARN: Invalid parameter format: SLEEP (sec)"
+        _log "WARN: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
+        _log "WARN: Setting SLEEP to 180 sec"
+        SLEEP=180; }
 
     # $ULDLCHECK" = "true"
     if [ ! -z "$ULDLCHECK" ]; then
-        [[ "$ULDLCHECK" = "true" || "$ULDLCHECK" = "false" ]] || { _log "WARN: ULDLCHECK not set properly. It has to be 'true' or 'false'."
-                _log "WARN: Set ULDLCHECK to false"
-                ULDLCHECK="false"; }
+        [[ "$ULDLCHECK" = "true" || "$ULDLCHECK" = "false" ]] || {
+            _log "WARN: ULDLCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARN: Set ULDLCHECK to false"
+            ULDLCHECK="false"; }
     fi
 
     # ULDLRATE (max 6 digits -> 1 - 999999 kB/s)
