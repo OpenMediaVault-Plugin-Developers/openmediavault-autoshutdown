@@ -1,3 +1,12 @@
+openmediavault-autoshutdown (5.0.7) stable; urgency=low
+
+  * Refactor _check_hddio and try to address github issues #24, #54 and #60
+  * As this deb package installs its depended remove unneeded checks
+  * Move read me and remove obsolete files
+  * Fix file indentation and formatting
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 08 Nov 2020 08:21:55 -0600
+
 openmediavault-autoshutdown (5.0.6) stable; urgency=low
 
   * Fix regression in logging
