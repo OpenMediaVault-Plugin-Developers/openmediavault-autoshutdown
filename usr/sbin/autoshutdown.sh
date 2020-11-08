@@ -31,6 +31,8 @@ FACILITY="local6"           # Facility to log to -> see rsyslog.conf
                             # For a separate Log:
                             # Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
 
+declare -A p_HDDIO_DEVS     # Associative array for storing _check_hddio read and wrtn values
+
 ######## CONSTANT DEFINITION ########
 VERSION="0.9.9.10"          # Script version information
 #CTOPPARAM="-d 1 -n 1"       # Define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
@@ -819,7 +821,7 @@ _check_clock()
 ###############################################################################
 #
 #   name          : _check_hddio
-#   parameter     : HDDIORATE : Rate in kB/s of HDD-IO
+#   parameter     : HDDIO_RATE : Rate in kB/s of HDD-IO
 #   global return : none
 #   return        : 0 : If actual value of hddio is lower than the defined value, ready for shutdown
 #                 : 1 : If actual value of hddio is higher than the defined value, no shutdown
@@ -830,151 +832,100 @@ _check_hddio()
     # _log "DEBUG: _check_processes() disabled for testing"
     # return 0
 
-    HDDIO_CNT=0
-    HDDIO_FIRSTRUN=0
+    local RVALUE=0
 
-    # function to write values to file
-    f_check_hdd_io_write_to_file() {
-        echo "r $OMV_ASD_HDD_IN" > $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ## Write new packets to hddio file
-        echo "w $OMV_ASD_HDD_OUT" >> $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ## Write new packets to hddio file
-    }
-
-    # do this for every HDD mounted in OMV
-    if $DEBUG; then
-        _log "DEBUG: ls -l $HDDIOTMPDIR ## Begin ----------"
-        ls -l $HDDIOTMPDIR | grep -v total | while read line; do
-            _log "DEBUG: $line"
-        done
-        _log "DEBUG: ls -l $HDDIOTMPDIR ## End ----------"
+    if "${DEBUG}"; then
+        _log "DEBUG: _check_hddio(): HDDIO_RATE: ${HDDIO_RATE} kB/s"
     fi
 
-    iostat -kd > $HDDIOTMPDIR/iostat.txt
-
-    if $DEBUG; then
-        _log "DEBUG: ## iostat -kd ## Begin ----------"
-        while read line; do
-            _log "DEBUG: $line"
-        done < $HDDIOTMPDIR/iostat.txt
-        _log "DEBUG: ## iostat -kd ## End ----------"
-    fi
-
-    for OMV_HDD in $(mount -l | grep /dev/sd | sed 's/.*\(sd.\).*/\1/g' | sort -u); do
-        OMV_IOSTAT="$(egrep ^${OMV_HDD} $HDDIOTMPDIR/iostat.txt)"
-
-        OMV_ASD_HDD_IN="$(echo "$OMV_IOSTAT" | awk '{print $5}')"
-        OMV_ASD_HDD_OUT="$(echo "$OMV_IOSTAT" | awk '{print $6}')"
-
-        # is there any function to achieve this in OMV?
-        OMV_HDD_NAME="$( blkid | grep /dev/$OMV_HDD | grep LABEL | sed 's/.*LABEL="\(.*\)" UUID.*/\1/g')"
-
-        if $DEBUG; then
-            _log "DEBUG: HDD-IO: ===== /dev/$OMV_HDD -> $OMV_HDD_NAME ====="
-
-            _log "DEBUG: ## iostat -kd | egrep ^${OMV_HDD} ## Begin ----------"
-            cat $HDDIOTMPDIR/iostat.txt | egrep ^${OMV_HDD} | while read line; do
-                _log "DEBUG: $line"
-            done
-            _log "DEBUG: ## iostat -kd | egrep ^${OMV_HDD} ## End ----------"
-
-            _log "DEBUG: check_hddio() actual iostat-values: r: OMV_ASD_HDD_IN:  $OMV_ASD_HDD_IN"
-            _log "DEBUG: check_hddio() actual iostat-values: w: OMV_ASD_HDD_OUT: $OMV_ASD_HDD_OUT"
+    while read -r OMV_HDD OMV_ASD_HDD_IN OMV_ASD_HDD_OUT; do
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_hddio(): ========== Device: ${OMV_HDD} =========="
         fi
 
-        if [ -f $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp ]; then
-
-            HDDIO_DEV_TMP="$(cat $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp)"
-
-            if $DEBUG; then
-                _log "DEBUG: _check_hddio(): HDDIO_RATE: $HDDIO_RATE"
-                _log "DEBUG: _check_hddio(): hddio_dev_$OMV_HDD.tmp exists"
-                _log "DEBUG: ## $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp: File content ## Begin ----------"
-                while read line; do
-                    _log "DEBUG: $line"
-                done < $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp
-                _log "DEBUG: ## $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp: File content ## End ----------"
+        if ! mount -l | grep -q "${OMV_HDD}"; then
+            if "${DEBUG}"; then
+                _log "DEBUG: _check_hddio(): Skipping as no mount point"
             fi
+            continue
+        fi
 
-            # store previous READ value in p_HDDIO_READ
-            p_HDDIO_READ=$(echo "$HDDIO_DEV_TMP" | grep r | sed 's/^r //g')
-            #p_HDDIO_READ=$(cat $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp | grep r | sed 's/^r //g')
+        if "${DEBUG}"; then
+            blkid -s LABEL -s UUID | grep "${OMV_HDD}" | while read -r line; do
+                _log "DEBUG: _check_hddio(): ${line}"
+            done
+            _log "DEBUG: _check_hddio(): actual: kB_read: ${OMV_ASD_HDD_IN}, kB_wrtn: ${OMV_ASD_HDD_OUT}"
+        fi
 
-            # store previous WRITE value in p_HDDIO_WRITE
-            #p_HDDIO_WRITE=$(cat $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp | grep w | sed 's/^w //g')
-            p_HDDIO_WRITE=$(echo "$HDDIO_DEV_TMP" | grep w | sed 's/^w //g')
+        if [[ "${RVALUE}" -eq 1 ||
+              -z "${p_HDDIO_DEVS["${OMV_HDD}_r"]:-}" ||
+              -z "${p_HDDIO_DEVS["${OMV_HDD}_w"]:-}" ]]; then
+            # Store current value.
+            p_HDDIO_DEVS["${OMV_HDD}_r"]="${OMV_ASD_HDD_IN}"
+            p_HDDIO_DEVS["${OMV_HDD}_w"]="${OMV_ASD_HDD_OUT}"
 
-            if $DEBUG; then
-                #_log "DEBUG: check_hddio(): r: p_HDDIO_READ:  $p_HDDIO_READ"
-                #_log "DEBUG: check_hddio(): w: p_HDDIO_WRITE: $p_HDDIO_WRITE"
-                _log "DEBUG: check_hddio(): r: actual OMV_ASD_HDD_IN: $OMV_ASD_HDD_IN"
-                _log "DEBUG: check_hddio(): r: prev p_HDDIO_READ: $p_HDDIO_READ ($HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp)"
-                _log "DEBUG: check_hddio(): w: actual OMV_ASD_HDD_OUT: $OMV_ASD_HDD_OUT"
-                _log "DEBUG: check_hddio(): w: prev p_HDDIO_WRITE: $p_HDDIO_WRITE  ($HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp)"
+            if "${DEBUG}"; then
+                _log "DEBUG: _check_hddio(): Store new read/write value for device"
             fi
+            continue
+        fi
 
-            # check if values seems to be correct (with RegEx)
-            [[ "$p_HDDIO_READ" =~ ^([0-9]{1,})$ ]] &&
-                [[ "$p_HDDIO_WRITE" =~ ^([0-9]{1,})$ ]] || {
-                    _log "WARN: Invalid value found in $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp"
-                    _log "WARN: READ: '$p_HDDIO_READ' --- WRITE: '$p_HDDIO_WRITE'"
-                    _log "WARN: Deleting and rewriting the file"
-                    rm -f $HDDIOTMPDIR/hddio_dev_$OMV_HDD.tmp
-                    f_check_hdd_io_write_to_file
-                    continue # next HDD
-                }
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_hddio(): previous: kB_read: ${p_HDDIO_DEVS["${OMV_HDD}_r"]}, kB_wrtn: ${p_HDDIO_DEVS["${OMV_HDD}_w"]}"
+        fi
 
-            f_check_hdd_io_write_to_file
+        # Calculate threshold limit (defined kB/s multiplied with $SLEEP) to get the total value of kB over the $SLEEP-time
+        local HDDIO_INCREASE="$(("${HDDIO_RATE}" * "${SLEEP}"))"
 
-            # Calculate threshold limit (defined kB/s multiplied with $SLEEP) to get the total value of kB over the $SLEEP-time
-            let HDDIO_INCREASE=$HDDIO_RATE*$SLEEP
+        # Calculate the total value
+        local t_HDDIO_READ="$(("${p_HDDIO_DEVS["${OMV_HDD}_r"]}" + "${HDDIO_INCREASE}"))"
+        local t_HDDIO_WRITE="$(("${p_HDDIO_DEVS["${OMV_HDD}_w"]}" + "${HDDIO_INCREASE}"))"
 
-            # Calculate the total value
-            t_HDDIO_READ=$(expr $p_HDDIO_READ + $HDDIO_INCREASE)
-            t_HDDIO_WRITE=$(expr $p_HDDIO_WRITE + $HDDIO_INCREASE)
+        # Calculate difference between the last and the actual value
+        local diff_HDDIO_READ="$(("${OMV_ASD_HDD_IN}" - "${p_HDDIO_DEVS["${OMV_HDD}_r"]}"))"
+        local diff_HDDIO_WRITE="$(("$OMV_ASD_HDD_OUT" - "${p_HDDIO_DEVS["${OMV_HDD}_w"]}"))"
 
-            # Calculate difference between the last and the actual value
-            diff_HDDIO_READ=$(expr $OMV_ASD_HDD_IN - $p_HDDIO_READ)
-            diff_HDDIO_WRITE=$(expr $OMV_ASD_HDD_OUT - $p_HDDIO_WRITE)
+        # Calculate hddio-rate in kB/s - format xx.x
+        local LAST_HDDIO_READ_RATE;
+        LAST_HDDIO_READ_RATE="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_HDDIO_READ} ${SLEEP}")"
+        local LAST_HDDIO_WRITE_RATE;
+        LAST_HDDIO_WRITE_RATE="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_HDDIO_WRITE} ${SLEEP}")"
 
-            # Calculate hddio-rate in kB/s - format xx.x
-            LAST_HDDIO_READ_RATE=$(echo $diff_HDDIO_READ $SLEEP | awk '{ printf("%.1f\n", ($1/$2) ) }')
-            LAST_HDDIO_WRITE_RATE=$(echo $diff_HDDIO_WRITE $SLEEP | awk '{ printf("%.1f\n", ($1/$2) ) }')
+        # If hddio bytes have not increased over given value
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_hddio(): HDDIO_INCREASE: ${HDDIO_INCREASE}"
+            _log "DEBUG: _check_hddio(): t_HDDIO_READ: ${t_HDDIO_READ}"
+            _log "DEBUG: _check_hddio(): diff_HDDIO_READ: ${diff_HDDIO_READ}"
+            _log "DEBUG: _check_hddio(): t_HDDIO_WRITE: ${t_HDDIO_WRITE}"
+            _log "DEBUG: _check_hddio(): diff_HDDIO_WRITE: ${diff_HDDIO_WRITE}"
+            _log "DEBUG: _check_hddio(): check: 'OMV_ASD_HDD_IN: ${OMV_ASD_HDD_IN}' <= 't_HDDIO_READ: ${t_HDDIO_READ}'"
+            _log "DEBUG: _check_hddio(): check: 'OMV_ASD_HDD_OUT: ${OMV_ASD_HDD_OUT}' <= 't_HDDIO_WRITE: ${t_HDDIO_WRITE}'"
+        fi
 
-            #_log "INFO: HDD-IO: '/dev/$OMV_HDD -> $OMV_HDD_NAME' (last ${SLEEP}s): READ $LAST_HDDIO_READ_RATE kB/s; WRITE: $LAST_HDDIO_WRITE_RATE kB/s"
+        # Store current value.
+        p_HDDIO_DEVS["${OMV_HDD}_r"]="${OMV_ASD_HDD_IN}"
+        p_HDDIO_DEVS["${OMV_HDD}_w"]="${OMV_ASD_HDD_OUT}"
 
-            # If hddio bytes have not increased over given value
-            if $DEBUG; then
-                #_log "DEBUG: check_hddio(): SLEEP: $SLEEP"
-                _log "DEBUG: check_hddio(): HDDIO_INCREASE: $HDDIO_INCREASE"
-                _log "DEBUG: check_hddio(): t_HDDIO_READ: $t_HDDIO_READ"
-                _log "DEBUG: check_hddio(): diff_HDDIO_READ: $diff_HDDIO_READ"
-                _log "DEBUG: check_hddio(): t_HDDIO_WRITE: $t_HDDIO_WRITE"
-                _log "DEBUG: check_hddio(): diff_HDDIO_WRITE: $diff_HDDIO_WRITE"
-                _log "DEBUG: check_hddio(): check: 'OMV_ASD_HDD_IN: $OMV_ASD_HDD_IN' -le 't_HDDIO_READ: $t_HDDIO_READ'"
-                _log "DEBUG: check_hddio(): check: 'OMV_ASD_HDD_OUT: $OMV_ASD_HDD_OUT'  -le 't_HDDIO_WRITE: $t_HDDIO_WRITE'"
-                _log "DEBUG: check_hddio(): '/dev/$OMV_HDD -> $OMV_HDD_NAME' (last ${SLEEP}s): r: $LAST_HDDIO_READ_RATE kB/s; w: $LAST_HDDIO_WRITE_RATE kB/s"
-            fi
+        local MSG="INFO: _check_hddio(): Device: ${OMV_HDD} (last ${SLEEP}s) "
+              MSG+="kB_aread/s: ${LAST_HDDIO_READ_RATE}, "
+              MSG+="kB_wrtn/s: ${LAST_HDDIO_WRITE_RATE}"
 
-            if [ $OMV_ASD_HDD_IN -le $t_HDDIO_READ -a $OMV_ASD_HDD_OUT -le $t_HDDIO_WRITE ]; then
-                _log "INFO: HDD-IO: '/dev/$OMV_HDD -> $OMV_HDD_NAME' (last ${SLEEP}s): r: $LAST_HDDIO_READ_RATE w: $LAST_HDDIO_WRITE_RATE is under $HDDIO_RATE -> next HDD"
-                 continue # next HDD
-            else
-                _log "INFO: HDD-IO for '/dev/$OMV_HDD -> $OMV_HDD_NAME' (last ${SLEEP}s): r: $LAST_HDDIO_READ_RATE w: $LAST_HDDIO_WRITE_RATE is over $HDDIO_RATE -> no shutdown"
-                return 1 # This HDD-IO is over the defined value, no need to do further HDD-IO-Checks
-            fi # > if [ $HDDIO_READ -le $t_HDDIO_READ ] && [ $HDDIO_WRITE -le $t_HDDIO_WRITE ]; then
-
-        # HDDIO_READ/HDDIO_WRITE-Files doesn't exist
+        if [[ "${OMV_ASD_HDD_IN}" -gt "${t_HDDIO_READ}" ||
+              "${OMV_ASD_HDD_OUT}" -gt "${t_HDDIO_WRITE}" ]]; then
+            _log "${MSG} is over: ${HDDIO_RATE} kB/s -> no shutdown"
+            RVALUE=1
         else
-            f_check_hdd_io_write_to_file
-            # This is the obviously the first run, because of dev_$OMV_HDD.tmp doesn't exist
-            if $DEBUG; then
-                _log "DEBUG: hddio_dev_$OMV_HDD.tmp doesn't exist - writing values to file"
-            fi
-        fi # > # if [ -f $TMPDIR/hddio_dev_$OMV_HDD.tmp ]; then
+            _log "${MSG} is under: ${HDDIO_RATE} kB/s -> next HDD"
+        fi
 
-    done
+    done < <(iostat -kdyNz | tail -n +4 | awk '!/^$/{print $1 " " $5 " " $6}')
+
+    if "${DEBUG}"; then _log "DEBUG: _check_hddio(): RVALUE: ${RVALUE}"; fi
+
     # No HDD-IO is over the defined value -> shutdown
-    _log "INFO: HDD-IO all checks for HDD-IO finished"
-    return 0
+    _log "INFO: _check_hddio(): All checks complete"
+
+    return "${RVALUE}"
 }
 
 
@@ -990,7 +941,8 @@ _check_config()
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Checking config"
 
-    [[ "$ENABLE" = "true" || "$ENABLE" = "false" ]] || { _log "WARN: ENABLE not set properly. It has to be 'true' or 'false'"
+    [[ "$ENABLE" = "true" || "$ENABLE" = "false" ]] || {
+        _log "WARN: ENABLE not set properly. It has to be 'true' or 'false'"
         _log "WARN: Set ENABLE to false -> exiting here ..."
         exit 0; }
 
@@ -998,13 +950,15 @@ _check_config()
         VERBOSE="true"; DEBUG="true"
         _log "INFO: Fake-Mode in on"
     else
-        [[ "$FAKE" = "true" || "$FAKE" = "false" || "$FAKE" = "" ]] || { _log "WARN: FAKE not set properly. It has to be 'true', 'false' or empty."
+        [[ "$FAKE" = "true" || "$FAKE" = "false" || "$FAKE" = "" ]] || {
+            _log "WARN: FAKE not set properly. It has to be 'true', 'false' or empty."
             _log "WARN: Set FAKE to true -> Testmode with VERBOSE on"
             FAKE="true"; VERBOSE="true"; DEBUG="TRUE"; }
     fi
 
     if [ ! -z "$PLUGINCHECK" ]; then
-        [[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || { _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+        [[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || {
+            _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
             _log "WARN: Set PLUGINCHECK to false"
             PLUGINCHECK="false"; }
     fi
@@ -1017,7 +971,8 @@ _check_config()
         CYCLES="5"; }
 
     # CheckClockActive together with UPHOURS
-    [[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || { _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
+    [[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || {
+        _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
         _log "WARN: Set CHECKCLOCKACTIVE to false"
         CHECKCLOCKACTIVE="false"; }
 
@@ -1095,28 +1050,20 @@ _check_config()
 
     # $HDDIOCHECK" = "true"
     if [ ! -z "$HDDIOCHECK" ]; then
-        [[ "$HDDIOCHECK" = "true" || "$HDDIOCHECK" = "false" ]] || { _log "WARN: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
-                _log "WARN: Set HDDIOCHECK to false"
-                HDDIOCHECK="false"; }
+        [[ "$HDDIOCHECK" = "true" || "$HDDIOCHECK" = "false" ]] || {
+            _log "WARN: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARN: Set HDDIOCHECK to false"
+            HDDIOCHECK="false"; }
     fi
 
     # HDDIO
     if [ "$HDDIOCHECK" = "true" ]; then
-
-        # check if iostat is executable and installed (package 'sysstat')
-        if which iostat > /dev/null 2>&1; then
-
-            # HDDIO_RATE (max 6 digits -> 1 - 999999 kB/s)
-            [[ "$HDDIO_RATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
-                _log "WARN: Invalid parameter format: HDDIO_RATE"
-                _log "WARN: You set it to '$HDDIO_RATE', which is not a correct syntax. Maybe it's empty?"
-                _log "WARN: Set HDDIO_RATE to 500"
-                HDDIO_RATE=500; }
-        else
-            _log "WARN: iostat is not found! Please install it with 'apt-get install sysstat'"
-            _log "WARN: HDDIOCHECK is set to false"
-            HDDIOCHECK="false"
-        fi
+        # HDDIO_RATE (max 6 digits -> 1 - 999999 kB/s)
+        [[ "$HDDIO_RATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
+            _log "WARN: Invalid parameter format: HDDIO_RATE"
+            _log "WARN: You set it to '$HDDIO_RATE', which is not a correct syntax. Maybe it's empty?"
+            _log "WARN: Set HDDIO_RATE to 500"
+            HDDIO_RATE=500; }
     else
         _log "WARN: HDDIOCHECK is set to false"
         _log "WARN: Ignoring HDDIO_RATE"
@@ -1125,16 +1072,17 @@ _check_config()
 
     # Sleep: 1 - 9999
     [[ "$SLEEP" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
-            _log "WARN: Invalid parameter format: SLEEP (sec)"
-            _log "WARN: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
-            _log "WARN: Setting SLEEP to 180 sec"
-            SLEEP=180; }
+        _log "WARN: Invalid parameter format: SLEEP (sec)"
+        _log "WARN: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
+        _log "WARN: Setting SLEEP to 180 sec"
+        SLEEP=180; }
 
     # $ULDLCHECK" = "true"
     if [ ! -z "$ULDLCHECK" ]; then
-        [[ "$ULDLCHECK" = "true" || "$ULDLCHECK" = "false" ]] || { _log "WARN: ULDLCHECK not set properly. It has to be 'true' or 'false'."
-                _log "WARN: Set ULDLCHECK to false"
-                ULDLCHECK="false"; }
+        [[ "$ULDLCHECK" = "true" || "$ULDLCHECK" = "false" ]] || {
+            _log "WARN: ULDLCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARN: Set ULDLCHECK to false"
+            ULDLCHECK="false"; }
     fi
 
     # ULDLRATE (max 6 digits -> 1 - 999999 kB/s)
@@ -1155,37 +1103,29 @@ _check_config()
     PM_HIBERNATE=false
     if [ ! -z "$SHUTDOWNCOMMAND" ]; then
         _log "INFO: SHUTDOWNCOMMAND is set to '$SHUTDOWNCOMMAND'"
-        # check, if pm-utils is installed
-        if ! which pm-is-supported 1>/dev/null; then
-            _log "WARN: SHUTDOWNCOMMAND is set, but pm-is-supported not found"
-            _log "WARN: Please install the package pm-utils with 'apt-get install pm-utils'!"
-            _log "WARN: Unset SHUTDOWNCOMMAND -> do normal shutdown"
-            unset $SHUTDOWNCOMMAND
-        else
-            # check POWER MANAGEMENT MODES
-            _log "INFO: Your Kernel supports the following modes from pm-utils:"
-            pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)" && PM_SUSPEND=true
-            pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)" && PM_HIBERNATE=true
-            pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)" && PM_SUSPEND_HYBRID=true
+        # check POWER MANAGEMENT MODES
+        _log "INFO: Your Kernel supports the following modes from pm-utils:"
+        pm-is-supported --suspend         && _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)" && PM_SUSPEND=true
+        pm-is-supported --hibernate       && _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)" && PM_HIBERNATE=true
+        pm-is-supported --suspend-hybrid  && _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)" && PM_SUSPEND_HYBRID=true
 
-            # check, if pm-suspend is supported
-            if [ "$SHUTDOWNCOMMAND" = "pm-suspend" -a ! "$PM_SUSPEND" = "true" ]; then
-                _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
-                _log "WARN: Setting it to 'shutdown -h now'"
-                SHUTDOWNCOMMAND="shutdown -h now"
-            fi
-            # check, if pm-hibernate is supported
-            if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
-                _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
-                _log "WARN: Setting it to 'shutdown -h now'"
-                SHUTDOWNCOMMAND="shutdown -h now"
-            fi
-            # check, if pm-suspend-hybrid is supported
-            if [ "$SHUTDOWNCOMMAND" = "pm-suspend-hybrid" -a ! "$PM_SUSPEND_HYBRID" = "true" ]; then
-                _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
-                _log "WARN: Setting it to 'shutdown -h now'"
-                SHUTDOWNCOMMAND="shutdown -h now"
-            fi
+        # check, if pm-suspend is supported
+        if [ "$SHUTDOWNCOMMAND" = "pm-suspend" -a ! "$PM_SUSPEND" = "true" ]; then
+            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
+            _log "WARN: Setting it to 'shutdown -h now'"
+            SHUTDOWNCOMMAND="shutdown -h now"
+        fi
+        # check, if pm-hibernate is supported
+        if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
+            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
+            _log "WARN: Setting it to 'shutdown -h now'"
+            SHUTDOWNCOMMAND="shutdown -h now"
+        fi
+        # check, if pm-suspend-hybrid is supported
+        if [ "$SHUTDOWNCOMMAND" = "pm-suspend-hybrid" -a ! "$PM_SUSPEND_HYBRID" = "true" ]; then
+            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
+            _log "WARN: Setting it to 'shutdown -h now'"
+            SHUTDOWNCOMMAND="shutdown -h now"
         fi
     fi
 
@@ -1519,13 +1459,6 @@ fi
 
 _check_networkconfig
 
-#### Testing fping ####
-if ! which fping > /dev/null; then
-    echo "WARN: fping not found! Please install it with 'apt-get install fping'"
-    _log "WARN: fping not found! Please install it with 'apt-get install fping'"
-    exit 1
-fi
-
 # If the tmp-dir doesn't exist, create it
 if [ ! -d $TMPDIR ]; then
     mkdir $TMPDIR 2> /dev/null
@@ -1589,21 +1522,6 @@ if [ "$ULDLCHECK" = "true" ]; then
         if $DEBUG ; then _log "DEBUG: _check_ul_dl_rate(): creating tmpdir: $RXTXTMPDIR"; fi
         mkdir $RXTXTMPDIR && if $DEBUG; then _log "DEBUG: _check_ul_dl_rate(): $RXTXTMPDIR created successfully"; fi
     fi
-fi
-
-# Creation of the dir for HDDIOCHECK
-HDDIOTMPDIR="$TMPDIR/hddio"
-if [ "$HDDIOCHECK" = "true" ]; then
-    if [ ! -d $HDDIOTMPDIR ]; then
-        if $DEBUG ; then _log "DEBUG: _check_hddio(): creating tmpdir: $HDDIOTMPDIR"; fi
-        mkdir $HDDIOTMPDIR && if $DEBUG; then _log "DEBUG: _check_hddio(): $HDDIOTMPDIR created successfully"; fi
-    else
-        if $DEBUG ; then _log "DEBUG: _check_hddio(): tmpdir: $HDDIOTMPDIR exists"; fi
-    fi
-    # clearing for the first run of HDDIOCHECK
-    rm $HDDIOTMPDIR/hddio_dev_*.tmp >/dev/null 2>&1
-    rm $HDDIOTMPDIR/iostat.txt >/dev/null 2>&1
-    if $DEBUG; then _log "DEBUG: $HDDIOTMPDIR/hddio_dev_*.tmp and iostat.txt deleted @ start of script"; fi
 fi
 
 if [ "$FAKE" = "true" ]; then
