@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.0.8) stable; urgency=low
+
+  * Refactor and remove deprecation on logging
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2020 14:56:55 -0600
+
 openmediavault-autoshutdown (5.0.7) stable; urgency=low
 
   * Refactor _check_hddio and try to address github issues #24, #54 and #60
