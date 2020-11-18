@@ -30,7 +30,7 @@ SYSLOG="false"              # Default if logging should go to syslog
 FAKE="false"                # Default fake mode operation
 
 ######## STORAGE DEFINITION #########
-declare -A p_HDDIO_DEVS     # Associative array for storing _check_hddio read and wrtn values
+declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read and wrtn values
 
 ######## CONSTANT DEFINITION ########
 CTOPPARAM="-b -d 1 -n 1"    # Define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
@@ -821,18 +821,18 @@ _check_hddio()
     # _log "DEBUG: _check_processes() disabled for testing"
     # return 0
 
-    local RVALUE=0
+    local rvalue=0
 
     if "${DEBUG}"; then
         _log "DEBUG: _check_hddio(): HDDIO_RATE: ${HDDIO_RATE} kB/s"
     fi
 
-    while read -r OMV_HDD OMV_ASD_HDD_IN OMV_ASD_HDD_OUT; do
+    while read -r omv_hdd omv_asd_hdd_in omv_asd_hdd_out; do
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): ========== Device: ${OMV_HDD} =========="
+            _log "DEBUG: _check_hddio(): ========== Device: ${omv_hdd} =========="
         fi
 
-        if ! mount -l | grep -q "${OMV_HDD}"; then
+        if ! mount -l | grep -q "${omv_hdd}"; then
             if "${DEBUG}"; then
                 _log "DEBUG: _check_hddio(): Skipping as no mount point"
             fi
@@ -840,18 +840,18 @@ _check_hddio()
         fi
 
         if "${DEBUG}"; then
-            blkid -s LABEL -s UUID | grep "${OMV_HDD}" | while read -r line; do
+            blkid -s LABEL -s UUID | grep "${omv_hdd}" | while read -r line; do
                 _log "DEBUG: _check_hddio(): ${line}"
             done
-            _log "DEBUG: _check_hddio(): actual: kB_read: ${OMV_ASD_HDD_IN}, kB_wrtn: ${OMV_ASD_HDD_OUT}"
+            _log "DEBUG: _check_hddio(): actual: kB_read: ${omv_asd_hdd_in}, kB_wrtn: ${omv_asd_hdd_out}"
         fi
 
-        if [[ "${RVALUE}" -eq 1 ||
-              -z "${p_HDDIO_DEVS["${OMV_HDD}_r"]:-}" ||
-              -z "${p_HDDIO_DEVS["${OMV_HDD}_w"]:-}" ]]; then
+        if [[ "${rvalue}" -eq 1 ||
+              -z "${P_HDDIO_DEVS["${omv_hdd}_r"]:-}" ||
+              -z "${P_HDDIO_DEVS["${omv_hdd}_w"]:-}" ]]; then
             # Store current value.
-            p_HDDIO_DEVS["${OMV_HDD}_r"]="${OMV_ASD_HDD_IN}"
-            p_HDDIO_DEVS["${OMV_HDD}_w"]="${OMV_ASD_HDD_OUT}"
+            P_HDDIO_DEVS["${omv_hdd}_r"]="${omv_asd_hdd_in}"
+            P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
             if "${DEBUG}"; then
                 _log "DEBUG: _check_hddio(): Store new read/write value for device"
@@ -860,61 +860,61 @@ _check_hddio()
         fi
 
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): previous: kB_read: ${p_HDDIO_DEVS["${OMV_HDD}_r"]}, kB_wrtn: ${p_HDDIO_DEVS["${OMV_HDD}_w"]}"
+            _log "DEBUG: _check_hddio(): previous: kB_read: ${P_HDDIO_DEVS["${omv_hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${omv_hdd}_w"]}"
         fi
 
         # Calculate threshold limit (defined kB/s multiplied with $SLEEP) to get the total value of kB over the $SLEEP-time
-        local HDDIO_INCREASE="$(("${HDDIO_RATE}" * "${SLEEP}"))"
+        local hddio_increase="$(("${HDDIO_RATE}" * "${SLEEP}"))"
 
         # Calculate the total value
-        local t_HDDIO_READ="$(("${p_HDDIO_DEVS["${OMV_HDD}_r"]}" + "${HDDIO_INCREASE}"))"
-        local t_HDDIO_WRITE="$(("${p_HDDIO_DEVS["${OMV_HDD}_w"]}" + "${HDDIO_INCREASE}"))"
+        local t_hddio_read="$(("${P_HDDIO_DEVS["${omv_hdd}_r"]}" + "${hddio_increase}"))"
+        local t_hddio_write="$(("${P_HDDIO_DEVS["${omv_hdd}_w"]}" + "${hddio_increase}"))"
 
         # Calculate difference between the last and the actual value
-        local diff_HDDIO_READ="$(("${OMV_ASD_HDD_IN}" - "${p_HDDIO_DEVS["${OMV_HDD}_r"]}"))"
-        local diff_HDDIO_WRITE="$(("$OMV_ASD_HDD_OUT" - "${p_HDDIO_DEVS["${OMV_HDD}_w"]}"))"
+        local diff_hddio_read="$(("${omv_asd_hdd_in}" - "${P_HDDIO_DEVS["${omv_hdd}_r"]}"))"
+        local diff_hddio_write="$(("${omv_asd_hdd_out}" - "${P_HDDIO_DEVS["${omv_hdd}_w"]}"))"
 
         # Calculate hddio-rate in kB/s - format xx.x
-        local LAST_HDDIO_READ_RATE;
-        LAST_HDDIO_READ_RATE="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_HDDIO_READ} ${SLEEP}")"
-        local LAST_HDDIO_WRITE_RATE;
-        LAST_HDDIO_WRITE_RATE="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_HDDIO_WRITE} ${SLEEP}")"
+        local last_hddio_read_rate;
+        last_hddio_read_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_read} ${SLEEP}")"
+        local last_hddio_write_rate;
+        last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${SLEEP}")"
 
         # If hddio bytes have not increased over given value
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): HDDIO_INCREASE: ${HDDIO_INCREASE}"
-            _log "DEBUG: _check_hddio(): t_HDDIO_READ: ${t_HDDIO_READ}"
-            _log "DEBUG: _check_hddio(): diff_HDDIO_READ: ${diff_HDDIO_READ}"
-            _log "DEBUG: _check_hddio(): t_HDDIO_WRITE: ${t_HDDIO_WRITE}"
-            _log "DEBUG: _check_hddio(): diff_HDDIO_WRITE: ${diff_HDDIO_WRITE}"
-            _log "DEBUG: _check_hddio(): check: 'OMV_ASD_HDD_IN: ${OMV_ASD_HDD_IN}' <= 't_HDDIO_READ: ${t_HDDIO_READ}'"
-            _log "DEBUG: _check_hddio(): check: 'OMV_ASD_HDD_OUT: ${OMV_ASD_HDD_OUT}' <= 't_HDDIO_WRITE: ${t_HDDIO_WRITE}'"
+            _log "DEBUG: _check_hddio(): hddio_increase: ${hddio_increase}"
+            _log "DEBUG: _check_hddio(): t_hddio_read: ${t_hddio_read}"
+            _log "DEBUG: _check_hddio(): diff_hddio_read: ${diff_hddio_read}"
+            _log "DEBUG: _check_hddio(): t_hddio_write: ${t_hddio_write}"
+            _log "DEBUG: _check_hddio(): diff_hddio_write: ${diff_hddio_write}"
+            _log "DEBUG: _check_hddio(): check: 'omv_asd_hdd_in: ${omv_asd_hdd_in}' <= 't_hddio_read: ${t_hddio_read}'"
+            _log "DEBUG: _check_hddio(): check: 'omv_asd_hdd_out: ${omv_asd_hdd_out}' <= 't_hddio_write: ${t_hddio_write}'"
         fi
 
         # Store current value.
-        p_HDDIO_DEVS["${OMV_HDD}_r"]="${OMV_ASD_HDD_IN}"
-        p_HDDIO_DEVS["${OMV_HDD}_w"]="${OMV_ASD_HDD_OUT}"
+        P_HDDIO_DEVS["${omv_hdd}_r"]="${omv_asd_hdd_in}"
+        P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
-        local MSG="INFO: _check_hddio(): Device: ${OMV_HDD} (last ${SLEEP}s) "
-              MSG+="kB_aread/s: ${LAST_HDDIO_READ_RATE}, "
-              MSG+="kB_wrtn/s: ${LAST_HDDIO_WRITE_RATE}"
+        local msg="INFO: _check_hddio(): Device: ${omv_hdd} (last ${SLEEP}s) "
+              msg+="kB_aread/s: ${last_hddio_read_rate}, "
+              msg+="kB_wrtn/s: ${last_hddio_write_rate}"
 
-        if [[ "${OMV_ASD_HDD_IN}" -gt "${t_HDDIO_READ}" ||
-              "${OMV_ASD_HDD_OUT}" -gt "${t_HDDIO_WRITE}" ]]; then
-            _log "${MSG} is over: ${HDDIO_RATE} kB/s -> no shutdown"
-            RVALUE=1
+        if [[ "${omv_asd_hdd_in}" -gt "${t_hddio_read}" ||
+              "${omv_asd_hdd_out}" -gt "${t_hddio_write}" ]]; then
+            _log "${msg} is over: ${HDDIO_RATE} kB/s -> no shutdown"
+            rvalue=1
         else
-            _log "${MSG} is under: ${HDDIO_RATE} kB/s -> next HDD"
+            _log "${msg} is under: ${HDDIO_RATE} kB/s -> next HDD"
         fi
 
     done < <(iostat -kdyNz | tail -n +4 | awk '!/^$/{print $1 " " $5 " " $6}')
 
-    if "${DEBUG}"; then _log "DEBUG: _check_hddio(): RVALUE: ${RVALUE}"; fi
+    if "${DEBUG}"; then _log "DEBUG: _check_hddio(): rvalue: ${rvalue}"; fi
 
     # No HDD-IO is over the defined value -> shutdown
     _log "INFO: _check_hddio(): All checks complete"
 
-    return "${RVALUE}"
+    return "${rvalue}"
 }
 
 
