@@ -2,6 +2,7 @@ openmediavault-autoshutdown (5.0.8) stable; urgency=low
 
   * Refactor and remove deprecation on logging
   * _check_loadavagrage change local variable to lowercase
+  * Clean up some comment and typos
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2020 14:56:55 -0600
 

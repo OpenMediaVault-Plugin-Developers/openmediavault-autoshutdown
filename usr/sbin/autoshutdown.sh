@@ -3,25 +3,21 @@
 #
 #          FILE:    autoshutdown.sh
 #
-#         USAGE:    copy this script to /usr/sbin and the config-file to /etc
-#
-#   DESCRIPTION:    shuts down a PC/Server - variable options
+#   DESCRIPTION:    Shuts-down a PC/Server - variable options
 #
 #  REQUIREMENTS:    Debian / Ubuntu-based system
 #
-#          BUGS:    if you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
+#          BUGS:    If you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
 #
 #        AUTHOR:    Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes), it should work on any Debain-based System, too
 #                   based on autoshutdown.sh v0.7.008 by chrikai, see:
 #                   https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
 #==============================================================================
 
-# Changelog:    see extra file!
-
 ######## VARIABLE DEFINITION ########
 RESULT=0                    # Declare reusable RESULT variable to check function return values
 
-# Variables that normal users should normaly not define - PowerUsers can do it here or add it to the config
+# Variables that normal users should normally not define - PowerUsers can do it here or add it to the config
 LPREPEAT=5                  # Number of test cycles for finding and active LOADPROCNAMES-Process (default=5)
 TPREPEAT=5                  # Number of test cycles for finding and active TEMPPROCNAMES-Process (default=5)
 
@@ -625,7 +621,7 @@ _check_docker_status()
 #   name          : _check_ul_dl_rate
 #   parameter     : Array-# of NIC
 #   global return : none
-#   return        : 0 : I no (not enough) network activity has been found, ready for shutdown
+#   return        : 0 : If no (not enough) network activity has been found, ready for shutdown
 #                 : 1 : If enough network activity has been found, no shutdown
 #
 # Checks for activity on given NIC. It compares the RX and TX bytes
