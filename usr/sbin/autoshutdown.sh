@@ -342,66 +342,63 @@ _check_processes()
 #
 _check_plugin()
 {
-    FOUNDVALUE_checkplugin=0
-    RVALUE=0
+    local foundvalue=0
+    local rvalue=0
 
-    ASD_pluginNR=0
-    for ASD_plugin in /etc/autoshutdown.d/*; do
-        let ASD_pluginNR++
+    for asd_plugin in /etc/autoshutdown.d/*; do
 
-        PLUGIN_name[$ASD_pluginNR]="${ASD_plugin##*/}"
-        PLUGIN_folder[$ASD_pluginNR]="$(egrep 'folder=' $ASD_plugin | sed 's/folder=//g; s/"//g')"
-        PLUGIN_file[$ASD_pluginNR]="$(egrep 'file=' $ASD_plugin | sed 's/file=//g; s/"//g')"
-        PLUGIN_content[$ASD_pluginNR]="$(egrep 'content=' $ASD_plugin | sed 's/content=//g; s/"//g')"
+        local plugin_name;
+        plugin_name="${asd_plugin##*/}"
+        local plugin_folder;
+        plugin_folder="$(awk -F= '/folder=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
+        local plugin_file;
+        plugin_file="$(awk -F= '/file=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
+        local plugin_content;
+        plugin_content="$(awk -F= '/content=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
 
-        if $DEBUG; then
+        if "${DEBUG}"; then
             _log "DEBUG: -----------------------------------------------------"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: ASD_PLUGIN-file: $ASD_plugin"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_name[$ASD_pluginNR]: ${PLUGIN_name[$ASD_pluginNR]}"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_folder[$ASD_pluginNR]: ${PLUGIN_folder[$ASD_pluginNR]}"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_file[$ASD_pluginNR]: ${PLUGIN_file[$ASD_pluginNR]}"
-            if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
-                _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_content[$ASD_pluginNR]: ${PLUGIN_content[$ASD_pluginNR]}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: asd_plugin: ${asd_plugin}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_name: ${plugin_name}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_folder: ${plugin_folder}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_file: ${plugin_file}"
+            if [ -n "${plugin_content}" ]; then
+                _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_content: ${plugin_content}"
             fi
         fi
 
         # When file exists (matches regex), no shutdown
-        if [ "$(find ${PLUGIN_folder[$ASD_pluginNR]} -regextype posix-egrep -regex '.*'${PLUGIN_file[$ASD_pluginNR]} 2> /dev/null | wc -l)" -gt 0 ]; then
-
-            # Check, if PLUGIN_content for the plugin is defined
-            if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
-
-                # content found
-                if [ $(egrep -c "${PLUGIN_content[$ASD_pluginNR]}" "${PLUGIN_folder[$ASD_pluginNR]}/${PLUGIN_file[$ASD_pluginNR]}") -gt 0 ]; then
-                    _log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content found (${PLUGIN_content[$ASD_pluginNR]}) - no shutdown"
-                    let FOUNDVALUE_checkplugin++
-                else
-                    # content not found
-                    _log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content not found (${PLUGIN_content[$ASD_pluginNR]})"
-                fi
-
-            # content not defined and file found
-            else
-                _log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> File found - no shutdown"
-                let FOUNDVALUE_checkplugin++
-            fi
-        else
-            # If file doesn't exist -> shutdown
-            _log "INFO: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} - File not found"
+        if [ -z "$(find "${plugin_folder}" -regextype posix-egrep -regex ".*${plugin_file}" 2>/dev/null)" ]; then
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: File not found"
+            continue
         fi
 
-        if $DEBUG ; then _log "DEBUG: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
-
+        # Check, if plugin_content for the plugin is defined
+        if [ -z "${plugin_content}" ]; then
+            # Content not defined and file found
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: File found - no shutdown"
+            (( foundvalue+=1 ))
+        elif grep -q "${plugin_content}" "${plugin_folder}/${plugin_file}"; then
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: Content found (${plugin_content}) - no shutdown"
+            (( foundvalue+=1 ))
+        else
+            # Content not found
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: Content not found (${plugin_content})"
+        fi
     done
 
-    if $DEBUG ; then _log "DEBUG: _check_plugin(): All PlugIns processed - FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
-
-    if [ $FOUNDVALUE_checkplugin -gt 0 ]; then
-        let RVALUE++
+    if "${DEBUG}"; then
+        _log "DEBUG: -----------------------------------------------------"
+        _log "DEBUG: _check_plugin(): All plugins processed: Active plugins found: ${foundvalue}" ;
     fi
-    if $DEBUG ; then _log "DEBUG: _check_plugin(): after all plugin-checks: RVALUE: $RVALUE" ; fi
 
-    return ${RVALUE}
+    if [ "${foundvalue}" -gt 0 ]; then
+        rvalue=1
+    fi
+
+    if "${DEBUG}"; then _log "DEBUG: _check_plugin(): After all plugin-checks: rvalue: ${rvalue}"; fi
+
+    return ${rvalue}
 }
 
 
