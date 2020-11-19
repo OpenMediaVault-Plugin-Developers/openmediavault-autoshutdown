@@ -30,7 +30,7 @@ SYSLOG="false"              # Default if logging should go to syslog
 FAKE="false"                # Default fake mode operation
 
 ######## STORAGE DEFINITION #########
-declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read and wrtn values
+declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
 
 ######## CONSTANT DEFINITION ########
 CTOPPARAM="-b -d 1 -n 1"    # Define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
@@ -827,6 +827,9 @@ _check_hddio()
         _log "DEBUG: _check_hddio(): HDDIO_RATE: ${HDDIO_RATE} kB/s"
     fi
 
+    local epoch_sec="${EPOCHSECONDS}"
+    local last_checked_sec=$((epoch_sec - ${P_HDDIO_DEVS["epoch_sec"]:-${epoch_sec}}))
+
     while read -r omv_hdd omv_asd_hdd_in omv_asd_hdd_out; do
         if "${DEBUG}"; then
             _log "DEBUG: _check_hddio(): ========== Device: ${omv_hdd} =========="
@@ -846,7 +849,8 @@ _check_hddio()
             _log "DEBUG: _check_hddio(): actual: kB_read: ${omv_asd_hdd_in}, kB_wrtn: ${omv_asd_hdd_out}"
         fi
 
-        if [[ "${rvalue}" -eq 1 ||
+        if [[ "${rvalue}" -eq 1 || "${last_checked_sec}" -eq 0 ||
+              -z "${P_HDDIO_DEVS["epoch_sec"]:-}" ||
               -z "${P_HDDIO_DEVS["${omv_hdd}_r"]:-}" ||
               -z "${P_HDDIO_DEVS["${omv_hdd}_w"]:-}" ]]; then
             # Store current value.
@@ -863,22 +867,24 @@ _check_hddio()
             _log "DEBUG: _check_hddio(): previous: kB_read: ${P_HDDIO_DEVS["${omv_hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${omv_hdd}_w"]}"
         fi
 
-        # Calculate threshold limit (defined kB/s multiplied with $SLEEP) to get the total value of kB over the $SLEEP-time
-        local hddio_increase="$(("${HDDIO_RATE}" * "${SLEEP}"))"
+        # Calculate threshold limit (defined kB/s multiplied with second since
+        # last checked) to get the total value of kB over the 'last checked
+        # time' - 'time now'
+        local hddio_increase=$((HDDIO_RATE * last_checked_sec))
 
         # Calculate the total value
-        local t_hddio_read="$(("${P_HDDIO_DEVS["${omv_hdd}_r"]}" + "${hddio_increase}"))"
-        local t_hddio_write="$(("${P_HDDIO_DEVS["${omv_hdd}_w"]}" + "${hddio_increase}"))"
+        local t_hddio_read=$((P_HDDIO_DEVS["${omv_hdd}_r"] + hddio_increase))
+        local t_hddio_write=$((P_HDDIO_DEVS["${omv_hdd}_w"] + hddio_increase))
 
         # Calculate difference between the last and the actual value
-        local diff_hddio_read="$(("${omv_asd_hdd_in}" - "${P_HDDIO_DEVS["${omv_hdd}_r"]}"))"
-        local diff_hddio_write="$(("${omv_asd_hdd_out}" - "${P_HDDIO_DEVS["${omv_hdd}_w"]}"))"
+        local diff_hddio_read=$((omv_asd_hdd_in - P_HDDIO_DEVS["${omv_hdd}_r"]))
+        local diff_hddio_write=$((omv_asd_hdd_out - P_HDDIO_DEVS["${omv_hdd}_w"]))
 
         # Calculate hddio-rate in kB/s - format xx.x
         local last_hddio_read_rate;
-        last_hddio_read_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_read} ${SLEEP}")"
+        last_hddio_read_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_read} ${last_checked_sec}")"
         local last_hddio_write_rate;
-        last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${SLEEP}")"
+        last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${last_checked_sec}")"
 
         # If hddio bytes have not increased over given value
         if "${DEBUG}"; then
@@ -895,7 +901,7 @@ _check_hddio()
         P_HDDIO_DEVS["${omv_hdd}_r"]="${omv_asd_hdd_in}"
         P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
-        local msg="INFO: _check_hddio(): Device: ${omv_hdd} (last ${SLEEP}s) "
+        local msg="INFO: _check_hddio(): Device: ${omv_hdd} (last ${last_checked_sec}s) "
               msg+="kB_aread/s: ${last_hddio_read_rate}, "
               msg+="kB_wrtn/s: ${last_hddio_write_rate}"
 
@@ -907,7 +913,9 @@ _check_hddio()
             _log "${msg} is under: ${HDDIO_RATE} kB/s -> next HDD"
         fi
 
-    done < <(iostat -kdyNz | tail -n +4 | awk '!/^$/{print $1 " " $5 " " $6}')
+    done < <(iostat -kdyNz | awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
+
+    P_HDDIO_DEVS["epoch_sec"]="${epoch_sec}"
 
     if "${DEBUG}"; then _log "DEBUG: _check_hddio(): rvalue: ${rvalue}"; fi
 
