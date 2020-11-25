@@ -33,11 +33,10 @@ FAKE="false"                # Default fake mode operation
 declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
 
 ######## CONSTANT DEFINITION ########
-CTOPPARAM="-b -d 1 -n 1"    # Define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
-STOPPARAM="-i $CTOPPARAM"   # Add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
-
-# tmp-directory
-TMPDIR="/tmp/autoshutdown"
+readonly CTOPPARAM="-b -d 1 -n 1"         # Define common parameters for the top command line
+readonly STOPPARAM="-i ${CTOPPARAM}"      # Add specific parameters for the top command line
+readonly CONFIG="/etc/autoshutdown.conf"  # Autoshtdown configuration options.
+readonly TMPDIR="/tmp/autoshutdown"       # Script temporary directory
 
 
 ######## FUNCTION DECLARATION ########
@@ -1429,11 +1428,11 @@ _log "INFO: Openmediavault-autoshutdown version: $(\
 _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
 _log "INFO: Initialize logging to: ${FACILITY}" force
 
-if [ -f /etc/autoshutdown.conf ]; then
-    . /etc/autoshutdown.conf
-    _log "INFO: /etc/autoshutdown.conf loaded"
+if [ -f "${CONFIG}" ]; then
+    . "${CONFIG}"
+    _log "INFO: ${CONFIG} loaded"
 else
-    _log "WARNING: cfg-File not found! Please check Path /etc for autoshutdown.conf"
+    _log "ERR: cfg-File not found! Please check ${CONFIG} exits"
     exit 1
 fi
 
