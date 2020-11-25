@@ -918,7 +918,6 @@ _check_hddio()
 
     if "${DEBUG}"; then _log "DEBUG: _check_hddio(): rvalue: ${rvalue}"; fi
 
-    # No HDD-IO is over the defined value -> shutdown
     _log "INFO: _check_hddio(): All checks complete"
 
     return "${rvalue}"
@@ -1499,7 +1498,13 @@ if $DEBUG ; then
     done
 fi   # > if $DEBUG ;then
 
-_log "INFO: ---------------- script started ----------------------"
+_log "INFO: --------------- Initalise states ---------------------"
+
+[ "${HDDIOCHECK}" == "true" ] && ! _check_hddio && {
+    _log "ERR: Initalising _check_hddio(): Please check using debug mode"
+    exit 1; }
+
+_log "INFO: ---------------- Script started ----------------------"
 _log "INFO: ${CYCLES} test cycles until shutdown is issued."
 
 # Creation of the dir for ULDLCHECK
@@ -1516,10 +1521,11 @@ if [ "$ULDLCHECK" = "true" ]; then
 fi
 
 if [ "$FAKE" = "true" ]; then
-    _log "INFO: FAKE-Mode in on, dont't wait for first check"
+    _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
+    sleep 1
 else
-    _log "INFO: Waiting 5 min until the first check"
-    sleep 5m    # or: sleep 300
+    _log "INFO: Waiting 5 minuets until the first check"
+    sleep 5m
 fi
 
 for NICNR_START in $(seq 1 $NICNR); do
