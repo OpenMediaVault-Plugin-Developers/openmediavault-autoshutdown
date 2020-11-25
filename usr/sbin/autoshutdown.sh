@@ -564,7 +564,7 @@ _check_net_status()
 #
 _check_docker_status()
 {
-    command -v docker &>- || return 0
+    command -v docker &>/dev/null || return 0
     local active=0
     for container in $(docker ps --format "{{ .Names }}"); do
         local details; read -ra details <<< "$(docker inspect --format \
