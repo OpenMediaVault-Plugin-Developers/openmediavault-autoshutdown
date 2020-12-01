@@ -1,8 +1,9 @@
 {{ pillar['headers']['multiline'] }}
 
-ENABLE="{{ 'true' if config.enable | to_bool else 'false' }}"
+ENABLE="{{ config.enable | to_bool | lower }}"
 CYCLES={{ config.cycles }}
 SLEEP={{ config.sleep }}
+IPCHECK="{{ config.ipcheck | to_bool | lower }}"
 RANGE="{{ config.range }}"
 {%- if config.shutdowncommand == 0 %}
 SHUTDOWNCOMMAND="shutdown -h now"
@@ -13,20 +14,20 @@ SHUTDOWNCOMMAND="systemctl suspend"
 {%- elif config.shutdowncommand == 3 %}
 SHUTDOWNCOMMAND="systemctl hybrid"
 {%- endif %}
-CHECKCLOCKACTIVE="{{ 'true' if config.checkclockactive | to_bool else 'false' }}"
+CHECKCLOCKACTIVE="{{ config.checkclockactive | to_bool | lower }}"
 UPHOURS="{{ config.uphours_begin }}..{{ config.uphours_end }}"
 NSOCKETNUMBERS="{{ config.nsocketnumbers }}"
-ULDLCHECK="{{ 'true' if config.uldlcheck | to_bool else 'false' }}"
+ULDLCHECK="{{ config.uldlcheck | to_bool | lower }}"
 ULDLRATE={{ config.uldlrate }}
-LOADAVERAGECHECK="{{ 'true' if config.loadaveragecheck | to_bool else 'false' }}"
+LOADAVERAGECHECK="{{ config.loadaveragecheck | to_bool | lower }}"
 LOADAVERAGE={{ config.loadaverage }}
-HDDIOCHECK="{{ 'true' if config.hddiocheck | to_bool else 'false' }}"
+HDDIOCHECK="{{ config.hddiocheck | to_bool | lower }}"
 HDDIO_RATE={{ config.hddiorate }}
-CHECK_SAMBA="{{ 'true' if config.checksamba | to_bool else 'false' }}"
-CHECK_CLI="{{ 'true' if config.checkcli | to_bool else 'false' }}"
-SYSLOG="{{ 'true' if config.syslog | to_bool else 'false' }}"
-VERBOSE="{{ 'true' if config.verbose | to_bool else 'false' }}"
-FAKE="{{ 'true' if config.fake | to_bool else 'false' }}"
+CHECK_SAMBA="{{ config.checksamba | to_bool | lower }}"
+CHECK_CLI="{{ config.checkcli | to_bool | lower }}"
+SYSLOG="{{ config.syslog | to_bool | lower }}"
+VERBOSE="{{ config.verbose | to_bool | lower }}"
+FAKE="{{ config.fake | to_bool | lower }}"
 {%- if config.extraoptions | length > 0 %}
 {{ config.extraoptions }}
 {%- endif %}

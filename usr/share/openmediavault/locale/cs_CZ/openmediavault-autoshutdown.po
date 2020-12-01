@@ -51,10 +51,8 @@ msgstr "Kolikanásobně se ujišťovat"
 msgid "Date & Time"
 msgstr "Datum a čas"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "Zadejte rozsah IP adres (vyjádřených jejich posledními trojčíslími) počítačů, u kterých bude zjišťováno, zda jsou zapnuté (a tedy nejspíš potřebují server)."
+msgid "Define a range of IPs which should be scanned."
+msgstr "Definujte rozsah IP adres, které mají být skenovány."
 
 msgid "Define the network traffic in kB/s"
 msgstr "Dokud se síťový provoz na serveru pohybuje nad touto hodnotou (v kB/s), nebude odstaven z provozu."
@@ -64,9 +62,6 @@ msgstr "Používat tuto funkci"
 
 msgid "End"
 msgstr "Do"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr "Tuto kontrolu vypnete zadáním znaku „-“ (spojovník, mínus) do kolonky."
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -166,8 +161,8 @@ msgstr "Uspat kombinovaně"
 msgid "Syslog Configuration"
 msgstr "Nastavení pro Syslog"
 
-msgid "The following scheme is mandatory"
-msgstr "Použijte k tomu následující formu zápisu: "
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "V rozsahu IP by měl být seznam následujících hodnot oddělených čárkami:"
 
 msgid "Type"
 msgstr "Typ"
@@ -187,14 +182,14 @@ msgstr "Zaznamenávat více podrobností."
 msgid "Write log informations to system logs."
 msgstr "Zapisovat události do systémového záznamu událostí."
 
-msgid "all list entries are seperated by comma ','"
-msgstr "vícero položek oddělujte čárkou („,“)"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "Pokud je nastaven 'začátek..konec' nebo 'Posledný oktet IP', použijí se první tři oktety IP adresy iface."
 
-msgid "define a single ip : ip"
-msgstr "jediná IP adresa: ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "Definujte jednu IP: Posledný oktet IP zzz | www.xxx.rrr.zzz | iface:www.xxx.rrr.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "rozsah IP adres: začátek..konec (ony dvě tečky jsou nezbytné)"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "Definujte rozsah IP: začátek..konec | iface:začátek..konec | www.xxx.rrr.začátek..konec | iface: xxx.rrr.zzz.začátek..konec"
 
 msgid "for more details."
 msgstr "(v angličtině)."

@@ -51,10 +51,8 @@ msgstr "循環數"
 msgid "Date & Time"
 msgstr "日期與時間"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "定義一個所要掃瞄的 IP 範圍，在列表中使用 IP 地址 XXX.XXX.XXX.xxx 的最後三個數字。"
+msgid "Define a range of IPs which should be scanned."
+msgstr "定義一個所要掃瞄的 IP 範圍。"
 
 msgid "Define the network traffic in kB/s"
 msgstr "以 kB/s 來定義網路流量"
@@ -64,9 +62,6 @@ msgstr "啟用"
 
 msgid "End"
 msgstr "結束"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr "在欄位中輸入單一 '-' 來停止檢查。"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -166,8 +161,8 @@ msgstr "暫停-混合"
 msgid "Syslog Configuration"
 msgstr "Syslog 設置"
 
-msgid "The following scheme is mandatory"
-msgstr "強制使用以下的格式 "
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "IP範圍應為逗號分隔的以下列表："
 
 msgid "Type"
 msgstr "型式"
@@ -187,14 +182,14 @@ msgstr "詳盡模式"
 msgid "Write log informations to system logs."
 msgstr "將日誌資訊寫到系統日誌中。"
 
-msgid "all list entries are seperated by comma ','"
-msgstr "所有列表項目必須以逗號 ',' 分開"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "如果設置了'start..end' 或 'IP的最後一個八位字節'，則使用iface IP地址的前三個八位字節。"
 
-msgid "define a single ip : ip"
-msgstr "定義單一的 ip：ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "定義一個IP：IP的最後一個八位位組zzz | www.xxx.yyy.zzz | \<iface\:www.xxx.yyy.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "定義一個 ip 範圍：啟始...結束 -> 兩個點是必要的"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "定義IP範圍：start..end | ifacestart..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "for more details."
 msgstr "中的詳細內容。"

@@ -52,10 +52,8 @@ msgstr "Cicli"
 msgid "Date & Time"
 msgstr "Data & Ora"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "Definisci un intervallo di indirizzi IP che devono essere scansionati, attraverso una lista di XXX.XXX.XXX.xxx ultime triple di indirizzi IP."
+msgid "Define a range of IPs which should be scanned."
+msgstr "Definisci un intervallo di indirizzi IP che devono essere scansionati."
 
 msgid "Define the network traffic in kB/s"
 msgstr "Definisci il traffico di rete in kB/s"
@@ -65,9 +63,6 @@ msgstr "Abilita"
 
 msgid "End"
 msgstr "Fine"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr "Inserisci il carattere '-' nel campo per disabilitare la verifica"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -167,8 +162,8 @@ msgstr "Sospensione-Ibrida"
 msgid "Syslog Configuration"
 msgstr "Configurazione Syslog"
 
-msgid "The following scheme is mandatory"
-msgstr "Lo schema seguente è obbligatorio"
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "L'intervallo IP deve essere un elenco delimitato da virgole dei seguenti:"
 
 msgid "Type"
 msgstr "Tipo"
@@ -188,14 +183,14 @@ msgstr "Modalità verbosa."
 msgid "Write log informations to system logs."
 msgstr "Scrivi informazioni di registro nei registri di sistema."
 
-msgid "all list entries are seperated by comma ','"
-msgstr "tutti gli elementi dell'elenco sono separati da una virgola ','"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "Se è impostato 'start..end' o 'Ultimo ottetto di IP', vengono utilizzati i primi tre ottetti dell'indirizzo IP iface."
 
-msgid "define a single ip : ip"
-msgstr "definisci un singolo ip : ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "Definisci un singolo IP: Ultimo ottetto di IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "definisci un intervallo di ip : inizio..fine -> i due punti sono obbligatori"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "Definisci un intervallo IP: inizio..fine | iface:inizio..fine | www.xxx.yyy.inizio..fine | iface:xxx.yyy.zzz.inizio..fine"
 
 msgid "for more details."
 msgstr "per ulteriori dettagli."

@@ -8,6 +8,7 @@ openmediavault-autoshutdown (5.0.8) stable; urgency=low
   * Fix redirect in _check_docker_status
   * Add readonly constant definition and make config a constant
   * Initialise _check_hddio before first script check
+  * Refactor and enhance _ping_range
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2020 14:56:55 -0600
 

@@ -20,6 +20,10 @@
 				"maximum": 9999,
 				"required": true
 			},
+			"ipcheck": {
+				"type": "boolean",
+				"required": true
+			},
 			"range": {
 				"type": "string",
 				"required": true

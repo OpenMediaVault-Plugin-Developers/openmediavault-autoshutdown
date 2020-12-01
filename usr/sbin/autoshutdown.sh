@@ -31,6 +31,7 @@ FAKE="false"                # Default fake mode operation
 
 ######## STORAGE DEFINITION #########
 declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
+declare -A PINGLIST_IFACE   # Associative array for storing _ping_range network interface IP addresses
 
 ######## CONSTANT DEFINITION ########
 readonly CTOPPARAM="-b -d 1 -n 1"         # Define common parameters for the top command line
@@ -70,82 +71,88 @@ _log()
 ###############################################################################
 #
 #   name          : _ping_range
-#   parameter     : none
-#   return        : CNT : Number of active IP hosts within given IP range
+#   parameter     : $1        : The network interface that is being worked on
+#                 : $2        : The network interface IP address
+#                 : $3        : IP addresses found for all network interfaces
+#   global        : $PINTLIST : A file reference of IPs to be checked (advanced)
+#                 : $RANGE    : Details of IPs to be checked
+#   return        : Number of active IP on network interfaces
 #
 _ping_range()
 {
-    NICNR_PINGRANGE="$1"
-    PINGRANGECNT=0
-    CREATEPINGLIST="false"
+    local -r net_iface="${1}"
+    local -r server_ip="${2}"
+    local -r server_ips="${3// /\\|}"
 
-    # Create only one pinglist at script-start and not every function-call
-    # If pinglist exists, don't create it
-    if [ -z $USEOWNPINGLIST ]; then
-        PINGLIST="$TMPDIR/pinglist"
-        if [ ! -f "$PINGLIST" ]; then
-            CREATEPINGLIST="true"
+    local ip_list=()
+    local pinglist_array=()
+    local -r empty="No IP addresses specified"
+
+    if "${DEBUG}"; then
+        _log "DEBUG: _ping_range(): INTERFACE: ${net_iface}"
+        _log "DEBUG: _ping_range(): CLASS: ${server_ip%.*}"
+        _log "DEBUG: _ping_range(): PINGLIST: ${PINGLIST:-N/A}"
+        _log "DEBUG: _ping_range(): RANGE: ${RANGE:-N/A}"
+    fi
+
+    local key="${PINGLIST:-"${net_iface}"}"
+    if [ -z "${PINGLIST_IFACE["${key}"]:-}" ]; then
+        if "${DEBUG}"; then
+            _log "DEBUG: _ping_range(): Generating new PINGLIST_IFACE[${key}]"
         fi
+
+        if [ -n "${PINGLIST:-}" ]; then
+            mapfile -t ip_list < "${PINGLIST}"
+        else
+            for rg in ${RANGE//,/ }; do
+                if [[ "${rg}" =~ ^([a-z]+[0-9]+)[:] &&
+                        "${BASH_REMATCH[1]}" != "${net_iface}" ]]; then
+                    continue
+                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})$ ]]; then
+                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
+                        "${BASH_REMATCH[2]:-"${server_ip%.*}."}${BASH_REMATCH[4]}"
+                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})\.{2}([1-9][0-9]{0,2})$ ]]; then
+                    local min="${BASH_REMATCH[4]}"; local max="${BASH_REMATCH[5]}"
+                    if [ "${BASH_REMATCH[5]}" -lt "${BASH_REMATCH[4]}" ]; then
+                        min="${BASH_REMATCH[5]}"; max="${BASH_REMATCH[4]}"
+                    fi
+                    mapfile -t -O "${#ip_list[@]}" ip_list < <(
+                        seq --format "${BASH_REMATCH[2]:-"${server_ip%.*}."}%g" \
+                            "${min}" "${max}")
+                fi
+            done
+        fi
+        PINGLIST_IFACE["${key}"]="$(
+            printf '%s\n' "${ip_list[@]}" |
+            sort -t . -k 3,3n -k 4,4n | uniq |
+            grep -v "${server_ips}")"
+    fi
+    mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
+
+    if "${DEBUG}"; then
+        _log "DEBUG: _ping_range(): pinglist_array: ${pinglist_array[*]:-"${empty}"}"
     fi
 
-    if $DEBUG; then
-        _log "DEBUG: _ping_range(): NICNR_PINGRANGE: $NICNR_PINGRANGE"
-        _log "DEBUG: _ping_range(): PINGLIST: $PINGLIST"
-        _log "DEBUG: _ping_range(): RANGE: '$RANGE'"
-        _log "DEBUG: _ping_range(): CLASS: '${CLASS[${NICNR_PINGRANGE}]}'"
-    fi
-    # separate the IP end number from the loop counter, to give the user a chance to configure the search "algorithm"
-    # COUNTUP = 1 means starting at the lowest IP address; COUNTUP=0 will start at the upper end of the given range
-    for RG in ${RANGE//,/ } ; do
-
-        if [[ ! "$RG" =~ \.{2} ]]; then
-
-            FINIT="J=$RG"
-            FORCHECK="J<=$RG"
-            STEP="J++"
-
-        elif [[ "$RG" =~ ^([0-9]{1,3})\.{2}([0-9]{1,3}$) ]]; then
-
-            if [ ${BASH_REMATCH[2]} -gt ${BASH_REMATCH[1]} ]; then
-                FINIT="J=${BASH_REMATCH[1]}"
-                FORCHECK="J<=${BASH_REMATCH[2]}"
-                STEP="J++"
-            else
-                FINIT="J=${BASH_REMATCH[1]}"
-                FORCHECK="J>=${BASH_REMATCH[2]}"
-                STEP="J--";
-            fi   # > if [ ${BASH_REMATCH[2]} -gt ${BASH_REMATCH[1]} ]; then
-
-        fi   # > if [[ "$RG" =~ [0-9]{1,3} ]]; then
-
-        for (( $FINIT;$FORCHECK;$STEP )); do
-
-            # If the pinglist is not created, create it with all IPs
-            # don't add the ServerIP (OMV-IP) to the pinglist (grep -v)
-            if $CREATEPINGLIST; then echo "${CLASS[$NICNR_PINGRANGE]}.$J" | grep -vw ${CLASS[$NICNR_PINGRANGE]}.${SERVERIP[$NICNR_PINGRANGE]} >> $PINGLIST; fi
-
-        done   # > for (( J=$iSTART;$FORCHECK;$STEP )); do
-
-    done   # > for RG in ${RANGE//,/ } ; do
-
-    _log "INFO: retrieve list of active IPs for '${NIC[$NICNR_PINGRANGE]}' ..."
-
-    # fping output 2> /dev/null suppresses the " ICMP Host Unreachable from 192.168.178.xy for ICMP Echo sent to 192.168.178.yz"
-    if [ -f $PINGLIST ]; then
-        FPINGRESULT="$(fping -a -r1 < "$PINGLIST" 2>/dev/null)"
-    else
-        _log "INFO: PINGLIST: $PINGLIST does not exist. Skip fpinging hosts"
-    fi
-    for ACTIVEPC in $FPINGRESULT; do
-        _log "INFO: Found IP $ACTIVEPC as active host."
-        let PINGRANGECNT++;
-    done
-
-    if [ -z "$FPINGRESULT" ]; then
-        _log "INFO: No active IPs in the specified IP-Range found"
+    if [[ "${pinglist_array[0]}" == "${empty}" ]]; then
+        _log "INFO: _ping_range(): No IP addresses specified for: ${net_iface}"
+        return 0
     fi
 
-    return ${PINGRANGECNT};
+    _log "INFO: _ping_range(): Retrieve list of active IPs for: ${net_iface}"
+    local fping_result
+    fping_result="$(fping --iface="${net_iface}" --quiet --alive --retry=1 \
+                        "${pinglist_array[@]}" || true)"
+
+    if [ -z "${fping_result}" ]; then
+        _log "INFO: _ping_range(): No active IPs found in the specified Range"
+        return 0
+    fi
+
+    while read -r active_ip; do
+        _log "INFO: _ping_range(): ${active_ip} is active"
+    done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
+
+    return "$(wc -l <<< "${fping_result}")"
 }
 
 
@@ -1014,28 +1021,36 @@ _check_config()
             _log "WARNING: Setting NSOCKETNUMBERS to 21,22 (FTP and SSH)"
             NSOCKETNUMBERS="22"; }
 
-    # Pinglist
-    IPCHECK=true
-    if [ -z $PINGLIST ]; then
-        if [ "$RANGE" = "-" ]; then
-                _log "INFO: RANGE is set to '-' -> no IP-Check"
-                IPCHECK=false
-        else
-            [[ "$RANGE" =~ ^([1-9]{1}[0-9]{0,2})?([1-9]{1}[0-9]{0,2}\.{2}[1-9]{1}[0-9]{0,2})?(,[1-9]{1}[0-9]{0,2})*((,[1-9]{1}[0-9]{0,2})\.{2}[1-9]{1}[0-9]{0,2})*$ ]] || {
-                    _log "WARNING: Invalid parameter list format: RANGE [v..v+n,w,x+m..x,y,z..z+o]"
-                    _log "WARNING: You set it to '$RANGE', which is not a correct syntax."
-                    _log "WARNING: Setting RANGE to 2..254"
-                    RANGE="2..254"; }
-        fi
-    else
-        if [ -f "$PINGLIST" ]; then
-            _log "INFO: PINGLIST is set in the conf, reading IPs from '$PINGLIST'"
-            USEOWNPINGLIST="true"
-        else
-            _log "WARNING: PINGLIST is set in the conf, but the file isn't there"
-            _log "WARNING: Setting RANGE to 2..254"
-            RANGE="2..254"
-        fi
+    # IPCHECK
+    [[ "${IPCHECK}" == "true" || "${IPCHECK}" == "false" ]] || {
+        _log "WARNING: IPCHECK not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: Set IPCHECK to: false"
+        IPCHECK="false"; }
+
+    # PINGLIST/RANGE
+    if [[ -n "${PINGLIST:-}" && -f "${PINGLIST}" ]]; then
+        _log "INFO: PINGLIST is set in the config, reading IPs from: '${PINGLIST}'"
+        _log "INFO: Overidding IPCHECK to: 'true'"
+        unset RANGE
+        IPCHECK="ture"
+    elif [[ -n "${PINGLIST:-}" && ! -f "${PINGLIST}" ]]; then
+        _log "WARNING: PINGLIST is set in the conf, but file not found: '${PINGLIST}'"
+        _log "WARNING: Set IPCHECK to: 'false'"
+        IPCHECK="false"
+    elif [ "${IPCHECK}" == "false" ]; then
+        _log "WARNING: IPCHECK is set to false"
+        _log "WARNING: Ignoring RANGE"
+    elif [[ -z "${RANGE:=}" || "${RANGE}" == "-" ]]; then
+        _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
+        IPCHECK="false"
+    elif [[ -n "${RANGE:-}" && ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})?(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})?(,(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2}))*$ ]]; then
+        _log "WARNING: Invalid parameter list format: ${RANGE}"
+        _log "WARNING: The 'RANGE' should be comma delimited list of the following:"
+        _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+        _log "WARNING: Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+        _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+        _log "WARNING: Setting RANGE to: '2..254'"
+        RANGE="2..254"
     fi
 
     # $HDDIOCHECK" = "true"
@@ -1302,19 +1317,19 @@ _check_system_active()
                 # stop as there's really no point continuing to looking for more.
 
                 # only check IPs, if RANGE is not set to "-"
-                if [ $IPCHECK = "true" ]; then
-                    _ping_range $NICNR_CHECKSYSTEMACTIVE
-                    PINGRANGERETURN="$?"
-                    if [ "$PINGRANGERETURN" -gt 0 ]; then
+                if [ "${IPCHECK}" == "true" ]; then
+                    local pingrangereturn=0
+                    _ping_range "${NIC["${NICNR_CHECKSYSTEMACTIVE}"]}"\
+                        "${IPFROMIFCONFIG[$NICNR]}" "${IPFROMIFCONFIG[*]}" ||
+                            pingrangereturn="${?}"
+                    if [ "${pingrangereturn}" -gt 0 ]; then
                         let CNT++
-                        if $DEBUG; then _log "DEBUG: _ping_range() -> RETURN: $PINGRANGERETURN"; fi
+                        if "${DEBUG}"; then _log "DEBUG: _ping_range() -> RETURN: ${pingrangereturn}"; fi
                     fi
-                    if $DEBUG ; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: $CNT "; fi
-                else
-                    _log "INFO: No IPCHECK -> RANGE was set to '-' in the config"
+                    if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: ${CNT}"; fi
                 fi
             else
-                if $DEBUG ; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: $CNT "; fi
+                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: ${CNT}"; fi
             fi
 
             if [ $CNT -eq 0 ]; then
@@ -1457,12 +1472,6 @@ if [ ! -d $TMPDIR ]; then
         _log "WARNING: Can't create $TMPDIR! Exiting ...!"
         exit 1
     }
-fi
-
-# If the pinglist or pinglistactive exists, delete it (at every start of the script)
-if [ -f $TMPDIR/pinglist ]; then
-    rm -f $TMPDIR/pinglist 2> /dev/null
-    [[ $? = 0 ]] && _log "INFO: Pinglist deleted" || _log "WARNING: Can't delete Pinglist!"
 fi
 
 # Init the counter

@@ -19,32 +19,34 @@ SLEEP=180
     # Numbers of seconds between each Cycle (Check). (default=180, 3 min)
     # allowed is 1 - 9999
 
+
+##################################################
+####  Check range of IPs ####
+IPCHECK="true"
+    # Parameter to activate or deactivate this feature (default="true")
+
 RANGE="2..254"
-    # define a range of IPs which should be scanned, (default="2..254")
-    # via XXX.XXX.XXX.xxx last triple of IP address in a list
-    # The following scheme is mandatory
-    # "v..v+m,w,x..x+n,y+o..y,z"
-    # define an ip range :    <start>..<end> -> the two dots are mandatory
-    # define a single ip :   <ip>
-    # all list entries seperated by comma ','
+    # Define a range of IPs which should be scanned. (default="2..254")
+    # The 'RANGE' should be comma delimited list of the following:
+    # - Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end
+    # - Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz
+    # If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used.
     # Please make sure to leave 1 and 255 out of the list !
-    # To disable a check for a IP, just set a "-"
-    # -> RANGE="-"
 
 ##################################################
 ####  Check Clock to identify uptime ####
 CHECKCLOCKACTIVE="false"
-    # parameter to activate or deactivate this feature (default="false")
+    # Parameter to activate or deactivate this feature (default="false")
     # per default this is deactivated
 
 UPHOURS="06..20"
-    # define a range of hours, in which the system should stay up (default="6..20")
+    # Define a range of hours, in which the system should stay up (default="6..20")
     # without checking any other paramter to stay awake
 
 ##################################################
 #### Network Socket Supervision Configuration
 NSOCKETNUMBERS="22,139,445,10000,49152"
-    # socket numbers to check for activity
+    # Socket numbers to check for activity
     # (default="21,22,80,139,445,3689,6991,9091,49152")
     # Ports:
     # 21 = FTP
@@ -63,16 +65,16 @@ NSOCKETNUMBERS="22,139,445,10000,49152"
 
 ULDLCHECK="true"
     # (default=true)
-    # set it to "true" for a network-traffic check. Then don't forget to set ULDLRATE also!
+    # Set it to "true" for a network-traffic check. Then don't forget to set ULDLRATE also!
 
 ULDLRATE=50
-    # define the network traffic in kB/s
+    # Define the network traffic in kB/s
     # in each cycle autoshutdown checks whether the network-traffic (upload or download) is over the set value
     # over this value, no shutdown -> new check after x seconds (see SLEEP)
     # below this value, your PC shuts down, if all other checks are negative, too after the defined nr. of Cycles
 
 LOADAVERAGECHECK="true"
-    # set it to "true" for a check of loadaverage over the last minute in autoshutdown. If the system is
+    # Set it to "true" for a check of loadaverage over the last minute in autoshutdown. If the system is
     # over this value, then no shutdown is issued.
     # If you set this to "true", don't forget to set LOADAVERAGE also!
 
@@ -102,14 +104,14 @@ CHECK_CLI="true"
 ##################################################
 #### Syslog Configuration ####
 SYSLOG="true"
-    # activate write to syslog (default="true")
+    # Activate write to syslog (default="true")
 
 VERBOSE="false"
-    # use the verbose mode, with additional output on the command line (default="false")
+    # Use the verbose mode, with additional output on the command line (default="false")
     # verbose includes DEBUG-Mode
 
 FAKE="false"
-    # set it to "true" for a Fake-Mode: The script runs dry: You can test what happens, without shutting down your PC
+    # Set it to "true" for a Fake-Mode: The script runs dry: You can test what happens, without shutting down your PC
     # This mode includes VERBOSE-output automatically, even if VERBOSE is set to "false"
     # Setting it to "false" or if it is not set, the script will run normally.
     # With Fake-Mode ON, the script doesn't sleep 5 minutes after it starts, so you can see what happens immediately
