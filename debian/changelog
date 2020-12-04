@@ -1,3 +1,18 @@
+openmediavault-autoshutdown (5.0.8) stable; urgency=low
+
+  * Refactor and remove deprecation on logging
+  * _check_loadavagrage change local variable to lowercase
+  * Clean up some comment and typos
+  * _check_plugin simplify and fix shellcheck issues
+  * _check_hddio change local variable to lowercase
+  * Fix redirect in _check_docker_status
+  * Add readonly constant definition and make config a constant
+  * Initialise _check_hddio before first script check
+  * Refactor and enhance _ping_range
+  * Clean-up deb build
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2020 14:56:55 -0600
+
 openmediavault-autoshutdown (5.0.7) stable; urgency=low
 
   * Refactor _check_hddio and try to address github issues #24, #54 and #60

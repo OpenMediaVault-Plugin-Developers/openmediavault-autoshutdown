@@ -23,6 +23,10 @@
 			"maximum": 9999,
 			"default": 180
 		},
+		"ipcheck": {
+			"type": "boolean",
+			"default": true
+		},
 		"range": {
 			"type": "string",
 			"default": "2..254"

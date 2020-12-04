@@ -32,6 +32,17 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
         ptype: "linkedfields",
         correlations: [{
             name: [
+                "range"
+            ],
+            conditions: [
+                { name: "ipcheck", value: true }
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
+        },{
+            name: [
                 "uldlrate"
             ],
             conditions: [
@@ -174,19 +185,34 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 labelSeparator: ""
             },
             items: [{
-                xtype: "textfield",
-                name: "range",
+                xtype: "fieldcontainer",
                 fieldLabel: _("IP-Range"),
-                value: "2..254",
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last triple of IP address in a list.") + "<br />" +
-                            _("The following scheme is mandatory") + "v..v+m,w,x..x+n,y+o..y,z" + "<br />" + "- " +
-                            _("define an ip range : start..end -> the two dots are mandatory") + "<br />" + "- " +
-                            _("define a single ip : ip") + "<br />" + "- " +
-                            _("all list entries are seperated by comma ','") + "<br />" +
-                            _("Please make sure to leave 1 and 255 out of the list!") + "<br />" +
-                            _("Enter a single dash '-' in the field to disable check.")
+                layout: "hbox",
+                items: [{
+                    xtype: "checkbox",
+                    name: "ipcheck",
+                    fieldLabel: _(""),
+                    checked: true
+                },{
+                    xtype: "displayfield",
+                    width: 25,
+                    value: ""
+                },{
+                    xtype: "textfield",
+                    name: "range",
+                    fieldLabel: "",
+                    value: "2..254",
+                    width: 600,
+                    allowBlank: false,
+                    plugins: [{
+                        ptype: "fieldinfo",
+                        text: _("Define a range of IPs which should be scanned.") + "<br />" +
+                              _("The IP-Range should be comma delimited list of the following:") + "<br />" + "- " +
+                              _("Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end") + "<br />" + "- " +
+                              _("Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz") + "<br />" +
+                              _("If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used.") + "<br />" +
+                              _("Please make sure to leave 1 and 255 out of the list!")
+                    }]
                 }]
             },{
                 xtype: "textfield",
@@ -196,7 +222,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 plugins: [{
                     ptype: "fieldinfo",
                     text: _("Socket number to check for activity.") + "  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>" +
-                            _("List of Ports") + "</a>"
+                          _("List of Ports") + "</a>"
                 }]
             },{
                 xtype: "fieldcontainer",
@@ -220,7 +246,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 50,
-                    width: 500,
+                    width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("Define the network traffic in kB/s")
@@ -248,7 +274,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 40,
-                    width: 500,
+                    width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("If the load average of the server is above this value, then no shutdown.") + "<br />" +
@@ -277,7 +303,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 400,
-                    width: 500,
+                    width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("If the HDD-IO-average of the server is above this value, then no shutdown.")

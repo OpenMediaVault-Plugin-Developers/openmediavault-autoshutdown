@@ -51,10 +51,8 @@ msgstr "Cyklusser"
 msgid "Date & Time"
 msgstr "Dato & Tid"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "Definer et interval IP-adresser, der skal scannes, via XXX.XXX.XXX.xxx sidste tredobbelte af IP-adressen i en liste."
+msgid "Define a range of IPs which should be scanned."
+msgstr "Definer et interval IP-adresser, der skal scannes."
 
 msgid "Define the network traffic in kB/s"
 msgstr "Definer netværks trafik i kB/s"
@@ -64,9 +62,6 @@ msgstr "Aktiver"
 
 msgid "End"
 msgstr "Slut"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr "Indtast en bindestreg '-' i feltet for, at deaktivere kontrol."
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -166,8 +161,8 @@ msgstr "Udsæt-Hybrid"
 msgid "Syslog Configuration"
 msgstr "Syslog Konfiguration"
 
-msgid "The following scheme is mandatory"
-msgstr "Det følgende skema er obligatorisk"
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "IP-området skal være en kommasepareret liste over følgende:"
 
 msgid "Type"
 msgstr "Type"
@@ -187,14 +182,14 @@ msgstr "Detaljeret tilstand."
 msgid "Write log informations to system logs."
 msgstr "Skriv log oplysninger til system logfiler."
 
-msgid "all list entries are seperated by comma ','"
-msgstr "alle liste indtastninger deles med et komma ','"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "Hvis 'start..slut' eller 'Sidste oktet af IP' er indstillet, bruges de første tre oktetter af iface IP-adressen."
 
-msgid "define a single ip : ip"
-msgstr "definer en enkel ip : ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "Definer en enkelt IP: Sidste oktet af IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "definer et ip interval : start..slut -> de to punktummer er obligatoriske"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "Definer et IP-interval: start..slut | iface:start..slut | www.xxx.yyy.start..slut | iface:xxx.yyy.zzz.start..slut"
 
 msgid "for more details."
 msgstr "for flere detaljer."

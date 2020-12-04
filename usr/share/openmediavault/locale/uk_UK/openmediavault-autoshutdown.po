@@ -51,9 +51,7 @@ msgstr "Цикли"
 msgid "Date & Time"
 msgstr "Дата і Час"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
+msgid "Define a range of IPs which should be scanned."
 msgstr ""
 
 msgid "Define the network traffic in kB/s"
@@ -64,9 +62,6 @@ msgstr "Увімкнути"
 
 msgid "End"
 msgstr "Кінець"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -166,8 +161,8 @@ msgstr ""
 msgid "Syslog Configuration"
 msgstr "Конфігурація Syslog"
 
-msgid "The following scheme is mandatory"
-msgstr "Наступна схема є обов'язковою"
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "У діапазоні IP слід вказати наступне:"
 
 msgid "Type"
 msgstr "Тип"
@@ -187,14 +182,14 @@ msgstr "Докладний режим."
 msgid "Write log informations to system logs."
 msgstr ""
 
-msgid "all list entries are seperated by comma ','"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
 msgstr ""
 
-msgid "define a single ip : ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 msgstr ""
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "визначити діапазон IP: початок..кінець -> дві точок є обов'язковими"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "Визначте діапазон IP: start..end | iface:початок..кінець | www.xxx.yyy.початок..кінець | iface:xxx.yyy.zzz.початок..кінець"
 
 msgid "for more details."
 msgstr "для більш докладної інформації."

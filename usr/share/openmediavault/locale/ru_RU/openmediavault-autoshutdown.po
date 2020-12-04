@@ -53,10 +53,8 @@ msgstr "Циклы"
 msgid "Date & Time"
 msgstr "Дата и Время"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "Определите диапазон IP-адресов, которые следует отсканировать, используя XXX.XXX.XXX.xxx последнюю тройку IP-адресов в списке."
+msgid "Define a range of IPs which should be scanned."
+msgstr "Определите диапазон IP-адресов, которые следует сканировать."
 
 msgid "Define the network traffic in kB/s"
 msgstr "Определить сетевой трафик в kB/s"
@@ -66,9 +64,6 @@ msgstr "Включить"
 
 msgid "End"
 msgstr "Конец"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr "Введите одно тире '-' в поле, чтобы отключить проверку."
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -168,8 +163,8 @@ msgstr "Suspend-Hybrid"
 msgid "Syslog Configuration"
 msgstr "Настройка Syslog"
 
-msgid "The following scheme is mandatory"
-msgstr "Следующая схема обязательна"
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "IP-Range должен быть разделенным запятыми списком следующего:"
 
 msgid "Type"
 msgstr "Тип"
@@ -189,14 +184,14 @@ msgstr "Подробный режим."
 msgid "Write log informations to system logs."
 msgstr "Запись журнальной информации в системный журнал."
 
-msgid "all list entries are seperated by comma ','"
-msgstr "Все записи списка разделяются запятой ','"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "Если установлено 'start..end' или 'Последний октет IP', используются первые три октета IP-адреса iface."
 
-msgid "define a single ip : ip"
-msgstr "Определить одиночный ip: ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "Определите единственный IP-адрес: Последний октет IP-адреса zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "Определить диапазон ip: start..end -> две точки являются обязательными"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "Определите диапазон IP-адресов: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "for more details."
 msgstr "Больше подробностей."

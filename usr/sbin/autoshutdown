@@ -1,153 +1,158 @@
 #!/bin/bash
 #==============================================================================
 #
-#          FILE:    autoshutdown.sh
+#          FILE:    autoshutdown
 #
-#         USAGE:    copy this script to /usr/sbin and the config-file to /etc
-#
-#   DESCRIPTION:    shuts down a PC/Server - variable options
+#   DESCRIPTION:    Shuts-down a PC/Server - variable options
 #
 #  REQUIREMENTS:    Debian / Ubuntu-based system
 #
-#          BUGS:    if you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
+#          BUGS:    If you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
 #
 #        AUTHOR:    Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes), it should work on any Debain-based System, too
 #                   based on autoshutdown.sh v0.7.008 by chrikai, see:
 #                   https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
 #==============================================================================
 
-# Changelog:    see extra file!
-
 ######## VARIABLE DEFINITION ########
 RESULT=0                    # Declare reusable RESULT variable to check function return values
 
-# Variables that normal users should normaly not define - PowerUsers can do it here or add it to the config
+# Variables that normal users should normally not define - PowerUsers can do it here or add it to the config
 LPREPEAT=5                  # Number of test cycles for finding and active LOADPROCNAMES-Process (default=5)
 TPREPEAT=5                  # Number of test cycles for finding and active TEMPPROCNAMES-Process (default=5)
 
-LOGGER="/usr/bin/logger"    # Path and name of logger (default="/usr/bin/logger")
+############## LOGGING ##############
 FACILITY="local6"           # Facility to log to -> see rsyslog.conf
+DEBUG="false"               # Default debug logging mode is enabled
+VERBOSE="false"             # Default if verbose logging mode is enabled
+SYSLOG="false"              # Default if logging should go to syslog
 
-                            # For a separate Log:
-                            # Put the file "autoshutdownlog.conf" in /etc/rsyslog.d/
+FAKE="false"                # Default fake mode operation
 
-declare -A p_HDDIO_DEVS     # Associative array for storing _check_hddio read and wrtn values
+######## STORAGE DEFINITION #########
+declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
+declare -A PINGLIST_IFACE   # Associative array for storing _ping_range network interface IP addresses
 
 ######## CONSTANT DEFINITION ########
-VERSION="0.9.9.10"          # Script version information
-#CTOPPARAM="-d 1 -n 1"       # Define common parameters for the top command line "-d 1 -n 1" (Debian/Ubuntu)
-CTOPPARAM="-b -d 1 -n 1"    # Define common parameters for the top command line "-b -d 1 -n 1" (Debian/Ubuntu)
-STOPPARAM="-i $CTOPPARAM"   # Add specific parameters for the top command line  "-i $CTOPPARAM" (Debian/Ubuntu)
+readonly CTOPPARAM="-b -d 1 -n 1"         # Define common parameters for the top command line
+readonly STOPPARAM="-i ${CTOPPARAM}"      # Add specific parameters for the top command line
+readonly CONFIG="/etc/autoshutdown.conf"  # Autoshtdown configuration options.
+readonly TMPDIR="/tmp/autoshutdown"       # Script temporary directory
 
-# tmp-directory
-TMPDIR="/tmp/autoshutdown"
 
 ######## FUNCTION DECLARATION ########
 
 ###############################################################################
 #
 #   name          : _log
-#   parameter     : $LOGMESSAGE : logmessage in format "PRIORITY: MESSAGE"
+#   parameter     : $1: Log message in format "PRIORITY: MESSAGE"
+#                 : $2: 'force' will force logging to syslog and sent to stderr
 #   return        : none
 #
 _log()
 {
-    [[ "$*" =~ ^([A-Za-z]*):(.*) ]] && {
-        PRIORITY=${BASH_REMATCH[1]}
-        LOGMESSAGE=${BASH_REMATCH[2]}
-        [[ "$(basename "$0")" =~ ^(.*)\. ]] &&
-        if $FAKE; then
-            LOGMESSAGE="${BASH_REMATCH[1]}[$$]: $PRIORITY: 'FAKE-Mode: $LOGMESSAGE'";
-        else
-            LOGMESSAGE="${BASH_REMATCH[1]}[$$]: $PRIORITY: '$LOGMESSAGE'";
-        fi;
+    [[ "${1}" =~ ^([A-Za-z]*):\ *(.*) ]] && {
+       local priority=${BASH_REMATCH[1]}
+       local message=${BASH_REMATCH[2]}
     }
+    [ "${FAKE}" == "true" ] && message="FAKE-Mode: ${message}"
+    message="$(basename "${0}")[$$]: ${priority}: '${message}'"
 
-    if $VERBOSE||$FAKE; then echo "$(date '+%b %e %H:%M:%S'): $USER: $FACILITY $LOGMESSAGE"; fi
+    [[ "${VERBOSE}" == "true" || "${FAKE}" == "true" ]] &&
+        echo "$(date '+%b %e %H:%M:%S') ${USER}: ${message}"
 
-    [ $SYSLOG ] && $LOGGER -p $FACILITY.$PRIORITY "$LOGMESSAGE"
+    local stderr=""
+    [ "${2}" == "force" ] && stderr="--stderr"
+    [[ "${SYSLOG}" == "true" || "${2}" == "force" ]] &&
+        logger "${stderr}" -p "${FACILITY}.${priority}" "${message}"
 }
 
 
 ###############################################################################
 #
 #   name          : _ping_range
-#   parameter     : none
-#   return        : CNT : Number of active IP hosts within given IP range
+#   parameter     : $1        : The network interface that is being worked on
+#                 : $2        : The network interface IP address
+#                 : $3        : IP addresses found for all network interfaces
+#   global        : $PINTLIST : A file reference of IPs to be checked (advanced)
+#                 : $RANGE    : Details of IPs to be checked
+#   return        : Number of active IP on network interfaces
 #
 _ping_range()
 {
-    NICNR_PINGRANGE="$1"
-    PINGRANGECNT=0
-    CREATEPINGLIST="false"
+    local -r net_iface="${1}"
+    local -r server_ip="${2}"
+    local -r server_ips="${3// /\\|}"
 
-    # Create only one pinglist at script-start and not every function-call
-    # If pinglist exists, don't create it
-    if [ -z $USEOWNPINGLIST ]; then
-        PINGLIST="$TMPDIR/pinglist"
-        if [ ! -f "$PINGLIST" ]; then
-            CREATEPINGLIST="true"
+    local ip_list=()
+    local pinglist_array=()
+    local -r empty="No IP addresses specified"
+
+    if "${DEBUG}"; then
+        _log "DEBUG: _ping_range(): INTERFACE: ${net_iface}"
+        _log "DEBUG: _ping_range(): CLASS: ${server_ip%.*}"
+        _log "DEBUG: _ping_range(): PINGLIST: ${PINGLIST:-N/A}"
+        _log "DEBUG: _ping_range(): RANGE: ${RANGE:-N/A}"
+    fi
+
+    local key="${PINGLIST:-"${net_iface}"}"
+    if [ -z "${PINGLIST_IFACE["${key}"]:-}" ]; then
+        if "${DEBUG}"; then
+            _log "DEBUG: _ping_range(): Generating new PINGLIST_IFACE[${key}]"
         fi
+
+        if [ -n "${PINGLIST:-}" ]; then
+            mapfile -t ip_list < "${PINGLIST}"
+        else
+            for rg in ${RANGE//,/ }; do
+                if [[ "${rg}" =~ ^([a-z]+[0-9]+)[:] &&
+                        "${BASH_REMATCH[1]}" != "${net_iface}" ]]; then
+                    continue
+                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})$ ]]; then
+                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
+                        "${BASH_REMATCH[2]:-"${server_ip%.*}."}${BASH_REMATCH[4]}"
+                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})\.{2}([1-9][0-9]{0,2})$ ]]; then
+                    local min="${BASH_REMATCH[4]}"; local max="${BASH_REMATCH[5]}"
+                    if [ "${BASH_REMATCH[5]}" -lt "${BASH_REMATCH[4]}" ]; then
+                        min="${BASH_REMATCH[5]}"; max="${BASH_REMATCH[4]}"
+                    fi
+                    mapfile -t -O "${#ip_list[@]}" ip_list < <(
+                        seq --format "${BASH_REMATCH[2]:-"${server_ip%.*}."}%g" \
+                            "${min}" "${max}")
+                fi
+            done
+        fi
+        PINGLIST_IFACE["${key}"]="$(
+            printf '%s\n' "${ip_list[@]}" |
+            sort -t . -k 3,3n -k 4,4n | uniq |
+            grep -v "${server_ips}")"
+    fi
+    mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
+
+    if "${DEBUG}"; then
+        _log "DEBUG: _ping_range(): pinglist_array: ${pinglist_array[*]:-"${empty}"}"
     fi
 
-    if $DEBUG; then
-        _log "DEBUG: _ping_range(): NICNR_PINGRANGE: $NICNR_PINGRANGE"
-        _log "DEBUG: _ping_range(): PINGLIST: $PINGLIST"
-        _log "DEBUG: _ping_range(): RANGE: '$RANGE'"
-        _log "DEBUG: _ping_range(): CLASS: '${CLASS[${NICNR_PINGRANGE}]}'"
-    fi
-    # separate the IP end number from the loop counter, to give the user a chance to configure the search "algorithm"
-    # COUNTUP = 1 means starting at the lowest IP address; COUNTUP=0 will start at the upper end of the given range
-    for RG in ${RANGE//,/ } ; do
-
-        if [[ ! "$RG" =~ \.{2} ]]; then
-
-            FINIT="J=$RG"
-            FORCHECK="J<=$RG"
-            STEP="J++"
-
-        elif [[ "$RG" =~ ^([0-9]{1,3})\.{2}([0-9]{1,3}$) ]]; then
-
-            if [ ${BASH_REMATCH[2]} -gt ${BASH_REMATCH[1]} ]; then
-                FINIT="J=${BASH_REMATCH[1]}"
-                FORCHECK="J<=${BASH_REMATCH[2]}"
-                STEP="J++"
-            else
-                FINIT="J=${BASH_REMATCH[1]}"
-                FORCHECK="J>=${BASH_REMATCH[2]}"
-                STEP="J--";
-            fi   # > if [ ${BASH_REMATCH[2]} -gt ${BASH_REMATCH[1]} ]; then
-
-        fi   # > if [[ "$RG" =~ [0-9]{1,3} ]]; then
-
-        for (( $FINIT;$FORCHECK;$STEP )); do
-
-            # If the pinglist is not created, create it with all IPs
-            # don't add the ServerIP (OMV-IP) to the pinglist (grep -v)
-            if $CREATEPINGLIST; then echo "${CLASS[$NICNR_PINGRANGE]}.$J" | grep -vw ${CLASS[$NICNR_PINGRANGE]}.${SERVERIP[$NICNR_PINGRANGE]} >> $PINGLIST; fi
-
-        done   # > for (( J=$iSTART;$FORCHECK;$STEP )); do
-
-    done   # > for RG in ${RANGE//,/ } ; do
-
-    _log "INFO: retrieve list of active IPs for '${NIC[$NICNR_PINGRANGE]}' ..."
-
-    # fping output 2> /dev/null suppresses the " ICMP Host Unreachable from 192.168.178.xy for ICMP Echo sent to 192.168.178.yz"
-    if [ -f $PINGLIST ]; then
-        FPINGRESULT="$(fping -a -r1 < "$PINGLIST" 2>/dev/null)"
-    else
-        _log "INFO: PINGLIST: $PINGLIST does not exist. Skip fpinging hosts"
-    fi
-    for ACTIVEPC in $FPINGRESULT; do
-        _log "INFO: Found IP $ACTIVEPC as active host."
-        let PINGRANGECNT++;
-    done
-
-    if [ -z "$FPINGRESULT" ]; then
-        _log "INFO: No active IPs in the specified IP-Range found"
+    if [[ "${pinglist_array[0]}" == "${empty}" ]]; then
+        _log "INFO: _ping_range(): No IP addresses specified for: ${net_iface}"
+        return 0
     fi
 
-    return ${PINGRANGECNT};
+    _log "INFO: _ping_range(): Retrieve list of active IPs for: ${net_iface}"
+    local fping_result
+    fping_result="$(fping --iface="${net_iface}" --quiet --alive --retry=1 \
+                        "${pinglist_array[@]}" || true)"
+
+    if [ -z "${fping_result}" ]; then
+        _log "INFO: _ping_range(): No active IPs found in the specified Range"
+        return 0
+    fi
+
+    while read -r active_ip; do
+        _log "INFO: _ping_range(): ${active_ip} is active"
+    done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
+
+    return "$(wc -l <<< "${fping_result}")"
 }
 
 
@@ -159,44 +164,37 @@ _ping_range()
 #
 _shutdown()
 {
-    # Goodbye and thanks for all the fish!!
     # We've had no responses for the required number of consecutive scans
     # defined in CYCLES shutdown & power off.
 
-    if [ -z "$SHUTDOWNCOMMAND" ]; then
-        _log "INFO: No shutdown command set: setting it to 'shutdown -h now'"
+    if [ -z "${SHUTDOWNCOMMAND}" ]; then
         SHUTDOWNCOMMAND="shutdown -h now"
+        _log "INFO: No shutdown command set: setting it to '${SHUTDOWNCOMMAND}'"
     fi
 
     # When FAKE-Mode is on:
-    [[ "$FAKE" = "true" ]] && {
-        logger -s -t "$USER - : autoshutdown [$$]" "INFO: Fake-Shutdown issued: '$SHUTDOWNCOMMAND' - Command is not executed because of Fake-Mode"
-        # normal log-entry
-        _log "INFO: Fake-Shutdown issued: '$SHUTDOWNCOMMAND'"
-        _log "INFO: The autoshutdown-script will end here."
-        _log "INFO:   "
+    [ "$FAKE" == "true" ] && {
+        _log "INFO: Fake-shutdown issued: '${SHUTDOWNCOMMAND}' - Command is not executed because of Fake-Mode" force
+        _log "INFO: autoshutdowe will end here."
+        _log "INFO:"
         exit 0
     }
 
     # Without Fake-Mode:
-    # This logs to normal syslog - "autoshutdown [" (the space) is necessary, because then all other logs can be filterd in rsyslog.conf with
-    # :msg, contains, "autoshutdown[" /var/log/autoshutdown.log
-    # & ~
-    logger -s -t "$USER - : autoshutdown [$$]" "INFO: Shutdown issued: '$SHUTDOWNCOMMAND'"
-    # normal log-entry
-    _log "INFO: Shutdown issued: '$SHUTDOWNCOMMAND'"
-    _log "INFO:   "
-    _log "INFO:   "
+    _log "INFO: Shutdown issued: '${SHUTDOWNCOMMAND}'" force
+    _log "INFO:"
 
-    # write everything to disk/stick and shutdown, hibernate, $whatever is configured
-    if sync; then eval "$SHUTDOWNCOMMAND" && exit 0; fi
-    # sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script and give the right log-message
-    # if we exit here immediately, there are errors in the log
+    # Write everything to disk/stick and shutdown, hibernate, $whatever is
+    # configured.
+    if sync; then eval "${SHUTDOWNCOMMAND}" && exit 0; fi
+    # Sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script
+    # and give the right log-message. If we exit here immediately, there are
+    # errors in the log.
     sleep 5m
-    # we need this just for debugging - the system should be shutdown here
-    logger -s -t "$USER - : autoshutdown [$$]" "INFO: 5 minutes are over"
+    # We need this just for debugging - the system should be shutdown here.
+    _log "INFO: 5 minutes are over" force
     sleep 5m
-    logger -s -t "$USER - : autoshutdown [$$]" "INFO: another 5 minutes are over"
+    _log "INFO: Another 5 minutes are over" force
     exit 0
 }
 
@@ -248,7 +246,7 @@ _ident_num_proc()
             ;;
 
         *)
-            _log "ERROR: _ident_num_proc() This should not happen. Exit 42"
+            _log "ERR: _ident_num_proc() This should not happen. Exit 42"
             ;;
     esac
 
@@ -350,78 +348,75 @@ _check_processes()
 #
 _check_plugin()
 {
-    FOUNDVALUE_checkplugin=0
-    RVALUE=0
+    local foundvalue=0
+    local rvalue=0
 
-    ASD_pluginNR=0
-    for ASD_plugin in /etc/autoshutdown.d/*; do
-        let ASD_pluginNR++
+    for asd_plugin in /etc/autoshutdown.d/*; do
 
-        PLUGIN_name[$ASD_pluginNR]="${ASD_plugin##*/}"
-        PLUGIN_folder[$ASD_pluginNR]="$(egrep 'folder=' $ASD_plugin | sed 's/folder=//g; s/"//g')"
-        PLUGIN_file[$ASD_pluginNR]="$(egrep 'file=' $ASD_plugin | sed 's/file=//g; s/"//g')"
-        PLUGIN_content[$ASD_pluginNR]="$(egrep 'content=' $ASD_plugin | sed 's/content=//g; s/"//g')"
+        local plugin_name;
+        plugin_name="${asd_plugin##*/}"
+        local plugin_folder;
+        plugin_folder="$(awk -F= '/folder=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
+        local plugin_file;
+        plugin_file="$(awk -F= '/file=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
+        local plugin_content;
+        plugin_content="$(awk -F= '/content=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
 
-        if $DEBUG; then
+        if "${DEBUG}"; then
             _log "DEBUG: -----------------------------------------------------"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: ASD_PLUGIN-file: $ASD_plugin"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_name[$ASD_pluginNR]: ${PLUGIN_name[$ASD_pluginNR]}"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_folder[$ASD_pluginNR]: ${PLUGIN_folder[$ASD_pluginNR]}"
-            _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_file[$ASD_pluginNR]: ${PLUGIN_file[$ASD_pluginNR]}"
-            if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
-                _log "DEBUG: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]}: PLUGIN_content[$ASD_pluginNR]: ${PLUGIN_content[$ASD_pluginNR]}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: asd_plugin: ${asd_plugin}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_name: ${plugin_name}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_folder: ${plugin_folder}"
+            _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_file: ${plugin_file}"
+            if [ -n "${plugin_content}" ]; then
+                _log "DEBUG: _check_plugin(): Plugin: ${plugin_name}: plugin_content: ${plugin_content}"
             fi
         fi
 
         # When file exists (matches regex), no shutdown
-        if [ "$(find ${PLUGIN_folder[$ASD_pluginNR]} -regextype posix-egrep -regex '.*'${PLUGIN_file[$ASD_pluginNR]} 2> /dev/null | wc -l)" -gt 0 ]; then
-
-            # Check, if PLUGIN_content for the plugin is defined
-            if [ ! -z "${PLUGIN_content[$ASD_pluginNR]}" ]; then
-
-                # content found
-                if [ $(egrep -c "${PLUGIN_content[$ASD_pluginNR]}" "${PLUGIN_folder[$ASD_pluginNR]}/${PLUGIN_file[$ASD_pluginNR]}") -gt 0 ]; then
-                    _log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content found (${PLUGIN_content[$ASD_pluginNR]}) - no shutdown"
-                    let FOUNDVALUE_checkplugin++
-                else
-                    # content not found
-                    _log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> content not found (${PLUGIN_content[$ASD_pluginNR]})"
-                fi
-
-            # content not defined and file found
-            else
-                _log "INFO: _check_plugin(): PlugIn: ${PLUGIN_name[$ASD_pluginNR]} -> File found - no shutdown"
-                let FOUNDVALUE_checkplugin++
-            fi
-        else
-            # If file doesn't exist -> shutdown
-            _log "INFO: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} - File not found"
+        if [ -z "$(find "${plugin_folder}" -regextype posix-egrep -regex ".*${plugin_file}" 2>/dev/null)" ]; then
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: File not found"
+            continue
         fi
 
-        if $DEBUG ; then _log "DEBUG: _check_plugin(): ${PLUGIN_name[$ASD_pluginNR]} FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
-
+        # Check, if plugin_content for the plugin is defined
+        if [ -z "${plugin_content}" ]; then
+            # Content not defined and file found
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: File found - no shutdown"
+            (( foundvalue+=1 ))
+        elif grep -q "${plugin_content}" "${plugin_folder}/${plugin_file}"; then
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: Content found (${plugin_content}) - no shutdown"
+            (( foundvalue+=1 ))
+        else
+            # Content not found
+            _log "INFO: _check_plugin(): Plugin: ${plugin_name}: Content not found (${plugin_content})"
+        fi
     done
 
-    if $DEBUG ; then _log "DEBUG: _check_plugin(): All PlugIns processed - FOUNDVALUE_checkplugin: $FOUNDVALUE_checkplugin" ; fi
-
-    if [ $FOUNDVALUE_checkplugin -gt 0 ]; then
-        let RVALUE++
+    if "${DEBUG}"; then
+        _log "DEBUG: -----------------------------------------------------"
+        _log "DEBUG: _check_plugin(): All plugins processed: Active plugins found: ${foundvalue}" ;
     fi
-    if $DEBUG ; then _log "DEBUG: _check_plugin(): after all plugin-checks: RVALUE: $RVALUE" ; fi
 
-    return ${RVALUE}
+    if [ "${foundvalue}" -gt 0 ]; then
+        rvalue=1
+    fi
+
+    if "${DEBUG}"; then _log "DEBUG: _check_plugin(): After all plugin-checks: rvalue: ${rvalue}"; fi
+
+    return ${rvalue}
 }
 
 
 ###############################################################################
 #
 #   name          : _check_loadaverage
-#   parameter     : none
+#   parameter     : LOADAVERAGE: integer load average
 #   global return : none
-#   return        : 1 : If loadaverage is higher (greater) than $LOADAVERAGE, no shutdown
-#                 : 0 : If loadaverage is lower (less) than $LOADAVERAGE
+#   return        : 1 : If loadaverage is higher (greater) than LOADAVERAGE, no shutdown
+#                 : 0 : If loadaverage is lower (less) than LOADAVERAGE
 #
-# This script checks if the loadaverage is higher than $LOADAVERAGE over the last 1 minute
+# This script checks if the loadaverage is higher than LOADAVERAGE over the last 1 minute
 # if yes -> no shutdown, next cycle
 # if no  -> next check and shutdown if all cycles failed
 #
@@ -431,36 +426,36 @@ _check_loadaverage()
     # _log "DEBUG: _check_loadaverage() disabled for testing"
     # return 0
 
-    local RVALUE=0
+    local rvalue=0
     # Get the load averages.
-    local CURRENT_LOAD_AVERAGE_LINE
-    CURRENT_LOAD_AVERAGE_LINE="$(LC_ALL=C cat "/proc/loadavg")"
+    local current_load_average_line
+    current_load_average_line="$(LC_ALL=C cat "/proc/loadavg")"
     # Get load average in decimal notation.
-    local CURRENT_LOAD_AVERAGE_DECIMAL
-    CURRENT_LOAD_AVERAGE_DECIMAL="$(awk '{print $1}' <<< "${CURRENT_LOAD_AVERAGE_LINE}")"
+    local current_load_average_decimal
+    current_load_average_decimal="$(awk '{print $1}' <<< "${current_load_average_line}")"
     # Convert to integer value by removing decimal point and assuming two fixed decimal places.
-    local CURRENT_LOAD_AVERAGE
-    CURRENT_LOAD_AVERAGE="$(sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${CURRENT_LOAD_AVERAGE_DECIMAL}")"
+    local current_load_average
+    current_load_average="$(sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${current_load_average_decimal}")"
 
     if "${DEBUG}"; then
         _log "DEBUG: -----------------------------------------------------"
-        _log "DEBUG: _check_loadaverage(): Output from '/proc/loadavg': ${CURRENT_LOAD_AVERAGE_LINE}"
-        _log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE_DECIMAL: ${CURRENT_LOAD_AVERAGE_DECIMAL}"
-        _log "DEBUG: _check_loadaverage(): CURRENT_LOAD_AVERAGE: ${CURRENT_LOAD_AVERAGE}"
+        _log "DEBUG: _check_loadaverage(): Output from '/proc/loadavg': ${current_load_average_line}"
+        _log "DEBUG: _check_loadaverage(): current_load_average_decimal: ${current_load_average_decimal}"
+        _log "DEBUG: _check_loadaverage(): current_load_average: ${current_load_average}"
     fi
 
-    local MSG="INFO: _check_loadaverage(): Load average (${CURRENT_LOAD_AVERAGE_DECIMAL} -> ${CURRENT_LOAD_AVERAGE}) is"
-    if [ "${CURRENT_LOAD_AVERAGE}" -gt "${LOADAVERAGE}" ]; then
-        MSG+=" higher than target (${LOADAVERAGE}) - no shutdown"
-        RVALUE=1
+    local msg="INFO: _check_loadaverage(): Load average (${current_load_average_decimal} -> ${current_load_average}) is"
+    if [ "${current_load_average}" -gt "${LOADAVERAGE}" ]; then
+        msg+=" higher than target (${LOADAVERAGE}) - no shutdown"
+        rvalue=1
     else
-        MSG+=" lower than target (${LOADAVERAGE})"
+        msg+=" lower than target (${LOADAVERAGE})"
     fi
-    _log "${MSG}"
+    _log "${msg}"
 
-    if "${DEBUG}"; then _log "DEBUG: _check_loadaverage(): RVALUE: ${RVALUE}"; fi
+    if "${DEBUG}"; then _log "DEBUG: _check_loadaverage(): rvalue: ${rvalue}"; fi
 
-    return "${RVALUE}"
+    return "${rvalue}"
 }
 
 
@@ -575,7 +570,7 @@ _check_net_status()
 #
 _check_docker_status()
 {
-    command -v docker &>- || return 0
+    command -v docker &>/dev/null || return 0
     local active=0
     for container in $(docker ps --format "{{ .Names }}"); do
         local details; read -ra details <<< "$(docker inspect --format \
@@ -629,7 +624,7 @@ _check_docker_status()
 #   name          : _check_ul_dl_rate
 #   parameter     : Array-# of NIC
 #   global return : none
-#   return        : 0 : I no (not enough) network activity has been found, ready for shutdown
+#   return        : 0 : If no (not enough) network activity has been found, ready for shutdown
 #                 : 1 : If enough network activity has been found, no shutdown
 #
 # Checks for activity on given NIC. It compares the RX and TX bytes
@@ -721,7 +716,7 @@ _check_ul_dl_rate()
         return 0
     fi # > # if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
 
-    _log "ERROR: _check_ul_dl_rate: This should not happen - Exit 42"
+    _log "ERR: _check_ul_dl_rate: This should not happen - Exit 42"
     exit 42
 }
 
@@ -832,18 +827,21 @@ _check_hddio()
     # _log "DEBUG: _check_processes() disabled for testing"
     # return 0
 
-    local RVALUE=0
+    local rvalue=0
 
     if "${DEBUG}"; then
         _log "DEBUG: _check_hddio(): HDDIO_RATE: ${HDDIO_RATE} kB/s"
     fi
 
-    while read -r OMV_HDD OMV_ASD_HDD_IN OMV_ASD_HDD_OUT; do
+    local epoch_sec="${EPOCHSECONDS}"
+    local last_checked_sec=$((epoch_sec - ${P_HDDIO_DEVS["epoch_sec"]:-${epoch_sec}}))
+
+    while read -r omv_hdd omv_asd_hdd_in omv_asd_hdd_out; do
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): ========== Device: ${OMV_HDD} =========="
+            _log "DEBUG: _check_hddio(): ========== Device: ${omv_hdd} =========="
         fi
 
-        if ! mount -l | grep -q "${OMV_HDD}"; then
+        if ! mount -l | grep -q "${omv_hdd}"; then
             if "${DEBUG}"; then
                 _log "DEBUG: _check_hddio(): Skipping as no mount point"
             fi
@@ -851,18 +849,19 @@ _check_hddio()
         fi
 
         if "${DEBUG}"; then
-            blkid -s LABEL -s UUID | grep "${OMV_HDD}" | while read -r line; do
+            blkid -s LABEL -s UUID | grep "${omv_hdd}" | while read -r line; do
                 _log "DEBUG: _check_hddio(): ${line}"
             done
-            _log "DEBUG: _check_hddio(): actual: kB_read: ${OMV_ASD_HDD_IN}, kB_wrtn: ${OMV_ASD_HDD_OUT}"
+            _log "DEBUG: _check_hddio(): actual: kB_read: ${omv_asd_hdd_in}, kB_wrtn: ${omv_asd_hdd_out}"
         fi
 
-        if [[ "${RVALUE}" -eq 1 ||
-              -z "${p_HDDIO_DEVS["${OMV_HDD}_r"]:-}" ||
-              -z "${p_HDDIO_DEVS["${OMV_HDD}_w"]:-}" ]]; then
+        if [[ "${rvalue}" -eq 1 || "${last_checked_sec}" -eq 0 ||
+              -z "${P_HDDIO_DEVS["epoch_sec"]:-}" ||
+              -z "${P_HDDIO_DEVS["${omv_hdd}_r"]:-}" ||
+              -z "${P_HDDIO_DEVS["${omv_hdd}_w"]:-}" ]]; then
             # Store current value.
-            p_HDDIO_DEVS["${OMV_HDD}_r"]="${OMV_ASD_HDD_IN}"
-            p_HDDIO_DEVS["${OMV_HDD}_w"]="${OMV_ASD_HDD_OUT}"
+            P_HDDIO_DEVS["${omv_hdd}_r"]="${omv_asd_hdd_in}"
+            P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
             if "${DEBUG}"; then
                 _log "DEBUG: _check_hddio(): Store new read/write value for device"
@@ -871,61 +870,64 @@ _check_hddio()
         fi
 
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): previous: kB_read: ${p_HDDIO_DEVS["${OMV_HDD}_r"]}, kB_wrtn: ${p_HDDIO_DEVS["${OMV_HDD}_w"]}"
+            _log "DEBUG: _check_hddio(): previous: kB_read: ${P_HDDIO_DEVS["${omv_hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${omv_hdd}_w"]}"
         fi
 
-        # Calculate threshold limit (defined kB/s multiplied with $SLEEP) to get the total value of kB over the $SLEEP-time
-        local HDDIO_INCREASE="$(("${HDDIO_RATE}" * "${SLEEP}"))"
+        # Calculate threshold limit (defined kB/s multiplied with second since
+        # last checked) to get the total value of kB over the 'last checked
+        # time' - 'time now'
+        local hddio_increase=$((HDDIO_RATE * last_checked_sec))
 
         # Calculate the total value
-        local t_HDDIO_READ="$(("${p_HDDIO_DEVS["${OMV_HDD}_r"]}" + "${HDDIO_INCREASE}"))"
-        local t_HDDIO_WRITE="$(("${p_HDDIO_DEVS["${OMV_HDD}_w"]}" + "${HDDIO_INCREASE}"))"
+        local t_hddio_read=$((P_HDDIO_DEVS["${omv_hdd}_r"] + hddio_increase))
+        local t_hddio_write=$((P_HDDIO_DEVS["${omv_hdd}_w"] + hddio_increase))
 
         # Calculate difference between the last and the actual value
-        local diff_HDDIO_READ="$(("${OMV_ASD_HDD_IN}" - "${p_HDDIO_DEVS["${OMV_HDD}_r"]}"))"
-        local diff_HDDIO_WRITE="$(("$OMV_ASD_HDD_OUT" - "${p_HDDIO_DEVS["${OMV_HDD}_w"]}"))"
+        local diff_hddio_read=$((omv_asd_hdd_in - P_HDDIO_DEVS["${omv_hdd}_r"]))
+        local diff_hddio_write=$((omv_asd_hdd_out - P_HDDIO_DEVS["${omv_hdd}_w"]))
 
         # Calculate hddio-rate in kB/s - format xx.x
-        local LAST_HDDIO_READ_RATE;
-        LAST_HDDIO_READ_RATE="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_HDDIO_READ} ${SLEEP}")"
-        local LAST_HDDIO_WRITE_RATE;
-        LAST_HDDIO_WRITE_RATE="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_HDDIO_WRITE} ${SLEEP}")"
+        local last_hddio_read_rate;
+        last_hddio_read_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_read} ${last_checked_sec}")"
+        local last_hddio_write_rate;
+        last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${last_checked_sec}")"
 
         # If hddio bytes have not increased over given value
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): HDDIO_INCREASE: ${HDDIO_INCREASE}"
-            _log "DEBUG: _check_hddio(): t_HDDIO_READ: ${t_HDDIO_READ}"
-            _log "DEBUG: _check_hddio(): diff_HDDIO_READ: ${diff_HDDIO_READ}"
-            _log "DEBUG: _check_hddio(): t_HDDIO_WRITE: ${t_HDDIO_WRITE}"
-            _log "DEBUG: _check_hddio(): diff_HDDIO_WRITE: ${diff_HDDIO_WRITE}"
-            _log "DEBUG: _check_hddio(): check: 'OMV_ASD_HDD_IN: ${OMV_ASD_HDD_IN}' <= 't_HDDIO_READ: ${t_HDDIO_READ}'"
-            _log "DEBUG: _check_hddio(): check: 'OMV_ASD_HDD_OUT: ${OMV_ASD_HDD_OUT}' <= 't_HDDIO_WRITE: ${t_HDDIO_WRITE}'"
+            _log "DEBUG: _check_hddio(): hddio_increase: ${hddio_increase}"
+            _log "DEBUG: _check_hddio(): t_hddio_read: ${t_hddio_read}"
+            _log "DEBUG: _check_hddio(): diff_hddio_read: ${diff_hddio_read}"
+            _log "DEBUG: _check_hddio(): t_hddio_write: ${t_hddio_write}"
+            _log "DEBUG: _check_hddio(): diff_hddio_write: ${diff_hddio_write}"
+            _log "DEBUG: _check_hddio(): check: 'omv_asd_hdd_in: ${omv_asd_hdd_in}' <= 't_hddio_read: ${t_hddio_read}'"
+            _log "DEBUG: _check_hddio(): check: 'omv_asd_hdd_out: ${omv_asd_hdd_out}' <= 't_hddio_write: ${t_hddio_write}'"
         fi
 
         # Store current value.
-        p_HDDIO_DEVS["${OMV_HDD}_r"]="${OMV_ASD_HDD_IN}"
-        p_HDDIO_DEVS["${OMV_HDD}_w"]="${OMV_ASD_HDD_OUT}"
+        P_HDDIO_DEVS["${omv_hdd}_r"]="${omv_asd_hdd_in}"
+        P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
-        local MSG="INFO: _check_hddio(): Device: ${OMV_HDD} (last ${SLEEP}s) "
-              MSG+="kB_aread/s: ${LAST_HDDIO_READ_RATE}, "
-              MSG+="kB_wrtn/s: ${LAST_HDDIO_WRITE_RATE}"
+        local msg="INFO: _check_hddio(): Device: ${omv_hdd} (last ${last_checked_sec}s) "
+              msg+="kB_aread/s: ${last_hddio_read_rate}, "
+              msg+="kB_wrtn/s: ${last_hddio_write_rate}"
 
-        if [[ "${OMV_ASD_HDD_IN}" -gt "${t_HDDIO_READ}" ||
-              "${OMV_ASD_HDD_OUT}" -gt "${t_HDDIO_WRITE}" ]]; then
-            _log "${MSG} is over: ${HDDIO_RATE} kB/s -> no shutdown"
-            RVALUE=1
+        if [[ "${omv_asd_hdd_in}" -gt "${t_hddio_read}" ||
+              "${omv_asd_hdd_out}" -gt "${t_hddio_write}" ]]; then
+            _log "${msg} is over: ${HDDIO_RATE} kB/s -> no shutdown"
+            rvalue=1
         else
-            _log "${MSG} is under: ${HDDIO_RATE} kB/s -> next HDD"
+            _log "${msg} is under: ${HDDIO_RATE} kB/s -> next HDD"
         fi
 
-    done < <(iostat -kdyNz | tail -n +4 | awk '!/^$/{print $1 " " $5 " " $6}')
+    done < <(iostat -kdyNz | awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
 
-    if "${DEBUG}"; then _log "DEBUG: _check_hddio(): RVALUE: ${RVALUE}"; fi
+    P_HDDIO_DEVS["epoch_sec"]="${epoch_sec}"
 
-    # No HDD-IO is over the defined value -> shutdown
+    if "${DEBUG}"; then _log "DEBUG: _check_hddio(): rvalue: ${rvalue}"; fi
+
     _log "INFO: _check_hddio(): All checks complete"
 
-    return "${RVALUE}"
+    return "${rvalue}"
 }
 
 
@@ -942,46 +944,41 @@ _check_config()
     _log "INFO: Checking config"
 
     [[ "$ENABLE" = "true" || "$ENABLE" = "false" ]] || {
-        _log "WARN: ENABLE not set properly. It has to be 'true' or 'false'"
-        _log "WARN: Set ENABLE to false -> exiting here ..."
+        _log "WARNING: ENABLE not set properly. It has to be 'true' or 'false'"
+        _log "WARNING: Set ENABLE to false -> exiting here ..."
         exit 0; }
 
-    if [ "$FAKE" = "true" ]; then
-        VERBOSE="true"; DEBUG="true"
-        _log "INFO: Fake-Mode in on"
-    else
-        [[ "$FAKE" = "true" || "$FAKE" = "false" || "$FAKE" = "" ]] || {
-            _log "WARN: FAKE not set properly. It has to be 'true', 'false' or empty."
-            _log "WARN: Set FAKE to true -> Testmode with VERBOSE on"
-            FAKE="true"; VERBOSE="true"; DEBUG="TRUE"; }
-    fi
+    [[ "$FAKE" = "true" || "$FAKE" = "false" ]] || {
+        _log "WARNING: FAKE not set properly. It has to be 'true' or 'false'"
+        _log "WARNING: Set FAKE to true -> Testmode with VERBOSE on"
+        FAKE="true"; }
 
     if [ ! -z "$PLUGINCHECK" ]; then
         [[ "$PLUGINCHECK" = "true" || "$PLUGINCHECK" = "false" ]] || {
-            _log "WARN: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
-            _log "WARN: Set PLUGINCHECK to false"
+            _log "WARNING: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARNING: Set PLUGINCHECK to false"
             PLUGINCHECK="false"; }
     fi
 
     # Flag: 1 - 999 (cycles)
     [[ "$CYCLES" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
-        _log "WARN: Invalid parameter format: Flag"
-        _log "WARN: You set it to '$CYCLES', which is not a correct syntax. Only '1' - '999' is allowed."
-        _log "WARN: Setting CYCLES to 5"
+        _log "WARNING: Invalid parameter format: Flag"
+        _log "WARNING: You set it to '$CYCLES', which is not a correct syntax. Only '1' - '999' is allowed."
+        _log "WARNING: Setting CYCLES to 5"
         CYCLES="5"; }
 
     # CheckClockActive together with UPHOURS
     [[ "$CHECKCLOCKACTIVE" = "true" || "$CHECKCLOCKACTIVE" = "false" ]] || {
-        _log "WARN: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
-        _log "WARN: Set CHECKCLOCKACTIVE to false"
+        _log "WARNING: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: Set CHECKCLOCKACTIVE to false"
         CHECKCLOCKACTIVE="false"; }
 
     # Check UpHours only if CHECKCLOCKACTIVE is "true"
     if [ "$CHECKCLOCKACTIVE" = "true" ]; then
         [[ "$UPHOURS" =~ ^(([0-1]?[0-9]|[2][0-3])\.{2}([0-1]?[0-9]|[2][0-3]))$ ]] || {
-            _log "WARN: Invalid parameter list format: UPHOURS [hour1..hour2]"
-            _log "WARN: You set it to '$UPHOURS', which is not a correct syntax. Maybe it's empty?"
-            _log "WARN: Setting UPHOURS to 6..20"
+            _log "WARNING: Invalid parameter list format: UPHOURS [hour1..hour2]"
+            _log "WARNING: You set it to '$UPHOURS', which is not a correct syntax. Maybe it's empty?"
+            _log "WARNING: Setting UPHOURS to 6..20"
             UPHOURS="6..20"; }
     fi
 
@@ -995,9 +992,9 @@ _check_config()
         LOADPROCNAMES="smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd"
     else
         [[ "$LOADPROCNAMES" =~ $REGEX ]] || {
-            _log "WARN: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
-            _log "WARN: You set it to '$LOADPROCNAMES', which is not a correct syntax."
-            _log "WARN: exiting ..."
+            _log "WARNING: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
+            _log "WARNING: You set it to '$LOADPROCNAMES', which is not a correct syntax."
+            _log "WARNING: exiting ..."
             exit 1; }
     fi
 
@@ -1011,48 +1008,56 @@ _check_config()
         TEMPPROCNAMES="in.tftpd"
     else
         [[ "$TEMPPROCNAMES" =~ $REGEX ]] || {
-            _log "WARN: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
-            _log "WARN: You set it to '$TEMPPROCNAMES', which is not a correct syntax."
-            _log "WARN: exiting ..."
+            _log "WARNING: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
+            _log "WARNING: You set it to '$TEMPPROCNAMES', which is not a correct syntax."
+            _log "WARNING: exiting ..."
             exit 1; }
     fi
 
     # Port-Numbers with at least 2 digits
     [[ "$NSOCKETNUMBERS" =~ ^([0-9]{2,5})+(,[0-9]{2,5})*$ ]] || {
-            _log "WARN: Invalid parameter list format: NSOCKETNUMBERS [nsocket1,nsocket2,nsocket3,...]"
-            _log "WARN: You set it to '$NSOCKETNUMBERS', which is not a correct syntax. Maybe it's empty? Only  Port-Numbers with at least 2 digits are allowed."
-            _log "WARN: Setting NSOCKETNUMBERS to 21,22 (FTP and SSH)"
+            _log "WARNING: Invalid parameter list format: NSOCKETNUMBERS [nsocket1,nsocket2,nsocket3,...]"
+            _log "WARNING: You set it to '$NSOCKETNUMBERS', which is not a correct syntax. Maybe it's empty? Only  Port-Numbers with at least 2 digits are allowed."
+            _log "WARNING: Setting NSOCKETNUMBERS to 21,22 (FTP and SSH)"
             NSOCKETNUMBERS="22"; }
 
-    # Pinglist
-    IPCHECK=true
-    if [ -z $PINGLIST ]; then
-        if [ "$RANGE" = "-" ]; then
-                _log "INFO: RANGE is set to '-' -> no IP-Check"
-                IPCHECK=false
-        else
-            [[ "$RANGE" =~ ^([1-9]{1}[0-9]{0,2})?([1-9]{1}[0-9]{0,2}\.{2}[1-9]{1}[0-9]{0,2})?(,[1-9]{1}[0-9]{0,2})*((,[1-9]{1}[0-9]{0,2})\.{2}[1-9]{1}[0-9]{0,2})*$ ]] || {
-                    _log "WARN: Invalid parameter list format: RANGE [v..v+n,w,x+m..x,y,z..z+o]"
-                    _log "WARN: You set it to '$RANGE', which is not a correct syntax."
-                    _log "WARN: Setting RANGE to 2..254"
-                    RANGE="2..254"; }
-        fi
-    else
-        if [ -f "$PINGLIST" ]; then
-            _log "INFO: PINGLIST is set in the conf, reading IPs from '$PINGLIST'"
-            USEOWNPINGLIST="true"
-        else
-            _log "WARN: PINGLIST is set in the conf, but the file isn't there"
-            _log "WARN: Setting RANGE to 2..254"
-            RANGE="2..254"
-        fi
+    # IPCHECK
+    [[ "${IPCHECK}" == "true" || "${IPCHECK}" == "false" ]] || {
+        _log "WARNING: IPCHECK not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: Set IPCHECK to: false"
+        IPCHECK="false"; }
+
+    # PINGLIST/RANGE
+    if [[ -n "${PINGLIST:-}" && -f "${PINGLIST}" ]]; then
+        _log "INFO: PINGLIST is set in the config, reading IPs from: '${PINGLIST}'"
+        _log "INFO: Overidding IPCHECK to: 'true'"
+        unset RANGE
+        IPCHECK="ture"
+    elif [[ -n "${PINGLIST:-}" && ! -f "${PINGLIST}" ]]; then
+        _log "WARNING: PINGLIST is set in the conf, but file not found: '${PINGLIST}'"
+        _log "WARNING: Set IPCHECK to: 'false'"
+        IPCHECK="false"
+    elif [ "${IPCHECK}" == "false" ]; then
+        _log "WARNING: IPCHECK is set to false"
+        _log "WARNING: Ignoring RANGE"
+    elif [[ -z "${RANGE:=}" || "${RANGE}" == "-" ]]; then
+        _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
+        IPCHECK="false"
+    elif [[ -n "${RANGE:-}" && ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})?(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})?(,(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2}))*$ ]]; then
+        _log "WARNING: Invalid parameter list format: ${RANGE}"
+        _log "WARNING: The 'RANGE' should be comma delimited list of the following:"
+        _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+        _log "WARNING: Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+        _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+        _log "WARNING: Setting RANGE to: '2..254'"
+        RANGE="2..254"
     fi
 
     # $HDDIOCHECK" = "true"
     if [ ! -z "$HDDIOCHECK" ]; then
         [[ "$HDDIOCHECK" = "true" || "$HDDIOCHECK" = "false" ]] || {
-            _log "WARN: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
-            _log "WARN: Set HDDIOCHECK to false"
+            _log "WARNING: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARNING: Set HDDIOCHECK to false"
             HDDIOCHECK="false"; }
     fi
 
@@ -1060,41 +1065,41 @@ _check_config()
     if [ "$HDDIOCHECK" = "true" ]; then
         # HDDIO_RATE (max 6 digits -> 1 - 999999 kB/s)
         [[ "$HDDIO_RATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
-            _log "WARN: Invalid parameter format: HDDIO_RATE"
-            _log "WARN: You set it to '$HDDIO_RATE', which is not a correct syntax. Maybe it's empty?"
-            _log "WARN: Set HDDIO_RATE to 500"
+            _log "WARNING: Invalid parameter format: HDDIO_RATE"
+            _log "WARNING: You set it to '$HDDIO_RATE', which is not a correct syntax. Maybe it's empty?"
+            _log "WARNING: Set HDDIO_RATE to 500"
             HDDIO_RATE=500; }
     else
-        _log "WARN: HDDIOCHECK is set to false"
-        _log "WARN: Ignoring HDDIO_RATE"
+        _log "WARNING: HDDIOCHECK is set to false"
+        _log "WARNING: Ignoring HDDIO_RATE"
         HDDIOCHECK="false"
     fi
 
     # Sleep: 1 - 9999
     [[ "$SLEEP" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
-        _log "WARN: Invalid parameter format: SLEEP (sec)"
-        _log "WARN: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
-        _log "WARN: Setting SLEEP to 180 sec"
+        _log "WARNING: Invalid parameter format: SLEEP (sec)"
+        _log "WARNING: You set it to '$SLEEP', which is not a correct syntax.  Only '1' - '9999' is allowed. Maybe it's empty?"
+        _log "WARNING: Setting SLEEP to 180 sec"
         SLEEP=180; }
 
     # $ULDLCHECK" = "true"
     if [ ! -z "$ULDLCHECK" ]; then
         [[ "$ULDLCHECK" = "true" || "$ULDLCHECK" = "false" ]] || {
-            _log "WARN: ULDLCHECK not set properly. It has to be 'true' or 'false'."
-            _log "WARN: Set ULDLCHECK to false"
+            _log "WARNING: ULDLCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARNING: Set ULDLCHECK to false"
             ULDLCHECK="false"; }
     fi
 
     # ULDLRATE (max 6 digits -> 1 - 999999 kB/s)
     if [ "$ULDLCHECK" = "true" ]; then
         [[ "$ULDLRATE" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
-            _log "WARN: Invalid parameter format: ULDLRATE"
-            _log "WARN: You set it to '$ULDLRATE', which is not a correct syntax. Maybe it's empty?"
-            _log "WARN: Set ULDLRATE to 50"
+            _log "WARNING: Invalid parameter format: ULDLRATE"
+            _log "WARNING: You set it to '$ULDLRATE', which is not a correct syntax. Maybe it's empty?"
+            _log "WARNING: Set ULDLRATE to 50"
             ULDLRATE=50; }
     else
-        _log "WARN: ULDLCHECK is set to false"
-        _log "WARN: Ignoring ULDLRATE"
+        _log "WARNING: ULDLCHECK is set to false"
+        _log "WARNING: Ignoring ULDLRATE"
     fi
 
     # SHUTDOWNCOMMAND - check acpi power states with pm-is-supported
@@ -1111,41 +1116,42 @@ _check_config()
 
         # check, if pm-suspend is supported
         if [ "$SHUTDOWNCOMMAND" = "pm-suspend" -a ! "$PM_SUSPEND" = "true" ]; then
-            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
-            _log "WARN: Setting it to 'shutdown -h now'"
+            _log "WARNING: You set 'SHUTDOWNCOMMAND=\"pm-suspend\", but your PC doesn't support this!"
+            _log "WARNING: Setting it to 'shutdown -h now'"
             SHUTDOWNCOMMAND="shutdown -h now"
         fi
         # check, if pm-hibernate is supported
         if [ "$SHUTDOWNCOMMAND" = "pm-hibernate" -a ! "$PM_HIBERNATE" = "true" ]; then
-            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
-            _log "WARN: Setting it to 'shutdown -h now'"
+            _log "WARNING: You set 'SHUTDOWNCOMMAND=\"pm-hibernate\", but your PC doesn't support this!"
+            _log "WARNING: Setting it to 'shutdown -h now'"
             SHUTDOWNCOMMAND="shutdown -h now"
         fi
         # check, if pm-suspend-hybrid is supported
         if [ "$SHUTDOWNCOMMAND" = "pm-suspend-hybrid" -a ! "$PM_SUSPEND_HYBRID" = "true" ]; then
-            _log "WARN: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
-            _log "WARN: Setting it to 'shutdown -h now'"
+            _log "WARNING: You set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\", but your PC doesn't support this!"
+            _log "WARNING: Setting it to 'shutdown -h now'"
             SHUTDOWNCOMMAND="shutdown -h now"
         fi
     fi
 
     # LOADAVERAGECHECK = "true"
     if [ ! -z "$LOADAVERAGECHECK" ]; then
-        [[ "$LOADAVERAGECHECK" = "true" || "$LOADAVERAGECHECK" = "false" ]] || { _log "WARN: LOADAVERAGECHECK not set properly. It has to be 'true' or 'false'."
-                _log "WARN: Set LOADAVERAGECHECK to false"
-                LOADAVERAGECHECK="false"; }
+        [[ "$LOADAVERAGECHECK" = "true" || "$LOADAVERAGECHECK" = "false" ]] || {
+            _log "WARNING: LOADAVERAGECHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARNING: Set LOADAVERAGECHECK to false"
+            LOADAVERAGECHECK="false"; }
     fi
 
     # LOADAVERAGE (max 3 digits)
     if [ "$LOADAVERAGECHECK" = "true" ]; then
         [[ "$LOADAVERAGE" =~ ^([1-9]|[1-9][0-9]{1,2})$ ]] || {
-            _log "WARN: Invalid parameter format: LOADAVERAGE"
-            _log "WARN: You set it to '$LOADAVERAGE', which is not a correct syntax. Maybe it's empty?"
-            _log "WARN: Set LOADAVERAGECHECK to 20 (0.20)"
+            _log "WARNING: Invalid parameter format: LOADAVERAGE"
+            _log "WARNING: You set it to '$LOADAVERAGE', which is not a correct syntax. Maybe it's empty?"
+            _log "WARNING: Set LOADAVERAGECHECK to 20 (0.20)"
             LOADAVERAGE=20; }
     else
-        _log "WARN: LOADAVERAGECHECK is set to false"
-        _log "WARN: Ignoring LOADAVERAGE"
+        _log "WARNING: LOADAVERAGECHECK is set to false"
+        _log "WARNING: Ignoring LOADAVERAGE"
     fi
 }
 
@@ -1186,14 +1192,14 @@ _check_networkconfig()
                 let NW_WAIT++
                 if [ $NW_WAIT -le 5 ]; then
                     if ! ifconfig ${NIC[$NICNR]} | egrep -q "inet "; then
-                        _log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: No internet-Adress found - wait 60 sec for initializing the network"
+                        _log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: No internet-Address found - wait 60 sec for initializing the network"
                         sleep 60
                     else
-                        _log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: IP-Adress found"
+                        _log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: IP-Address found"
                         break
                     fi
                 else
-                    _log "WARN: No internet-Adress for ${NIC[$NICNR]} found after 5 minutes - The script will not work maybe ..."
+                    _log "WARNING: No internet-Address for ${NIC[$NICNR]} found after 5 minutes - The script will not work maybe ..."
                     break
                 fi
             done
@@ -1235,17 +1241,17 @@ _check_networkconfig()
 
             # Check CLASS and SERVERIP if they are correct
             [[ "${CLASS[$NICNR]}" =~ ^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)$ ]] || {
-                _log "WARN: Invalid parameter format: Class: nnn.nnn.nnn]"
-                _log "WARN: It is set to '${CLASS[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig ' did something wrong"
-                _log "WARN: Please report this Bug and the CLI-output of 'ifconfig'"
-                _log "WARN: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
+                _log "WARNING: Invalid parameter format: Class: nnn.nnn.nnn]"
+                _log "WARNING: It is set to '${CLASS[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig ' did something wrong"
+                _log "WARNING: Please report this Bug and the CLI-output of 'ifconfig'"
+                _log "WARNING: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
                 unset NIC[$NICNR]; }
 
             [[ "${SERVERIP[$NICNR]}" =~ ^(25[0-4]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])$ ]] || {
-                _log "WARN: Invalid parameter format: SERVERIP [iii]"
-                _log "WARN: It is set to '${SERVERIP[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig' did something wrong"
-                _log "WARN: Please report this Bug and the CLI-output of 'ifconfig'"
-                _log "WARN: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
+                _log "WARNING: Invalid parameter format: SERVERIP [iii]"
+                _log "WARNING: It is set to '${SERVERIP[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig' did something wrong"
+                _log "WARNING: Please report this Bug and the CLI-output of 'ifconfig'"
+                _log "WARNING: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
                 unset NIC[$NICNR]; }
 
         else
@@ -1257,8 +1263,8 @@ _check_networkconfig()
     done
 
     if [ $FOUNDIP = 0 ]; then
-        _log "WARN: No SERVERIP or CLASS found"
-        _log "WARN: exiting ..."
+        _log "WARNING: No SERVERIP or CLASS found"
+        _log "WARNING: exiting ..."
         exit 1
     fi
 }
@@ -1311,19 +1317,19 @@ _check_system_active()
                 # stop as there's really no point continuing to looking for more.
 
                 # only check IPs, if RANGE is not set to "-"
-                if [ $IPCHECK = "true" ]; then
-                    _ping_range $NICNR_CHECKSYSTEMACTIVE
-                    PINGRANGERETURN="$?"
-                    if [ "$PINGRANGERETURN" -gt 0 ]; then
+                if [ "${IPCHECK}" == "true" ]; then
+                    local pingrangereturn=0
+                    _ping_range "${NIC["${NICNR_CHECKSYSTEMACTIVE}"]}"\
+                        "${IPFROMIFCONFIG[$NICNR]}" "${IPFROMIFCONFIG[*]}" ||
+                            pingrangereturn="${?}"
+                    if [ "${pingrangereturn}" -gt 0 ]; then
                         let CNT++
-                        if $DEBUG; then _log "DEBUG: _ping_range() -> RETURN: $PINGRANGERETURN"; fi
+                        if "${DEBUG}"; then _log "DEBUG: _ping_range() -> RETURN: ${pingrangereturn}"; fi
                     fi
-                    if $DEBUG ; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: $CNT "; fi
-                else
-                    _log "INFO: No IPCHECK -> RANGE was set to '-' in the config"
+                    if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: ${CNT}"; fi
                 fi
             else
-                if $DEBUG ; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: $CNT "; fi
+                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: ${CNT}"; fi
             fi
 
             if [ $CNT -eq 0 ]; then
@@ -1428,30 +1434,30 @@ _check_system_active()
 ######## START OF BODY FUNCTION SCRIPT AUTOSHUTDOWN.SH ########
 ###############################################################
 
-logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'"
-logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'"
-logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'"
-logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' X Version: $VERSION'"
-logger -s -t "logger: $(basename "$0" | sed 's/\.sh$//g')[$$]" -p $FACILITY.info "INFO: ' Initialize logging to $FACILITY'"
+_log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
+_log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
+_log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
+_log "INFO: Openmediavault-autoshutdown version: $(\
+    dpkg -s openmediavault-autoshutdown | awk '/Version:/{print $2}')" force
+_log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
+_log "INFO: Initialize logging to: ${FACILITY}" force
 
-if [ -f /etc/autoshutdown.conf ]; then
-    . /etc/autoshutdown.conf
-    _log "INFO: /etc/autoshutdown.conf loaded"
+if [ -f "${CONFIG}" ]; then
+    . "${CONFIG}"
+    _log "INFO: ${CONFIG} loaded"
 else
-    _log "WARN: cfg-File not found! Please check Path /etc for autoshutdown.conf"
+    _log "ERR: cfg-File not found! Please check ${CONFIG} exits"
     exit 1
 fi
 
-if [ "$VERBOSE" = "true" ]; then
-    DEBUG="true"
-else
-    DEBUG="false"
-fi
+# Set-up logging and modes.
+[ "$FAKE" == "true" ] && VERBOSE="true"
+[ "$VERBOSE" == "true" ] && DEBUG="true"
 
 _check_config
 
 # enable / disable check here
-if ! $ENABLE; then
+if [ "${ENABLE}" != "true" ]; then
     _log "INFO: script disabled by autoshutdown.conf"
     _log "INFO: nothing to do. Exiting here ..."
     exit 0
@@ -1463,15 +1469,9 @@ _check_networkconfig
 if [ ! -d $TMPDIR ]; then
     mkdir $TMPDIR 2> /dev/null
     [[ $? = 0 ]] && _log "INFO: $TMPDIR created" || {
-        _log "WARN: Can't create $TMPDIR! Exiting ...!"
+        _log "WARNING: Can't create $TMPDIR! Exiting ...!"
         exit 1
     }
-fi
-
-# If the pinglist or pinglistactive exists, delete it (at every start of the script)
-if [ -f $TMPDIR/pinglist ]; then
-    rm -f $TMPDIR/pinglist 2> /dev/null
-    [[ $? = 0 ]] && _log "INFO: Pinglist deleted" || _log "WARN: Can't delete Pinglist!"
 fi
 
 # Init the counter
@@ -1479,8 +1479,7 @@ FCNT=$CYCLES
 
 # functional start of script
 if $DEBUG ; then
-    _log "INFO:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    _log "DEBUG: ### DEBUG:"
+    _log "DEBUG: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     _log "DEBUG: CLASS and SERVERIP: see above"
     _log "DEBUG: CYCLES: $CYCLES"
     _log "DEBUG: SLEEP: $SLEEP"
@@ -1508,7 +1507,13 @@ if $DEBUG ; then
     done
 fi   # > if $DEBUG ;then
 
-_log "INFO: ---------------- script started ----------------------"
+_log "INFO: --------------- Initalise states ---------------------"
+
+[ "${HDDIOCHECK}" == "true" ] && ! _check_hddio && {
+    _log "ERR: Initalising _check_hddio(): Please check using debug mode"
+    exit 1; }
+
+_log "INFO: ---------------- Script started ----------------------"
 _log "INFO: ${CYCLES} test cycles until shutdown is issued."
 
 # Creation of the dir for ULDLCHECK
@@ -1525,10 +1530,11 @@ if [ "$ULDLCHECK" = "true" ]; then
 fi
 
 if [ "$FAKE" = "true" ]; then
-    _log "INFO: FAKE-Mode in on, dont't wait for first check"
+    _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
+    sleep 1
 else
-    _log "INFO: Waiting 5 min until the first check"
-    sleep 5m    # or: sleep 300
+    _log "INFO: Waiting 5 minuets until the first check"
+    sleep 5m
 fi
 
 for NICNR_START in $(seq 1 $NICNR); do
@@ -1565,4 +1571,4 @@ while : ; do
 done   # > while : ; do
 
 echo "This should not happen!" && exit 42
-#EOF####### END OF SCRIPT AUTOSHUTDOWN.SH ########
+#EOF####### END OF SCRIPT AUTOSHUTDOWN ########

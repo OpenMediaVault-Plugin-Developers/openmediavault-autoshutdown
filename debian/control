@@ -2,9 +2,9 @@ Source: openmediavault-autoshutdown
 Section: misc
 XB-Plugin-Section: utilities
 Priority: optional
-Maintainer: OpenMediaVault Plugin Developers (plugins@omv-extras.org>
-Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.6
+Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.3.0
 Homepage: http://omv-extras.org
 
 Package: openmediavault-autoshutdown
@@ -20,4 +20,5 @@ Priority: optional
 Description: OpenMediaVault AutoShutdown Plugin
  Web interface for autoshutdown script.
  .
- Allow system to be automatically shutdown based on use rather than a specified time.
+ Allow system to be automatically shutdown based on use rather than a specified
+ time.

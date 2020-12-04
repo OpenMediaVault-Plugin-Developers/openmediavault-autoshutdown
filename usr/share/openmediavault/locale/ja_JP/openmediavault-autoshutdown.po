@@ -51,10 +51,8 @@ msgstr "サイクル"
 msgid "Date & Time"
 msgstr "日付 & 時間"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "スキャンするIPアドレスの範囲を定義してください。（XXX.XXX.XXX.xxx リスト内のIPアドレスの最後の3つの部分）"
+msgid "Define a range of IPs which should be scanned."
+msgstr "スキャンするIPアドレスの範囲を定義してください。"
 
 msgid "Define the network traffic in kB/s"
 msgstr "ネットワークトラフィックを kB/s で設定"
@@ -64,9 +62,6 @@ msgstr "有効"
 
 msgid "End"
 msgstr "終了"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr "一つだけのダッシュ'-' をフィールドに入力するとチェックを無効にします。"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -166,8 +161,8 @@ msgstr "サスペンド-ハイブリッド"
 msgid "Syslog Configuration"
 msgstr "Syslog設定"
 
-msgid "The following scheme is mandatory"
-msgstr "以下のスキームは必須です"
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "IP範囲は、次のコンマ区切りのリストである必要があります。"
 
 msgid "Type"
 msgstr "タイプ"
@@ -187,14 +182,14 @@ msgstr "冗長モード"
 msgid "Write log informations to system logs."
 msgstr "システムログへログ情報を書き込みます。"
 
-msgid "all list entries are seperated by comma ','"
-msgstr "すべてのリストエントリをカンマ ','で区切ります"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "'start..end'または 'IPの最後のオクテット'が設定されている場合、ifaceIPアドレスの最初の3オクテットが使用されます"
 
-msgid "define a single ip : ip"
-msgstr "シングルIPを定義 : ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "単一のIPを定義します。IPの最後のオクテットzzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "IP範囲を定義 : 開始..終了 -> 2つのドットは必須です"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "IP範囲を定義します: start..end | \<iface\:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "for more details."
 msgstr "詳細。"

@@ -51,10 +51,8 @@ msgstr "주기"
 msgid "Date & Time"
 msgstr "날짜 및 시간"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
-msgstr "목록의 IP 주소의 마지막 3자리 XXX.XXX.XXX.xxx를 통해, 조사해야 할 IP들의 범위를 정의합니다."
+msgid "Define a range of IPs which should be scanned."
+msgstr "스캔해야하는 IP 범위를 정의하십시오."
 
 msgid "Define the network traffic in kB/s"
 msgstr "KiB/s 단위의 네트워크 전송량을 정의"
@@ -64,9 +62,6 @@ msgstr "활성화"
 
 msgid "End"
 msgstr "끝"
-
-msgid "Enter a single dash '-' in the field to disable check."
-msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -166,8 +161,8 @@ msgstr "하이브리드-대기"
 msgid "Syslog Configuration"
 msgstr "Syslog 구성"
 
-msgid "The following scheme is mandatory"
-msgstr "다음 구성은 필수입니다 "
+msgid "The IP-Range should be comma delimited list of the following:"
+msgstr "IP-Range는 쉼표로 구분 된 다음 목록이어야합니다."
 
 msgid "Type"
 msgstr "유형"
@@ -187,14 +182,14 @@ msgstr "상세한 방식."
 msgid "Write log informations to system logs."
 msgstr "기록 정보를 Syslog에 씁니다."
 
-msgid "all list entries are seperated by comma ','"
-msgstr "모든 목록 항목은 쉼표','로 구분되어야 합니다."
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+msgstr "'start..end'또는 'IP의 마지막 옥텟' 가 설정된 경우 iface IP 주소의 처음 세 옥텟이 사용됩니다."
 
-msgid "define a single ip : ip"
-msgstr "단일 ip 지정 : ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr "단일 IP 정의 : IP의 마지막 옥텟 zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
-msgstr "IP 범위 지정 : 시작..종료 -> 두개의 점은 필수입니다."
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "IP 범위를 정의하십시오. start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "for more details."
 msgstr "를 확인하세요."

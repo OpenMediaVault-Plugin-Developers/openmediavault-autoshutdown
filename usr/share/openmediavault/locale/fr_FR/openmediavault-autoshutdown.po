@@ -39,9 +39,7 @@ msgstr "Cycles"
 msgid "Date & Time"
 msgstr "Date & Heure"
 
-msgid ""
-"Define a range of IPs which should be scanned, via XXX.XXX.XXX.xxx last "
-"triple of IP address in a list."
+msgid "Define a range of IPs which should be scanned."
 msgstr ""
 
 msgid "Define the network traffic in kB/s"
@@ -142,7 +140,7 @@ msgstr "Suspendre"
 msgid "Syslog Configuration"
 msgstr "Configuration de Syslog"
 
-msgid "The following scheme is mandatory"
+msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
 msgid "Type"
@@ -157,13 +155,13 @@ msgstr "Mode verbose (détails)."
 msgid "Write log informations to system logs."
 msgstr "Inscrire les informations du journal d’événements au journal du système."
 
-msgid "all list entries are seperated by comma ','"
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
 msgstr ""
 
-msgid "define a single ip : ip"
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 msgstr ""
 
-msgid "define an ip range : start..end -> the two dots are mandatory"
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
 msgid "for more details."

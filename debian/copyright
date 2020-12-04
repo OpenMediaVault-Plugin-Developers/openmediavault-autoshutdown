@@ -1,12 +1,15 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Contact: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 Source: https://github.com/OMV-Plugins/openmediavault-autoshutdown
-Copyright: 2013-2019 OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Copyright: 2011-2012 Marcel Beck <marcel.beck@mbeck.org>
+
+Files: *
+Copyright: 2013-2020 OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+           2011-2012 Marcel Beck <marcel.beck@mbeck.org>
 License: GPL-3
+
 
 Files: /var/www/openmediavault/images/autoshutdown.png
        /var/www/openmediavault/images/autoshutdown.svg
 Copyright: IcoMoon <http://www.icomoon.io>
-IcoMoon <http://www.icomoon.io>
-License: GPLv3
+Homepage: http://www.icomoon.io
+License: GPL-3
