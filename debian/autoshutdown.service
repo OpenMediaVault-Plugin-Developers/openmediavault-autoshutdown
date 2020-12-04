@@ -10,7 +10,7 @@ Type=simple
 Restart=always
 RestartSec=3
 PIDFile=/run/autoshutdown.pid
-ExecStart=/usr/sbin/autoshutdown.sh
+ExecStart=/usr/sbin/autoshutdown
 
 [Install]
 WantedBy=multi-user.target

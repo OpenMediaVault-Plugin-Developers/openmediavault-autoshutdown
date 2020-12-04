@@ -1,7 +1,7 @@
 #!/bin/bash
 #==============================================================================
 #
-#          FILE:    autoshutdown.sh
+#          FILE:    autoshutdown
 #
 #   DESCRIPTION:    Shuts-down a PC/Server - variable options
 #
@@ -56,7 +56,7 @@ _log()
        local message=${BASH_REMATCH[2]}
     }
     [ "${FAKE}" == "true" ] && message="FAKE-Mode: ${message}"
-    message="$(basename "${0%.*}")[$$]: ${priority}: '${message}'"
+    message="$(basename "${0}")[$$]: ${priority}: '${message}'"
 
     [[ "${VERBOSE}" == "true" || "${FAKE}" == "true" ]] &&
         echo "$(date '+%b %e %H:%M:%S') ${USER}: ${message}"
@@ -1571,4 +1571,4 @@ while : ; do
 done   # > while : ; do
 
 echo "This should not happen!" && exit 42
-#EOF####### END OF SCRIPT AUTOSHUTDOWN.SH ########
+#EOF####### END OF SCRIPT AUTOSHUTDOWN ########

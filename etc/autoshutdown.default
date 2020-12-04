@@ -176,7 +176,7 @@ FAKE="false"
 #NETSTATWORD="VERBUNDEN"    # Set specific word, which specifies the connection in netstat
                             # only needed for CLI-testing with VERBOSE!
 
-    # It is needed, if someone wants to test autoshutdown.sh on the CLI, because on the CLI the netstat-output is language-specific.
+    # It is needed, if someone wants to test autoshutdown on the CLI, because on the CLI the netstat-output is language-specific.
     # At systemstart netstat-output is always english. For german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n'
     # on the CLI and you shoud see this output:
 
@@ -192,7 +192,7 @@ FAKE="false"
 
 #PLUGINCHECK="true"
     # PlugIns: You find sample plugins in /etc/autoshutdown.d
-    # Set this to true, if autoshutdown.sh checks for PlugIns in /etc/autoshutdown.d
+    # Set this to true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d
     # set it to "false" (or uncemmented) to skip the check
     #
     # E.g.: When ClamAV does a check, the Server shouldn't shut down
