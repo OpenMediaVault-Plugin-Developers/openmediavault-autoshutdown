@@ -173,7 +173,7 @@ _shutdown()
     fi
 
     # When FAKE-Mode is on:
-    [ "$FAKE" == "true" ] && {
+    [ "${FAKE}" == "true" ] && {
         _log "INFO: Fake-shutdown issued: '${SHUTDOWNCOMMAND}' - Command is not executed because of Fake-Mode" force
         _log "INFO: autoshutdowe will end here."
         _log "INFO:"
@@ -271,7 +271,7 @@ _ident_num_proc()
 _check_processes()
 {
     # ## disabled for testing
-    # _log "DEBUG: _check_processes() disabled for testing"
+    # _log "DEBUG: _check_processes(): Disabled for testing"
     # return 0
 
     NUMPROC=0
@@ -423,7 +423,7 @@ _check_plugin()
 _check_loadaverage()
 {
     # ## disabled for testing
-    # _log "DEBUG: _check_loadaverage() disabled for testing"
+    # _log "DEBUG: _check_loadaverage(): Disabled for testing"
     # return 0
 
     local rvalue=0
@@ -470,7 +470,7 @@ _check_loadaverage()
 _check_net_status()
 {
     # ## disabled for testing
-    # _log "DEBUG: _check_net_status() disabled for testing"
+    # _log "DEBUG: _check_net_status(): Disabled for testing"
     # return 0
 
     NUMPROC=0
@@ -634,7 +634,7 @@ _check_docker_status()
 _check_ul_dl_rate()
 {
     # ## disabled for testing
-    # _log "DEBUG: _check_ul_dl_rate() disabled for testing"
+    # _log "DEBUG: _check_ul_dl_rate(): Disabled for testing"
     # return 0
 
     NICNR_ULDLCHECK="$1"
@@ -824,7 +824,7 @@ _check_clock()
 _check_hddio()
 {
     # ## disabled for testing
-    # _log "DEBUG: _check_processes() disabled for testing"
+    # _log "DEBUG: _check_processes(): Disabled for testing"
     # return 0
 
     local rvalue=0
@@ -994,7 +994,7 @@ _check_config()
         [[ "$LOADPROCNAMES" =~ $REGEX ]] || {
             _log "WARNING: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
             _log "WARNING: You set it to '$LOADPROCNAMES', which is not a correct syntax."
-            _log "WARNING: exiting ..."
+            _log "ERR: exiting ..."
             exit 1; }
     fi
 
@@ -1010,7 +1010,7 @@ _check_config()
         [[ "$TEMPPROCNAMES" =~ $REGEX ]] || {
             _log "WARNING: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
             _log "WARNING: You set it to '$TEMPPROCNAMES', which is not a correct syntax."
-            _log "WARNING: exiting ..."
+            _log "ERR: exiting ..."
             exit 1; }
     fi
 
@@ -1263,8 +1263,7 @@ _check_networkconfig()
     done
 
     if [ $FOUNDIP = 0 ]; then
-        _log "WARNING: No SERVERIP or CLASS found"
-        _log "WARNING: exiting ..."
+        _log "ERR: No SERVERIP or CLASS found, exiting ..."
         exit 1
     fi
 }
@@ -1469,7 +1468,7 @@ _check_networkconfig
 if [ ! -d $TMPDIR ]; then
     mkdir $TMPDIR 2> /dev/null
     [[ $? = 0 ]] && _log "INFO: $TMPDIR created" || {
-        _log "WARNING: Can't create $TMPDIR! Exiting ...!"
+        _log "ERR: Can't create $TMPDIR! Exiting ...!"
         exit 1
     }
 fi
@@ -1485,6 +1484,7 @@ if $DEBUG ; then
     _log "DEBUG: SLEEP: $SLEEP"
     _log "DEBUG: CHECKCLOCKACTIVE: $CHECKCLOCKACTIVE"
     _log "DEBUG: UPHOURS: $UPHOURS"
+    _log "DEBUG: IPCHECK: $IPCHECK"
     _log "DEBUG: RANGE: $RANGE"
     _log "DEBUG: LOADPROCNAMES: $LOADPROCNAMES"
     _log "DEBUG: NSOCKETNUMBERS: $NSOCKETNUMBERS"

@@ -10,6 +10,7 @@ openmediavault-autoshutdown (5.0.8) stable; urgency=low
   * Initialise _check_hddio before first script check
   * Refactor and enhance _ping_range
   * Clean-up deb build
+  * Fix up some logging and tweaks
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2020 14:56:55 -0600
 
