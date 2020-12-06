@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.1.1) stable; urgency=low
+
+  * Improve log messages and improve function headers
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 06 Dec 2020 20:56:33 +0000
+
 openmediavault-autoshutdown (5.1.0) stable; urgency=low
 
   * Refactor and remove deprecation on logging

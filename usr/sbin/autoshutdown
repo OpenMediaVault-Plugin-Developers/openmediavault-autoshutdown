@@ -74,8 +74,11 @@ _log()
 #   parameter     : $1        : The network interface that is being worked on
 #                 : $2        : The network interface IP address
 #                 : $3        : IP addresses found for all network interfaces
-#   global        : $PINTLIST : A file reference of IPs to be checked (advanced)
+#   globals       : $PINTLIST : A file reference of IPs to be checked
+#                               (advanced)
 #                 : $RANGE    : Details of IPs to be checked
+#                 : $PINGLIST_IFACE : Associative array for storing network
+#                                     interface IP addresses
 #   return        : Number of active IP on network interfaces
 #
 _ping_range()
@@ -816,10 +819,14 @@ _check_clock()
 ###############################################################################
 #
 #   name          : _check_hddio
-#   parameter     : HDDIO_RATE : Rate in kB/s of HDD-IO
+#   globals       : $HDDIO_RATE   : Rate in kB/s of HDD-IO
+#                 : $P_HDDIO_DEVS : Associative array for storing read, wrtn
+#                                   and epoch values
 #   global return : none
-#   return        : 0 : If actual value of hddio is lower than the defined value, ready for shutdown
-#                 : 1 : If actual value of hddio is higher than the defined value, no shutdown
+#   return        : 0 : If actual value of hddio is lower than the defined
+#                       value, ready for shutdown
+#                 : 1 : If actual value of hddio is higher than the defined
+#                       value, no shutdown
 #
 _check_hddio()
 {
@@ -852,7 +859,7 @@ _check_hddio()
             blkid -s LABEL -s UUID | grep "${omv_hdd}" | while read -r line; do
                 _log "DEBUG: _check_hddio(): ${line}"
             done
-            _log "DEBUG: _check_hddio(): actual: kB_read: ${omv_asd_hdd_in}, kB_wrtn: ${omv_asd_hdd_out}"
+            _log "DEBUG: _check_hddio(): Actual: kB_read: ${omv_asd_hdd_in}, kB_wrtn: ${omv_asd_hdd_out}"
         fi
 
         if [[ "${rvalue}" -eq 1 || "${last_checked_sec}" -eq 0 ||
@@ -870,7 +877,7 @@ _check_hddio()
         fi
 
         if "${DEBUG}"; then
-            _log "DEBUG: _check_hddio(): previous: kB_read: ${P_HDDIO_DEVS["${omv_hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${omv_hdd}_w"]}"
+            _log "DEBUG: _check_hddio(): Previous: kB_read: ${P_HDDIO_DEVS["${omv_hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${omv_hdd}_w"]}"
         fi
 
         # Calculate threshold limit (defined kB/s multiplied with second since
@@ -892,15 +899,15 @@ _check_hddio()
         local last_hddio_write_rate;
         last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${last_checked_sec}")"
 
-        # If hddio bytes have not increased over given value
         if "${DEBUG}"; then
+            _log "DEBUG: _check_hddio(): last_checked_sec: ${last_checked_sec}"
             _log "DEBUG: _check_hddio(): hddio_increase: ${hddio_increase}"
             _log "DEBUG: _check_hddio(): t_hddio_read: ${t_hddio_read}"
             _log "DEBUG: _check_hddio(): diff_hddio_read: ${diff_hddio_read}"
             _log "DEBUG: _check_hddio(): t_hddio_write: ${t_hddio_write}"
             _log "DEBUG: _check_hddio(): diff_hddio_write: ${diff_hddio_write}"
-            _log "DEBUG: _check_hddio(): check: 'omv_asd_hdd_in: ${omv_asd_hdd_in}' <= 't_hddio_read: ${t_hddio_read}'"
-            _log "DEBUG: _check_hddio(): check: 'omv_asd_hdd_out: ${omv_asd_hdd_out}' <= 't_hddio_write: ${t_hddio_write}'"
+            _log "DEBUG: _check_hddio(): Check: 'omv_asd_hdd_in: ${omv_asd_hdd_in}' <= 't_hddio_read: ${t_hddio_read}'"
+            _log "DEBUG: _check_hddio(): Check: 'omv_asd_hdd_out: ${omv_asd_hdd_out}' <= 't_hddio_write: ${t_hddio_write}'"
         fi
 
         # Store current value.
@@ -908,15 +915,15 @@ _check_hddio()
         P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
         local msg="INFO: _check_hddio(): Device: ${omv_hdd} (last ${last_checked_sec}s) "
-              msg+="kB_aread/s: ${last_hddio_read_rate}, "
+              msg+="kB_read/s: ${last_hddio_read_rate}, "
               msg+="kB_wrtn/s: ${last_hddio_write_rate}"
 
         if [[ "${omv_asd_hdd_in}" -gt "${t_hddio_read}" ||
               "${omv_asd_hdd_out}" -gt "${t_hddio_write}" ]]; then
-            _log "${msg} is over: ${HDDIO_RATE} kB/s -> no shutdown"
+            _log "${msg} over: ${HDDIO_RATE} kB/s -> no shutdown"
             rvalue=1
         else
-            _log "${msg} is under: ${HDDIO_RATE} kB/s -> next HDD"
+            _log "${msg} under: ${HDDIO_RATE} kB/s -> next HDD"
         fi
 
     done < <(iostat -kdyNz | awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
