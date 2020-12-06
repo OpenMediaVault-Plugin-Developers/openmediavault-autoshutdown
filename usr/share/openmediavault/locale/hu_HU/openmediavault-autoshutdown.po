@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2019-07-01 14:02+0000\n"
-"Last-Translator: Grawens <szabolcs.szanyi@gmail.com>\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +54,16 @@ msgstr "Dátum és idő"
 msgid "Define a range of IPs which should be scanned."
 msgstr ""
 
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
+
 msgid "Define the network traffic in kB/s"
 msgstr ""
 
@@ -93,6 +103,11 @@ msgid "Hibernate"
 msgstr ""
 
 msgid "IP-Range"
+msgstr ""
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
 msgstr ""
 
 msgid ""
@@ -180,15 +195,6 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Write log informations to system logs."
-msgstr ""
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr ""
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr ""
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
 msgid "for more details."

@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-23 19:27+0000\n"
-"Last-Translator: songming <by@songming.me>\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,17 @@ msgid "Date & Time"
 msgstr "日期和时间"
 
 msgid "Define a range of IPs which should be scanned."
-msgstr "定义应扫描的IP范围。"
+msgstr ""
+
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
 
 msgid "Define the network traffic in kB/s"
 msgstr "设定网络速度单位kb/s"
@@ -95,6 +105,11 @@ msgstr "休眠"
 
 msgid "IP-Range"
 msgstr "IP 范围"
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -163,7 +178,7 @@ msgid "Syslog Configuration"
 msgstr "日志设置"
 
 msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "IP范围应为逗号分隔的以下列表："
+msgstr ""
 
 msgid "Type"
 msgstr "类型"
@@ -182,15 +197,6 @@ msgstr "详细记录"
 
 msgid "Write log informations to system logs."
 msgstr "记录到系统日志"
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr "如果设置了“ start..end”或“ IP的最后一个八位字节”，则使用iface IP地址的前三个八位字节。"
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr "定义一个IP：IP的最后一个八位位组 zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "定义IP范围：start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "for more details."
 msgstr "了解更多细节"

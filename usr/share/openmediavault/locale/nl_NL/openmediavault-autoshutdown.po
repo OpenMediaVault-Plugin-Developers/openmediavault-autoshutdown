@@ -4,13 +4,14 @@
 # 
 # Translators:
 # okpail <okpail@gmail.com>, 2014,2016
+# Rudy ten Kate, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-21 14:00+0000\n"
-"Last-Translator: okpail <okpail@gmail.com>\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,31 +20,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "AutoShutdown"
-msgstr "AutoShutdown"
+msgstr "Automatische uitschakeling"
 
 msgid "Autoshutdown"
-msgstr "Autoshutdown"
+msgstr "Automatische uitschakeling"
 
 msgid "Begin"
-msgstr "Starten"
+msgstr "Begin"
 
 msgid "Check Clock"
-msgstr "Klok instellingen"
+msgstr "Controleer de klok"
 
 msgid "Check Clock to identify forced uptime."
-msgstr "Controleer de klok op geforceerde uptime "
+msgstr "Controleer de klok om de geforceerde bedrijfstijd te bepalen."
 
 msgid "Check Users"
-msgstr "Check de gebruikers"
+msgstr "Controleer op gebruikers."
 
 msgid "Check for connected users."
-msgstr "Check voor online gebruikers"
+msgstr "Controleer op verbonden gebruikers."
 
 msgid "Check smbstatus"
-msgstr "Check smbstatus"
+msgstr "Controleer smbstatus"
 
 msgid "Check smbstatus for connected clients."
-msgstr "Check smbstatus for online clients."
+msgstr "Controleer smbstatus op verbonden clients."
 
 msgid "Cycles"
 msgstr "Cycles"
@@ -52,13 +53,23 @@ msgid "Date & Time"
 msgstr "Datum & Tijd"
 
 msgid "Define a range of IPs which should be scanned."
-msgstr "Definieer een reeks IP-adressen die moeten worden gescand."
+msgstr ""
+
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
 
 msgid "Define the network traffic in kB/s"
-msgstr "Definieer de bandbreedte grootte in kB/s"
+msgstr "Definieer het netwerkverkeer in kB/s"
 
 msgid "Enable"
-msgstr "Aanzetten"
+msgstr "Inschakelen"
 
 msgid "End"
 msgstr "Einde"
@@ -66,22 +77,22 @@ msgstr "Einde"
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
 "means a loadaverage of 2.20"
-msgstr "Voorbeeld: 50 betekend een gemiddelde van 0.50, 8 betekend een belasting-gemiddelde van 0.08, 220 betekend een belasting-gemiddelde van 2.20"
+msgstr "Voorbeeld: 50 betekent een gemiddelde van 0.50, 8 betekent een gemiddelde belasting van 0.08, 220 betekent een gemiddelde belasting van 2.20"
 
 msgid "Expert Settings"
-msgstr "Geavanceerde Settings"
+msgstr "Geavanceerde instellingen"
 
 msgid "Extra options"
-msgstr "Extra Opties"
+msgstr "Extra opties"
 
 msgid "Fake"
-msgstr "Schijn"
+msgstr "Nep"
 
 msgid "Fake/Test mode."
-msgstr "Schijn/Test mode"
+msgstr "Nep/Test mode"
 
 msgid "Forced Uptime"
-msgstr "Geforceerde Uptime"
+msgstr "Gedwongen bedrijfstijd"
 
 msgid "General settings"
 msgstr "Algemene Instellingen"
@@ -93,15 +104,20 @@ msgid "Hibernate"
 msgstr "Slaapstand"
 
 msgid "IP-Range"
-msgstr "IP-nummer range"
+msgstr "IP-bereik"
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "Indien het  HDD-IO-gemiddelde van de server boven deze waarde komt, dan vindt er geen shutdown plaats"
+msgstr "Als het HDD-IO-gemiddelde van de server boven deze waarde komt, wordt er niet afgesloten."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
-msgstr "Indien het  belasting-gemiddelde van de server boven deze waarde komt, dan vindt er geen shutdown plaats"
+msgstr "Als de gemiddelde belasting van de server boven deze waarde ligt, wordt er niet afgesloten."
 
 msgid "List of Ports"
 msgstr "Lijst van Poorten"
@@ -113,7 +129,7 @@ msgid "Log"
 msgstr "Log"
 
 msgid "Log to Syslog"
-msgstr "Log naar Syslog"
+msgstr "In Syslog opslaan"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Aantal seconden tussen elke cycle"
@@ -129,7 +145,7 @@ msgstr "Leesmij"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Geef het aantal cycles op die geen resultaat opleveren (de PC is niet offline, etc) voordat het systeem uitschakelt"
+msgstr "Stel het aantal cycli in zonder resultaat (geen PC online, enz.) voordat het systeem uitschakelt."
 
 msgid "Settings"
 msgstr "Instellingen"
@@ -138,10 +154,10 @@ msgid "Shutdown"
 msgstr "Uitschakelen"
 
 msgid "Shutdown Command"
-msgstr "Uitschakel commando"
+msgstr "Uitschakelopdracht"
 
 msgid "Sleep"
-msgstr "Slaap"
+msgstr "Wachttijd"
 
 msgid "Socket number to check for activity."
 msgstr "Het socket nummer wat gecheckt moet worden op activiteit"
@@ -153,7 +169,7 @@ msgid "Supervision Configuration"
 msgstr "Supervisie Configuratie"
 
 msgid "Suspend"
-msgstr "In Statis"
+msgstr "Uitstellen"
 
 msgid "Suspend-Hybrid"
 msgstr "Suspend-Hybrid"
@@ -162,7 +178,7 @@ msgid "Syslog Configuration"
 msgstr "Syslog Configuratie"
 
 msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "Het IP-bereik moet een door komma's gescheiden lijst zijn van de volgende:"
+msgstr ""
 
 msgid "Type"
 msgstr "Type"
@@ -171,25 +187,16 @@ msgid "ULDL Rate"
 msgstr "ULDL Snelheid"
 
 msgid "Uphours"
-msgstr "Up-uren"
+msgstr "Bedrijfsuren"
 
 msgid "Verbose"
 msgstr "Uitgebreid"
 
 msgid "Verbose mode."
-msgstr "Uitgebreide Modus"
+msgstr "Uitgebreide modus"
 
 msgid "Write log informations to system logs."
-msgstr "Schrijf log informatie naar systeem logs"
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr "Als 'start..end' of 'Laatste octet van IP' is ingesteld, worden de eerste drie octetten van het iface IP-adres gebruikt."
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr "Definieer een enkel IP: Laatste octet van IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "Definieer een IP-bereik: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr "Schrijf log informatie naar system logs"
 
 msgid "for more details."
 msgstr "voor meer details"

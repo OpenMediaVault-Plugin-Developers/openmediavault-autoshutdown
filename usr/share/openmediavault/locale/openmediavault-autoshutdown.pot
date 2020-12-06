@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,6 +53,12 @@ msgstr ""
 msgid "Define a range of IPs which should be scanned."
 msgstr ""
 
+msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
+msgstr ""
+
 msgid "Define the network traffic in kB/s"
 msgstr ""
 
@@ -90,6 +96,9 @@ msgid "Hibernate"
 msgstr ""
 
 msgid "IP-Range"
+msgstr ""
+
+msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
 msgstr ""
 
 msgid "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -174,15 +183,6 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Write log informations to system logs."
-msgstr ""
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr ""
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr ""
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
 msgid "for more details."

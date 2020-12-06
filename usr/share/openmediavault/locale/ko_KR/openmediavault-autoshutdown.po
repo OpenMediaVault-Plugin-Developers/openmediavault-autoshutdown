@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-23 20:29+0000\n"
-"Last-Translator: Hyeonkyu Chu <hyeonkyu@gmail.com>\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,17 @@ msgid "Date & Time"
 msgstr "날짜 및 시간"
 
 msgid "Define a range of IPs which should be scanned."
-msgstr "스캔해야하는 IP 범위를 정의하십시오."
+msgstr ""
+
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
 
 msgid "Define the network traffic in kB/s"
 msgstr "KiB/s 단위의 네트워크 전송량을 정의"
@@ -94,6 +104,11 @@ msgstr "휴면"
 
 msgid "IP-Range"
 msgstr "IP-범위"
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -162,7 +177,7 @@ msgid "Syslog Configuration"
 msgstr "Syslog 구성"
 
 msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "IP-Range는 쉼표로 구분 된 다음 목록이어야합니다."
+msgstr ""
 
 msgid "Type"
 msgstr "유형"
@@ -181,15 +196,6 @@ msgstr "상세한 방식."
 
 msgid "Write log informations to system logs."
 msgstr "기록 정보를 Syslog에 씁니다."
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr "'start..end'또는 'IP의 마지막 옥텟' 가 설정된 경우 iface IP 주소의 처음 세 옥텟이 사용됩니다."
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr "단일 IP 정의 : IP의 마지막 옥텟 zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "IP 범위를 정의하십시오. start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "for more details."
 msgstr "를 확인하세요."

@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-19 22:18+0000\n"
-"Last-Translator: Paolo Velati <paolo.velati@gmail.com>\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,17 @@ msgid "Date & Time"
 msgstr "Data & Ora"
 
 msgid "Define a range of IPs which should be scanned."
-msgstr "Definisci un intervallo di indirizzi IP che devono essere scansionati."
+msgstr ""
+
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
 
 msgid "Define the network traffic in kB/s"
 msgstr "Definisci il traffico di rete in kB/s"
@@ -95,6 +105,11 @@ msgstr "Ibernazione"
 
 msgid "IP-Range"
 msgstr "Intervallo di IP"
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -163,7 +178,7 @@ msgid "Syslog Configuration"
 msgstr "Configurazione Syslog"
 
 msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "L'intervallo IP deve essere un elenco delimitato da virgole dei seguenti:"
+msgstr ""
 
 msgid "Type"
 msgstr "Tipo"
@@ -182,15 +197,6 @@ msgstr "Modalità verbosa."
 
 msgid "Write log informations to system logs."
 msgstr "Scrivi informazioni di registro nei registri di sistema."
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr "Se è impostato 'start..end' o 'Ultimo ottetto di IP', vengono utilizzati i primi tre ottetti dell'indirizzo IP iface."
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr "Definisci un singolo IP: Ultimo ottetto di IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "Definisci un intervallo IP: inizio..fine | iface:inizio..fine | www.xxx.yyy.inizio..fine | iface:xxx.yyy.zzz.inizio..fine"
 
 msgid "for more details."
 msgstr "per ulteriori dettagli."

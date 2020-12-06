@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-19 20:47+0000\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -54,6 +54,16 @@ msgstr "Дата і Час"
 msgid "Define a range of IPs which should be scanned."
 msgstr ""
 
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
+
 msgid "Define the network traffic in kB/s"
 msgstr "Визначення мережевого трафіку в Кб/с"
 
@@ -94,6 +104,11 @@ msgstr ""
 
 msgid "IP-Range"
 msgstr "Діапазон-IP"
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -162,7 +177,7 @@ msgid "Syslog Configuration"
 msgstr "Конфігурація Syslog"
 
 msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "У діапазоні IP слід вказати наступне:"
+msgstr ""
 
 msgid "Type"
 msgstr "Тип"
@@ -181,15 +196,6 @@ msgstr "Докладний режим."
 
 msgid "Write log informations to system logs."
 msgstr ""
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr ""
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr ""
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "Визначте діапазон IP: start..end | iface:початок..кінець | www.xxx.yyy.початок..кінець | iface:xxx.yyy.zzz.початок..кінець"
 
 msgid "for more details."
 msgstr "для більш докладної інформації."

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-21 07:24-0600\n"
-"PO-Revision-Date: 2017-09-19 23:19+0000\n"
-"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
+"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +52,17 @@ msgid "Date & Time"
 msgstr "Fecha y Hora"
 
 msgid "Define a range of IPs which should be scanned."
-msgstr "Defina el rango de IP que deben ser escaneadas."
+msgstr ""
+
+msgid ""
+"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
+"iface:www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
+" iface:xxx.yyy.zzz.start..end"
+msgstr ""
 
 msgid "Define the network traffic in kB/s"
 msgstr "Definir trafico de red en kB/s"
@@ -94,6 +104,11 @@ msgstr "Hibernar"
 
 msgid "IP-Range"
 msgstr "Rango de IP"
+
+msgid ""
+"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
+"iface IP address are used."
+msgstr ""
 
 msgid ""
 "If the HDD-IO-average of the server is above this value, then no shutdown."
@@ -162,7 +177,7 @@ msgid "Syslog Configuration"
 msgstr "Configuración del Syslog (log del sistema)"
 
 msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "El rango de IP debe ser una lista delimitada por comas de lo siguiente:"
+msgstr ""
 
 msgid "Type"
 msgstr "Tipo"
@@ -181,15 +196,6 @@ msgstr "Modo info ampliada."
 
 msgid "Write log informations to system logs."
 msgstr "Esccribir los Logs en el Log del sistema."
-
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr "Si se configura 'inicial..final' o 'Último octeto de IP', se utilizan los primeros tres octetos de la dirección IP de iface."
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr "Definir una sola IP: Último octeto de IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "Defina un rango de IP: inicial..final | iface:inicial..final | www.xxx.yyy.inicial..final | iface:xxx.yyy.zzz.inicial..final"
 
 msgid "for more details."
 msgstr "para mas detalles."
