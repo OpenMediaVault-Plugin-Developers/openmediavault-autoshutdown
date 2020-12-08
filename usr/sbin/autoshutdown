@@ -30,15 +30,14 @@ SYSLOG="false"              # Default if logging should go to syslog
 FAKE="false"                # Default fake mode operation
 
 ######## STORAGE DEFINITION #########
-declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
 declare -A PINGLIST_IFACE   # Associative array for storing _ping_range network interface IP addresses
+declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
+declare -A P_UL_DL_RATE     # Associative array for storing _check_ul_dl_rate a network interface tx, rx and epoch values
 
 ######## CONSTANT DEFINITION ########
 readonly CTOPPARAM="-b -d 1 -n 1"         # Define common parameters for the top command line
 readonly STOPPARAM="-i ${CTOPPARAM}"      # Add specific parameters for the top command line
 readonly CONFIG="/etc/autoshutdown.conf"  # Autoshtdown configuration options.
-readonly TMPDIR="/tmp/autoshutdown"       # Script temporary directory
-
 
 ######## FUNCTION DECLARATION ########
 
@@ -626,106 +625,111 @@ _check_docker_status()
     return "${active}"
 }
 
-
 ###############################################################################
 #
 #   name          : _check_ul_dl_rate
-#   parameter     : Array-# of NIC
+#   parameter     : $1            : The network interface to check
+#   globals       : $ULDLRATE     : Rate in kB/s of network activity
+#                 : $P_UL_DL_RATE : Associative array for strong a network
+#                                   interface tx, rx and epoch values
 #   global return : none
-#   return        : 0 : If no (not enough) network activity has been found, ready for shutdown
-#                 : 1 : If enough network activity has been found, no shutdown
+#   return        : 0 : If not enough network activity, ready for shutdown
+#                 : 1 : If enough network activity, no shutdown
 #
-# Checks for activity on given NIC. It compares the RX and TX bytes
-# in every cycle to detect if they significantly changed.
-# If they haven't, it will force the system to sleep or do the next check
+# Checks for activity on given network interface It compares the RX and TX
+# bytes in every cycle to detect if they significantly changed. If they
+# haven't, it will force the system to sleep or do the next check
 #
 _check_ul_dl_rate()
 {
     # ## disabled for testing
-    # _log "DEBUG: _check_ul_dl_rate(): Disabled for testing"
+    # _log "DEBUG: _check_ul_dl_rate(): disabled for testing"
     # return 0
 
-    NICNR_ULDLCHECK="$1"
+    local -r net_iface="${1}"
 
-    # creation of the directory is in the main script
+    _log "INFO: _check_ul_dl_rate(): Running on interface: ${net_iface}"
 
-    _log "INFO: ULDL-Traffic-Check for '${NIC[${NICNR_ULDLCHECK}]}'"
+    local epoch_sec="${EPOCHSECONDS}"
+    local last_checked_sec=$((epoch_sec - ${P_UL_DL_RATE["${net_iface}_epoch_sec"]:-${epoch_sec}}))
 
-    # RX in kB
-    RX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep RX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
+    local rx_kb
+    rx_kb="$(awk '{printf("%.0f",($0/1024))}' \
+                "/sys/class/net/${net_iface}/statistics/rx_bytes")"
+    local tx_kb
+    tx_kb="$(awk '{printf("%.0f",($0/1024))}' \
+                "/sys/class/net/${net_iface}/statistics/tx_bytes")"
 
-    # TX in kB
-    TX=$(ifconfig ${NIC[${NICNR_ULDLCHECK}]} |grep TX |grep bytes | sed -r 's/.*bytes([ ]|:)//g; :a;N;$!ba;s/\n//g' | awk '{printf("%.0f\n", ($1/1024))}')
+    if "${DEBUG}"; then
+        _log "DEBUG: _check_ul_dl_rate(): Actual: TX kB: ${tx_kb}, RX kB: ${rx_kb}"
+    fi
 
-    # Check if RX/TX Files Exist
-    RX_FILE=$RXTXTMPDIR/rx-${NICNR_ULDLCHECK}.tmp
-    TX_FILE=$RXTXTMPDIR/tx-${NICNR_ULDLCHECK}.tmp
-    if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
-        if $DEBUG; then _log "DEBUG: _check_ul_dl(): $RX_FILE and $TX_FILE exist"; fi
-        p_RX=$(cat $RX_FILE) ## store previous RX value in p_RX
-        p_TX=$(cat $TX_FILE) ## store previous TX value in p_TX
+    if [[ "${last_checked_sec}" -eq 0 ||
+          -z "${P_UL_DL_RATE["${net_iface}_epoch_sec"]:-}" ||
+          -z "${P_UL_DL_RATE["${net_iface}_tx"]:-}" ||
+          -z "${P_UL_DL_RATE["${net_iface}_rx"]:-}" ]]; then
+        # Store current value.
+        P_UL_DL_RATE["${net_iface}_epoch_sec"]="${epoch_sec}"
+        P_UL_DL_RATE["${net_iface}_rx"]="${rx_kb}"
+        P_UL_DL_RATE["${net_iface}_tx"]="${tx_kb}"
 
-        echo $RX > $RX_FILE ## Write new packets to RX file
-        echo $TX > $TX_FILE ## Write new packets to TX file
-
-        if $DEBUG; then
-            _log "DEBUG: _check_ul_dl(): actual     RX: $RX"
-            _log "DEBUG: _check_ul_dl(): previous p_RX: $p_RX"
-            _log "DEBUG: _check_ul_dl(): actual     TX: $TX"
-            _log "DEBUG: _check_ul_dl(): previous p_TX: $p_TX"
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_ul_dl_rate(): Store new TX, RX and epoch values"
         fi
-
-        # Calculate threshold limit
-        let ULDLINCREASE=$ULDLRATE*$SLEEP
-        if $DEBUG; then _log "DEBUG: _check_ul_dl(): ULDLINCREASE: $ULDLINCREASE"; fi
-
-        t_RX=$(expr $p_RX + $ULDLINCREASE)
-        t_TX=$(expr $p_TX + $ULDLINCREASE)
-
-        # Calculate difference between the last and the actual value
-        diff_RX=$(expr $RX - $p_RX)
-        diff_TX=$(expr $TX - $p_TX)
-
-        # Calculate dl/ul-rate in kB/s - format xx.x
-        LAST_DL_RATE=$(echo $diff_RX $SLEEP | awk '{ printf("%.1f\n", ($1/$2) ) }')
-        LAST_UL_RATE=$(echo $diff_TX $SLEEP | awk '{ printf("%.1f\n", ($1/$2) ) }')
-
-        _log "INFO: ${NIC[${NICNR_ULDLCHECK}]}: over the last $SLEEP seconds: DL: $LAST_DL_RATE kB/s; UL: $LAST_UL_RATE kB/s"
-
-        # If network bytes have not increased over given value
-        if $DEBUG; then
-            _log "DEBUG: _check_ul_dl(): SLEEP: $SLEEP"
-            _log "DEBUG: _check_ul_dl(): t_RX: $t_RX"
-            _log "DEBUG: _check_ul_dl(): diff_RX: $diff_RX"
-            _log "DEBUG: _check_ul_dl(): t_TX: $t_TX"
-            _log "DEBUG: _check_ul_dl(): diff_TX: $diff_TX"
-            _log "DEBUG: _check_ul_dl(): check: RX:$RX -le t_RX:$t_RX"
-            _log "DEBUG: _check_ul_dl(): check: TX:$TX -le t_TX:$t_TX"
-        fi
-
-        if [ $RX -le $t_RX -a $TX -le $t_TX ]; then
-            _log "INFO: ${NIC[${NICNR_ULDLCHECK}]}: UL- and DL-Rate is under $ULDLRATE kB/s -> next check"
-            return 0 # return value -> shutdown
-        else
-            _log "INFO: ${NIC[${NICNR_ULDLCHECK}]}: UL- or DL-Rate is over $ULDLRATE kB/s -> no shutdown"
-            return 1 # -> no shutdown
-        fi # > if [ $RX -le $t_RX ] && [ $TX -le $t_TX ]; then
-
-    # RX/TX-Files doesn't Exist
-    else
-        echo $RX > $RX_FILE ## Write new packets to RX file
-        echo $TX > $TX_FILE ## Write new packets to TX file
-
-        if $DEBUG; then
-            _log "DEBUG: rx.tmp and/or tx.tmp do not exist - writing values to files"
-        fi
-
-        # This is the obviously the first run, because of tx.tmp and/or rx.tmp doesn't exist
         return 0
-    fi # > # if [ -f $RX_FILE ] && [ -f $TX_FILE ]; then
+    fi
 
-    _log "ERR: _check_ul_dl_rate: This should not happen - Exit 42"
-    exit 42
+    if "${DEBUG}"; then
+        _log "DEBUG: _check_ul_dl_rate(): Previous TX kB: ${P_UL_DL_RATE["${net_iface}_tx"]}, RX kB: ${P_UL_DL_RATE["${net_iface}_rx"]}"
+    fi
+
+    # Calculate threshold limit (defined kB/s multiplied with second since
+    # last checked) to get the total value of kB over the 'last checked
+    # time' - 'time now'
+    local ul_dl_increase=$((ULDLRATE * last_checked_sec))
+
+    # Calculate the total value
+    local t_rx=$((P_UL_DL_RATE["${net_iface}_rx"] + ul_dl_increase))
+    local t_tx=$((P_UL_DL_RATE["${net_iface}_tx"] + ul_dl_increase))
+
+    # Calculate difference between the last and the actual value
+    local diff_rx=$((rx_kb - P_UL_DL_RATE["${net_iface}_rx"]))
+    local diff_tx=$((tx_kb - P_UL_DL_RATE["${net_iface}_tx"]))
+
+    # Calculate dl/ul-rate in kB/s - format xx.x
+    local last_dl_rate
+    last_dl_rate=$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_rx} ${last_checked_sec}")
+    local last_ul_rate
+    last_ul_rate=$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_tx} ${last_checked_sec}")
+
+    if "${DEBUG}"; then
+        _log "DEBUG: _check_ul_dl_rate(): last_checked_sec ${last_checked_sec}"
+        _log "DEBUG: _check_ul_dl_rate(): ul_dl_increase: ${ul_dl_increase}"
+        _log "DEBUG: _check_ul_dl_rate(): t_rx: ${t_rx}"
+        _log "DEBUG: _check_ul_dl_rate(): diff_rx: ${diff_rx}"
+        _log "DEBUG: _check_ul_dl_rate(): t_tx: ${t_tx}"
+        _log "DEBUG: _check_ul_dl_rate(): diff_tx: ${diff_tx}"
+        _log "DEBUG: _check_ul_dl_rate(): Check: rx_kb:${rx_kb} <= t_rx:${t_rx}"
+        _log "DEBUG: _check_ul_dl_rate(): Check: tx_kb:${tx_kb} <= t_tx:${t_tx}"
+    fi
+
+    # Store current value.
+    P_UL_DL_RATE["${net_iface}_epoch_sec"]="${epoch_sec}"
+    P_UL_DL_RATE["${net_iface}_rx"]="${rx_kb}"
+    P_UL_DL_RATE["${net_iface}_tx"]="${tx_kb}"
+
+    local msg="INFO: _check_ul_dl_rate(): Network interface: ${net_iface} (last ${last_checked_sec}s) "
+          msg+="DL: ${last_dl_rate} kB/s, "
+          msg+="UL: ${last_ul_rate} kB/s"
+
+    if [[ "${rx_kb}" -gt "${t_rx}" ||
+          "${tx_kb}" -gt "${t_tx}" ]]; then
+        _log "${msg} over ${ULDLRATE} kB/s -> no shutdown"
+        return 1
+    fi
+
+    _log "${msg} under ${ULDLRATE} kB/s -> next check"
+    return 0
 }
 
 
@@ -1364,16 +1368,18 @@ _check_system_active()
                 # PRIO 3: _check_ul_dl_rate
                 # Do a check for ul-dl-rate
                 # I've put it here, because every NIC should be checked for uldl-rate
-                if [ "$ULDLCHECK" = "true" ] ; then
-                    _check_ul_dl_rate $NICNR_CHECKSYSTEMACTIVE
-                    if [ $? -gt 0 ]; then
+                if [ "${ULDLCHECK}" == "true" ] ; then
+                    local checkuldlratereturn=0
+                    _check_ul_dl_rate "${NIC["${NICNR_CHECKSYSTEMACTIVE}"]}" ||
+                        checkuldlratereturn="${?}"
+                    if [ "${checkuldlratereturn}" -gt 0 ]; then
                         let CNT++
                     fi
 
-                    if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_ul_dl_rate -> CNT: $CNT "; fi
+                    if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _check_ul_dl_rate -> CNT: ${CNT}"; fi
                 fi
             else
-                if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_ul_dl_rate not called -> CNT: $CNT "; fi
+                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _check_ul_dl_rate not called -> CNT: ${CNT}"; fi
             fi   # > if[ $CNT -eq 0 ]; then
 
         fi # >  if [ ! -z "${NIC[$NICNR_CHECKSYSTEMACTIVE]}" ]; then
@@ -1476,15 +1482,6 @@ fi
 
 _check_networkconfig
 
-# If the tmp-dir doesn't exist, create it
-if [ ! -d $TMPDIR ]; then
-    mkdir $TMPDIR 2> /dev/null
-    [[ $? = 0 ]] && _log "INFO: $TMPDIR created" || {
-        _log "ERR: Can't create $TMPDIR! Exiting ...!"
-        exit 1
-    }
-fi
-
 # Init the counter
 FCNT=$CYCLES
 
@@ -1510,7 +1507,6 @@ if $DEBUG ; then
     _log "DEBUG: ULDLRATE: $ULDLRATE"
     _log "DEBUG: LOADAVERAGECHECK: $LOADAVERAGECHECK"
     _log "DEBUG: LOADAVERAGE: $LOADAVERAGE"
-    _log "DEBUG: TMPDIR: $TMPDIR"
     _log "DEBUG: PLUGINCHECK: $PLUGINCHECK"
     # List all PlugIns
     _log "DEBUG: PlugIns found in /etc/autoshutdown.d:"
@@ -1525,21 +1521,18 @@ _log "INFO: --------------- Initalise states ---------------------"
     _log "ERR: Initalising _check_hddio(): Please check using debug mode"
     exit 1; }
 
+for NICNR_INIT in $(seq 1 "${NICNR}"); do
+  # if NIC is set (not empty) then check IPs connections, else skip it
+  if [ -n "${NIC[$NICNR_INIT]}" ]; then
+    [ "${ULDLCHECK}" == "true" ] &&
+        ! _check_ul_dl_rate "${NIC["${NICNR_INIT}"]}" && {
+        _log "ERR: Initalising _check_ul_dl_rate(): Please check using debug mode"
+        exit 1; }
+  fi
+done
+
 _log "INFO: ---------------- Script started ----------------------"
 _log "INFO: ${CYCLES} test cycles until shutdown is issued."
-
-# Creation of the dir for ULDLCHECK
-RXTXTMPDIR="$TMPDIR/txrx"
-if [ "$ULDLCHECK" = "true" ]; then
-    # clearing for the first run of ULDLCHECK
-    if [ -d $RXTXTMPDIR ]; then
-        if $DEBUG; then _log "DEBUG: _check_ul_dl_rate(): tmpdir: $RXTXTMPDIR exists"; fi
-        rm $RXTXTMPDIR/*.tmp >/dev/null 2>&1 && if $DEBUG; then _log "DEBUG: $RXTXTMPDIR/*.tmp deleted @ start of script"; fi
-    else
-        if $DEBUG ; then _log "DEBUG: _check_ul_dl_rate(): creating tmpdir: $RXTXTMPDIR"; fi
-        mkdir $RXTXTMPDIR && if $DEBUG; then _log "DEBUG: _check_ul_dl_rate(): $RXTXTMPDIR created successfully"; fi
-    fi
-fi
 
 if [ "$FAKE" = "true" ]; then
     _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
