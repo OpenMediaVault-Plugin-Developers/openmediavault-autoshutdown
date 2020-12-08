@@ -35,9 +35,9 @@ declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, w
 declare -A P_UL_DL_RATE     # Associative array for storing _check_ul_dl_rate a network interface tx, rx and epoch values
 
 ######## CONSTANT DEFINITION ########
-readonly CTOPPARAM="-b -d 1 -n 1"         # Define common parameters for the top command line
-readonly STOPPARAM="-i ${CTOPPARAM}"      # Add specific parameters for the top command line
-readonly CONFIG="/etc/autoshutdown.conf"  # Autoshtdown configuration options.
+readonly CTOPPARAM="-b -d 1 -n 1"              # Define common parameters for the top command line
+readonly STOPPARAM="-i ${CTOPPARAM}"           # Add specific parameters for the top command line
+readonly CONFIG="${1:-/etc/autoshutdown.conf}" # Autoshtdown configuration options.
 
 ######## FUNCTION DECLARATION ########
 
