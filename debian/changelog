@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (5.1.1) stable; urgency=low
 
   * Improve log messages and improve function headers
+  * Fix bugs and Shellcheck issued in _check_docker_status
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 06 Dec 2020 20:56:33 +0000
 
