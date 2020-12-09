@@ -231,6 +231,6 @@ FAKE="false"
 
 #FORCE_NIC="eth1"
     # You can set NICs to look for a IP. This is useful, if you don't use eth0
-    # make sure you insert a space between each NIC
+    # make sure you insert a comma or space between each NIC
 
-    # see README
+    # see README.md

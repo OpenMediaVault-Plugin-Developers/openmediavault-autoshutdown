@@ -1,11 +1,13 @@
 [Unit]
-Description=Run autoshutdown script
-After=network.target
+Description=openmediavault-autoshutdown plugin service
+Requires=network-online.target local-fs.target
+After=network-online.target local-fs.target
 After=suspend.target
 After=hibernate.target
 After=hybrid-sleep.target
 
 [Service]
+User=root
 Type=simple
 Restart=always
 RestartSec=3

@@ -30,6 +30,7 @@ SYSLOG="false"              # Default if logging should go to syslog
 FAKE="false"                # Default fake mode operation
 
 ######## STORAGE DEFINITION #########
+declare -A NIC_TO_IP        # Associative array for storing _check_networkconfig network interface to IP address mappings
 declare -A PINGLIST_IFACE   # Associative array for storing _ping_range network interface IP addresses
 declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, wrtn and epoch values
 declare -A P_UL_DL_RATE     # Associative array for storing _check_ul_dl_rate a network interface tx, rx and epoch values
@@ -274,7 +275,7 @@ _check_processes()
 {
     # ## disabled for testing
     # _log "DEBUG: _check_processes(): Disabled for testing"
-    # return 0
+    #  return 0
 
     NUMPROC=0
     CHECK=0
@@ -464,10 +465,14 @@ _check_loadaverage()
 ###############################################################################
 #
 #   name          : _check_net_status
-#   parameter     : Array-# of NIC
+#   parameter     : $1 : Network interface under test
+#                 : $2 : The network interface IP address
+#   globals       : $NSOCKETNUMBERS : Socket number to check for activity
 #   global return : none
-#   return        : 0         : If no active socket has been found, ready for shutdown
-#                 : 1 or more : If at least one active socket has been found, no shutdown
+#   return        : 0         : If no active socket has been found, ready for
+#                               shutdown
+#                 : 1 or more : If at least one active socket has been found,
+#                               no shutdown
 #
 _check_net_status()
 {
@@ -475,22 +480,22 @@ _check_net_status()
     # _log "DEBUG: _check_net_status(): Disabled for testing"
     # return 0
 
-    NUMPROC=0
-    NICNR_NETSTATUS="$1"
+    local -r net_iface="${1}"
+    local -r server_ip="${2}"
 
-    _log "INFO: Check Connections for '${NIC[${NICNR_NETSTATUS}]}'"
+    NUMPROC=0
+
+    _log "INFO: _check_net_status(): Check Connections for: ${net_iface}"
 
     # check for each given socket number in NSOCKETNUMBERS if it is currently stated active in "netstat"
     for NSOCKET in ${NSOCKETNUMBERS//,/ } ; do
-        IP="${CLASS[$NICNR_NETSTATUS]}.${SERVERIP[$NICNR_NETSTATUS]}"
+        LINES="$(ss -n | awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${NSOCKET}$" '$2 ~ /^ESTAB$/ && $5 ~ regex')"
 
-        LINES="$(ss -n | awk -v regex="^([[]::ffff:)?${IP}[]]?:${NSOCKET}$" '$2 ~ /^ESTAB$/ && $5 ~ regex')"
+        if $DEBUG ; then _log "DEBUG: _check_net_status(): Port ${NSOCKET} ${LINES:-"found no active connection"}"; fi
 
-        if $DEBUG ; then _log "DEBUG: _check_net_status(): Result: $LINES"; fi # changed LINE in LINES
+        [ -z "${LINES}" ] && continue
 
         let NUMPROC+="$([ -n "${LINES}" ] && wc -l <<< "${LINES}" || echo -n "0")"
-
-        if $DEBUG ; then _log "DEBUG: _check_net_status(): Is socket present: $([ -n "${LINES}" ] && echo -n "true" || echo -n "false")"; fi
 
         CONIPS="$(awk '{gsub(/^([[]::ffff:)?/,"",$6);gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${LINES}" |
                     sort -u)"
@@ -513,7 +518,7 @@ _check_net_status()
             *)       PORTPROTOCOL="unknown" ;;
         esac
 
-        if [ -n "${LINES}" ]; then _log "INFO: _check_net_status(): Found active connection on port $NSOCKET ($PORTPROTOCOL) from ${CONIPS//$'\n'/, }"; fi
+        _log "INFO: _check_net_status(): Found active connection on port $NSOCKET ($PORTPROTOCOL) from ${CONIPS//$'\n'/, }";
 
     done   # > NSOCKET in ${NSOCKETNAMES//,/ } ; do
 
@@ -521,9 +526,9 @@ _check_net_status()
     _check_docker_status
     let NUMPROC+=${?}
 
-    if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active socket(s) from Port(s): $NSOCKETNUMBERS" ; }; fi
-
-    if $DEBUG ; then _log "DEBUG: _check_net_status(): $NUMPROC socket(s) active on ${NIC[$NICNR_NETSTATUS]}."; fi
+    if [ $NUMPROC -gt 0 ]; then
+        _log "INFO: _check_net_status(): Found $NUMPROC active socket(s) on ${net_iface}, from Port(s): $NSOCKETNUMBERS";
+    fi
 
     # Extra Check for connected users on the CLI if other processes are negative -> [ $NUMPROC -eq 0 ]
     if [ $NUMPROC -eq 0 ]; then
@@ -551,7 +556,7 @@ _check_net_status()
     if [ $NUMPROC -eq 0 ]; then
         if [ "$CHECK_SAMBA" = "true" ]; then
             if [ $(/usr/bin/smbstatus | egrep -i "no locked|sessionid.tdb not initialised|locking.tdb not initialised" | wc -l) != "1" ]; then
-                _log "INFO: Samba connected (reported by smbstatus) -> no shutdown"
+                _log "INFO: _check_net_status(): Samba connected (reported by smbstatus) -> no shutdown"
                 let NUMPROC++
             fi
         fi
@@ -1176,112 +1181,45 @@ _check_config()
 #
 #   name          : _check_networkconfig
 #   parameter     : none
+#   globals       : $FORCE_NIC : Force network interface lookup make sure you
+#                                insert a comma or space between each network
+#                                interface to be cheked.
+#                 : $NIC_TO_IP : Associative array for storing network
+#                                interface to IP address mappings.
 #   return        : none
 #
 _check_networkconfig()
 {
-    # Read IP-Adress and SERVERIP from e.g. 'ifconfig eth0'
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: Reading NICs ,IPs, ..."
-    NICNR=0
-    FOUNDIP=0
+    _log "INFO: _check_networkconfig(): Finding up network interfaces and associated IPv4 address"
 
-    # check FORCE_NIC, if set, then set it to NIC[0]
-    if [ -z "$FORCE_NIC" ]; then
-        # set the default NICs
-        # make sure that we filter out any suffixes for sub interfaces when using VLANs and stuff (i.e. "eth0.3@eth0" becomes "eth0.3" only).
-        FORCE_NIC="$(ip link | awk -F': ' '/: en|: eth|: wlan|: bond|: usb/ {print $2}' | sed 's/\@.*//g')"
-    else
-        _log "INFO: FORCE_NIC found: NIC is now $FORCE_NIC"
-        _log "INFO: If the following checks fail, then try to uncomment FORCE_NIC to do a normal network-check"
-    fi
+    local -r net_ifaces="${FORCE_NIC:-"en,eth,wlan,bond,usb"}"
+    while read -r net_iface ip; do
+        ipv4_valid=0
+        [[ "${ip}" =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$ ]] ||
+            ipv4_valid=1
 
-    for NWADAPTERS in $FORCE_NIC; do
-        let NICNR++
-        NIC[$NICNR]=$NWADAPTERS
-
-        if ip link show up | grep ${NIC[$NICNR]} > /dev/null; then
-            _log "INFO: NIC '${NIC[$NICNR]}' found: try to get IP"
-
-            NW_WAIT=0
-            while true; do
-                let NW_WAIT++
-                if [ $NW_WAIT -le 5 ]; then
-                    if ! ifconfig ${NIC[$NICNR]} | egrep -q "inet "; then
-                        _log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: No internet-Address found - wait 60 sec for initializing the network"
-                        sleep 60
-                    else
-                        _log "INFO: _check_networkconfig(): Run: #${NW_WAIT}: IP-Address found"
-                        break
-                    fi
-                else
-                    _log "WARNING: No internet-Address for ${NIC[$NICNR]} found after 5 minutes - The script will not work maybe ..."
-                    break
-                fi
-            done
-
-            IPFROMIFCONFIG[$NICNR]="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed -r 's/[ ]*(Bcast|netmask).*//g; s/[ ]*inet[ ](ad[d]r:)?//g')"
-            SERVERIP[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/.*\.//g')"
-            CLASS[$NICNR]="$(echo ${IPFROMIFCONFIG[$NICNR]} | sed 's/\(.*\..*\..*\)\..*/\1/g')"
-            _log "INFO: '${NIC[$NICNR]}' has IP: ${IPFROMIFCONFIG[$NICNR]}"
-
-            if $DEBUG; then
-                # ifconfig in extra variables for easier debugging
-                IPFROMIFCONFIG_DEBUG_1="$(ifconfig ${NIC[$NICNR]} | egrep "inet ")"
-                IPFROMIFCONFIG_DEBUG_2="$(ifconfig ${NIC[$NICNR]} | egrep "inet " | sed 's/[ ]*Bcast.*//g')"
-                # Log-Output all the stuff
-                _log "DEBUG: ifconfig ${NIC[$NICNR]} (Begin) ====================================="
-                # Output of ifconfig line for line
-                ifconfig ${NIC[$NICNR]} | while read IFCONFIGLINE
-                do
-                    _log "DEBUG: $IFCONFIGLINE"
-                done
-                _log "DEBUG: ifconfig ${NIC[$NICNR]} (End) ======================================="
-                _log "DEBUG: IPFROMIFCONFIG_DEBUG_1: '$IPFROMIFCONFIG_DEBUG_1'"
-                _log "DEBUG: IPFROMIFCONFIG_DEBUG_2: '$IPFROMIFCONFIG_DEBUG_2'"
-                _log "DEBUG: _check_networkconfig(): IPFROMIFCONFIG$NICNR: ${IPFROMIFCONFIG[$NICNR]}"
-                _log "DEBUG: _check_networkconfig(): SERVERIP$NICNR: ${SERVERIP[$NICNR]}"
-                _log "DEBUG: _check_networkconfig(): CLASS$NICNR: ${CLASS[$NICNR]}"
-            fi
-
-            # if both variables found, then count 1 up
-            if [ ! -z "${SERVERIP[$NICNR]}" ] && [ ! -z "${CLASS[$NICNR]}" ]; then
-                let FOUNDIP++
-
-                # bond0 has priority, even if there are eth0 and eth1
-                if [ "${NIC[$NICNR]}" = "bond0" ]; then
-                    _log "INFO: NIC '${NIC[$NICNR]}' found, skipping all others. bond0 has priority"
-                    break
-                fi
-            fi
-
-            # Check CLASS and SERVERIP if they are correct
-            [[ "${CLASS[$NICNR]}" =~ ^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)$ ]] || {
-                _log "WARNING: Invalid parameter format: Class: nnn.nnn.nnn]"
-                _log "WARNING: It is set to '${CLASS[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig ' did something wrong"
-                _log "WARNING: Please report this Bug and the CLI-output of 'ifconfig'"
-                _log "WARNING: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
-                unset NIC[$NICNR]; }
-
-            [[ "${SERVERIP[$NICNR]}" =~ ^(25[0-4]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])$ ]] || {
-                _log "WARNING: Invalid parameter format: SERVERIP [iii]"
-                _log "WARNING: It is set to '${SERVERIP[$NICNR]}', which is not a correct syntax. Maybe parsing 'ifconfig' did something wrong"
-                _log "WARNING: Please report this Bug and the CLI-output of 'ifconfig'"
-                _log "WARNING: unsetting NIC[$NICNR]: ${NIC[$NICNR]} ..."
-                unset NIC[$NICNR]; }
-
-        else
-            _log "INFO: NIC '${NIC[$NICNR]}' not found, skipping '${NIC[$NICNR]}'"
-            if $DEBUG; then _log "DEBUG: before unset: NIC[$NICNR]: ${NIC[$NICNR]}"; fi
-            unset NIC[$NICNR]
-            if $DEBUG; then _log "DEBUG: after unset: NIC[$NICNR]: ${NIC[$NICNR]}"; fi
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_networkconfig(): Network interfaces: ${net_iface}"
+            _log "DEBUG: _check_networkconfig(): Network interfaces status: $(< "/sys/class/net/${net_iface}/operstate")"
+            _log "DEBUG: _check_networkconfig(): Network interfaces IPv4 address: ${ip}"
+            _log "DEBUG: _check_networkconfig(): Network interfaces IPv4 address valid: ${ipv4_valid}"
         fi
-    done
 
-    if [ $FOUNDIP = 0 ]; then
-        _log "ERR: No SERVERIP or CLASS found, exiting ..."
-        exit 1
-    fi
+        [ "${ipv4_valid}" -eq 0 ] &&
+            [ "$(< "/sys/class/net/${net_iface}/operstate")" == "up" ] && {
+                _log "INFO: _check_networkconfig(): '${net_iface}' has IPv4 address: ${ip}"
+                NIC_TO_IP["${net_iface}"]="${ip}"; }
+
+    done < <(LC_ALL=C ip -o -4 address show |
+                awk -F"/| " -v regex=": ${net_ifaces//[, ]/|: }" \
+                    '$0 ~ regex {print $2 " " $7}')
+
+    [ -z "${!NIC_TO_IP[*]}" ] && {
+        _log "ERR: _check_networkconfig(): No valid network interface found, exiting ..."
+        exit 1; }
+
+    return 0
 }
 
 
@@ -1319,72 +1257,59 @@ _check_system_active()
         if $DEBUG; then _log "DEBUG: _check_clock is inactive. Setting CNT=0"; fi
     fi # > if $CHECKCLOCKACTIVE ; then
 
-    # call array "1 until $NICNR" (value is set after scriptstart)
-    for NICNR_CHECKSYSTEMACTIVE in $(seq 1 $NICNR); do
+    for net_iface in "${!NIC_TO_IP[@]}"; do
+        if $DEBUG; then _log "DEBUG: _check_system_active(): Running on: ${net_iface}"; fi
 
+        if [ $CNT -eq 0 ]; then
+            ## PRIO 1: Ping each IP address in parameter list. if we find one -> CNT != 0 we'll
+            # stop as there's really no point continuing to looking for more.
 
-        # if NIC is set (not empty) then check IPs connections, else skip it
-        if [ ! -z "${NIC[$NICNR_CHECKSYSTEMACTIVE]}" ]; then
-            if $DEBUG; then _log "DEBUG: _check_system_active() is running - NICNR_CHECKSYSTEMACTIVE: $NICNR_CHECKSYSTEMACTIVE"; fi
-
-            if [ $CNT -eq 0 ]; then
-                ## PRIO 1: Ping each IP address in parameter list. if we find one -> CNT != 0 we'll
-                # stop as there's really no point continuing to looking for more.
-
-                # only check IPs, if RANGE is not set to "-"
-                if [ "${IPCHECK}" == "true" ]; then
-                    local pingrangereturn=0
-                    _ping_range "${NIC["${NICNR_CHECKSYSTEMACTIVE}"]}"\
-                        "${IPFROMIFCONFIG[$NICNR]}" "${IPFROMIFCONFIG[*]}" ||
-                            pingrangereturn="${?}"
-                    if [ "${pingrangereturn}" -gt 0 ]; then
-                        let CNT++
-                        if "${DEBUG}"; then _log "DEBUG: _ping_range() -> RETURN: ${pingrangereturn}"; fi
-                    fi
-                    if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: ${CNT}"; fi
+            # only check IPs, if RANGE is not set to "-"
+            if [ "${IPCHECK}" == "true" ]; then
+                local pingrangereturn=0
+                _ping_range "${net_iface}" \
+                    "${NIC_TO_IP["${net_iface}"]}" "${NIC_TO_IP[*]}" ||
+                        pingrangereturn="${?}"
+                if [ "${pingrangereturn}" -gt 0 ]; then
+                    let CNT++
+                    if "${DEBUG}"; then _log "DEBUG: _ping_range() -> RETURN: ${pingrangereturn}"; fi
                 fi
-            else
-                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: ${CNT}"; fi
+                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: ${CNT}"; fi
+            fi
+        else
+            if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: ${CNT}"; fi
+        fi
+
+        if [ $CNT -eq 0 ]; then
+        # PRIO 2: Do a check for some active network sockets, maybe, one never knows...
+        # If there is at least one active, we leave this function with a 'bogus find'
+            _check_net_status "${net_iface}" "${NIC_TO_IP["${net_iface}"]}"
+            if [ $? -gt 0 ]; then
+                let CNT++
             fi
 
-            if [ $CNT -eq 0 ]; then
-            # PRIO 2: Do a check for some active network sockets, maybe, one never knows...
-            # If there is at least one active, we leave this function with a 'bogus find'
-                _check_net_status $NICNR_CHECKSYSTEMACTIVE
+            if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_net_status -> CNT: $CNT "; fi
+        else
+            if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_net_status not called -> CNT: $CNT "; fi
+        fi   # > if[ $CNT -eq 0 ]; then
 
-                ### Internal debugging
-                #echo "_check_net_status disabled for debugging!!!!"
-
-                if [ $? -gt 0 ]; then
+        if [ $CNT -eq 0 ]; then
+            # PRIO 3: _check_ul_dl_rate
+            # Do a check for ul-dl-rate
+            # I've put it here, because every network interface should be checked for uldl-rate
+            if [ "${ULDLCHECK}" == "true" ] ; then
+                local checkuldlratereturn=0
+                _check_ul_dl_rate "${net_iface}" || checkuldlratereturn="${?}"
+                if [ "${checkuldlratereturn}" -gt 0 ]; then
                     let CNT++
                 fi
 
-                if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_net_status -> CNT: $CNT "; fi
-            else
-                if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_net_status not called -> CNT: $CNT "; fi
-            fi   # > if[ $CNT -eq 0 ]; then
-
-            if [ $CNT -eq 0 ]; then
-                # PRIO 3: _check_ul_dl_rate
-                # Do a check for ul-dl-rate
-                # I've put it here, because every NIC should be checked for uldl-rate
-                if [ "${ULDLCHECK}" == "true" ] ; then
-                    local checkuldlratereturn=0
-                    _check_ul_dl_rate "${NIC["${NICNR_CHECKSYSTEMACTIVE}"]}" ||
-                        checkuldlratereturn="${?}"
-                    if [ "${checkuldlratereturn}" -gt 0 ]; then
-                        let CNT++
-                    fi
-
-                    if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _check_ul_dl_rate -> CNT: ${CNT}"; fi
-                fi
-            else
-                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _check_ul_dl_rate not called -> CNT: ${CNT}"; fi
-            fi   # > if[ $CNT -eq 0 ]; then
-
-        fi # >  if [ ! -z "${NIC[$NICNR_CHECKSYSTEMACTIVE]}" ]; then
-
-    done  # > NICNR_CHECKSYSTEMACTIVE in $(seq 1 $NICNR); do
+                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _check_ul_dl_rate -> CNT: ${CNT}"; fi
+            fi
+        else
+            if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _check_ul_dl_rate not called -> CNT: ${CNT}"; fi
+        fi   # > if[ $CNT -eq 0 ]; then
+    done
 
     if [ $CNT -eq 0 ]; then
         # PRIO 4: Do a HDDIO-Check
@@ -1488,7 +1413,6 @@ FCNT=$CYCLES
 # functional start of script
 if $DEBUG ; then
     _log "DEBUG: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    _log "DEBUG: CLASS and SERVERIP: see above"
     _log "DEBUG: CYCLES: $CYCLES"
     _log "DEBUG: SLEEP: $SLEEP"
     _log "DEBUG: CHECKCLOCKACTIVE: $CHECKCLOCKACTIVE"
@@ -1521,14 +1445,10 @@ _log "INFO: --------------- Initalise states ---------------------"
     _log "ERR: Initalising _check_hddio(): Please check using debug mode"
     exit 1; }
 
-for NICNR_INIT in $(seq 1 "${NICNR}"); do
-  # if NIC is set (not empty) then check IPs connections, else skip it
-  if [ -n "${NIC[$NICNR_INIT]}" ]; then
-    [ "${ULDLCHECK}" == "true" ] &&
-        ! _check_ul_dl_rate "${NIC["${NICNR_INIT}"]}" && {
+for net_iface in "${!NIC_TO_IP[@]}"; do
+    [ "${ULDLCHECK}" == "true" ] && ! _check_ul_dl_rate "${net_iface}" && {
         _log "ERR: Initalising _check_ul_dl_rate(): Please check using debug mode"
         exit 1; }
-  fi
 done
 
 _log "INFO: ---------------- Script started ----------------------"
@@ -1542,11 +1462,8 @@ else
     sleep 5m
 fi
 
-for NICNR_START in $(seq 1 $NICNR); do
-    # if NIC is set (not empty) then check IPs connections, else skip it
-    if [ ! -z "${NIC[$NICNR_START]}" ]; then
-        _log "INFO: script is doing checks for NIC: ${NIC[$NICNR_START]} - ${CLASS[$NICNR_START]}.${SERVERIP[$NICNR_START]}"
-    fi
+for net_iface in "${!NIC_TO_IP[@]}"; do
+    _log "INFO: Script is doing checks for NIC: ${net_iface} - ${NIC_TO_IP[${net_iface}]}"
 done
 
 while : ; do
