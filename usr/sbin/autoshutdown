@@ -155,6 +155,8 @@ _ping_range()
         _log "INFO: _ping_range(): ${active_ip} is active"
     done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
 
+    _log "INFO: _ping_range(): Active IPs found in the specified Range -> no shutdown"
+
     return "$(wc -l <<< "${fping_result}")"
 }
 
@@ -1233,142 +1235,80 @@ _check_networkconfig()
 #
 _check_system_active()
 {
-    # Set CNT to 1, because if $CHECKCLOCKACTIVE is successfull or not active, $CNT will be 0
-    CNT=1
-
-    # PRIO 0: Do a check, if the actual time is wihin the range of defined STAYUP-phase for this system
-    # e.g. 06:00 - 20:00, stay up, otherwise shutdown
-    # then: no need to ping all PCs
-
-    if $CHECKCLOCKACTIVE ; then # when $CHECKCLOCKACTIVE is on, then check the Clock
-
-        # if the Clock is in the given Range to shutdown
-        #_check_clock $UPHOURS &&
-        _check_clock &&
-            {
-                CNT=0
-            }
-
-        if $DEBUG ; then _log "DEBUG: _check_clock(): call _check_clock -> CNT: $CNT; UPHOURS: $UPHOURS "; fi
-
-    else
-        # If $CHECKCLOCKACTIVE is off, then Begin with CNT=0 and ping
-        CNT=0
-        if $DEBUG; then _log "DEBUG: _check_clock is inactive. Setting CNT=0"; fi
-    fi # > if $CHECKCLOCKACTIVE ; then
+    # PRIO 0: Do a check, if the actual time is wihin the range of defined
+    # STAYUP-phase for this system e.g. 06:00 - 20:00, stay up, otherwise
+    # shutdown.
+    if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_system_active(): Calling: _check_clock()"
+        fi
+        _check_clock || return 1
+    fi
 
     for net_iface in "${!NIC_TO_IP[@]}"; do
-        if $DEBUG; then _log "DEBUG: _check_system_active(): Running on: ${net_iface}"; fi
-
-        if [ $CNT -eq 0 ]; then
-            ## PRIO 1: Ping each IP address in parameter list. if we find one -> CNT != 0 we'll
-            # stop as there's really no point continuing to looking for more.
-
-            # only check IPs, if RANGE is not set to "-"
-            if [ "${IPCHECK}" == "true" ]; then
-                local pingrangereturn=0
-                _ping_range "${net_iface}" \
-                    "${NIC_TO_IP["${net_iface}"]}" "${NIC_TO_IP[*]}" ||
-                        pingrangereturn="${?}"
-                if [ "${pingrangereturn}" -gt 0 ]; then
-                    let CNT++
-                    if "${DEBUG}"; then _log "DEBUG: _ping_range() -> RETURN: ${pingrangereturn}"; fi
-                fi
-                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _ping_range -> CNT: ${CNT}"; fi
-            fi
-        else
-            if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _ping_range not called -> CNT: ${CNT}"; fi
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_system_active(): Running on: ${net_iface}";
         fi
 
-        if [ $CNT -eq 0 ]; then
-        # PRIO 2: Do a check for some active network sockets, maybe, one never knows...
-        # If there is at least one active, we leave this function with a 'bogus find'
-            _check_net_status "${net_iface}" "${NIC_TO_IP["${net_iface}"]}"
-            if [ $? -gt 0 ]; then
-                let CNT++
+        # PRIO 1: Ping each IP address in parameter list every network
+        # interface should be checked.
+        if [ "${IPCHECK}" == "true" ]; then
+            if "${DEBUG}"; then
+                _log "DEBUG: _check_system_active(): Calling: _ping_range()"
             fi
+            _ping_range "${net_iface}" \
+                        "${NIC_TO_IP["${net_iface}"]}" \
+                        "${NIC_TO_IP[*]}" || return 1
+        fi
 
-            if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_net_status -> CNT: $CNT "; fi
-        else
-            if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_net_status not called -> CNT: $CNT "; fi
-        fi   # > if[ $CNT -eq 0 ]; then
+        # PRIO 2: Do a check for some active network sockets.
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_system_active(): Calling: _check_net_status()"
+        fi
+        _check_net_status "${net_iface}" "${NIC_TO_IP["${net_iface}"]}" ||
+            return 1
 
-        if [ $CNT -eq 0 ]; then
-            # PRIO 3: _check_ul_dl_rate
-            # Do a check for ul-dl-rate
-            # I've put it here, because every network interface should be checked for uldl-rate
-            if [ "${ULDLCHECK}" == "true" ] ; then
-                local checkuldlratereturn=0
-                _check_ul_dl_rate "${net_iface}" || checkuldlratereturn="${?}"
-                if [ "${checkuldlratereturn}" -gt 0 ]; then
-                    let CNT++
-                fi
-
-                if "${DEBUG}"; then _log "DEBUG: _check_system_active(): call _check_ul_dl_rate -> CNT: ${CNT}"; fi
+        # PRIO 3: Do a check for ul-dl-rate every network interface should be
+        # checked for uldl-rate.
+        if [ "${ULDLCHECK}" == "true" ]; then
+            if "${DEBUG}"; then
+                _log "DEBUG: _check_system_active(): Calling: _check_ul_dl_rate()"
             fi
-        else
-            if "${DEBUG}"; then _log "DEBUG: _check_system_active(): _check_ul_dl_rate not called -> CNT: ${CNT}"; fi
-        fi   # > if[ $CNT -eq 0 ]; then
+            _check_ul_dl_rate "${net_iface}" || return 1
+        fi
     done
 
-    if [ $CNT -eq 0 ]; then
-        # PRIO 4: Do a HDDIO-Check
-        if [ "$HDDIOCHECK" = "true" ] ; then
-            _check_hddio
-            if [ $? -gt 0 ]; then
-                let CNT++
-            fi
-
-            if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_hddio -> CNT: $CNT "; fi
+    # PRIO 4: Do a hdd io check.
+    if [ "${HDDIOCHECK}" == "true" ]; then
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_system_active(): Calling: _check_hddio()"
         fi
-    else
-        if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_hddio not called -> CNT: $CNT "; fi
-    fi   # > if[ $CNT -eq 0 ]; then
+        _check_hddio || return 1
+    fi
 
+    # PRIO 5: Do a check for some active processes.
+    if "${DEBUG}"; then
+        _log "DEBUG: _check_system_active(): Calling: _check_processes()"
+    fi
+    _check_processes || return 1
 
-
-    if [ $CNT -eq 0 ]; then
-        # PRIO 5: Do a check for some active processes, maybe, one never knows...
-        # If there is at least one active, we leave this function with a 'bogus find'
-        _check_processes
-        if [ $? -gt 0 ]; then
-            let CNT++
+    # PRIO 6: Do a load average check
+    if [ "${LOADAVERAGECHECK}" == "true" ]; then
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_system_active(): Calling: _check_loadaverage()"
         fi
+        _check_loadaverage || return 1
+    fi
 
-        if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_processes -> CNT: $CNT "; fi
-    else
-        if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_processes not called -> CNT: $CNT "; fi
-    fi   # > if[ $CNT -eq 0 ]; then
-
-    if [ $CNT -eq 0 ]; then
-        # PRIO 6: Do a LOADAVERAGE-Check
-        if [ "$LOADAVERAGECHECK" = "true" ] ; then
-            _check_loadaverage
-            if [ $? -gt 0 ]; then
-                let CNT++
-            fi
-
-            if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_loadaverage -> CNT: $CNT "; fi
+    # PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
+    if [ "${PLUGINCHECK}" == "true" ] ; then
+        if "${DEBUG}"; then
+            _log "DEBUG: _check_system_active(): Calling: _check_plugin()"
         fi
-    else
-        if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_loadaverage not called -> CNT: $CNT "; fi
-    fi   # > if[ $CNT -eq 0 ]; then
+        _check_plugin || return 1
+    fi
 
-    if [ $CNT -eq 0 ]; then
-        # PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
-        if [ "$PLUGINCHECK" = "true" ] ; then
-            _check_plugin
-            if [ $? -gt 0 ]; then
-                let CNT++
-            fi
-
-            if $DEBUG ; then _log "DEBUG: _check_system_active(): call _check_plugin -> CNT: $CNT "; fi
-        fi
-    else
-        if $DEBUG ; then _log "DEBUG: _check_system_active(): _check_plugin not called -> CNT: $CNT "; fi
-    fi   # > if[ $CNT -eq 0 ]; then
-
-    return ${CNT};
+    return 0
 }
 
 

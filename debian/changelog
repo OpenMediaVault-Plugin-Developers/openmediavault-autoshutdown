@@ -6,6 +6,7 @@ openmediavault-autoshutdown (5.1.1) stable; urgency=low
   * Allow the autoshutdown.config to be passed to script
   * Rework _check_networkconfig and the autosutdown.service
   * Remove unsupported options form autoshutdown.default
+  * Refactor and simplify _check_system_active
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 06 Dec 2020 20:56:33 +0000
 
