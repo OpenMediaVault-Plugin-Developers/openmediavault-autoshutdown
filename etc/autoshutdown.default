@@ -173,23 +173,6 @@ FAKE="false"
 
 # ----------------------------------------------------------------------------------------
 
-#NETSTATWORD="VERBUNDEN"    # Set specific word, which specifies the connection in netstat
-                            # only needed for CLI-testing with VERBOSE!
-
-    # It is needed, if someone wants to test autoshutdown on the CLI, because on the CLI the netstat-output is language-specific.
-    # At systemstart netstat-output is always english. For german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n'
-    # on the CLI and you shoud see this output:
-
-        # Aktive Internetverbindungen (ohne Server)
-        # Proto Recv-Q Send-Q Local Address           Foreign Address         State
-        # tcp        0      0 192.168.178.21:2049     192.168.178.23:753      VERBUNDEN
-        # tcp        0      0 192.168.178.21:22       192.168.178.23:53099    VERBUNDEN
-
-    # now take the word under "State" -> "VERBUNDEN" and set it for NETSTATWORD
-
-
-# ----------------------------------------------------------------------------------------
-
 #PLUGINCHECK="true"
     # PlugIns: You find sample plugins in /etc/autoshutdown.d
     # Set this to true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d
