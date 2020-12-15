@@ -191,7 +191,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "checkbox",
                     name: "ipcheck",
-                    fieldLabel: _(""),
+                    fieldLabel: "",
                     checked: true
                 },{
                     xtype: "displayfield",
@@ -231,7 +231,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "checkbox",
                     name: "uldlcheck",
-                    fieldLabel: _(""),
+                    fieldLabel: "",
                     checked: true
                 },{
                     xtype: "displayfield",
@@ -278,7 +278,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("If the load average of the server is above this value, then no shutdown.") + "<br />" +
-                                _("Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
+                              _("Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20")
                     }]
                 }]
             },{
@@ -288,7 +288,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "checkbox",
                     name: "hddiocheck",
-                    fieldLabel: _(""),
+                    fieldLabel: "",
                     checked: true
                 },{
                     xtype: "displayfield",
@@ -361,8 +361,8 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 plugins: [{
                     ptype: "fieldinfo",
                     text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
-                            _("README") + "</a> " +
-                            _("for more details.")
+                          _("README") + "</a> " +
+                          _("for more details.")
                 }]
             }]
         }];

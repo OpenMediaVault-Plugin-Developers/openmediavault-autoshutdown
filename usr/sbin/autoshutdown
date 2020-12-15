@@ -1386,7 +1386,7 @@ _check_system_active()
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
-_log "INFO: Openmediavault-autoshutdown version: $(\
+_log "INFO: Openmediavault-autoshutdown version: $(
     dpkg -s openmediavault-autoshutdown | awk '/Version:/{print $2}')" force
 _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
 _log "INFO: Initialize logging to: ${FACILITY}" force
