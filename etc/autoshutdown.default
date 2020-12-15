@@ -41,10 +41,13 @@ CHECKCLOCKACTIVE="false"
 
 UPHOURS="06..20"
     # Define a range of hours, in which the system should stay up (default="6..20")
-    # without checking any other paramter to stay awake
+    # without checking any other parameter to stay awake
 
 ##################################################
 #### Network Socket Supervision Configuration
+CHECKSOCKETS="true"
+    # Parameter to activate or deactivate network socket feature (default="true")
+
 NSOCKETNUMBERS="22,139,445,10000,49152"
     # Socket numbers to check for activity
     # (default="21,22,80,139,445,3689,6991,9091,49152")

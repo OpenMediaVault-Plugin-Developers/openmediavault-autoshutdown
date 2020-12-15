@@ -43,6 +43,17 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             ]
         },{
             name: [
+                "nsocketnumbers"
+            ],
+            conditions: [
+                { name: "checksockets", value: true }
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
+        },{
+            name: [
                 "uldlrate"
             ],
             conditions: [
@@ -215,14 +226,31 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     }]
                 }]
             },{
-                xtype: "textfield",
-                name: "nsocketnumbers",
+                xtype: "fieldcontainer",
                 fieldLabel: _("Sockets"),
-                value: "21,22,80,139,445,3689,6991,9091,49152",
-                plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Socket number to check for activity.") + "  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>" +
-                          _("List of Ports") + "</a>"
+                layout: "hbox",
+                items: [{
+                    xtype: "checkbox",
+                    name: "checksockets",
+                    fieldLabel: "",
+                    checked: true
+                },{
+                    xtype: "displayfield",
+                    width: 25,
+                    value: ""
+                },{
+                    xtype: "textfield",
+                    name: "nsocketnumbers",
+                    fieldLabel: "",
+                    value: "21,22,80,139,445,3689,6991,9091,49152",
+                    width: 600,
+                    allowBlank: false,
+                    plugins: [{
+                        ptype: "fieldinfo",
+                        text: _("Socket number to check for activity.") +
+                                "  <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>" +
+                              _("List of Ports") + "</a>"
+                    }]
                 }]
             },{
                 xtype: "fieldcontainer",

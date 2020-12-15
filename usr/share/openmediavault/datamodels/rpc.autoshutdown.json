@@ -50,6 +50,10 @@
 				"maximum": 23,
 				"required": true
 			},
+			"checksockets": {
+				"type": "boolean",
+				"required": true
+			},
 			"nsocketnumbers": {
 				"type": "string",
 				"required": true
