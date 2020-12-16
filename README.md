@@ -38,7 +38,7 @@ Let's have a look at a example:
     ULDLCHECK="true"
     ULDLRATE=50
     LOADAVERAGECHECK="true"
-    LOADAVERAGE=30
+    LOADAVERAGE=40
     SYSLOG="true"
     VERBOSE="false"
     FAKE="false"
@@ -137,4 +137,5 @@ to delete all *.status files, which are not deleted before (loss of power for ex
 Please have a look at the two example files in /etc/autoshutdown.d
 
 __FORCE_NIC__  
-e.g. FORCE_NIC="eth1" forces autoshutdown to look for a IP first in the given device, after that all others are checked.
+e.g. FORCE_NIC="eth1" You can set NICs to look for a IP. This is useful, if
+you don't use eth0 make sure you insert a comma or space between each NIC.

@@ -53,6 +53,10 @@
 			"maximum": 23,
 			"default": 20
 		},
+		"checksockets": {
+			"type": "boolean",
+			"default": true
+		},
 		"nsocketnumbers": {
 			"type": "string",
 			"default": "21,22,80,139,445,3689,6991,9091,49152"

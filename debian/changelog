@@ -1,3 +1,20 @@
+openmediavault-autoshutdown (5.1.1) stable; urgency=low
+
+  * Improve log messages and improve function headers
+  * Fix bugs and Shellcheck issued in _check_docker_status
+  * Refactor _check_ul_dl_rate, stop using fixed sleep and add init
+  * Allow the autoshutdown.config to be passed to script
+  * Rework _check_networkconfig and the autosutdown.service
+  * Remove unsupported options form autoshutdown.default
+  * Refactor and simplify _check_system_active
+  * Refactor and split-up _check_net_status
+  * Small code improvement
+  * Add disablement of _check_net_status and _check_docker_status
+  * Clean-up/refactor _check_config
+  * Modify _log to auto-insert function name
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 06 Dec 2020 20:56:33 +0000
+
 openmediavault-autoshutdown (5.1.0) stable; urgency=low
 
   * Refactor and remove deprecation on logging

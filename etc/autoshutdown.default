@@ -39,13 +39,16 @@ CHECKCLOCKACTIVE="false"
     # Parameter to activate or deactivate this feature (default="false")
     # per default this is deactivated
 
-UPHOURS="06..20"
+UPHOURS="6..20"
     # Define a range of hours, in which the system should stay up (default="6..20")
-    # without checking any other paramter to stay awake
+    # without checking any other parameter to stay awake
 
 ##################################################
 #### Network Socket Supervision Configuration
-NSOCKETNUMBERS="22,139,445,10000,49152"
+CHECKSOCKETS="true"
+    # Parameter to activate or deactivate network socket feature (default="true")
+
+NSOCKETNUMBERS="21,22,80,139,445,3689,6991,9091,49152"
     # Socket numbers to check for activity
     # (default="21,22,80,139,445,3689,6991,9091,49152")
     # Ports:
@@ -92,7 +95,7 @@ HDDIOCHECK="true"
     # over this value, then no shutdown is issued.
     # If you set this to "true", don't forget to set HDDIO-RATE also!
 
-HDDIO_RATE=400
+HDDIO_RATE=401
     # Set this to the target HDDIO-rate in kB/s for the Server.
 
 CHECK_SAMBA="true"
@@ -173,23 +176,6 @@ FAKE="false"
 
 # ----------------------------------------------------------------------------------------
 
-#NETSTATWORD="VERBUNDEN"    # Set specific word, which specifies the connection in netstat
-                            # only needed for CLI-testing with VERBOSE!
-
-    # It is needed, if someone wants to test autoshutdown on the CLI, because on the CLI the netstat-output is language-specific.
-    # At systemstart netstat-output is always english. For german Debian/Ubuntu = "VERBUNDEN", other languages: 'netstat -n'
-    # on the CLI and you shoud see this output:
-
-        # Aktive Internetverbindungen (ohne Server)
-        # Proto Recv-Q Send-Q Local Address           Foreign Address         State
-        # tcp        0      0 192.168.178.21:2049     192.168.178.23:753      VERBUNDEN
-        # tcp        0      0 192.168.178.21:22       192.168.178.23:53099    VERBUNDEN
-
-    # now take the word under "State" -> "VERBUNDEN" and set it for NETSTATWORD
-
-
-# ----------------------------------------------------------------------------------------
-
 #PLUGINCHECK="true"
     # PlugIns: You find sample plugins in /etc/autoshutdown.d
     # Set this to true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d
@@ -231,6 +217,6 @@ FAKE="false"
 
 #FORCE_NIC="eth1"
     # You can set NICs to look for a IP. This is useful, if you don't use eth0
-    # make sure you insert a space between each NIC
+    # make sure you insert a comma or space between each NIC
 
-    # see README
+    # see README.md
