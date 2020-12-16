@@ -38,7 +38,7 @@ Let's have a look at a example:
     ULDLCHECK="true"
     ULDLRATE=50
     LOADAVERAGECHECK="true"
-    LOADAVERAGE=30
+    LOADAVERAGE=40
     SYSLOG="true"
     VERBOSE="false"
     FAKE="false"
