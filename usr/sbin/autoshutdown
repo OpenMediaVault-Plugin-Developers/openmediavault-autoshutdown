@@ -1035,7 +1035,7 @@ _check_config()
             PLUGINCHECK="false"; }
     fi
 
-    # CheckClockActive together with UPHOURS
+    # CheckClockActive together with UPHOURS.
     [[ "${CHECKCLOCKACTIVE}" == "true" || "${CHECKCLOCKACTIVE}" == "false" ]] || {
         _log "WARNING: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
         _log "WARNING: Set CHECKCLOCKACTIVE to false"
@@ -1047,6 +1047,9 @@ _check_config()
             _log "WARNING: You set it to '${UPHOURS}', which is not a correct syntax. Maybe it's empty?"
             _log "WARNING: Setting UPHOURS to 6..20"
             UPHOURS="6..20"; }
+    else
+        _log "WARNING: CHECKCLOCKACTIVE is set to false"
+        _log "WARNING: Ignoring UPHOURS"
     fi
 
     local -r regex="^([A-Za-z0-9_.-]+)+(,[A-Za-z0-9_.-]+)*$"
@@ -1095,7 +1098,6 @@ _check_config()
     else
         _log "WARNING: CHECKSOCKETS is set to false"
         _log "WARNING: Ignoring NSOCKETNUMBERS"
-        CHECKSOCKETS="false"
     fi
 
     # IPCHECK
@@ -1145,7 +1147,6 @@ _check_config()
     else
         _log "WARNING: HDDIOCHECK is set to false"
         _log "WARNING: Ignoring HDDIO_RATE"
-        HDDIOCHECK="false"
     fi
 
     # Sleep: 1 - 9999
