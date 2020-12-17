@@ -59,7 +59,7 @@
 		},
 		"nsocketnumbers": {
 			"type": "string",
-			"default": "21,22,80,139,445,3689,6991,9091,49152"
+			"default": "21,22,80,3689,6991,9091,49152"
 		},
 		"uldlcheck": {
 			"type": "boolean",

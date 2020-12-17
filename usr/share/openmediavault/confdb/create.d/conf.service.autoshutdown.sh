@@ -38,7 +38,7 @@ if ! omv_config_exists "${SERVICE_XPATH}"; then
     omv_config_add_key "${SERVICE_XPATH}" "uphours_begin" "6"
     omv_config_add_key "${SERVICE_XPATH}" "uphours_end" "20"
     omv_config_add_key "${SERVICE_XPATH}" "checksockets" "1"
-    omv_config_add_key "${SERVICE_XPATH}" "nsocketnumbers" "21,22,80,139,445,3689,6991,9091,49152"
+    omv_config_add_key "${SERVICE_XPATH}" "nsocketnumbers" "21,22,80,3689,6991,9091,49152"
     omv_config_add_key "${SERVICE_XPATH}" "uldlcheck" "1"
     omv_config_add_key "${SERVICE_XPATH}" "uldlrate" "50"
     omv_config_add_key "${SERVICE_XPATH}" "loadaveragecheck" "0"
