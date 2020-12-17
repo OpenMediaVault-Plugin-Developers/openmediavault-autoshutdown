@@ -180,7 +180,7 @@ _shutdown()
     # When FAKE-Mode is on:
     [ "${FAKE}" == "true" ] && {
         _log "INFO: Fake-shutdown issued: '${SHUTDOWNCOMMAND}' - Command is not executed because of Fake-Mode" force
-        _log "INFO: autoshutdowe will end here."
+        _log "INFO: Autoshutdown will end here"
         _log "INFO:"
         exit 0
     }
@@ -229,20 +229,20 @@ _ident_num_proc()
 
     case $CHECKPROCESS in
         loadproc)
-            if $DEBUG ; then _log "DEBUG: _ident_num_proc() loadproc: commandline: 'top ${TPPARAM} | grep -c ${GRPPATTERN}'"; fi
+            if $DEBUG ; then _log "DEBUG: loadproc: commandline: 'top ${TPPARAM} | grep -c ${GRPPATTERN}'"; fi
             # call top once, pipe the result to grep and count the number of patterns found
             # the number of found processes is returned to the callee
             NUMOFPROCESSES_TOP=$(top ${TPPARAM} | grep -c ${GRPPATTERN})
             ;;
 
         tempproc)
-            if $DEBUG ; then _log "DEBUG: _ident_num_proc() tempproc: commandline: 'top ${TPPARAM} | grep -c ${GRPPATTERN}'"; fi
+            if $DEBUG ; then _log "DEBUG: tempproc: commandline: 'top ${TPPARAM} | grep -c ${GRPPATTERN}'"; fi
             NUMOFPROCESSES_TOP=$(top ${TPPARAM} | grep -c ${GRPPATTERN})
 
             # If there is no process with top, maybe we find some with "ps", but not in in.tftpd
             if [ "$NUMOFPROCESSES_TOP" = 0 ]; then
                 if [ "${GRPPATTERN}" != "in.tftpd" ]; then
-                    if $DEBUG ; then _log "DEBUG: _ident_num_proc() tempproc-ps: commandline: 'ps -ef | grep -c ${GRPPATTERN}'"; fi
+                    if $DEBUG ; then _log "DEBUG: tempproc-ps: commandline: 'ps -ef | grep -c ${GRPPATTERN}'"; fi
                     NUMOFPROCESSES_PS=$(ps -ef | grep -v grep | grep -c $GRPPATTERN)
                 else
                     if $DEBUG; then _log "INFO: Process = 'in.tftpd' - skipping 'ps'-check"; fi
@@ -251,7 +251,7 @@ _ident_num_proc()
             ;;
 
         *)
-            _log "ERR: _ident_num_proc() This should not happen. Exit 42"
+            _log "ERR: This should not happen. Exit 42"
             ;;
     esac
 
@@ -332,7 +332,7 @@ _check_processes()
 
     let NUMPROC=$NUMPROC+$CHECK
 
-    if $DEBUG ; then _log "DEBUG: $NUMPROC process(es) active."; fi
+    if $DEBUG ; then _log "DEBUG: $NUMPROC process(es) active"; fi
 
     # only return we found a process
     return $NUMPROC
@@ -1012,7 +1012,7 @@ _check_config()
 
     [[ "${ENABLE}" == "true" || "${ENABLE}" == "false" ]] || {
         _log "WARNING: ENABLE not set properly. It has to be 'true' or 'false'"
-        _log "ERR: exiting ..."
+        _log "ERR: Exiting ..."
         exit 1; }
 
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
@@ -1023,21 +1023,21 @@ _check_config()
      # Flag: 1 - 999 (cycles)
     [[ "${CYCLES}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
         _log "WARNING: Invalid parameter format: Flag"
-        _log "WARNING: You set it to '${CYCLES}', which is not a correct syntax. Only '1' - '999' is allowed."
+        _log "WARNING: You set it to '${CYCLES}', which is not a correct syntax. Only '1' - '999' is allowed"
         _log "WARNING: Setting CYCLES to 5"
         CYCLES="5"; }
 
     # Check PLUGINCHECK is defined as it not available directly in the GUI.
     if [ -n "${PLUGINCHECK:-}" ]; then
         [[ "${PLUGINCHECK}" == "true" || "${PLUGINCHECK}" == "false" ]] || {
-            _log "WARNING: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'."
+            _log "WARNING: AUTOUNRARCHECK not set properly. It has to be 'true' or 'false'"
             _log "WARNING: Set PLUGINCHECK to false"
             PLUGINCHECK="false"; }
     fi
 
     # CheckClockActive together with UPHOURS.
     [[ "${CHECKCLOCKACTIVE}" == "true" || "${CHECKCLOCKACTIVE}" == "false" ]] || {
-        _log "WARNING: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: CHECKCLOCKACTIVE not set properly. It has to be 'true' or 'false'"
         _log "WARNING: Set CHECKCLOCKACTIVE to false"
         CHECKCLOCKACTIVE="false"; }
 
@@ -1064,7 +1064,7 @@ _check_config()
     elif [[ ! "${LOADPROCNAMES}" =~ ${regex} ]]; then
         _log "WARNING: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
         _log "WARNING: You set it to '${LOADPROCNAMES}', which is not the correct syntax"
-        _log "ERR: exiting ..."
+        _log "ERR: Exiting ..."
         exit 1
     fi
 
@@ -1078,7 +1078,7 @@ _check_config()
     elif [[ ! "${TEMPPROCNAMES}" =~ ${regex} ]]; then
         _log "WARNING: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
         _log "WARNING: You set it to '${TEMPPROCNAMES}', which is not the correct syntax"
-        _log "ERR: exiting ..."
+        _log "ERR: Exiting ..."
         exit 1
     fi
 
@@ -1092,7 +1092,8 @@ _check_config()
     if [ "${CHECKSOCKETS}" == "true" ]; then
         [[ "${NSOCKETNUMBERS}" =~ ^([0-9]{2,5})+(,[0-9]{2,5})*$ ]] || {
             _log "WARNING: Invalid parameter list format: NSOCKETNUMBERS [nsocket1,nsocket2,nsocket3,...]"
-            _log "WARNING: You set it to '${NSOCKETNUMBERS}', which is not a correct syntax. Maybe it's empty? Only Port-Numbers with at least 2 digits are allowed."
+            _log "WARNING: Only Port-Numbers with at least 2 digits are allowed"
+            _log "WARNING: You set it to '${NSOCKETNUMBERS}', which is not a correct syntax. Maybe it's empty?"
             _log "WARNING: Setting NSOCKETNUMBERS to: 21,22,80,3689,6991,9091,49152"
             NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"; }
     else
@@ -1102,7 +1103,7 @@ _check_config()
 
     # IPCHECK
     [[ "${IPCHECK}" == "true" || "${IPCHECK}" == "false" ]] || {
-        _log "WARNING: IPCHECK not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: IPCHECK not set properly. It has to be 'true' or 'false'"
         _log "WARNING: Set IPCHECK to: false"
         IPCHECK="false"; }
 
@@ -1127,13 +1128,13 @@ _check_config()
         _log "WARNING: The 'RANGE' should be comma delimited list of the following:"
         _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
         _log "WARNING: Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-        _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
+        _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used"
         _log "WARNING: Setting RANGE to: '2..254'"
         RANGE="2..254"
     fi
 
    [[ "${HDDIOCHECK}" == "true" || "${HDDIOCHECK}" == "false" ]] || {
-        _log "WARNING: HDDIOCHECK not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: HDDIOCHECK not set properly. It has to be 'true' or 'false'"
         _log "WARNING: Set HDDIOCHECK to false"
         HDDIOCHECK="false"; }
 
@@ -1158,7 +1159,7 @@ _check_config()
         SLEEP=180; }
 
     [[ "${ULDLCHECK}" == "true" || "${ULDLCHECK}" == "false" ]] || {
-        _log "WARNING: ULDLCHECK not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: ULDLCHECK not set properly. It has to be 'true' or 'false'"
         _log "WARNING: Set ULDLCHECK to false"
         ULDLCHECK="false"; }
 
@@ -1175,7 +1176,7 @@ _check_config()
     fi
 
     [[ "${LOADAVERAGECHECK}" == "true" || "${LOADAVERAGECHECK}" == "false" ]] || {
-        _log "WARNING: LOADAVERAGECHECK not set properly. It has to be 'true' or 'false'."
+        _log "WARNING: LOADAVERAGECHECK not set properly. It has to be 'true' or 'false'"
         _log "WARNING: Set LOADAVERAGECHECK to false"
         LOADAVERAGECHECK="false"; }
 
@@ -1199,17 +1200,17 @@ _check_config()
     _log "INFO: Your Kernel supports the following modes from pm-utils:"
     local pm_suspend="false"
     pm-is-supported --suspend && {
-         _log "INFO: Kernel supports SUSPEND (SUSPEND to RAM)"
+         _log "INFO: Kernel supports: SUSPEND (SUSPEND to RAM)"
         pm_suspend="true"; }
 
     local pm_hibernate="false"
     pm-is-supported --hibernate && {
-        _log "INFO: Kernel supports HIBERNATE (SUSPEND to DISK)"
+        _log "INFO: Kernel supports: HIBERNATE (SUSPEND to DISK)"
         pm_hibernate="true"; }
 
     local pm_suspend_hybrid="false"
     pm-is-supported --suspend-hybrid && {
-        _log "INFO: Kernel supports HYBRID-SUSPEND (to DISK & to RAM)"
+        _log "INFO: Kernel supports: HYBRID-SUSPEND (to DISK & to RAM)"
         pm_suspend_hybrid="true"; }
 
     # Check, if pm-suspend is supported.
@@ -1273,7 +1274,7 @@ _check_networkconfig()
                     '$0 ~ regex {print $2 " " $7}')
 
     [ -z "${!NIC_TO_IP[*]}" ] && {
-        _log "ERR: _check_networkconfig(): No valid network interface found, exiting ..."
+        _log "ERR: No valid network interface found, exiting ..."
         exit 1; }
 
     return 0
@@ -1411,7 +1412,7 @@ if [ -f "${CONFIG}" ]; then
     . "${CONFIG}"
     _log "INFO: ${CONFIG} loaded"
 else
-    _log "ERR: cfg-File not found! Please check ${CONFIG} exits"
+    _log "ERR: Config file not found! Please check ${CONFIG} exits ..."
     exit 1
 fi
 
@@ -1423,8 +1424,8 @@ _check_config
 
 # enable / disable check here
 if [ "${ENABLE}" != "true" ]; then
-    _log "INFO: script disabled by autoshutdown.conf"
-    _log "INFO: nothing to do. Exiting here ..."
+    _log "INFO: Script disabled by autoshutdown.conf"
+    _log "INFO: Nothing to do. Exiting here ..."
     exit 0
 fi
 
@@ -1476,7 +1477,7 @@ for net_iface in "${!NIC_TO_IP[@]}"; do
 done
 
 _log "INFO: ---------------- Script started ----------------------"
-_log "INFO: ${CYCLES} test cycles until shutdown is issued."
+_log "INFO: ${CYCLES} test cycles until shutdown is issued"
 
 if [ "$FAKE" = "true" ]; then
     _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
@@ -1500,7 +1501,7 @@ while : ; do
         # Nothing found so sub one from the count and check if we can shutdown yet.
         let FCNT--
 
-        _log "INFO: No active hosts or processes within network range, ${FCNT} cycles until shutdown..."
+        _log "INFO: No active hosts or processes within network range, ${FCNT} cycles until shutdown ..."
 
         if [ $FCNT -eq 0 ]; then
             _shutdown;
@@ -1511,7 +1512,7 @@ while : ; do
     fi   # > if _check_system_active
 
     # Wait for the required time before checking again.
-    _log "INFO: sleep for ${SLEEP}s."
+    _log "INFO: sleep for ${SLEEP}s"
     sleep $SLEEP;
 
 done   # > while : ; do
