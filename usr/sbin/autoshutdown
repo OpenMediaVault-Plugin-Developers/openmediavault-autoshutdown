@@ -659,18 +659,24 @@ _check_users_cli_status()
 _check_smb_status()
 {
     local smb_connectons
-    smb_connectons="$(LC_ALL=C smbstatus -b | awk 'NR>4')"
+    smb_connectons="$(LC_ALL=C smbstatus --brief | awk 'NR>4')"
+    local smb_lock_pids
+    mapfile -t smb_lock_pids <<< "$(
+        LC_ALL=C smbstatus --locks |
+        awk '$1 ~ /[0-9]+/{print $1}' |
+        sort -u)"
 
-    [ -z "${smb_connectons}" ] && {
-        _log "INFO: No SMB clients connected -> next check"
+    [[ -z "${smb_connectons}" || ! "${smb_lock_pids[*]}" ]] && {
+        _log "INFO: No SMB clients connected with locks -> next check"
         return 0
     }
 
     while read -r pid user host proto; do
-        _log "INFO: SMB client - PID: ${pid} User: ${user} Host: ${host} Proto: ${proto}"
+        [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] &&
+            _log "INFO: SMB client with locks - PID: ${pid} USER: ${user} HOST: ${host} PROTO: ${proto}"
     done < <(awk '{print $1 " " $2":"$3 " " $4 " " $6}' <<< "${smb_connectons}")
 
-    _log "INFO: SMB clients connected -> no shutdown"
+    _log "INFO: SMB clients with locks connected -> no shutdown"
     return 1
 }
 
