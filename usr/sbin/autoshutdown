@@ -358,13 +358,13 @@ _check_plugin()
 
     for asd_plugin in /etc/autoshutdown.d/*; do
 
-        local plugin_name;
+        local plugin_name
         plugin_name="${asd_plugin##*/}"
-        local plugin_folder;
+        local plugin_folder
         plugin_folder="$(awk -F= '/folder=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
-        local plugin_file;
+        local plugin_file
         plugin_file="$(awk -F= '/file=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
-        local plugin_content;
+        local plugin_content
         plugin_content="$(awk -F= '/content=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
 
         if "${DEBUG}"; then
@@ -400,7 +400,7 @@ _check_plugin()
 
     if "${DEBUG}"; then
         _log "DEBUG: -----------------------------------------------------"
-        _log "DEBUG: All plugins processed: Active plugins found: ${foundvalue}" ;
+        _log "DEBUG: All plugins processed: Active plugins found: ${foundvalue}"
     fi
 
     if [ "${foundvalue}" -gt 0 ]; then
@@ -499,7 +499,7 @@ _check_net_status()
                 '$2 ~ /^ESTAB$/ && $5 ~ regex')"
 
         if "${DEBUG}"; then
-            _log "DEBUG: Port ${nsocket} ${lines:-"${empty}"}";
+            _log "DEBUG: Port ${nsocket} ${lines:-"${empty}"}"
         fi
 
         # No active connection found.
@@ -532,10 +532,10 @@ _check_net_status()
             *)       portprotocol="unknown" ;;
         esac
 
-        _log "INFO: Found active connection on port ${nsocket} ($portprotocol) from: ${conips//$'\n'/, }";
+        _log "INFO: Found active connection on port ${nsocket} ($portprotocol) from: ${conips//$'\n'/, }"
     done
 
-    _log "INFO: Found ${active} active socket(s) on ${net_iface}, from port(s): ${NSOCKETNUMBERS}";
+    _log "INFO: Found ${active} active socket(s) on ${net_iface}, from port(s): ${NSOCKETNUMBERS}"
 
     # Return the number of active sockets found.
     return "${active}"
@@ -571,9 +571,9 @@ _check_docker_status()
         mapfile -t nsocketnumbers <<< "${NSOCKETNUMBERS//,/$'\n'}"
         for ports in "${details[@]: -2}"; do
             if [[ "${ports}" =~ (.*)-(.*):(.*)-(.*) ]]; then
-                local host_map;
+                local host_map
                 mapfile -t host_map < <(seq "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")
-                local con_map;
+                local con_map
                 mapfile -t con_map < <(seq "${BASH_REMATCH[3]}" "${BASH_REMATCH[4]}")
                 for index in "${!host_map[@]}"; do
                     [[ " ${nsocketnumbers[*]} " =~ \ ${host_map["${index}"]}\  ]] &&
@@ -602,7 +602,7 @@ _check_docker_status()
                   _log "INFO: Found active connection on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
-    _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}";
+    _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}"
     return "${active}"
 }
 
@@ -658,7 +658,7 @@ _check_users_cli_status()
 #
 _check_smb_status()
 {
-    local smb_connectons;
+    local smb_connectons
     smb_connectons="$(LC_ALL=C smbstatus -b | awk 'NR>4')"
 
     [ -z "${smb_connectons}" ] && {
@@ -953,9 +953,9 @@ _check_hddio()
         local diff_hddio_write=$((omv_asd_hdd_out - P_HDDIO_DEVS["${omv_hdd}_w"]))
 
         # Calculate hddio-rate in kB/s - format xx.x
-        local last_hddio_read_rate;
+        local last_hddio_read_rate
         last_hddio_read_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_read} ${last_checked_sec}")"
-        local last_hddio_write_rate;
+        local last_hddio_write_rate
         last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${last_checked_sec}")"
 
         if "${DEBUG}"; then
@@ -1303,7 +1303,7 @@ _check_system_active()
 
     for net_iface in "${!NIC_TO_IP[@]}"; do
         if "${DEBUG}"; then
-            _log "DEBUG: Running on: ${net_iface}";
+            _log "DEBUG: Running on: ${net_iface}"
         fi
 
         # PRIO 1: Ping each IP address in parameter list every network
@@ -1385,7 +1385,7 @@ _check_system_active()
     fi
 
     # PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins
-    if [ "${PLUGINCHECK}" == "true" ] ; then
+    if [ "${PLUGINCHECK}" == "true" ]; then
         if "${DEBUG}"; then
             _log "DEBUG: Calling: _check_plugin()"
         fi
@@ -1504,16 +1504,16 @@ while : ; do
         _log "INFO: No active hosts or processes within network range, ${FCNT} cycles until shutdown ..."
 
         if [ $FCNT -eq 0 ]; then
-            _shutdown;
+            _shutdown
         fi   # > if [ $FCNT -eq 0 ]; then
     else
         # Live IP found so reset count
-        FCNT=${CYCLES};
+        FCNT=${CYCLES}
     fi   # > if _check_system_active
 
     # Wait for the required time before checking again.
     _log "INFO: sleep for ${SLEEP}s"
-    sleep $SLEEP;
+    sleep $SLEEP
 
 done   # > while : ; do
 
