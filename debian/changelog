@@ -5,6 +5,7 @@ openmediavault-autoshutdown (5.1.2) stable; urgency=low
   * Further cleaning-up of log output
   * Clean-up of script
   * Tweak _check_smb_status to only consider client with locks
+  * Allow all OS UP interfaces in _check_networkconfig()
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 17 Dec 2020 12:31:31 +0000
 

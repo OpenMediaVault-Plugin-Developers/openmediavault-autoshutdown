@@ -1259,19 +1259,21 @@ _check_networkconfig()
 
     local -r net_ifaces="${FORCE_NIC:-"en,eth,wlan,bond,usb"}"
     while read -r net_iface ip; do
-        ipv4_valid=0
+        local operstate
+        operstate="$(< "/sys/class/net/${net_iface}/operstate")"
+        local ipv4_valid=0
         [[ "${ip}" =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$ ]] ||
             ipv4_valid=1
 
         if "${DEBUG}"; then
             _log "DEBUG: Network interfaces: ${net_iface}"
-            _log "DEBUG: Network interfaces status: $(< "/sys/class/net/${net_iface}/operstate")"
+            _log "DEBUG: Network interfaces status: ${operstate}"
             _log "DEBUG: Network interfaces IPv4 address: ${ip}"
             _log "DEBUG: Network interfaces IPv4 address valid: ${ipv4_valid}"
         fi
 
         [ "${ipv4_valid}" -eq 0 ] &&
-            [ "$(< "/sys/class/net/${net_iface}/operstate")" == "up" ] && {
+            [ "${operstate}" != "down" ] && {
                 _log "INFO: '${net_iface}' has IPv4 address: ${ip}"
                 NIC_TO_IP["${net_iface}"]="${ip}"; }
 
