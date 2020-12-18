@@ -242,7 +242,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     xtype: "textfield",
                     name: "nsocketnumbers",
                     fieldLabel: "",
-                    value: "21,22,80,139,445,3689,6991,9091,49152",
+                    value: "21,22,80,3689,6991,9091,49152",
                     width: 600,
                     allowBlank: false,
                     plugins: [{

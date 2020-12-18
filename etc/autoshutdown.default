@@ -48,9 +48,9 @@ UPHOURS="6..20"
 CHECKSOCKETS="true"
     # Parameter to activate or deactivate network socket feature (default="true")
 
-NSOCKETNUMBERS="21,22,80,139,445,3689,6991,9091,49152"
+NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     # Socket numbers to check for activity
-    # (default="21,22,80,139,445,3689,6991,9091,49152")
+    # (default="21,22,80,3689,6991,9091,49152")
     # Ports:
     # 21 = FTP
     # 22 = SSH
