@@ -668,8 +668,7 @@ _check_smb_status()
 
     [[ -z "${smb_connectons}" || ! "${smb_lock_pids[*]}" ]] && {
         _log "INFO: No SMB clients connected with locks -> next check"
-        return 0
-    }
+        return 0; }
 
     while read -r pid user host proto; do
         [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] &&
@@ -1118,7 +1117,7 @@ _check_config()
         _log "INFO: PINGLIST is set in the config, reading IPs from: '${PINGLIST}'"
         _log "INFO: Overidding IPCHECK to: 'true'"
         unset RANGE
-        IPCHECK="ture"
+        IPCHECK="true"
     elif [[ -n "${PINGLIST:-}" && ! -f "${PINGLIST}" ]]; then
         _log "WARNING: PINGLIST is set in the config, but file not found: '${PINGLIST}'"
         _log "WARNING: Set IPCHECK to: 'false'"
