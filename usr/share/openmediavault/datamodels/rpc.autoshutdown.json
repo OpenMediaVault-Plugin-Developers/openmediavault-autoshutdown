@@ -44,10 +44,22 @@
 				"maximum": 23,
 				"required": true
 			},
+			"upmins_begin": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 59,
+				"required": true
+			},
 			"uphours_end": {
 				"type": "integer",
 				"minimum": 0,
 				"maximum": 23,
+				"required": true
+			},
+			"uphours_end": {
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 59,
 				"required": true
 			},
 			"checksockets": {

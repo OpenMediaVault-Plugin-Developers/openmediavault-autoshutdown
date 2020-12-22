@@ -167,12 +167,21 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "numberfield",
                     name: "uphours_begin",
-                    fieldLabel: _("Begin"),
+                    fieldLabel: _("Begin:&emsp;Hour"),
                     minValue: 0,
                     maxValue: 23,
                     allowDecimals: false,
                     allowBlank: false,
                     value: 6
+                },{
+                    xtype: "numberfield",
+                    name: "upmins_begin",
+                    fieldLabel: _("&emsp;Minute"),
+                    minValue: 0,
+                    maxValue: 59,
+                    allowDecimals: false,
+                    allowBlank: false,
+                    value: 0
                 }]
             },{
                 xtype: "fieldcontainer",
@@ -181,12 +190,21 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "numberfield",
                     name: "uphours_end",
-                    fieldLabel: _("End"),
+                    fieldLabel: _("End:&nbsp;&ensp;&emsp;Hour"),
                     minValue: 0,
                     maxValue: 23,
                     allowDecimals: false,
                     allowBlank: false,
                     value: 20
+                },{
+                    xtype: "numberfield",
+                    name: "upmins_end",
+                    fieldLabel: _("&emsp;Minute"),
+                    minValue: 0,
+                    maxValue: 59,
+                    allowDecimals: false,
+                    allowBlank: false,
+                    value: 0
                 }]
             }]
         },{

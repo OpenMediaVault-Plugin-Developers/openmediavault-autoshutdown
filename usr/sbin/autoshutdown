@@ -791,92 +791,60 @@ _check_ul_dl_rate()
 ###############################################################################
 #
 #   name          : _check_clock
-#   parameter     : UPHOURS : range of hours, where system should go to sleep, e.g. 6..20
+#   globals       : $UPHOURS : Range of hours, where system should go to sleep,
+#                              e.g. 06:00..20:00
 #   global return : none
-#   return        : 0 : If actual value of hours is in DOWN range, ready for shutdown
-#                 : 1 : If actual value of hours is in UP range, no shutdown
+#   return        : 0 : If actual value of hours is in DOWN range, ready for
+#                       shutdown.
+#                 : 1 : If actual value of hours is in UP range, sleep till
+#                       DOWN range, block shutdown.
 #
 _check_clock()
 {
-    CLOCKOK=true
+    local -r range_start="$(date -f - "+%R" <<< "${UPHOURS%..*}")"
+    local -r range_end="$(date -f - "+%R" <<< "${UPHOURS#*..}")"
 
-    if [[ "$UPHOURS" =~ ^([0-9]{1,2})\.{2}([0-9]{1,2}$) ]]; then
-        CLOCKSTART=${BASH_REMATCH[1]}
-        CLOCKEND=${BASH_REMATCH[2]}
-        CLOCKCHECK=$(date +%H | sed 's/^0//g')
-        CLOCKMINUTES=$(date +%M)
-        TIMETOSLEEP=0
-        SECONDSTOSLEEP=0
-        TIMETOSLEEP=0
-        if $DEBUG ; then
-            _log "DEBUG: CLOCKOK: $CLOCKOK; CLOCKSTART: $CLOCKSTART ; CLOCKEND: $CLOCKEND "
-            _log "DEBUG: CLOCKCHECK: $CLOCKCHECK "
-        fi
-        _log "INFO: Checking the time: stay up or shutdown ..."
+    local -r epoch_sec="${EPOCHSECONDS}"
+    local -r current_time="$(date -d @"${epoch_sec}" +%R)"
 
-        if [[ $CLOCKEND -gt $CLOCKSTART ]]; then
-            # aktuelle Zeit liegt zwischendrin
-            if [[ $CLOCKCHECK -ge $CLOCKSTART && $CLOCKCHECK -lt $CLOCKEND ]]; then
-                CLOCKOK=true
-                let TIMETOSLEEP=$CLOCKEND-$CLOCKCHECK-1
-
-                if $DEBUG ; then
-                    _log "DEBUG: CHECK 1"
-                    _log "DEBUG: CLOCKCHECK: $CLOCKCHECK; CLOCKSTART: $CLOCKSTART ; CLOCKEND: $CLOCKEND -> forced to stay up"
-                fi
-            else
-                CLOCKOK=false
-                if $DEBUG ; then
-                    _log "DEBUG: CHECK 2"
-                    _log "DEBUG: CLOCKCHECK: $CLOCKCHECK; CLOCKSTART: $CLOCKSTART ; CLOCKEND: $CLOCKEND -> shutdown-check"
-                fi
-            fi
+    local epoch_start; epoch_start="$(date -f - +%s <<< \
+            "$(date -d @"$((epoch_sec))" +%D) ${range_start}")"
+    local epoch_end; epoch_end="$(date -f - +%s <<< \
+            "$(date -d @"$((epoch_sec))" +%D) ${range_end}")"
+    # Fix epoch if we are wrapped around midnight applying a lexicographic
+    # comparison.
+    if [[ "${range_start}" > "${range_end}" ]]; then
+        if [[ "${current_time}" > "${range_start}" ||
+              "${current_time}" == "${range_start}" ||
+              "${current_time}" > "${range_end}" ||
+              "${current_time}" == "${range_end}" ]]; then
+            epoch_end="$(date -f - +%s <<< \
+                "$(date -d @"$((epoch_sec + 86400))" +%D) ${range_end}")"
         else
-            if [[ $CLOCKCHECK -ge $CLOCKSTART || $CLOCKCHECK -lt $CLOCKEND ]]; then
-                CLOCKOK=true
-                let TIMETOSLEEP=$CLOCKEND-$CLOCKCHECK-1
-                if $DEBUG ; then
-                    _log "DEBUG: CHECK 3"
-                    _log "DEBUG: CLOCKCHECK: $CLOCKCHECK; CLOCKSTART: $CLOCKSTART ; CLOCKEND: $CLOCKEND -> forced to stay up"
-                fi
-            else
-                CLOCKOK=false
-                if $DEBUG ; then
-                    _log "DEBUG: CHECK 4"
-                    _log "DEBUG: CLOCKCHECK: $CLOCKCHECK; CLOCKSTART: $CLOCKSTART ; CLOCKEND: $CLOCKEND -> shutdown-check"
-                fi
-            fi
-        fi # > [[ $CLOCKEND -gt $CLOCKSTART ]]; then
-    fi # > [[ "$UPHOURS" =~ ^([0-9]{1,2})\.{2}([0-9]{1,2}$) ]]; then
-
-    # Calculating the time before shutdown-Phase
-    if [ $TIMETOSLEEP -gt 0 ]; then # only if $TIMETOSLEEP > 0; otherwise calculations are obsolete
-        let SECONDSTOSLEEP=$TIMETOSLEEP*3600
-        let MINUTESTOSLEEP=60-$CLOCKMINUTES-5 # Minutes until full Hour minus 5 min
-        let SECONDSTOSLEEP=$SECONDSTOSLEEP+$MINUTESTOSLEEP*60 # Seconds until 5 minutes before shutdown-Range
-
-        # The following two should point to shutdown-range minus 5 minutes
-        let TIMEHOUR=$CLOCKCHECK+$TIMETOSLEEP # actual time plus hours to sleep
-        let TIMEMINUTES=$CLOCKMINUTES+$MINUTESTOSLEEP # actual time (minutes) plus minutes to sleep
+            epoch_start="$(date -f - +%s <<< \
+                "$(date -d @"$((epoch_sec - 86400))" +%D) ${range_start}")"
+        fi
     fi
 
-    if $DEBUG; then
-        _log "DEBUG: TIMETOSLEEP: $TIMETOSLEEP"
-        _log "DEBUG: SECONDSTOSLEEP: $SECONDSTOSLEEP"
-        _log "DEBUG: MINUTESTOSLEEP: $MINUTESTOSLEEP"
-        _log "DEBUG: Final: SECONDSTOSLEEP: $SECONDSTOSLEEP"
-        _log "DEBUG: TIMEHOUR: $TIMEHOUR - TIMEMINUTES: $TIMEMINUTES"
+    # If it negative or zero we already in the shutdown window
+    local seconds_to_sleep="$((epoch_end - epoch_sec))"
+    local msg; msg="DEBUG: Current time: $(date -d @"${epoch_sec}"), "
+          msg+="Stay up range - start: ${range_start}, end: ${range_end} -> "
+    if [[ "${epoch_sec}" -lt "${epoch_start}" ||
+          "${epoch_sec}" -ge "${epoch_end}" ||
+          "${seconds_to_sleep}" -le 0 ]]; then
+        if "${DEBUG}"; then _log "${msg}allow shutdown"; fi
+       _log "INFO: System is in shutdown range -> next check"
+       return 0
     fi
 
-    if $CLOCKOK; then
-        _log "INFO: System is in Stayup-Range. No need to do anything. Sleeping ..."
-        _log "INFO: Sleeping until $TIMEHOUR:$TIMEMINUTES -> $SECONDSTOSLEEP seconds"
-        sleep $SECONDSTOSLEEP
-        return 1
-    else
-        _log "INFO: System is in Shutdown-Range. Do further checks ..."
-        return 0
-    fi
+    if "${DEBUG}"; then _log "${msg}stay up"; fi
+    _log "INFO: System is in stay up range"
+    _log "INFO: Sleeping until: $(
+            date -d @"$((epoch_sec + seconds_to_sleep))"
+                ) -> ${seconds_to_sleep}s"
+    sleep "${seconds_to_sleep}"
+    return 1
 }
 
 
@@ -1047,11 +1015,12 @@ _check_config()
         CHECKCLOCKACTIVE="false"; }
 
     if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
-        [[ "$UPHOURS" =~ ^(([0-1]?[0-9]|[2][0-3])\.{2}([0-1]?[0-9]|[2][0-3]))$ ]] || {
-            _log "WARNING: Invalid parameter list format: UPHOURS [hour1..hour2]"
+        [[ "${UPHOURS}" =~ ^((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))$ &&
+           "${BASH_REMATCH[1]}" != "${BASH_REMATCH[2]}" ]] || {
+            _log "WARNING: Invalid parameter list format: UPHOURS [hour1..hour2] and hour1 != hour2"
             _log "WARNING: You set it to '${UPHOURS}', which is not a correct syntax. Maybe it's empty?"
-            _log "WARNING: Setting UPHOURS to 6..20"
-            UPHOURS="6..20"; }
+            _log "WARNING: Setting UPHOURS to 06:00..20:00"
+            UPHOURS="06:00..20:00"; }
     else
         _log "WARNING: CHECKCLOCKACTIVE is set to false"
         _log "WARNING: Ignoring UPHOURS"
@@ -1305,7 +1274,7 @@ _check_system_active()
         if "${DEBUG}"; then
             _log "DEBUG: Calling: _check_clock()"
         fi
-        _check_clock || return 1
+        _check_clock || true
     fi
 
     for net_iface in "${!NIC_TO_IP[@]}"; do

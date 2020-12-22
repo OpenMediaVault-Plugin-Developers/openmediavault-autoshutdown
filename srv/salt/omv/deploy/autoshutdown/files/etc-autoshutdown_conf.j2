@@ -15,7 +15,9 @@ SHUTDOWNCOMMAND="systemctl suspend"
 SHUTDOWNCOMMAND="systemctl hybrid"
 {%- endif %}
 CHECKCLOCKACTIVE="{{ config.checkclockactive | to_bool | lower }}"
-UPHOURS="{{ config.uphours_begin }}..{{ config.uphours_end }}"
+UPHOURS="{{
+    '%02d' % config.uphours_begin }}:{{ '%02d' % config.upmins_begin }}..{{
+    '%02d' % config.uphours_end }}:{{ '%02d' % config.upmins_end }}"
 CHECKSOCKETS="{{ config.checksockets | to_bool | lower }}"
 NSOCKETNUMBERS="{{ config.nsocketnumbers }}"
 ULDLCHECK="{{ config.uldlcheck | to_bool | lower }}"

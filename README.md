@@ -21,9 +21,9 @@ The checks have a different priority from 0 = high to 5 = low:
 5. ASD-plugins
 
 If a check with a higher priority gives back a positive result, then no check
-with a lower priority is executed. The script reduces the cycles by one and goes
-to sleep for x seconds until the next cycle. If all cycles are 0 (zero) the
-server is shutting down.
+with a lower priority is executed. The script reduces the cycles by one and
+goes to sleep for x seconds until the next cycle. If all cycles are 0 (zero)
+the server is shutting down.
 
 Let's have a look at a example:
 
@@ -33,7 +33,7 @@ Let's have a look at a example:
     SLEEP=180
     RANGE="5..100"
     CHECKCLOCKACTIVE="true"
-    UPHOURS="6..20"
+    UPHOURS="06:00..20:00"
     NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     ULDLCHECK="true"
     ULDLRATE=50
@@ -47,7 +47,8 @@ Let's have a look at a example:
 It is 10:00 am. ASD does the first check:
 
 Prio 0: UPHOURS  
-They are set to "6..20" which means 06:00 - 08:00 (6am to 8pm). No further checks needed, the script sleeps until 8pm.
+They are set to "06:00..20:00" which means 06:00 - 08:00 (6am to 8pm). No
+further checks needed, the script sleeps until 8pm.
 
 It is 20:01 (8:01pm) now and ASD does further checks:
 
