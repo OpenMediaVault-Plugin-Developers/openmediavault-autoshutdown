@@ -108,6 +108,10 @@
 				"type": "boolean",
 				"required": true
 			},
+			"plugincheck": {
+				"type": "boolean",
+				"required": false
+			},
 			"syslog": {
 				"type": "boolean",
 				"required": true

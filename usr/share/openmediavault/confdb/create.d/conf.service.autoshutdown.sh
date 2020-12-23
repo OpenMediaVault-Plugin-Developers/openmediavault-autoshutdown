@@ -49,6 +49,7 @@ if ! omv_config_exists "${SERVICE_XPATH}"; then
     omv_config_add_key "${SERVICE_XPATH}" "hddiorate" "401"
     omv_config_add_key "${SERVICE_XPATH}" "checksamba" "1"
     omv_config_add_key "${SERVICE_XPATH}" "checkcli" "1"
+    omv_config_add_key "${SERVICE_XPATH}" "plugincheck" "0"
     omv_config_add_key "${SERVICE_XPATH}" "syslog" "1"
     omv_config_add_key "${SERVICE_XPATH}" "verbose" "0"
     omv_config_add_key "${SERVICE_XPATH}" "fake" "0"

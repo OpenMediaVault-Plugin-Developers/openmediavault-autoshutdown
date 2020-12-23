@@ -367,6 +367,18 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 fieldLabel: _("Check Users"),
                 checked: true,
                 boxLabel: _("Check for connected users.")
+            },{
+                xtype: "checkbox",
+                name: "plugincheck",
+                fieldLabel: _("Check plugins"),
+                checked: true,
+                boxLabel: _("Check for users defined plugins."),
+                plugins: [{
+                    ptype: "fieldinfo",
+                    text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
+                          _("autoshutdown.default") + "</a> " +
+                          _("for more details.")
+                }]
             }]
         },{
             xtype: "fieldset",
@@ -407,7 +419,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 plugins: [{
                     ptype: "fieldinfo",
                     text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
-                          _("README") + "</a> " +
+                          _("autoshutdown.default") + "</a> " +
                           _("for more details.")
                 }]
             }]

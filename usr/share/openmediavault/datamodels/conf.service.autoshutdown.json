@@ -111,6 +111,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"plugincheck": {
+			"type": "boolean",
+			"default": false
+		},
 		"syslog": {
 			"type": "boolean",
 			"default": true
