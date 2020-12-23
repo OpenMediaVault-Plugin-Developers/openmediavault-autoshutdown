@@ -7,25 +7,27 @@ Please provide a _full_ DEBUG- or FAKE-Mode-log with the git issue.
 
 How it works:
 -------------
-Autoshutdown, later called "ASD" does some checks on the network or on the server itself.
+Autoshutdown, does some checks on the network or on the server itself. A
+"cycle" is a set of checks. Between the cycles goes into sleep for x
+seconds. The checks have a different priority from 0 = high to 6 = low:
 
-A "cycle" is a set of checks. Between the cycles ASD goes into sleep for x seconds.
-
-The checks have a different priority from 0 = high to 5 = low:
-0: Stayup-range: UPHOURS (is the server in the timerange, where it should stay online)
-
-1. IPs
-2. Ports (Network sockets)
-3. UL/DL-Rate in kB/s (only over the last minute)
-4. processes, daemons
-5. ASD-plugins
+0. Stay up-range: UPHOURS (Server in the time range, where it should be online)
+1. Check for active IPs over network interfaces
+2. Ports (Network sockets) over network interfaces
+   Ports (Docker host ports)
+   Check for logged in user
+   Samba status check
+3. UL/DL-Rate in kB/s over active network interfaces
+4. HDD IO Rate check in Kb/s
+5. Check for active processes
+6. Check for User plugins
 
 If a check with a higher priority gives back a positive result, then no check
 with a lower priority is executed. The script reduces the cycles by one and
 goes to sleep for x seconds until the next cycle. If all cycles are 0 (zero)
 the server is shutting down.
 
-Let's have a look at a example:
+Let's have a look at a simple example:
 
     --- autoshutdown.conf ---
     ENABLE=true
@@ -53,7 +55,7 @@ further checks needed, the script sleeps until 8pm.
 It is 20:01 (8:01pm) now and ASD does further checks:
 
 Prio 0: UPHOURS  
-The server is not in the (forced) stayup-range (6..20) => negative, next check
+The server is not in the (forced) stayup-range (06::00..20:00) => negative, next check
 
 Prio 1: IPs  
 Let's assume, that only IP 137 is online, so the check is negative, next check
@@ -65,63 +67,72 @@ Prio 3: UL/DL-Rate
 Maybe a DL is running with 238 kB/s over the last minute. The check is positive, no more checks needed.
 ASD goes to sleep for x seconds.
 
-Prio 4 and 5:  
+Prio 4 and 6:  
 not needed, because a check with a higher priority is positive
 
 
-Expert Settings in autoshutdown.conf: (set it in "Expert settings" in the OMV-GUI)
--------------------------------------
+Expert Settings and explanations in autoshutdown.conf:
+------------------------------------------------------
 __LOADPROCNAMES__  
-Command names of processes with load dependent children to check if they have something to do
-checked by default="proftpd,smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd")
+Command names of processes with load dependent children to check if they have
+something to do checked by (default="proftpd,smbd,nfsd,transmission-daemon,
+mt-daapd,forked-daapd")
 
 __TEMPPROCNAMES__  
-Command names of processes only started when active
-checked with "top" AND "ps", so all processes are found, even such, which doesn't show up in top
-like "lftp" - Beware: If the process shows up in "ps" when there is no connection, your PC won't shutdown!
-maybe you have to call the process like this: "lftp -do -something -here && exit"
-checked by default="in.tftpd")
+Command names of processes only started when active checked with "top" AND "ps"
+, so all processes are found, even such, which doesn't show up in top like
+"lftp" - Beware: If the process shows up in "ps" when there is no connection,
+your PC won't shutdown! Maybe you have to call the process like this: "lftp
+-do -something -here && exit" checked by default="in.tftpd")
 
-if you want other processes than the default ones, please uncomment the above lines and add your process at the end of the line
-to disable the process-check, set LOADPROCNAMES="-" or TEMPPROCNAMES="-"
+If you want other processes than the default ones, please uncomment the above
+lines and add your process at the end of the line to disable the process-check,
+set LOADPROCNAMES="-" or TEMPPROCNAMES="-"
 
 The following scheme is mandatory for both LOADPROCNAMES and TEMPPROCNAMES:  
 process1,process2 
 All processes separated by comma ','
 
 __HDDIOCHECK__  
-Set this to "true" and the script checks, if a HDD-IO (read/write) is over a defined value in kB/s (default: HDDIO_RATE=400)
-and then don't shutdown the Server. This value is calculated with the SLEEP-time between every cycle of the script-checks.
-E.g.: You have defined HDDIO_RATE=2000 and SLEEP=100, then the HDD-IO (read or write) has to be over 200000kB (2000*100) within the
-last 100 sec to not shutdown the server.
+Set this to "true" and the script checks, if a HDD-IO (read/write) is over a
+defined value in kB/s (default: HDDIO_RATE=400) and then don't shutdown the
+Server. This value is calculated with the SLEEP-time between every cycle of the
+script-checks. e.g.: You have defined HDDIO_RATE=2000 and SLEEP=100, then the
+HDD-IO (read or write) has to be over 200000kB (2000*100) within the last 100
+sec to not shutdown the server.
 
 __PINGLIST__  
-With this, you can define a path to a file, which contains list of IPs that should be scanned
-only one IP per line is allowed - Format: mmm.nnn.ooo.ppp e.g.: 192.168.1.45
-If this expert-setting is used, the IPs specified in "RANGE" or in GUI doesn't work
+With this, you can define a path to a file, which contains list of IPs that
+should be scanned only one IP per line is allowed - Format: mmm.nnn.ooo.ppp
+e.g.: 192.168.1.45. If this expert-setting is used, the IPs specified in
+"RANGE" or in GUI doesn't work.
 
 __PLUGINCHECK__  
 Set this to true, if autoshutdown.sh checks for PlugIns in /etc/autoshutdown.d
 set it to "false" (or commented) to skip the check
 
 E.g.: When ClamAV does a check, the Server shouldn't shut down. How to do that?
-Let's look at a example: in the clamav-plugin for autoshutdown (etc/autoshutdown.d/clamav) the following is set:
+Let's look at a example: in the clamav-plugin for autoshutdown
+(etc/autoshutdown.d/clamav) the following is set:
 
     # In which folder is the file to look for
     folder="/var/run/clamav"
     # filename (can be expanded with regexes)
     file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
 
-Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345 (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown
+Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345 (or whatever
+UUID) in /var/run/clamav exists, the Server isn't shutdown
 
-also possible:
+Also possible:
+
     folder="/home/user"
     file="backup.status"
     content="processing job"
 
-If a file /home/user/backup.status exists with the content 'processing job', the Server isn't shutdow
-This is useful for backupscripts. It is not nice if the PC is shutting down while the backup-script is running.
-In my backup-script i use a simple
+If a file /home/user/backup.status exists with the content 'processing job',
+the Server isn't shutdow. This is useful for backupscripts. It is not nice if
+the PC is shutting down while the backup-script is running. In my backup-script
+I use a simple.
 
     echo "processing job" > /home/user/backup.status
 
@@ -133,7 +144,8 @@ at the end of the script. In the boot-Phase also a
 
     rm /home/user/*.status
 
-to delete all *.status files, which are not deleted before (loss of power for example)
+To delete all *.status files, which are not deleted before (loss of power for
+example)
 
 Please have a look at the two example files in /etc/autoshutdown.d
 
