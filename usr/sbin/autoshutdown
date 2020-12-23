@@ -427,10 +427,6 @@ _check_plugin()
 #
 _check_loadaverage()
 {
-    # ## disabled for testing
-    # _log "DEBUG: Disabled for testing"
-    # return 0
-
     local rvalue=0
     # Get the load averages.
     local current_load_average_line
@@ -478,10 +474,6 @@ _check_loadaverage()
 #
 _check_net_status()
 {
-    # ## disabled for testing
-    # _log "DEBUG: Disabled for testing"
-    # return 0
-
     local -r net_iface="${1}"
     local -r server_ip="${2}"
 
@@ -697,10 +689,6 @@ _check_smb_status()
 #
 _check_ul_dl_rate()
 {
-    # ## disabled for testing
-    # _log "DEBUG: disabled for testing"
-    # return 0
-
     local -r net_iface="${1}"
 
     _log "INFO: Running on interface: ${net_iface}"
@@ -862,10 +850,6 @@ _check_clock()
 #
 _check_hddio()
 {
-    # ## disabled for testing
-    # _log "DEBUG: Disabled for testing"
-    # return 0
-
     local rvalue=0
 
     if "${DEBUG}"; then
