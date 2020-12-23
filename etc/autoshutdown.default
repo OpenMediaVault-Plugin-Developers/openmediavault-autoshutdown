@@ -165,14 +165,13 @@ FAKE="false"
 
 # ----------------------------------------------------------------------------------------
 
+#PINGLIST="PATH/TO/PINGLIST"
     # Here you can define a path to a file, which contains list of IPs that should be scanned
     # only one IP per line allowed - Format mmm.nnn.ooo.ppp
     # e.g.:
     # 192.168.1.45
     # If this expert-setting is used, the IPs specified in "RANGE" or in GUI doesn't work
     # If this is uncommented, the IPs specified in "RANGE" or in GUI doesn't work
-
-#PINGLIST="PATH/TO/PINGLIST"
 
 # ----------------------------------------------------------------------------------------
 

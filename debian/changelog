@@ -2,6 +2,7 @@ openmediavault-autoshutdown (5.1.3) stable; urgency=low
 
   * Fix typo ture to true in _check_config
   * Refactor, fix and extend _check_clock
+  * Small teak for constancy move PINGLIST
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 18 Dec 2020 15:46:24 +0000
 
