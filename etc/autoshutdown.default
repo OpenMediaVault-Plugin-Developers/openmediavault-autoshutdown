@@ -200,7 +200,7 @@ FAKE="false"
                      # transmission-daemon,mt-daapd,forked-daapd")
 
 #TEMPPROCNAMES="in.tftpd"
-                     # command names of processes only started when active
+                     # Command names of processes only started when active
                      # checked with "top" AND "ps", so all processes are found,
                      # even such, which doesn't show up in top like "lftp"
                      # Beware: If the process shows up in "ps" when there is no
@@ -209,7 +209,7 @@ FAKE="false"
                      # -something -here && exit" so that the process is killed
                      # after it has done something checked (default="in.tftpd")
 
-    # if you want others, please uncomment the above lines and add your process
+    # If you want others, please uncomment the above lines and add your process
     # at the end of the line. The following scheme is mandatory for both
     # LOADPROCNAMES and TEMPPROCNAMES: process1,process2, all processes
     # separated by comma ','

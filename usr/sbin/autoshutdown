@@ -15,8 +15,6 @@
 #==============================================================================
 
 ######## VARIABLE DEFINITION ########
-RESULT=0                    # Declare reusable RESULT variable to check function return values
-
 # Variables that normal users should normally not define - PowerUsers can do it here or add it to the config
 LPREPEAT=5                  # Number of test cycles for finding and active LOADPROCNAMES-Process (default=5)
 TPREPEAT=5                  # Number of test cycles for finding and active TEMPPROCNAMES-Process (default=5)
@@ -36,8 +34,6 @@ declare -A P_HDDIO_DEVS     # Associative array for storing _check_hddio read, w
 declare -A P_UL_DL_RATE     # Associative array for storing _check_ul_dl_rate a network interface tx, rx and epoch values
 
 ######## CONSTANT DEFINITION ########
-readonly CTOPPARAM="-b -d 1 -n 1"              # Define common parameters for the top command line
-readonly STOPPARAM="-i ${CTOPPARAM}"           # Add specific parameters for the top command line
 readonly CONFIG="${1:-/etc/autoshutdown.conf}" # Autoshtdown configuration options.
 
 ######## FUNCTION DECLARATION ########
@@ -206,70 +202,12 @@ _shutdown()
 
 ###############################################################################
 #
-#   name          : _ident_num_proc
-#   parameter     : $1...$(n-1) : Parameter for command 'top'
-#                 : $n          : Search pattern for command 'grep'
-#   return        : $NUMOFPROCESSES
-#
-_ident_num_proc()
-{
-    # retrieve all function parameters for the top command; as we know the last command line parameter
-    # is the pattern for the grep command, we can stop one parameter before the end
-    [[ "$*" =~ (.*)\ (.*)\ (.*)$ ]] &&
-        {
-            TPPARAM=${BASH_REMATCH[1]}
-            GRPPATTERN=${BASH_REMATCH[2]}
-            CHECKPROCESS=${BASH_REMATCH[3]};
-        }
-    if $DEBUG ; then _log "DEBUG: top cmd line: $TPPARAM, grep cmd line: $GRPPATTERN, CHECKPROCESS: $CHECKPROCESS"; fi
-
-    NUMOFPROCESSES=0
-    NUMOFPROCESSES_PS=0
-    NUMOFPROCESSES_TOP=0
-
-    case $CHECKPROCESS in
-        loadproc)
-            if $DEBUG ; then _log "DEBUG: loadproc: commandline: 'top ${TPPARAM} | grep -c ${GRPPATTERN}'"; fi
-            # call top once, pipe the result to grep and count the number of patterns found
-            # the number of found processes is returned to the callee
-            NUMOFPROCESSES_TOP=$(top ${TPPARAM} | grep -c ${GRPPATTERN})
-            ;;
-
-        tempproc)
-            if $DEBUG ; then _log "DEBUG: tempproc: commandline: 'top ${TPPARAM} | grep -c ${GRPPATTERN}'"; fi
-            NUMOFPROCESSES_TOP=$(top ${TPPARAM} | grep -c ${GRPPATTERN})
-
-            # If there is no process with top, maybe we find some with "ps", but not in in.tftpd
-            if [ "$NUMOFPROCESSES_TOP" = 0 ]; then
-                if [ "${GRPPATTERN}" != "in.tftpd" ]; then
-                    if $DEBUG ; then _log "DEBUG: tempproc-ps: commandline: 'ps -ef | grep -c ${GRPPATTERN}'"; fi
-                    NUMOFPROCESSES_PS=$(ps -ef | grep -v grep | grep -c $GRPPATTERN)
-                else
-                    if $DEBUG; then _log "INFO: Process = 'in.tftpd' - skipping 'ps'-check"; fi
-                fi
-            fi
-            ;;
-
-        *)
-            _log "ERR: This should not happen. Exit 42"
-            ;;
-    esac
-
-    let NUMOFPROCESSES=$NUMOFPROCESSES_PS+$NUMOFPROCESSES_TOP
-    if $DEBUG; then
-        _log "DEBUG: NUMOFPROCESSES_PS: $NUMOFPROCESSES_PS"
-        _log "DEBUG: NUMOFPROCESSES_TOP: $NUMOFPROCESSES_TOP"
-    fi
-
-    return $NUMOFPROCESSES
-}
-
-
-###############################################################################
-#
 #   name          : _check_processes
 #   parameter     : none
-#   global return : none
+#   globals       : $LOADPROCNAMES : Command names of processes with load
+#                                    dependent children.
+#                 : $TEMPPROCNAMES : Command names of processes only started
+#                                    when active.
 #   return        : 0         : If no active process has been found
 #                 : 1 or more : If at least one active process has been found
 #
@@ -279,63 +217,83 @@ _check_processes()
     # _log "DEBUG: Disabled for testing"
     #  return 0
 
-    NUMPROC=0
-    CHECK=0
-
-    # check for each given command name in LOADPROCNAMES if it is currently stated active in "top"
-    # i found, that for smbd, proftpd, nsfd, ... there are processes always present in "ps" or "top" output
-    # this could be due to the "daemon" mechanism... Only chance to identify there is something happening with these
-    # processes, is to check if "top" states them active -> "-i" parameter on the command line
-    for LPROCESS in ${LOADPROCNAMES//,/ }; do
-        LP=0
-        IPROC=0
-        for ((N=0;N < ${LPREPEAT};N++ )); do
-            _ident_num_proc ${STOPPARAM} ${LPROCESS} loadproc
-            RESULT=$?
-            LP=$(($LP|$RESULT))
-            [ $RESULT -gt 0 ] && let IPROC++
+    # Check for each given command name in LOADPROCNAMES if it is currently
+    # stated active in "top". It has been found, that for smbd, proftpd, nsfd,
+    # ... there are processes always present in "ps" or "top" output (This
+    # could be due to the "daemon" mechanism.) So the only chance to identify
+    # there is something happening with these processes, is to check if "top"
+    # states them active hence the "-i" parameter is requred.
+    local num_load_proc=0
+    for process in ${LOADPROCNAMES//,/ }; do
+        local lp=0
+        local l_proc=0
+        for (( N=0; N < LPREPEAT; N++ )); do
+            local lp_result; lp_result="$(
+                top -i -b -d 1 -n 1 |
+                    awk -v regex="^${process}$" -v count=0 \
+                        '$NF ~ regex {count++} END{print count}')"
+            lp=$(( lp | lp_result ))
+            l_proc=$(( l_proc + lp_result ))
         done
-        let NUMPROC=$NUMPROC+$LP
 
-        if $DEBUG ; then
-            { [ $LP -gt 0 ] && _log "DEBUG: Found active process $LPROCESS"; }
-            _log "DEBUG: > $LPROCESS: found $IPROC of $LPREPEAT cycles active"
+        num_load_proc=$(( num_load_proc + lp ))
+
+        if "${DEBUG}"; then
+            _log "DEBUG: Load processes: ${process}: Found ${l_proc} active after ${LPREPEAT} cycles"
         fi
+    done
+    [ "${num_load_proc}" -gt 0 ] &&
+        _log "INFO: Found ${num_load_proc} active from: ${LOADPROCNAMES}"
 
-    done   # > LPROCESS in ${LOADPROCNAMES//,/ } ; do
+    # Check for each given command name in TEMPPROCNAMES if it is currently
+    # stated present in "top". It has been found that for sshd, ... there are
+    # processes only present in "ps" or "top" output when is is used. It is not
+    # guaranteed, that top states these services active, as they usually wait
+    # for user input no "-i" parameter on the command line, but shear presence
+    # is enough.
+    local num_temp_proc=0
+    for process in ${TEMPPROCNAMES//,/ }; do
+        local tp=0
+        local t_proc=0
+        for (( N=0; N < TPREPEAT; N++ )); do
+            local tp_result; tp_result="$(
+                top -b -d 1 -n 1 |
+                    awk -v regex="^${process}$" -v count=0 \
+                     '$NF ~ regex {count++} END{print count}')"
 
-    if ! $DEBUG ; then { [ $NUMPROC -gt 0 ] && _log "INFO: Found $NUMPROC active processes in $LOADPROCNAMES"; }; fi
-
-    # check for each given command name in TEMPPROCNAMES if it is currently stated present in "top"
-    # i found, that for sshd, ... there are processes only present in "ps" or "top" output when is is used.
-    # it can not be guaranteed, that top states these services active, as they usually wait for user input
-    # no "-I" parameter on the command line, but shear presence is enough
-    for TPROCESS in ${TEMPPROCNAMES//,/ }; do
-        TP=0
-        IPROC=0
-        for ((N=0;N < ${TPREPEAT};N++ )); do
-            _ident_num_proc ${CTOPPARAM} ${TPROCESS} tempproc
-            RESULT=$?
-            TP=$(($TP|$RESULT))
-            [ $RESULT -gt 0 ] && let IPROC++
+            # If there is no process with top, try "pgrep", but not in.tftpd
+            if [ "${tp_result}" -eq 0 ]; then
+                if [ "${process}" != "in.tftpd" ]; then
+                    tp_result="$(pgrep -fc "${process}")"
+                else
+                    if "${DEBUG}"; then
+                        _log "DEBUG: Temp processes: Skipping 'in.tftpd'"
+                        break
+                    fi
+                fi
+            fi
+            tp=$(( tp | tp_result ))
+            t_proc=$(( t_proc + tp_result ))
         done
 
-        let CHECK=$CHECK+$TP
+        num_temp_proc=$(( num_temp_proc + tp ))
 
-        if ! $DEBUG ; then { [ $TP -gt 0 ] && _log "INFO: Found active process $TPROCESS"; }; fi
+        if "${DEBUG}"; then
+            _log "DEBUG: Temp processes: ${process}: Found ${t_proc} active after ${TPREPEAT} cycles"
+        fi
+    done
+    [ "${num_temp_proc}" -gt 0 ] &&
+        _log "INFO: Found ${num_temp_proc} active from: ${TEMPPROCNAMES}"
 
-        if $DEBUG ; then _log "DEBUG: > $TPROCESS: found $IPROC of $TPREPEAT cycles active"; fi
+    local active=$(( num_load_proc + num_temp_proc ))
+    local msg="INFO: Found ${active} process(es) active -> "
+    if [ "${active}" -eq 0 ]; then
+        _log "${msg}next check"
+    else
+        _log "${msg}no shutdown"
+    fi
 
-    done   # > for TPROCESS in ${TEMPPROCNAMES//,/ } ; do
-
-    if ! $DEBUG ; then { [ $CHECK -gt 0 ] &&_log "INFO: Found $CHECK active processes in $TEMPPROCNAMES"; }; fi
-
-    let NUMPROC=$NUMPROC+$CHECK
-
-    if $DEBUG ; then _log "DEBUG: $NUMPROC process(es) active"; fi
-
-    # only return we found a process
-    return $NUMPROC
+    return "${active}"
 }
 
 

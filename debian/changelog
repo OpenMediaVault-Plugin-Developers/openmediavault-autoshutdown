@@ -6,6 +6,7 @@ openmediavault-autoshutdown (5.1.3) stable; urgency=low
   * Clean-up README and autoshutdown.default
   * Add PLUGINCHECK configuration to the GUI
   * Remove unnecessary disablement code
+  * Refactor _check_processes
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 18 Dec 2020 15:46:24 +0000
 
