@@ -90,7 +90,7 @@ _ping_range()
     local pinglist_array=()
     local -r empty="No IP addresses specified"
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: INTERFACE: ${net_iface}"
         _log "DEBUG: CLASS: ${server_ip%.*}"
         _log "DEBUG: PINGLIST: ${PINGLIST:-N/A}"
@@ -99,7 +99,7 @@ _ping_range()
 
     local key="${PINGLIST:-"${net_iface}"}"
     if [ -z "${PINGLIST_IFACE["${key}"]:-}" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Generating new PINGLIST_IFACE[${key}]"
         fi
 
@@ -131,7 +131,7 @@ _ping_range()
     fi
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: pinglist_array: ${pinglist_array[*]:-"${empty}"}"
     fi
 
@@ -238,7 +238,7 @@ _check_processes()
 
         num_load_proc=$(( num_load_proc + lp ))
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Load processes: ${process}: Found ${l_proc} active after ${LPREPEAT} cycles"
         fi
     done
@@ -266,7 +266,7 @@ _check_processes()
                 if [ "${process}" != "in.tftpd" ]; then
                     tp_result="$(pgrep -fc "${process}")"
                 else
-                    if "${DEBUG}"; then
+                    if [ "${DEBUG}" == "true" ]; then
                         _log "DEBUG: Temp processes: Skipping 'in.tftpd'"
                         break
                     fi
@@ -278,7 +278,7 @@ _check_processes()
 
         num_temp_proc=$(( num_temp_proc + tp ))
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Temp processes: ${process}: Found ${t_proc} active after ${TPREPEAT} cycles"
         fi
     done
@@ -325,7 +325,7 @@ _check_plugin()
         local plugin_content
         plugin_content="$(awk -F= '/content=/{gsub(/["]/,"",$2);print $2}' "${asd_plugin}")"
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: -----------------------------------------------------"
             _log "DEBUG: Plugin: ${plugin_name}: asd_plugin: ${asd_plugin}"
             _log "DEBUG: Plugin: ${plugin_name}: plugin_name: ${plugin_name}"
@@ -356,7 +356,7 @@ _check_plugin()
         fi
     done
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: -----------------------------------------------------"
         _log "DEBUG: All plugins processed: Active plugins found: ${foundvalue}"
     fi
@@ -365,7 +365,9 @@ _check_plugin()
         rvalue=1
     fi
 
-    if "${DEBUG}"; then _log "DEBUG: After all plugin-checks: rvalue: ${rvalue}"; fi
+    if [ "${DEBUG}" == "true" ]; then
+        _log "DEBUG: After all plugin-checks: rvalue: ${rvalue}"
+    fi
 
     return ${rvalue}
 }
@@ -398,7 +400,7 @@ _check_loadaverage()
     local current_load_average
     current_load_average="$(sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${current_load_average_decimal}")"
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: -----------------------------------------------------"
         _log "DEBUG: Output from '/proc/loadavg': ${current_load_average_line}"
         _log "DEBUG: current_load_average_decimal: ${current_load_average_decimal}"
@@ -414,7 +416,7 @@ _check_loadaverage()
     fi
     _log "${msg}"
 
-    if "${DEBUG}"; then _log "DEBUG: rvalue: ${rvalue}"; fi
+    if [ "${DEBUG}" == "true" ]; then _log "DEBUG: rvalue: ${rvalue}"; fi
 
     return "${rvalue}"
 }
@@ -449,7 +451,7 @@ _check_net_status()
             awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${nsocket}$" \
                 '$2 ~ /^ESTAB$/ && $5 ~ regex')"
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Port ${nsocket}: ${lines:-"${empty}"}"
         fi
 
@@ -573,7 +575,7 @@ _check_users_cli_status()
         return 0
     fi
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: Connected users:"
         while read -r user; do
             _log "DEBUG: ${user}"
@@ -657,7 +659,7 @@ _check_ul_dl_rate()
     tx_kb="$(awk '{printf("%.0f",($0/1024))}' \
                 "/sys/class/net/${net_iface}/statistics/tx_bytes")"
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: Actual: TX kB: ${tx_kb}, RX kB: ${rx_kb}"
     fi
 
@@ -670,13 +672,13 @@ _check_ul_dl_rate()
         P_UL_DL_RATE["${net_iface}_rx"]="${rx_kb}"
         P_UL_DL_RATE["${net_iface}_tx"]="${tx_kb}"
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Store new TX, RX and epoch values"
         fi
         return 0
     fi
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: Previous TX kB: ${P_UL_DL_RATE["${net_iface}_tx"]}, RX kB: ${P_UL_DL_RATE["${net_iface}_rx"]}"
     fi
 
@@ -699,7 +701,7 @@ _check_ul_dl_rate()
     local last_ul_rate
     last_ul_rate=$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_tx} ${last_checked_sec}")
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: last_checked_sec ${last_checked_sec}"
         _log "DEBUG: ul_dl_increase: ${ul_dl_increase}"
         _log "DEBUG: t_rx: ${t_rx}"
@@ -775,12 +777,12 @@ _check_clock()
     if [[ "${epoch_sec}" -lt "${epoch_start}" ||
           "${epoch_sec}" -ge "${epoch_end}" ||
           "${seconds_to_sleep}" -le 0 ]]; then
-        if "${DEBUG}"; then _log "${msg}allow shutdown"; fi
+        if [ "${DEBUG}" == "true" ]; then _log "${msg}allow shutdown"; fi
        _log "INFO: System is in shutdown range -> next check"
        return 0
     fi
 
-    if "${DEBUG}"; then _log "${msg}stay up"; fi
+    if [ "${DEBUG}" == "true" ]; then _log "${msg}stay up"; fi
     _log "INFO: System is in stay up range"
     _log "INFO: Sleeping until: $(
             date -d @"$((epoch_sec + seconds_to_sleep))"
@@ -806,7 +808,7 @@ _check_hddio()
 {
     local rvalue=0
 
-    if "${DEBUG}"; then
+    if [ "${DEBUG}" == "true" ]; then
         _log "DEBUG: HDDIO_RATE: ${HDDIO_RATE} kB/s"
     fi
 
@@ -814,18 +816,18 @@ _check_hddio()
     local last_checked_sec=$((epoch_sec - ${P_HDDIO_DEVS["epoch_sec"]:-${epoch_sec}}))
 
     while read -r omv_hdd omv_asd_hdd_in omv_asd_hdd_out; do
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: ========== Device: ${omv_hdd} =========="
         fi
 
         if ! mount -l | grep -q "${omv_hdd}"; then
-            if "${DEBUG}"; then
+            if [ "${DEBUG}" == "true" ]; then
                 _log "DEBUG: Skipping as no mount point"
             fi
             continue
         fi
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             blkid -s LABEL -s UUID | grep "${omv_hdd}" | while read -r line; do
                 _log "DEBUG: ${line}"
             done
@@ -840,13 +842,13 @@ _check_hddio()
             P_HDDIO_DEVS["${omv_hdd}_r"]="${omv_asd_hdd_in}"
             P_HDDIO_DEVS["${omv_hdd}_w"]="${omv_asd_hdd_out}"
 
-            if "${DEBUG}"; then
+            if [ "${DEBUG}" == "true" ]; then
                 _log "DEBUG: Store new read/write value for device"
             fi
             continue
         fi
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Previous: kB_read: ${P_HDDIO_DEVS["${omv_hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${omv_hdd}_w"]}"
         fi
 
@@ -869,7 +871,7 @@ _check_hddio()
         local last_hddio_write_rate
         last_hddio_write_rate="$(awk '{printf("%.1f",($1/$2))}' <<< "${diff_hddio_write} ${last_checked_sec}")"
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: last_checked_sec: ${last_checked_sec}"
             _log "DEBUG: hddio_increase: ${hddio_increase}"
             _log "DEBUG: t_hddio_read: ${t_hddio_read}"
@@ -900,7 +902,7 @@ _check_hddio()
 
     P_HDDIO_DEVS["epoch_sec"]="${epoch_sec}"
 
-    if "${DEBUG}"; then _log "DEBUG: rvalue: ${rvalue}"; fi
+    if [ "${DEBUG}" == "true" ]; then _log "DEBUG: rvalue: ${rvalue}"; fi
 
     _log "INFO: All checks complete"
 
@@ -1179,7 +1181,7 @@ _check_networkconfig()
         [[ "${ip}" =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$ ]] ||
             ipv4_valid=1
 
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Network interfaces: ${net_iface}"
             _log "DEBUG: Network interfaces status: ${operstate}"
             _log "DEBUG: Network interfaces IPv4 address: ${ip}"
@@ -1218,21 +1220,21 @@ _check_system_active()
     # STAYUP-phase for this system e.g. 06:00 - 20:00, stay up, otherwise
     # shutdown.
     if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_clock()"
         fi
         _check_clock || true
     fi
 
     for net_iface in "${!NIC_TO_IP[@]}"; do
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Running on: ${net_iface}"
         fi
 
         # PRIO 1: Ping each IP address in parameter list every network
         # interface should be checked.
         if [ "${IPCHECK}" == "true" ]; then
-            if "${DEBUG}"; then
+            if [ "${DEBUG}" == "true" ]; then
                 _log "DEBUG: Calling: _ping_range()"
             fi
             _ping_range "${net_iface}" \
@@ -1242,7 +1244,7 @@ _check_system_active()
 
         # PRIO 2: Do a check for active network sockets.
         if [ "${CHECKSOCKETS}" == "true" ]; then
-            if "${DEBUG}"; then
+            if [ "${DEBUG}" == "true" ]; then
                 _log "DEBUG: Calling: _check_net_status()"
             fi
             _check_net_status "${net_iface}" "${NIC_TO_IP["${net_iface}"]}" ||
@@ -1252,7 +1254,7 @@ _check_system_active()
 
     # PRIO 2: Do a check docker sockets for active network sockets.
     if [ "${CHECKSOCKETS}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_docker_status()"
         fi
         _check_docker_status || return 1
@@ -1260,7 +1262,7 @@ _check_system_active()
 
     # PRIO 2: Check for connected users on the CLI.
     if [ "${CHECK_CLI}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_users_cli_status()"
         fi
         _check_users_cli_status || return 1
@@ -1268,7 +1270,7 @@ _check_system_active()
 
     # PRIO 2: Check Samba for connected clients.
     if [ "${CHECK_SAMBA}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_smb_status()"
         fi
         _check_smb_status || return 1
@@ -1278,7 +1280,7 @@ _check_system_active()
         # PRIO 3: Do a check for ul-dl-rate every network interface should be
         # checked for uldl-rate.
         if [ "${ULDLCHECK}" == "true" ]; then
-            if "${DEBUG}"; then
+            if [ "${DEBUG}" == "true" ]; then
                 _log "DEBUG: Calling: _check_ul_dl_rate()"
             fi
             _check_ul_dl_rate "${net_iface}" || return 1
@@ -1287,7 +1289,7 @@ _check_system_active()
 
     # PRIO 4: Do a hdd io check.
     if [ "${HDDIOCHECK}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_hddio()"
         fi
         _check_hddio || return 1
@@ -1295,7 +1297,7 @@ _check_system_active()
 
     # PRIO 5: Do a check for some active processes.
     if [ "${CHECKPROCNAMES}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_processes()"
         fi
         _check_processes || return 1
@@ -1303,7 +1305,7 @@ _check_system_active()
 
     # PRIO 6: Do a load average check.
     if [ "${LOADAVERAGECHECK}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_loadaverage()"
         fi
         _check_loadaverage || return 1
@@ -1311,7 +1313,7 @@ _check_system_active()
 
     # PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins.
     if [ "${PLUGINCHECK}" == "true" ]; then
-        if "${DEBUG}"; then
+        if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Calling: _check_plugin()"
         fi
         _check_plugin || return 1
@@ -1354,7 +1356,7 @@ _check_config
 
 _check_networkconfig
 
-if "${DEBUG}"; then
+if [ "${DEBUG}" == "true" ]; then
     _log "DEBUG: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     _log "DEBUG: CYCLES: ${CYCLES}"
     _log "DEBUG: SLEEP: ${SLEEP}"
