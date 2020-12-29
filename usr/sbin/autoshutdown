@@ -1324,7 +1324,6 @@ _check_system_active()
 ###############################################################
 ######### START OF BODY FUNCTION SCRIPT AUTOSHUTDOWN ##########
 ###############################################################
-
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
@@ -1342,55 +1341,49 @@ else
 fi
 
 # Set-up logging and modes.
-[ "$FAKE" == "true" ] && VERBOSE="true"
-[ "$VERBOSE" == "true" ] && DEBUG="true"
+[ "${FAKE}" == "true" ] && VERBOSE="true"
+[ "${VERBOSE}" == "true" ] && DEBUG="true"
 
 _check_config
 
-# enable / disable check here
-if [ "${ENABLE}" != "true" ]; then
+# Enable / disable check here.
+[ "${ENABLE}" == "false" ] && {
     _log "INFO: Script disabled by autoshutdown.conf"
     _log "INFO: Nothing to do. Exiting here ..."
-    exit 0
-fi
+    exit 0; }
 
 _check_networkconfig
 
-# Init the counter
-FCNT=$CYCLES
-
-# functional start of script
-if $DEBUG ; then
+if "${DEBUG}"; then
     _log "DEBUG: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    _log "DEBUG: CYCLES: $CYCLES"
-    _log "DEBUG: SLEEP: $SLEEP"
-    _log "DEBUG: CHECKCLOCKACTIVE: $CHECKCLOCKACTIVE"
-    _log "DEBUG: UPHOURS: $UPHOURS"
-    _log "DEBUG: IPCHECK: $IPCHECK"
-    _log "DEBUG: RANGE: $RANGE"
-    _log "DEBUG: CHECKSOCKETS: $CHECKSOCKETS"
-    _log "DEBUG: NSOCKETNUMBERS: $NSOCKETNUMBERS"
-    _log "DEBUG: VERBOSE: $VERBOSE"
-    _log "DEBUG: FAKE: $FAKE"
-    _log "DEBUG: SHUTDOWNCOMMAND: $SHUTDOWNCOMMAND"
-    _log "DEBUG: HDDIOCHECK: $HDDIOCHECK"
-    _log "DEBUG: HDDIO_RATE: $HDDIO_RATE"
-    _log "DEBUG: ULDLCHECK: $ULDLCHECK"
-    _log "DEBUG: ULDLRATE: $ULDLRATE"
-    _log "DEBUG: LOADAVERAGECHECK: $LOADAVERAGECHECK"
-    _log "DEBUG: LOADAVERAGE: $LOADAVERAGE"
-    _log "DEBUG: CHECKPROCNAMES: $CHECKPROCNAMES"
-    _log "DEBUG: LOADPROCNAMES: $LOADPROCNAMES"
-    _log "DEBUG: TEMPPROCNAMES: $TEMPPROCNAMES"
-    _log "DEBUG: PLUGINCHECK: $PLUGINCHECK"
-    # List all PlugIns
+    _log "DEBUG: CYCLES: ${CYCLES}"
+    _log "DEBUG: SLEEP: ${SLEEP}"
+    _log "DEBUG: VERBOSE: ${VERBOSE}"
+    _log "DEBUG: FAKE: ${FAKE}"
+    _log "DEBUG: SHUTDOWNCOMMAND: ${SHUTDOWNCOMMAND}"
+    _log "DEBUG: CHECKCLOCKACTIVE: ${CHECKCLOCKACTIVE}"
+    _log "DEBUG: UPHOURS: ${UPHOURS}"
+    _log "DEBUG: IPCHECK: ${IPCHECK}"
+    _log "DEBUG: RANGE: ${RANGE}"
+    _log "DEBUG: CHECKSOCKETS: ${CHECKSOCKETS}"
+    _log "DEBUG: NSOCKETNUMBERS: ${NSOCKETNUMBERS}"
+    _log "DEBUG: HDDIOCHECK: ${HDDIOCHECK}"
+    _log "DEBUG: HDDIO_RATE: ${HDDIO_RATE}"
+    _log "DEBUG: ULDLCHECK: ${ULDLCHECK}"
+    _log "DEBUG: ULDLRATE: ${ULDLRATE}"
+    _log "DEBUG: LOADAVERAGECHECK: ${LOADAVERAGECHECK}"
+    _log "DEBUG: LOADAVERAGE: ${LOADAVERAGE}"
+    _log "DEBUG: CHECKPROCNAMES: ${CHECKPROCNAMES}"
+    _log "DEBUG: LOADPROCNAMES: ${LOADPROCNAMES}"
+    _log "DEBUG: TEMPPROCNAMES: ${TEMPPROCNAMES}"
+    _log "DEBUG: PLUGINCHECK: ${PLUGINCHECK}"
     _log "DEBUG: Plugins found in /etc/autoshutdown.d:"
-    for ASD_plugin_firstcheck in /etc/autoshutdown.d/*; do
-        _log "DEBUG: Plugin: $ASD_plugin_firstcheck"
+    for plugin_firstcheck in /etc/autoshutdown.d/*; do
+        _log "DEBUG: Plugin: ${plugin_firstcheck}"
     done
-fi   # > if $DEBUG ;then
+fi
 
-_log "INFO: --------------- Initialise states ---------------------"
+_log "INFO: --------------- Initialise states --------------------"
 
 [ "${HDDIOCHECK}" == "true" ] && ! _check_hddio && {
     _log "ERR: Initialising _check_hddio(): Please check using debug mode"
@@ -1405,7 +1398,7 @@ done
 _log "INFO: ---------------- Script started ----------------------"
 _log "INFO: ${CYCLES} test cycles until shutdown is issued"
 
-if [ "$FAKE" = "true" ]; then
+if [ "${FAKE}" == "true" ]; then
     _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
     sleep 1
 else
@@ -1414,34 +1407,29 @@ else
 fi
 
 for net_iface in "${!NIC_TO_IP[@]}"; do
-    _log "INFO: Script is doing checks for NIC: ${net_iface} - ${NIC_TO_IP[${net_iface}]}"
+    _log "INFO: Script is doing checks for NIC(s): ${net_iface} - ${NIC_TO_IP[${net_iface}]}"
 done
 
+# Initialise the loop counter.
+FCNT="${CYCLES}"
 while : ; do
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: new supervision cycle started - check active hosts or processes"
+    _log "INFO: New supervision cycle started - Check system activity"
 
-    # Main loop, just keep pinging and checking for processes, to decide whether we can shutdown or not...
+    # Main loop keep checking _check_system_active, to decide whether we
+    # should shutdown or not.
     if _check_system_active; then
-
-        # Nothing found so sub one from the count and check if we can shutdown yet.
-        let FCNT--
-
-        _log "INFO: No active hosts or processes within network range, ${FCNT} cycles until shutdown ..."
-
-        if [ $FCNT -eq 0 ]; then
-            _shutdown
-        fi   # > if [ $FCNT -eq 0 ]; then
+        # Nothing found so subtract one from the count and check if we
+        # can shutdown yet.
+        FCNT=$(( FCNT - 1 ))
+        _log "INFO: All system active check passed, ${FCNT} cycles until shutdown..."
+        [ "${FCNT}" -eq 0 ] && _shutdown
     else
-        # Live IP found so reset count
+        # Reset count.
         FCNT=${CYCLES}
-    fi   # > if _check_system_active
+    fi
 
     # Wait for the required time before checking again.
     _log "INFO: sleep for ${SLEEP}s"
-    sleep $SLEEP
-
-done   # > while : ; do
-
-echo "This should not happen!" && exit 42
-#EOF####### END OF SCRIPT AUTOSHUTDOWN ########
+    sleep "${SLEEP}"
+done
