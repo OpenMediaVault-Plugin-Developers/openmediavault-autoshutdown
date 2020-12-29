@@ -111,6 +111,18 @@
 			"type": "boolean",
 			"default": true
 		},
+		"checkprocnames": {
+			"type": "boolean",
+			"default": true
+		},
+		"loadprocnames": {
+			"type": "string",
+			"default": "smbd,nfsd,mt-daapd,forked-daapd"
+		},
+		"tempprocnames": {
+			"type": "string",
+			"default": "in.tftpd"
+		},
 		"plugincheck": {
 			"type": "boolean",
 			"default": false

@@ -26,6 +26,9 @@ SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
 omv_config_add_key "${SERVICE_XPATH}" "upmins_begin" "0"
 omv_config_add_key "${SERVICE_XPATH}" "upmins_end" "0"
+omv_config_add_key "${SERVICE_XPATH}" "checkprocnames" "1"
+omv_config_add_key "${SERVICE_XPATH}" "loadprocnames" "smbd,nfsd,mt-daapd,forked-daapd"
+omv_config_add_key "${SERVICE_XPATH}" "tempprocnames" "in.tftpd"
 omv_config_add_key "${SERVICE_XPATH}" "plugincheck" "0"
 
 exit 0

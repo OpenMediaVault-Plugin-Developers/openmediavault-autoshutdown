@@ -75,8 +75,7 @@ Expert Settings and explanations in autoshutdown.conf:
 ------------------------------------------------------
 __LOADPROCNAMES__  
 Command names of processes with load dependent children to check if they have
-something to do checked by (default="proftpd,smbd,nfsd,transmission-daemon,
-mt-daapd,forked-daapd")
+something to do checked by (default="proftpd,smbd,nfsd,mt-daapd,forked-daapd")
 
 __TEMPPROCNAMES__  
 Command names of processes only started when active checked with "top" AND "ps"

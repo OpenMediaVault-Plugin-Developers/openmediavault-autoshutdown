@@ -217,10 +217,6 @@ _shutdown()
 #
 _check_processes()
 {
-    # ## disabled for testing
-    # _log "DEBUG: Disabled for testing"
-    #  return 0
-
     # Check for each given command name in LOADPROCNAMES if it is currently
     # stated active in "top". It has been found, that for smbd, proftpd, nsfd,
     # ... there are processes always present in "ps" or "top" output (This
@@ -969,34 +965,41 @@ _check_config()
         _log "WARNING: Ignoring UPHOURS"
     fi
 
-    local -r regex="^([A-Za-z0-9_.-]+)+(,[A-Za-z0-9_.-]+)*$"
+    [[ "${CHECKPROCNAMES}" == "true" || "${CHECKPROCNAMES}" == "false" ]] || {
+        _log "WARNING: CHECKPROCNAMES not set properly. It has to be 'true' or 'false'"
+        _log "WARNING: Set CHECKPROCNAMES to false"
+        CHECKPROCNAMES="false"; }
 
-    if [ "${LOADPROCNAMES}" == "-" ]; then
-        _log "INFO: LOADPROCNAMES is disabled - No processes being checked"
-        LOADPROCNAMES=""
-    elif [ -z "${LOADPROCNAMES}" ]; then
-        _log "INFO: LOADPROCNAMES is set to: 'smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd' (default)"
-        _log "INFO: If you want more processes monitored, please have a look at the expert-settings"
-        LOADPROCNAMES="smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd"
-    elif [[ ! "${LOADPROCNAMES}" =~ ${regex} ]]; then
-        _log "WARNING: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
-        _log "WARNING: You set it to '${LOADPROCNAMES}', which is not the correct syntax"
-        _log "ERR: Exiting ..."
-        exit 1
-    fi
+    if [ "${CHECKPROCNAMES}" == "true" ]; then
+        local -r regex="^([A-Za-z0-9_.-]+)+(,[A-Za-z0-9_.-]+)*$"
 
-    if [ "${TEMPPROCNAMES}" == "-" ]; then
-        _log "INFO: TEMPPROCNAMES is disabled - No processes being checked"
-        TEMPPROCNAMES=""
-    elif  [ -z "${TEMPPROCNAMES}" ]; then
-        _log "INFO: TEMPPROCNAMES is set to: in.'tftpd' (default)"
-        _log "INFO: If you want more processes monitored, please have a look at the expert-settings"
-        TEMPPROCNAMES="in.tftpd"
-    elif [[ ! "${TEMPPROCNAMES}" =~ ${regex} ]]; then
-        _log "WARNING: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
-        _log "WARNING: You set it to '${TEMPPROCNAMES}', which is not the correct syntax"
-        _log "ERR: Exiting ..."
-        exit 1
+        if [ "${LOADPROCNAMES}" == "-" ]; then
+            _log "INFO: LOADPROCNAMES is disabled - No processes being checked"
+            LOADPROCNAMES=""
+        elif [ -z "${LOADPROCNAMES}" ]; then
+            _log "INFO: LOADPROCNAMES is set to: 'smbd,nfsd,mt-daapd,forked-daapd' (default)"
+            _log "INFO: If you want more processes monitored, please have a look at the expert-settings"
+            LOADPROCNAMES="smbd,nfsd,mt-daapd,forked-daapd"
+        elif [[ ! "${LOADPROCNAMES}" =~ ${regex} ]]; then
+            _log "WARNING: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
+            _log "WARNING: You set it to '${LOADPROCNAMES}', which is not the correct syntax"
+            _log "ERR: Exiting ..."
+            exit 1
+        fi
+
+        if [ "${TEMPPROCNAMES}" == "-" ]; then
+            _log "INFO: TEMPPROCNAMES is disabled - No processes being checked"
+            TEMPPROCNAMES=""
+        elif  [ -z "${TEMPPROCNAMES}" ]; then
+            _log "INFO: TEMPPROCNAMES is set to: in.'tftpd' (default)"
+            _log "INFO: If you want more processes monitored, please have a look at the expert-settings"
+            TEMPPROCNAMES="in.tftpd"
+        elif [[ ! "${TEMPPROCNAMES}" =~ ${regex} ]]; then
+            _log "WARNING: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
+            _log "WARNING: You set it to '${TEMPPROCNAMES}', which is not the correct syntax"
+            _log "ERR: Exiting ..."
+            exit 1
+        fi
     fi
 
     # CHECKSOCKETS.
@@ -1291,10 +1294,12 @@ _check_system_active()
     fi
 
     # PRIO 5: Do a check for some active processes.
-    if "${DEBUG}"; then
-        _log "DEBUG: Calling: _check_processes()"
+    if [ "${CHECKPROCNAMES}" == "true" ]; then
+        if "${DEBUG}"; then
+            _log "DEBUG: Calling: _check_processes()"
+        fi
+        _check_processes || return 1
     fi
-    _check_processes || return 1
 
     # PRIO 6: Do a load average check.
     if [ "${LOADAVERAGECHECK}" == "true" ]; then
@@ -1363,10 +1368,8 @@ if $DEBUG ; then
     _log "DEBUG: UPHOURS: $UPHOURS"
     _log "DEBUG: IPCHECK: $IPCHECK"
     _log "DEBUG: RANGE: $RANGE"
-    _log "DEBUG: LOADPROCNAMES: $LOADPROCNAMES"
     _log "DEBUG: CHECKSOCKETS: $CHECKSOCKETS"
     _log "DEBUG: NSOCKETNUMBERS: $NSOCKETNUMBERS"
-    _log "DEBUG: TEMPPROCNAMES: $TEMPPROCNAMES"
     _log "DEBUG: VERBOSE: $VERBOSE"
     _log "DEBUG: FAKE: $FAKE"
     _log "DEBUG: SHUTDOWNCOMMAND: $SHUTDOWNCOMMAND"
@@ -1376,6 +1379,9 @@ if $DEBUG ; then
     _log "DEBUG: ULDLRATE: $ULDLRATE"
     _log "DEBUG: LOADAVERAGECHECK: $LOADAVERAGECHECK"
     _log "DEBUG: LOADAVERAGE: $LOADAVERAGE"
+    _log "DEBUG: CHECKPROCNAMES: $CHECKPROCNAMES"
+    _log "DEBUG: LOADPROCNAMES: $LOADPROCNAMES"
+    _log "DEBUG: TEMPPROCNAMES: $TEMPPROCNAMES"
     _log "DEBUG: PLUGINCHECK: $PLUGINCHECK"
     # List all PlugIns
     _log "DEBUG: Plugins found in /etc/autoshutdown.d:"

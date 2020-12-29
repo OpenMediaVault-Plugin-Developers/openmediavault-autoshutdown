@@ -108,6 +108,18 @@
 				"type": "boolean",
 				"required": true
 			},
+			"checkprocnames": {
+				"type": "boolean",
+				"required": true
+			},
+			"loadprocnames": {
+				"type": "string",
+				"required": true
+			},
+			"tempprocnames": {
+				"type": "string",
+				"required": true
+			},
 			"plugincheck": {
 				"type": "boolean",
 				"required": false

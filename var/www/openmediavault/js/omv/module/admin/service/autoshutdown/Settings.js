@@ -78,13 +78,35 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             name: [
                 "hddiorate"
             ],
-           conditions: [
+            conditions: [
                 { name: "hddiocheck", value: true }
-           ],
-           properties: [
-            "!readOnly",
-            "!allowBlank"
-           ]
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
+        },{
+            name: [
+                "loadprocnames"
+            ],
+            conditions: [
+                { name: "checkprocnames", value: true }
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
+        },{
+            name: [
+                "tempprocnames"
+            ],
+            conditions: [
+                { name: "checkprocnames", value: true }
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
         }]
     }],
 
@@ -353,6 +375,52 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("If the HDD-IO-average of the server is above this value, then no shutdown.")
+                    }]
+                }]
+            },{
+                xtype: "fieldcontainer",
+                fieldLabel: _("Check Active Processes"),
+                layout: "hbox",
+                items: [{
+                    xtype: "checkbox",
+                    name: "checkprocnames",
+                    fieldLabel: "",
+                    checked: true
+                },{
+                    xtype: "displayfield",
+                    width: 25,
+                    value: ""
+                },{
+                    xtype: "textfield",
+                    name: "loadprocnames",
+                    fieldLabel: _("Load Processes"),
+                    allowBlank: false,
+                    value: "smbd,nfsd,mt-daapd,forked-daapd",
+                    width: 600,
+                    plugins: [{
+                        ptype: "fieldinfo",
+                        text: _("Names of processes with load dependent children. Set to '-' to disable")
+                    }]
+                }]
+            },{
+                xtype: "fieldcontainer",
+                fieldLabel: "&nbsp;",
+                layout: "hbox",
+                items: [{
+                    xtype: "displayfield",
+                    fieldLabel: "",
+                    width: 43,
+                    value: ""
+                },{
+                    xtype: "textfield",
+                    name: "tempprocnames",
+                    fieldLabel: _("Temp Processes"),
+                    allowBlank: false,
+                    value: "in.tftpd",
+                    width: 600,
+                    plugins: [{
+                        ptype: "fieldinfo",
+                        text: _("Names of processes only started when active Set to '-' to disable")
                     }]
                 }]
             },{

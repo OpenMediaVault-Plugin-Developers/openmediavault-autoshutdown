@@ -194,12 +194,12 @@ FAKE="false"
 
 #### Process Supervision Configuration
 
-#LOADPROCNAMES="smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd,your_processes_here"
+LOADPROCNAMES="smbd,nfsd,mt-daapd,forked-daapd,your_processes_here"
                      # Command names of processes with load dependent children
-                     # checked. (default="proftpd,smbd,nfsd,
-                     # transmission-daemon,mt-daapd,forked-daapd")
+                     # checked. (default="proftpd,smbd,nfsd,mt-daapd,
+                     # forked-daapd")
 
-#TEMPPROCNAMES="in.tftpd"
+TEMPPROCNAMES="in.tftpd"
                      # Command names of processes only started when active
                      # checked with "top" AND "ps", so all processes are found,
                      # even such, which doesn't show up in top like "lftp"
