@@ -14,6 +14,8 @@
 #                   https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
 #==============================================================================
 
+set -euo pipefail
+
 ######## VARIABLE DEFINITION ########
 # Variables that normal users should normally not define - PowerUsers can do it here or add it to the config.
 LPREPEAT=5                  # Number of test cycles for finding and active LOADPROCNAMES-Process (default=5).
@@ -46,7 +48,7 @@ readonly CONFIG="${1:-/etc/autoshutdown.conf}" # Autoshtdown configuration optio
 #   Globals       : $FAKE    : Are we runnig in fake mode ('true' or 'false')
 #                 : $VERBOSE : Set verbose logging ('true' or 'false')
 #                 : SYSLOG   : Should logging to to syslog ('true' or 'false')
-#   Return        : None
+#   Return        : 0 on success.
 #
 _log()
 {
@@ -61,9 +63,11 @@ _log()
         echo "$(date '+%b %e %H:%M:%S') ${USER}: ${message}"
 
     local stderr=""
-    [ "${2}" == "force" ] && stderr="--stderr"
-    [[ "${SYSLOG}" == "true" || "${2}" == "force" ]] &&
-        logger "${stderr}" -p "${FACILITY}.${priority}" "${message}"
+    [ "${2:-}" == "force" ] && stderr="--stderr"
+    [[ "${SYSLOG}" == "true" || "${2:-}" == "force" ]] &&
+       logger "${stderr}" -p "${FACILITY}.${priority,,}" "${message}"
+
+    return 0
 }
 
 
@@ -1154,6 +1158,8 @@ _check_config()
         _log "WARNING: Setting it to: ${shutdowncommand_default}"
         SHUTDOWNCOMMAND="${shutdowncommand_default}"
     fi
+
+    return 0
 }
 
 
@@ -1166,7 +1172,7 @@ _check_config()
 #                                interface to be checked.
 #                 : $NIC_TO_IP : Associative array for storing network
 #                                interface to IP address mappings.
-#   Return        : None
+#   Return        : 0 on success.
 #
 _check_networkconfig()
 {
