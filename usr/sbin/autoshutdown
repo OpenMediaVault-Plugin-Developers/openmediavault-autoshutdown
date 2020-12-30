@@ -453,7 +453,11 @@ _check_net_status()
         local lines; lines="$(LC_ALL=C
             ss -n |
             awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${nsocket}$" \
-                '$2 ~ /^ESTAB$/ && $5 ~ regex')"
+                -v ignore_self="${NSOCKEIGNORESELF:-"false"}" \
+                -v server_ip="${server_ip}" \
+                '(ignore_self == "false") ? \
+                    $2 ~ /^ESTAB$/ && $5 ~ regex : \
+                    $2 ~ /^ESTAB$/ && $5 ~ regex && $6 !~ server_ip')"
 
         if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Port ${nsocket}: ${lines:-"${empty}"}"
@@ -467,7 +471,7 @@ _check_net_status()
         local conips; conips="$(
             awk '{gsub(/^([[]::ffff:)?/,"",$6);
                   gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${lines}" |
-            sort -u)"
+            sort -t . -k 3,3n -k 4,4n | uniq)"
 
         # Set portprotocol - Only default ports are defined here.
         local portprotocol
@@ -551,7 +555,7 @@ _check_docker_status()
                 awk '{gsub(/^([[]::ffff:)?/,"",$6);
                       gsub(/[]]?:[0-9]+$/,"",$6);
                       print $6}' <<< "${lines}" |
-                sort -u)"
+                sort -t . -k 3,3n -k 4,4n | uniq)"
             [ -n "${lines}" ] &&
                 { (( active+="$(wc -l <<< "${lines}")" ))
                   _log "INFO: Found active connection on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }

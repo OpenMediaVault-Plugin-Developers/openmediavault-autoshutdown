@@ -216,6 +216,12 @@ TEMPPROCNAMES="in.tftpd"
 
 # -----------------------------------------------------------------------------
 
+#NSOCKEIGNORESELF="false"
+    # If set to 'true' _check_net_status will ignore any sockets connected on
+    # the network interface being tested. (default="false")
+
+# -----------------------------------------------------------------------------
+
 #SHUTDOWNCOMMAND="pm-hibernate" # puts the PC in hibernate-mode
                                 # pm-suspend  # puts the PC in suspend-mode
                                 # shutdown -h +5 shuts the PC down 5 min after
