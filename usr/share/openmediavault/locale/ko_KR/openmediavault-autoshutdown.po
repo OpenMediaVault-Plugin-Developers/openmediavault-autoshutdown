@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
-"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"PO-Revision-Date: 2020-12-30 18:12+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
@@ -18,14 +18,20 @@ msgstr ""
 "Language: ko_KR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
 msgstr "Autoshutdown"
 
-msgid "Begin"
-msgstr "시작"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
+msgstr ""
 
 msgid "Check Clock"
 msgstr "시각 확인"
@@ -38,6 +44,12 @@ msgstr "사용자 확인"
 
 msgid "Check for connected users."
 msgstr "접속된 사용자를 확인합니다."
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
+msgstr ""
 
 msgid "Check smbstatus"
 msgstr "smbstatus 확인"
@@ -70,8 +82,8 @@ msgstr "KiB/s 단위의 네트워크 전송량을 정의"
 msgid "Enable"
 msgstr "활성화"
 
-msgid "End"
-msgstr "끝"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
+msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -124,11 +136,20 @@ msgstr "포트 목록"
 msgid "Load Average"
 msgstr "적재 평균"
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr "기록"
 
 msgid "Log to Syslog"
 msgstr "Syslog에 기록"
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "각 주기 사이의 초 단위 수"
@@ -138,9 +159,6 @@ msgstr "상세한 정보는 "
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "목록에 1과 255는 없어야 합니다. 확인 바랍니다!"
-
-msgid "README"
-msgstr "읽어주세요"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -176,6 +194,9 @@ msgstr "하이브리드-대기"
 msgid "Syslog Configuration"
 msgstr "Syslog 구성"
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
@@ -196,6 +217,9 @@ msgstr "상세한 방식."
 
 msgid "Write log informations to system logs."
 msgstr "기록 정보를 Syslog에 씁니다."
+
+msgid "autoshutdown.default"
+msgstr ""
 
 msgid "for more details."
 msgstr "를 확인하세요."

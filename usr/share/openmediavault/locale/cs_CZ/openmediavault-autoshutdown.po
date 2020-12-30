@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
-"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"PO-Revision-Date: 2020-12-30 18:12+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
@@ -18,14 +18,20 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "Odstavení při nepotřebnosti"
 
 msgid "Autoshutdown"
 msgstr "Odstavení při nepotřebnosti"
 
-msgid "Begin"
-msgstr "Od"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
+msgstr ""
 
 msgid "Check Clock"
 msgstr "Aktivovat"
@@ -38,6 +44,12 @@ msgstr "Přihlášení uživatelé"
 
 msgid "Check for connected users."
 msgstr "Dokud jsou k systému připojení uživatelé."
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
+msgstr ""
 
 msgid "Check smbstatus"
 msgstr "Používáno SMB/CIFS sdílení"
@@ -70,8 +82,8 @@ msgstr "Dokud se síťový provoz na serveru pohybuje nad touto hodnotou (v kB/s
 msgid "Enable"
 msgstr "Používat tuto funkci"
 
-msgid "End"
-msgstr "Do"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
+msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -124,11 +136,20 @@ msgstr "Seznam portů"
 msgid "Load Average"
 msgstr "Průměrné vytížení"
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr "Záznam událostí"
 
 msgid "Log to Syslog"
 msgstr "Používat Syslog"
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Prodleva (v sekundách) mezi jednotlivými zjišťováními."
@@ -138,9 +159,6 @@ msgstr "Bližší informace naleznete v"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "Rozhodně sem nezadávejte hodnoty 1 a 255!"
-
-msgid "README"
-msgstr "CTIMNE"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -176,6 +194,9 @@ msgstr "Uspat kombinovaně"
 msgid "Syslog Configuration"
 msgstr "Nastavení pro Syslog"
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
@@ -196,6 +217,9 @@ msgstr "Zaznamenávat více podrobností."
 
 msgid "Write log informations to system logs."
 msgstr "Zapisovat události do systémového záznamu událostí."
+
+msgid "autoshutdown.default"
+msgstr ""
 
 msgid "for more details."
 msgstr "(v angličtině)."

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
-"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"PO-Revision-Date: 2020-12-30 18:12+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -19,14 +19,20 @@ msgstr ""
 "Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "Spegnimento Automatico"
 
 msgid "Autoshutdown"
 msgstr "Spegnimento automatico"
 
-msgid "Begin"
-msgstr "Inizio"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
+msgstr ""
 
 msgid "Check Clock"
 msgstr "Controlla l'Orario"
@@ -39,6 +45,12 @@ msgstr "Verifica Utenti"
 
 msgid "Check for connected users."
 msgstr "Verifica gli utenti collegati."
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
+msgstr ""
 
 msgid "Check smbstatus"
 msgstr "Verifica smbstatus"
@@ -71,8 +83,8 @@ msgstr "Definisci il traffico di rete in kB/s"
 msgid "Enable"
 msgstr "Abilita"
 
-msgid "End"
-msgstr "Fine"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
+msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -125,11 +137,20 @@ msgstr "Elenco delle Porte"
 msgid "Load Average"
 msgstr "Carico Medio"
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr "Log"
 
 msgid "Log to Syslog"
 msgstr "Registra in Syslog"
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Numero di secondi tra ogni ciclo."
@@ -139,9 +160,6 @@ msgstr "Per favore controlla il"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "Assicurati di lasciare 1 e 255 fuori dalla lista!"
-
-msgid "README"
-msgstr "LEGGIMI"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -177,6 +195,9 @@ msgstr "Sospensione-Ibrida"
 msgid "Syslog Configuration"
 msgstr "Configurazione Syslog"
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
@@ -197,6 +218,9 @@ msgstr "Modalità verbosa."
 
 msgid "Write log informations to system logs."
 msgstr "Scrivi informazioni di registro nei registri di sistema."
+
+msgid "autoshutdown.default"
+msgstr ""
 
 msgid "for more details."
 msgstr "per ulteriori dettagli."

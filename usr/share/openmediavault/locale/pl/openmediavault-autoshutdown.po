@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
-"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"PO-Revision-Date: 2020-12-30 18:12+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -17,13 +17,19 @@ msgstr ""
 "Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr ""
 
 msgid "Autoshutdown"
 msgstr ""
 
-msgid "Begin"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
 msgstr ""
 
 msgid "Check Clock"
@@ -36,6 +42,12 @@ msgid "Check Users"
 msgstr ""
 
 msgid "Check for connected users."
+msgstr ""
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
 msgstr ""
 
 msgid "Check smbstatus"
@@ -69,7 +81,7 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-msgid "End"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr ""
 
 msgid ""
@@ -123,10 +135,19 @@ msgstr ""
 msgid "Load Average"
 msgstr ""
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr ""
 
 msgid "Log to Syslog"
+msgstr ""
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
@@ -136,9 +157,6 @@ msgid "Please check the"
 msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
-
-msgid "README"
 msgstr ""
 
 msgid ""
@@ -175,6 +193,9 @@ msgstr ""
 msgid "Syslog Configuration"
 msgstr ""
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
@@ -194,6 +215,9 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Write log informations to system logs."
+msgstr ""
+
+msgid "autoshutdown.default"
 msgstr ""
 
 msgid "for more details."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr ""
 
 msgid "Autoshutdown"
 msgstr ""
 
-msgid "Begin"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
 msgstr ""
 
 msgid "Check Clock"
@@ -36,6 +42,12 @@ msgid "Check Users"
 msgstr ""
 
 msgid "Check for connected users."
+msgstr ""
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
 msgstr ""
 
 msgid "Check smbstatus"
@@ -65,7 +77,7 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-msgid "End"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr ""
 
 msgid "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 means a loadaverage of 2.20"
@@ -113,10 +125,19 @@ msgstr ""
 msgid "Load Average"
 msgstr ""
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr ""
 
 msgid "Log to Syslog"
+msgstr ""
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
@@ -126,9 +147,6 @@ msgid "Please check the"
 msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr ""
-
-msgid "README"
 msgstr ""
 
 msgid "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -164,6 +182,9 @@ msgstr ""
 msgid "Syslog Configuration"
 msgstr ""
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
@@ -183,6 +204,9 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Write log informations to system logs."
+msgstr ""
+
+msgid "autoshutdown.default"
 msgstr ""
 
 msgid "for more details."

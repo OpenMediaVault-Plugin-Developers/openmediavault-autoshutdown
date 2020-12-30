@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
-"PO-Revision-Date: 2020-12-09 19:52+0000\n"
-"Last-Translator: kochin <kochinc@outlook.com>\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"PO-Revision-Date: 2020-12-30 18:12+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,14 +18,20 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
 msgstr "Autoshutdown"
 
-msgid "Begin"
-msgstr "開始"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
+msgstr ""
 
 msgid "Check Clock"
 msgstr "檢查時鐘"
@@ -38,6 +44,12 @@ msgstr "檢查使用者"
 
 msgid "Check for connected users."
 msgstr "檢查已連接之使用者"
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
+msgstr ""
 
 msgid "Check smbstatus"
 msgstr "檢查 smbstatus"
@@ -70,8 +82,8 @@ msgstr "以 kB/s 來定義網路流量"
 msgid "Enable"
 msgstr "啟用"
 
-msgid "End"
-msgstr "結束"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
+msgstr ""
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -124,11 +136,20 @@ msgstr "通訊埠列表"
 msgid "Load Average"
 msgstr "負載平均值"
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr "日誌"
 
 msgid "Log to Syslog"
 msgstr "記錄日誌到 Syslog"
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "每個週期之間的秒數。"
@@ -138,9 +159,6 @@ msgstr "請查看"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "請確定 1 與 255 不在列表中！"
-
-msgid "README"
-msgstr "README"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -176,6 +194,9 @@ msgstr "暫停-混合"
 msgid "Syslog Configuration"
 msgstr "Syslog 設置"
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr "IP 範圍應該是以下用逗號分隔的列表："
 
@@ -196,6 +217,9 @@ msgstr "詳盡模式"
 
 msgid "Write log informations to system logs."
 msgstr "將日誌資訊寫到系統日誌中。"
+
+msgid "autoshutdown.default"
+msgstr ""
 
 msgid "for more details."
 msgstr "中的詳細內容。"

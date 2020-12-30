@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-06 09:53-0600\n"
-"PO-Revision-Date: 2020-12-06 15:54+0000\n"
+"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"PO-Revision-Date: 2020-12-30 18:12+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -18,14 +18,20 @@ msgstr ""
 "Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "&emsp;Minute"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
 msgid "Autoshutdown"
 msgstr "Autoshutdown"
 
-msgid "Begin"
-msgstr "Börja"
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Active Processes"
+msgstr ""
 
 msgid "Check Clock"
 msgstr "Kontrollera klockan"
@@ -38,6 +44,12 @@ msgstr "Kontrollera användare"
 
 msgid "Check for connected users."
 msgstr "Kontrollera efter anslutna användare."
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check plugins"
+msgstr ""
 
 msgid "Check smbstatus"
 msgstr "Kontrollera smbstatus"
@@ -70,7 +82,7 @@ msgstr "Definiera nätverkstrafiken i kB/s"
 msgid "Enable"
 msgstr "Aktivera"
 
-msgid "End"
+msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr ""
 
 msgid ""
@@ -124,10 +136,19 @@ msgstr "Lista över portar"
 msgid "Load Average"
 msgstr ""
 
+msgid "Load Processes"
+msgstr ""
+
 msgid "Log"
 msgstr "Logg"
 
 msgid "Log to Syslog"
+msgstr ""
+
+msgid "Names of processes only started when active Set to '-' to disable"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable"
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
@@ -138,9 +159,6 @@ msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr ""
-
-msgid "README"
-msgstr "README"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -176,6 +194,9 @@ msgstr ""
 msgid "Syslog Configuration"
 msgstr ""
 
+msgid "Temp Processes"
+msgstr ""
+
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr ""
 
@@ -195,6 +216,9 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Write log informations to system logs."
+msgstr ""
+
+msgid "autoshutdown.default"
 msgstr ""
 
 msgid "for more details."
