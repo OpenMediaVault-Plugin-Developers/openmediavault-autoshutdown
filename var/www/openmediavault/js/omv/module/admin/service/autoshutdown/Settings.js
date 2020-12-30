@@ -78,13 +78,35 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             name: [
                 "hddiorate"
             ],
-           conditions: [
+            conditions: [
                 { name: "hddiocheck", value: true }
-           ],
-           properties: [
-            "!readOnly",
-            "!allowBlank"
-           ]
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
+        },{
+            name: [
+                "loadprocnames"
+            ],
+            conditions: [
+                { name: "checkprocnames", value: true }
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
+        },{
+            name: [
+                "tempprocnames"
+            ],
+            conditions: [
+                { name: "checkprocnames", value: true }
+            ],
+            properties: [
+                "!readOnly",
+                "!allowBlank"
+            ]
         }]
     }],
 
@@ -167,12 +189,21 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "numberfield",
                     name: "uphours_begin",
-                    fieldLabel: _("Begin"),
+                    fieldLabel: _("Begin:&emsp;Hour"),
                     minValue: 0,
                     maxValue: 23,
                     allowDecimals: false,
                     allowBlank: false,
                     value: 6
+                },{
+                    xtype: "numberfield",
+                    name: "upmins_begin",
+                    fieldLabel: _("&emsp;Minute"),
+                    minValue: 0,
+                    maxValue: 59,
+                    allowDecimals: false,
+                    allowBlank: false,
+                    value: 0
                 }]
             },{
                 xtype: "fieldcontainer",
@@ -181,12 +212,21 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 items: [{
                     xtype: "numberfield",
                     name: "uphours_end",
-                    fieldLabel: _("End"),
+                    fieldLabel: _("End:&nbsp;&ensp;&emsp;Hour"),
                     minValue: 0,
                     maxValue: 23,
                     allowDecimals: false,
                     allowBlank: false,
                     value: 20
+                },{
+                    xtype: "numberfield",
+                    name: "upmins_end",
+                    fieldLabel: _("&emsp;Minute"),
+                    minValue: 0,
+                    maxValue: 59,
+                    allowDecimals: false,
+                    allowBlank: false,
+                    value: 0
                 }]
             }]
         },{
@@ -338,6 +378,52 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     }]
                 }]
             },{
+                xtype: "fieldcontainer",
+                fieldLabel: _("Check Active Processes"),
+                layout: "hbox",
+                items: [{
+                    xtype: "checkbox",
+                    name: "checkprocnames",
+                    fieldLabel: "",
+                    checked: true
+                },{
+                    xtype: "displayfield",
+                    width: 25,
+                    value: ""
+                },{
+                    xtype: "textfield",
+                    name: "loadprocnames",
+                    fieldLabel: _("Load Processes"),
+                    allowBlank: false,
+                    value: "smbd,nfsd,mt-daapd,forked-daapd",
+                    width: 600,
+                    plugins: [{
+                        ptype: "fieldinfo",
+                        text: _("Names of processes with load dependent children. Set to '-' to disable")
+                    }]
+                }]
+            },{
+                xtype: "fieldcontainer",
+                fieldLabel: "&nbsp;",
+                layout: "hbox",
+                items: [{
+                    xtype: "displayfield",
+                    fieldLabel: "",
+                    width: 43,
+                    value: ""
+                },{
+                    xtype: "textfield",
+                    name: "tempprocnames",
+                    fieldLabel: _("Temp Processes"),
+                    allowBlank: false,
+                    value: "in.tftpd",
+                    width: 600,
+                    plugins: [{
+                        ptype: "fieldinfo",
+                        text: _("Names of processes only started when active Set to '-' to disable")
+                    }]
+                }]
+            },{
                 xtype: "checkbox",
                 name: "checksamba",
                 fieldLabel: _("Check smbstatus"),
@@ -349,6 +435,18 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 fieldLabel: _("Check Users"),
                 checked: true,
                 boxLabel: _("Check for connected users.")
+            },{
+                xtype: "checkbox",
+                name: "plugincheck",
+                fieldLabel: _("Check plugins"),
+                checked: true,
+                boxLabel: _("Check for users defined plugins."),
+                plugins: [{
+                    ptype: "fieldinfo",
+                    text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
+                          _("autoshutdown.default") + "</a> " +
+                          _("for more details.")
+                }]
             }]
         },{
             xtype: "fieldset",
@@ -389,7 +487,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 plugins: [{
                     ptype: "fieldinfo",
                     text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
-                          _("README") + "</a> " +
+                          _("autoshutdown.default") + "</a> " +
                           _("for more details.")
                 }]
             }]

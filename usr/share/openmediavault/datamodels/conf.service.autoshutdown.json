@@ -47,11 +47,23 @@
 			"maximum": 23,
 			"default": 6
 		},
+		"upmins_begin": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 59,
+			"default": 0
+		},
 		"uphours_end": {
 			"type": "integer",
 			"minimum": 0,
 			"maximum": 23,
 			"default": 20
+		},
+		"upmins_end": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 59,
+			"default": 0
 		},
 		"checksockets": {
 			"type": "boolean",
@@ -98,6 +110,22 @@
 		"checkcli": {
 			"type": "boolean",
 			"default": true
+		},
+		"checkprocnames": {
+			"type": "boolean",
+			"default": true
+		},
+		"loadprocnames": {
+			"type": "string",
+			"default": "smbd,nfsd,mt-daapd,forked-daapd"
+		},
+		"tempprocnames": {
+			"type": "string",
+			"default": "in.tftpd"
+		},
+		"plugincheck": {
+			"type": "boolean",
+			"default": false
 		},
 		"syslog": {
 			"type": "boolean",

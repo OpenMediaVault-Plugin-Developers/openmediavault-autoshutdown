@@ -3,17 +3,16 @@
 ##################################################
 #### Script Common Configuration
 
-# if the autoshutdown-script should be enabled or not
-# default = "true"
-#
-# note:
-# enabled/disabled does start the script on OMV, but then it checks, if the script
-# is enabled or disabled. If it is "disabled", then the script stops with a log-message
 ENABLE="true"
+# if the autoshutdown-script should be enabled or not (default="true")
+#
+# Note: enabled/disabled does start the script on OMV, but then it checks,
+# if the script is enabled or disabled. If it is "disabled", then the script
+# stops with a log-message
 
 CYCLES=6
-    # Set the number of cycles with no result (no PC online etc.) before shutdown. (default=6)
-    # allowed is 1 - 999
+    # Set the number of cycles with no result (no PC online etc.) before
+    #shutdown. (default=6) allowed is 1 - 999
 
 SLEEP=180
     # Numbers of seconds between each Cycle (Check). (default=180, 3 min)
@@ -21,32 +20,37 @@ SLEEP=180
 
 
 ##################################################
-####  Check range of IPs ####
+####  Script checks ####
 IPCHECK="true"
     # Parameter to activate or deactivate this feature (default="true")
 
 RANGE="2..254"
     # Define a range of IPs which should be scanned. (default="2..254")
     # The 'RANGE' should be comma delimited list of the following:
-    # - Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end
-    # - Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz
-    # If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used.
-    # Please make sure to leave 1 and 255 out of the list !
+    # - Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |
+    #                       iface:xxx.yyy.zzz.start..end
+    # - Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz |
+    #                       iface:www.xxx.yyy.zzz
+    # If 'start..end' or 'Last octet of IP' is set the first three octets of
+    # the iface IP address are used. Please make sure to leave 1 and 255 out of
+    # the list !
 
-##################################################
-####  Check Clock to identify uptime ####
+# -----------------------------------------------------------------------------
+
 CHECKCLOCKACTIVE="false"
     # Parameter to activate or deactivate this feature (default="false")
     # per default this is deactivated
 
-UPHOURS="6..20"
-    # Define a range of hours, in which the system should stay up (default="6..20")
-    # without checking any other parameter to stay awake
+UPHOURS="06:00..20:00"
+    # Define a range of hours, in which the system should stay up
+    # (default="06:00..20:00") without checking any other parameter to stay
+    # awake
 
-##################################################
-#### Network Socket Supervision Configuration
+# -----------------------------------------------------------------------------
+
 CHECKSOCKETS="true"
-    # Parameter to activate or deactivate network socket feature (default="true")
+    # Parameter to activate or deactivate network socket feature
+    #(default="true")
 
 NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     # Socket numbers to check for activity
@@ -54,35 +58,40 @@ NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     # Ports:
     # 21 = FTP
     # 22 = SSH
-    # 80 = Web
+    # 80|8080 = Web
     # 139 = NetBIOS
     # 443 = HTTPS
     # 445 = Samba-Filesharing
     # 548 = AFP
+    # 873 = Rsync
+    # 3306 = MYSQL
     # 3689 = iTunes, DAAP
     # 6991 = Bittorrent
-    # 9091 = Transmission-Daemon-WebIF
-    # 10000 = Webmin WebIF
+    # 9091 = Bittorrent_WebIF
+    # 32400 = Plex media server
     # 49152 = UPnP
     # 51413 = Bittorrent
 
+# -----------------------------------------------------------------------------
+
 ULDLCHECK="true"
-    # (default=true)
-    # Set it to "true" for a network-traffic check. Then don't forget to set ULDLRATE also!
+    # Set it to "true" for a network-traffic check. (default="true")
 
 ULDLRATE=50
-    # Define the network traffic in kB/s
-    # in each cycle autoshutdown checks whether the network-traffic (upload or download) is over the set value
+    # Define the network traffic in kB/s in each cycle autoshutdown checks
+    # whether the network-traffic (upload or download) is over the set value
     # over this value, no shutdown -> new check after x seconds (see SLEEP)
-    # below this value, your PC shuts down, if all other checks are negative, too after the defined nr. of Cycles
+    # below this value, your PC shuts-down, if all other checks are negative,
+    # too after the defined. (default=50)
+
+# -----------------------------------------------------------------------------
 
 LOADAVERAGECHECK="true"
-    # Set it to "true" for a check of loadaverage over the last minute in autoshutdown. If the system is
-    # over this value, then no shutdown is issued.
-    # If you set this to "true", don't forget to set LOADAVERAGE also!
+    # Set it to "true" for a check of load-average in  autoshutdown. If the
+    # system is over this value, then no shutdown is issued. (default="true")
 
 LOADAVERAGE=40
-    # Set this to the target loadaverage for the Server.
+    # Set this to the target load-average for the Server. (default=40)
     # Make sure you leave the leading zeros and the dot out of the value!
     # Example:
     # LOADAVERAGE=50   # means a loadaverage of 0.50
@@ -90,19 +99,71 @@ LOADAVERAGE=40
     # LOADAVERAGE=220  # means a loadaverage of 2.20
     # and so on ...
 
+# -----------------------------------------------------------------------------
+
 HDDIOCHECK="true"
-    # set it to "true" for a check of HDD-IO over the last SLEEP-time in autoshutdown. If the system is
-    # over this value, then no shutdown is issued.
-    # If you set this to "true", don't forget to set HDDIO-RATE also!
+    # Set it to "true" for a check of HDD-IO over the last SLEEP-time in
+    # autoshutdown. If the system is over this value, then no shutdown is
+    # issued. (default="true")
 
 HDDIO_RATE=401
-    # Set this to the target HDDIO-rate in kB/s for the Server.
+    # Set this to the target HDDIO-rate in kB/s for the Server. (default=401)
+
+# -----------------------------------------------------------------------------
 
 CHECK_SAMBA="true"
     # If set to true, smbstatus will be checked for connected clients.
+    # (default="true")
+
+# -----------------------------------------------------------------------------
 
 CHECK_CLI="true"
-    # If set to true, will check for connected users.
+    # If set to true, will check for connected users. (default="true")
+
+# -----------------------------------------------------------------------------
+
+PLUGINCHECK="false"
+    # PlugIns: You find sample plugins in /etc/autoshutdown.d. Set this to
+    # true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d set it to
+    # "false" (or uncemmented) to skip the check. (default="false")
+    #
+    # E.g.: When ClamAV does a check, the Server shouldn't shut down. How to do
+    # that?  Let's look at a example: in the clamav-plugin for autoshutdown
+    # (etc/autoshutdown.d/clamav) the following is set:
+    #
+    #    # In which folder is the file to look for
+    #    folder="/var/run/clamav"
+    #    # filename (can be expanded with regexes)
+    #    file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+    #
+    # Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345
+    # (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown
+    #
+    # also possible:
+    #     folder="/home/user"
+    #     file="backup.status"
+    #     content="processing job"
+    #
+    # If a file /home/user/backup.status exists with the content 'processing
+    # job', the Server isn't shutdown. This is useful for backup-scripts. It
+    # is not nice if the PC is shutting down while the backup-script is
+    # running. In my backup-script i use a simple
+    #
+    #     echo "processing job" > /home/user/backup.status
+    #
+    # At the beginning and a
+    #
+    #     rm /home/user/backup.status
+    #
+    # At the end of the script. In the boot-Phase also a
+    #
+    #     rm /home/user/*.status
+    #
+    # To delete all *.status files, which are not deleted before (loss of power
+    # for example)
+    #
+    # Please have a look at the two example files in /etc/autoshutdown.d
+
 
 ##################################################
 #### Syslog Configuration ####
@@ -110,113 +171,79 @@ SYSLOG="true"
     # Activate write to syslog (default="true")
 
 VERBOSE="false"
-    # Use the verbose mode, with additional output on the command line (default="false")
-    # verbose includes DEBUG-Mode
+    # Use the verbose mode, with additional output on the command line
+    # (default="false") verbose includes DEBUG-Mode
 
 FAKE="false"
-    # Set it to "true" for a Fake-Mode: The script runs dry: You can test what happens, without shutting down your PC
-    # This mode includes VERBOSE-output automatically, even if VERBOSE is set to "false"
-    # Setting it to "false" or if it is not set, the script will run normally.
-    # With Fake-Mode ON, the script doesn't sleep 5 minutes after it starts, so you can see what happens immediately
+    # Set it to "true" for a Fake-Mode: The script runs dry: You can test what
+    # happens, without shutting down your PC. This mode includes VERBOSE-output
+    # automatically, even if VERBOSE is set to "false". Setting it to "false"
+    # or if it is not set, the script will run normally. With Fake-Mode ON, the
+    # script doesn't sleep 5 minutes after it starts, so you can see what
+    # happens immediately (default="false")
 
 
-
-##################################
-####### EXPERT SETTINGS ##########
-##################################
+##################################################
+#### EXPERT SETTINGS ####
 
 # You should know, what you are doing
 # Add these settings to the "Expert Settings" textfield in the OMV-GUI
 # make sure # isn't the first character in the line if you add it
 
-# ----------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 #### Process Supervision Configuration
 
-#LOADPROCNAMES="smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd,your_processes_here"
-                     # command names of processes with load dependent children
-                     # checked by default="proftpd,smbd,nfsd,transmission-daemon,mt-daapd,forked-daapd")
+LOADPROCNAMES="smbd,nfsd,mt-daapd,forked-daapd,your_processes_here"
+                     # Command names of processes with load dependent children
+                     # checked. (default="proftpd,smbd,nfsd,mt-daapd,
+                     # forked-daapd")
 
-#TEMPPROCNAMES="in.tftpd"
-                     # command names of processes only started when active
-                     # checked with "top" AND "ps", so all processes are found, even such, which doesn't show up in top
-                     # like "lftp"
-                     # Beware: If the process shows up in "ps" when there is no connection, your PC won't shutdown!
-                     # maybe you have to call the process in you script like this: "lftp -do -something -here && exit"
-                     # so that the process is killed after it has done something
-                     # checked by default="in.tftpd")
+TEMPPROCNAMES="in.tftpd"
+                     # Command names of processes only started when active
+                     # checked with "top" AND "ps", so all processes are found,
+                     # even such, which doesn't show up in top like "lftp"
+                     # Beware: If the process shows up in "ps" when there is no
+                     # connection, your PC won't shutdown! Maybe you have to
+                     # call the process in you script like this: "lftp -do
+                     # -something -here && exit" so that the process is killed
+                     # after it has done something checked (default="in.tftpd")
 
-    # if you want others, please uncomment the above lines and add your process at the end of the line
-    # The following scheme is mandatory for both LOADPROCNAMES and TEMPPROCNAMES:
-    # process1,process2
-    # all processes separated by comma ','
+    # If you want others, please uncomment the above lines and add your process
+    # at the end of the line. The following scheme is mandatory for both
+    # LOADPROCNAMES and TEMPPROCNAMES: process1,process2, all processes
+    # separated by comma ','
 
-# ----------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+#NSOCKEIGNORESELF="false"
+    # If set to 'true' _check_net_status will ignore any sockets connected on
+    # the network interface being tested. (default="false")
+
+# -----------------------------------------------------------------------------
 
 #SHUTDOWNCOMMAND="pm-hibernate" # puts the PC in hibernate-mode
                                 # pm-suspend  # puts the PC in suspend-mode
-                                # shutdown -h +5  # shuts the PC down 5 min after shutdown-command
+                                # shutdown -h +5 shuts the PC down 5 min after
+                                # shutdown-command
 
-    # If you don't want to shutdown your PC, but go in hibernate/suspend: Define the command here
-    # If nothing defined, it shuts down with "shutdown -h now"
-    # For more information and how to set up hibernate and suspend, look here:
+    # If you don't want to shutdown your PC, but go in hibernate/suspend:
+    # Define the command here If nothing defined, it shuts down with
+    # "shutdown -h now" For more information and how to set up hibernate and
+    # suspend, look here:
     # http://wiki.debian.org/Suspend
     # http://wiki.debian.org/Hibernation
 
-# ----------------------------------------------------------------------------------------
-
-    # Here you can define a path to a file, which contains list of IPs that should be scanned
-    # only one IP per line allowed - Format mmm.nnn.ooo.ppp
-    # e.g.:
-    # 192.168.1.45
-    # If this expert-setting is used, the IPs specified in "RANGE" or in GUI doesn't work
-    # If this is uncommented, the IPs specified in "RANGE" or in GUI doesn't work
+# -----------------------------------------------------------------------------
 
 #PINGLIST="PATH/TO/PINGLIST"
+    # Here you can define a path to a file, which contains list of IPs that
+    # should be scanned only one IP per line allowed - Format mmm.nnn.ooo.ppp
+    # e.g.: 192.168.1.45. If this expert-setting is used, the IPs specified in
+    # "RANGE" or in GUI doesn't work.
 
-# ----------------------------------------------------------------------------------------
-
-#PLUGINCHECK="true"
-    # PlugIns: You find sample plugins in /etc/autoshutdown.d
-    # Set this to true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d
-    # set it to "false" (or uncemmented) to skip the check
-    #
-    # E.g.: When ClamAV does a check, the Server shouldn't shut down
-    # How to do that?
-    # Let's look at a example: in the clamav-plugin for autoshutdown (etc/autoshutdown.d/clamav) the following is set:
-    #
-    #    # In which folder is the file to look for
-    #    folder="/var/run/clamav"
-    #    # filename (can be expanded with regexes)
-    #    file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
-    #
-    # Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345 (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown
-    #
-    # also possible:
-    #     folder="/home/user"
-    #     file="backup.status"
-    #     content="processing job"
-    #
-    # If a file /home/user/backup.status exists with the content 'processing job', the Server isn't shutdow
-    # This is useful for backupscripts. It is not nice if the PC is shutting down while the backup-script is running.
-    # In my backup-script i use a simple
-    #
-    #     echo "processing job" > /home/user/backup.status
-    #
-    # at the beginning and a
-    #
-    #     rm /home/user/backup.status
-    #
-    # at the end of the script. In the boot-Phase also a
-    #
-    #     rm /home/user/*.status
-    #
-    # to delete all *.status files, which are not deleted before (loss of power for example)
-    #
-    # Please have a look at the two example files in /etc/autoshutdown.d
+# -----------------------------------------------------------------------------
 
 #FORCE_NIC="eth1"
     # You can set NICs to look for a IP. This is useful, if you don't use eth0
-    # make sure you insert a comma or space between each NIC
-
-    # see README.md
+    # make sure you insert a comma or space between each NIC.
