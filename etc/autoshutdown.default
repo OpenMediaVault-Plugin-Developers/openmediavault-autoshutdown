@@ -223,7 +223,7 @@ FAKE="false"
 
 # -----------------------------------------------------------------------------
 
-#NSOCKEIGNORESELF="false"
+#NSOCKETIGNORESELF="false"
     # If set to 'true' _check_net_status will ignore any sockets connected on
     # the network interface being tested. (default="false")
 

@@ -429,9 +429,9 @@ _check_loadaverage()
 #   Name          : _check_net_status
 #   Parameters    : $1 : Network interface under test.
 #                 : $2 : The network interface IP address.
-#   Globals       : $NSOCKETNUMBERS   : Socket number to check for activity.
-#                 : $NSOCKEIGNORESELF : If set will ignore the Network
-#                                       interface IP address as a connection.
+#   Globals       : $NSOCKETNUMBERS    : Socket number to check for activity.
+#                 : $NSOCKETIGNORESELF : If set will ignore the Network
+#                                        interface IP address as a connection.
 #   Return        : 0         : If no active socket has been found, ready for
 #                               shutdown.
 #                 : 1 or more : If at least one active socket has been found,
@@ -453,11 +453,9 @@ _check_net_status()
         local lines; lines="$(LC_ALL=C
             ss -n |
             awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${nsocket}$" \
-                -v ignore_self="${NSOCKEIGNORESELF:-"false"}" \
+                -v ignore_self="${NSOCKETIGNORESELF:-"false"}" \
                 -v server_ip="${server_ip}" \
-                '(ignore_self == "false") ? \
-                    $2 ~ /^ESTAB$/ && $5 ~ regex : \
-                    $2 ~ /^ESTAB$/ && $5 ~ regex && $6 !~ server_ip')"
+                '(ignore_self == "false") ? $2 ~ /^ESTAB$/ && $5 ~ regex : $2 ~ /^ESTAB$/ && $5 ~ regex && $6 !~ server_ip')"
 
         if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: Port ${nsocket}: ${lines:-"${empty}"}"
@@ -1033,6 +1031,14 @@ _check_config()
     else
         _log "WARNING: CHECKSOCKETS is set to false"
         _log "WARNING: Ignoring NSOCKETNUMBERS"
+    fi
+
+    if [[ "${CHECKSOCKETS}" == "true" && -n "${NSOCKETIGNORESELF:-}" ]]; then
+        [[ "${NSOCKETIGNORESELF}" == "true" ||
+           "${NSOCKETIGNORESELF}" == "false" ]] || {
+            _log "WARNING: NSOCKETIGNORESELF not set properly. It has to be 'true' or 'false'"
+            _log "WARNING: Set NSOCKETIGNORESELF to: false"
+            NSOCKETIGNORESELF="false"; }
     fi
 
     # IPCHECK.
