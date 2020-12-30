@@ -4,6 +4,7 @@ openmediavault-autoshutdown (5.1.4) stable; urgency=low
   * Improve logging when CHECKPROCNAMES is set false
   * Comment improvement and tweak script
   * Improve and fix shellcheck issues for NSOCKETIGNORESELF
+  * Improve logging in _check_net_status and _check_docker_status
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Dec 2020 20:46:24 +0000
 

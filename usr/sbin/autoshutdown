@@ -464,7 +464,8 @@ _check_net_status()
         # No active connection found.
         [ -z "${lines}" ] && continue
 
-        (( active+="$(wc -l <<< "${lines}")" ))
+        local no_lines; no_lines="$(wc -l <<< "${lines}")"
+        (( active+="${no_lines}" ))
 
         local conips; conips="$(
             awk '{gsub(/^([[]::ffff:)?/,"",$6);
@@ -491,7 +492,7 @@ _check_net_status()
             *)       portprotocol="unknown" ;;
         esac
 
-        _log "INFO: Found active connection on port ${nsocket} ($portprotocol) from: ${conips//$'\n'/, }"
+        _log "INFO: Found ${no_lines} active connection on port ${nsocket} ($portprotocol) from: ${conips//$'\n'/, }"
     done
 
     _log "INFO: Found ${active} active socket(s) on ${net_iface}, from port(s): ${NSOCKETNUMBERS}"
@@ -556,8 +557,9 @@ _check_docker_status()
                       print $6}' <<< "${lines}" |
                 sort -t . -k 3,3n -k 4,4n | uniq)"
             [ -n "${lines}" ] &&
-                { (( active+="$(wc -l <<< "${lines}")" ))
-                  _log "INFO: Found active connection on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
+                { local no_lines; no_lines="$(wc -l <<< "${lines}")"
+                  (( active+="${no_lines}" ))
+                  _log "INFO: Found ${no_lines} active connection on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
     _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}"
@@ -1401,6 +1403,7 @@ if [ "${DEBUG}" == "true" ]; then
     _log "DEBUG: CHECKPROCNAMES: ${CHECKPROCNAMES}"
     _log "DEBUG: LOADPROCNAMES: ${LOADPROCNAMES}"
     _log "DEBUG: TEMPPROCNAMES: ${TEMPPROCNAMES}"
+    _log "DEBUG: NSOCKEIGNORESELF: ${NSOCKEIGNORESELF:-"false"}"
     _log "DEBUG: PLUGINCHECK: ${PLUGINCHECK}"
     _log "DEBUG: Plugins found in /etc/autoshutdown.d:"
     for plugin_firstcheck in /etc/autoshutdown.d/*; do
