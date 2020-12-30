@@ -1,28 +1,29 @@
-######## DEFAULT CONFIGURATION DEFINITION ########
+# DEFAULT CONFIGURATION DEFINITION
 
-##################################################
-#### Script Common Configuration
+###############################################################################
+# Script Common Configuration
 
 ENABLE="true"
-# if the autoshutdown-script should be enabled or not (default="true")
-#
-# Note: enabled/disabled does start the script on OMV, but then it checks,
-# if the script is enabled or disabled. If it is "disabled", then the script
-# stops with a log-message
+    # If the autoshutdown-script should be enabled or not. (default="true")
+    #
+    # Note: enabled/disabled does start the script on OMV, but then it checks,
+    # if the script is enabled or disabled. If it is "disabled", then the
+    # script stops with a log-message.
 
 CYCLES=6
     # Set the number of cycles with no result (no PC online etc.) before
-    #shutdown. (default=6) allowed is 1 - 999
+    # shutdown. (default=6) allowed is 1 - 999.
 
 SLEEP=180
     # Numbers of seconds between each Cycle (Check). (default=180, 3 min)
-    # allowed is 1 - 9999
+    # allowed is 1 - 9999.
 
 
-##################################################
-####  Script checks ####
+###############################################################################
+# Script Checks
+
 IPCHECK="true"
-    # Parameter to activate or deactivate this feature (default="true")
+    # Parameter to activate or deactivate this feature. (default="true")
 
 RANGE="2..254"
     # Define a range of IPs which should be scanned. (default="2..254")
@@ -39,21 +40,21 @@ RANGE="2..254"
 
 CHECKCLOCKACTIVE="false"
     # Parameter to activate or deactivate this feature (default="false")
-    # per default this is deactivated
+    # per default this is deactivated.
 
 UPHOURS="06:00..20:00"
     # Define a range of hours, in which the system should stay up
     # (default="06:00..20:00") without checking any other parameter to stay
-    # awake
+    # awake.
 
 # -----------------------------------------------------------------------------
 
 CHECKSOCKETS="true"
-    # Parameter to activate or deactivate network socket feature
+    # Parameter to activate or deactivate network socket feature.
     #(default="true")
 
 NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
-    # Socket numbers to check for activity
+    # Socket numbers to check for activity.
     # (default="21,22,80,3689,6991,9091,49152")
     # Ports:
     # 21 = FTP
@@ -107,7 +108,12 @@ HDDIOCHECK="true"
     # issued. (default="true")
 
 HDDIO_RATE=401
-    # Set this to the target HDDIO-rate in kB/s for the Server. (default=401)
+    # If a HDD-IO (read/write) is over a defined value in kB/s (default=401)
+    # and then don't shutdown the Server. This value is calculated with the
+    # SLEEP-time between every cycle of the script-checks. e.g.: You have
+    # defined HDDIO_RATE=2000 and the script sleep for 100 second then the
+    # HDD-IO (read or write) has to be over 200000kB (2000*100) within the last
+    # 100 sec to not shutdown the server.
 
 # -----------------------------------------------------------------------------
 
@@ -119,6 +125,30 @@ CHECK_SAMBA="true"
 
 CHECK_CLI="true"
     # If set to true, will check for connected users. (default="true")
+
+# -----------------------------------------------------------------------------
+
+CHECKPROCNAMES="true"
+    # If set to true, will enable LOADPROCNAMES and TEMPPROCNAMES checks.
+    # (default="true")
+
+LOADPROCNAMES="smbd,nfsd,mt-daapd,forked-daapd"
+    # Command names of processes with load dependent children checked.
+    # To disable the load process check set LOADPROCNAMES="-". (default="
+    # proftpd,smbd,nfsd,mt-daapd,forked-daapd")
+
+TEMPPROCNAMES="in.tftpd"
+    # Command names of processes only started when active checked with "top"
+    # AND "ps", so all processes are found, even such, which doesn't show up in
+    # top like "lftp". Beware: If the process shows up in "ps" when there is no
+    # connection, your PC won't shutdown! Maybe you have to  call the process
+    # in you script like this: "lftp -do -something -here && exit" so that the
+    # process is killed after it has done something checked. To disable the
+    # temp process check set to TEMPPROCNAMES="-". (default="in.tftpd")
+
+    # The following scheme is mandatory for both LOADPROCNAMES and
+    # TEMPPROCNAMES: process1,process2, all processes separated by comma ','.
+
 
 # -----------------------------------------------------------------------------
 
@@ -137,9 +167,9 @@ PLUGINCHECK="false"
     #    file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
     #
     # Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345
-    # (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown
+    # (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown.
     #
-    # also possible:
+    # Also possible:
     #     folder="/home/user"
     #     file="backup.status"
     #     content="processing job"
@@ -147,7 +177,7 @@ PLUGINCHECK="false"
     # If a file /home/user/backup.status exists with the content 'processing
     # job', the Server isn't shutdown. This is useful for backup-scripts. It
     # is not nice if the PC is shutting down while the backup-script is
-    # running. In my backup-script i use a simple
+    # running. In my backup-script I use a simple.
     #
     #     echo "processing job" > /home/user/backup.status
     #
@@ -160,19 +190,20 @@ PLUGINCHECK="false"
     #     rm /home/user/*.status
     #
     # To delete all *.status files, which are not deleted before (loss of power
-    # for example)
+    # for example).
     #
-    # Please have a look at the two example files in /etc/autoshutdown.d
+    # Please have a look at the two example files in: /etc/autoshutdown.d
 
 
-##################################################
-#### Syslog Configuration ####
+###############################################################################
+# Syslog Configuration
+
 SYSLOG="true"
-    # Activate write to syslog (default="true")
+    # Activate write to syslog. (default="true")
 
 VERBOSE="false"
     # Use the verbose mode, with additional output on the command line
-    # (default="false") verbose includes DEBUG-Mode
+    # (default="false") verbose includes DEBUG-Mode.
 
 FAKE="false"
     # Set it to "true" for a Fake-Mode: The script runs dry: You can test what
@@ -180,39 +211,15 @@ FAKE="false"
     # automatically, even if VERBOSE is set to "false". Setting it to "false"
     # or if it is not set, the script will run normally. With Fake-Mode ON, the
     # script doesn't sleep 5 minutes after it starts, so you can see what
-    # happens immediately (default="false")
+    # happens immediately. (default="false")
 
 
-##################################################
-#### EXPERT SETTINGS ####
+###############################################################################
+# Expert Settings
 
 # You should know, what you are doing
 # Add these settings to the "Expert Settings" textfield in the OMV-GUI
-# make sure # isn't the first character in the line if you add it
-
-# -----------------------------------------------------------------------------
-
-#### Process Supervision Configuration
-
-LOADPROCNAMES="smbd,nfsd,mt-daapd,forked-daapd,your_processes_here"
-                     # Command names of processes with load dependent children
-                     # checked. (default="proftpd,smbd,nfsd,mt-daapd,
-                     # forked-daapd")
-
-TEMPPROCNAMES="in.tftpd"
-                     # Command names of processes only started when active
-                     # checked with "top" AND "ps", so all processes are found,
-                     # even such, which doesn't show up in top like "lftp"
-                     # Beware: If the process shows up in "ps" when there is no
-                     # connection, your PC won't shutdown! Maybe you have to
-                     # call the process in you script like this: "lftp -do
-                     # -something -here && exit" so that the process is killed
-                     # after it has done something checked (default="in.tftpd")
-
-    # If you want others, please uncomment the above lines and add your process
-    # at the end of the line. The following scheme is mandatory for both
-    # LOADPROCNAMES and TEMPPROCNAMES: process1,process2, all processes
-    # separated by comma ','
+# make sure # isn't the first character in the line if you add it.
 
 # -----------------------------------------------------------------------------
 
@@ -222,10 +229,10 @@ TEMPPROCNAMES="in.tftpd"
 
 # -----------------------------------------------------------------------------
 
-#SHUTDOWNCOMMAND="pm-hibernate" # puts the PC in hibernate-mode
-                                # pm-suspend  # puts the PC in suspend-mode
-                                # shutdown -h +5 shuts the PC down 5 min after
-                                # shutdown-command
+#SHUTDOWNCOMMAND="pm-hibernate" # pm-hibernate  : Puts PC in hibernate-mode.
+                                # pm-suspend    : Puts PC in suspend-mode.
+                                # shutdown -h +5: Shuts the PC down 5 min after
+                                #                 shutdown-command.
 
     # If you don't want to shutdown your PC, but go in hibernate/suspend:
     # Define the command here If nothing defined, it shuts down with

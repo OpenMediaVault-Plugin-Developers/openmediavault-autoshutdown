@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.1.4) stable; urgency=low
+
+  * Update/improve documentation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Dec 2020 20:46:24 +0000
+
 openmediavault-autoshutdown (5.1.3) stable; urgency=low
 
   * Fix typo ture to true in _check_config
