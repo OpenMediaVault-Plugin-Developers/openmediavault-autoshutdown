@@ -984,7 +984,7 @@ _check_config()
         local -r regex="^([A-Za-z0-9_.-]+)+(,[A-Za-z0-9_.-]+)*$"
 
         if [ "${LOADPROCNAMES}" == "-" ]; then
-            _log "INFO: LOADPROCNAMES is disabled - No processes being checked"
+            _log "INFO: LOADPROCNAMES is disabled - No load processes being checked"
             LOADPROCNAMES=""
         elif [ -z "${LOADPROCNAMES}" ]; then
             _log "INFO: LOADPROCNAMES is set to: 'smbd,nfsd,mt-daapd,forked-daapd' (default)"
@@ -998,7 +998,7 @@ _check_config()
         fi
 
         if [ "${TEMPPROCNAMES}" == "-" ]; then
-            _log "INFO: TEMPPROCNAMES is disabled - No processes being checked"
+            _log "INFO: TEMPPROCNAMES is disabled - No temp processes being checked"
             TEMPPROCNAMES=""
         elif  [ -z "${TEMPPROCNAMES}" ]; then
             _log "INFO: TEMPPROCNAMES is set to: in.'tftpd' (default)"
@@ -1010,6 +1010,9 @@ _check_config()
             _log "ERR: Exiting ..."
             exit 1
         fi
+    else
+        _log "WARNING: CHECKPROCNAMES is set to false"
+        _log "WARNING: Ignoring CHECKPROCNAMES and TEMPPROCNAMES"
     fi
 
     # CHECKSOCKETS.
