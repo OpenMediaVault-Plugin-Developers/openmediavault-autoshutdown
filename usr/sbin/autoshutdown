@@ -2,16 +2,13 @@
 #==============================================================================
 #
 #          FILE:    autoshutdown
-#
 #   DESCRIPTION:    Shuts-down a PC/Server - variable options
-#
 #  REQUIREMENTS:    Debian / Ubuntu-based system
-#
 #          BUGS:    If you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
-#
 #        AUTHOR:    Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes), it should work on any Debain-based System, too
 #                   based on autoshutdown.sh v0.7.008 by chrikai, see:
 #                   https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
+#
 #==============================================================================
 
 set -euo pipefail
@@ -27,7 +24,7 @@ DEBUG="false"               # Default debug logging mode is enabled.
 VERBOSE="false"             # Default if verbose logging mode is enabled.
 SYSLOG="false"              # Default if logging should go to syslog.
 
-FAKE="false"                # Default fake mode operation
+FAKE="false"                # Default fake mode operation.
 
 ######## STORAGE DEFINITION #########
 declare -A NIC_TO_IP        # Associative array for storing _check_networkconfig network interface to IP address mappings.
@@ -43,11 +40,12 @@ readonly CONFIG="${1:-/etc/autoshutdown.conf}" # Autoshtdown configuration optio
 ###############################################################################
 #
 #   Name          : _log
-#   Parameters    : $1: Log message in format "PRIORITY: MESSAGE"
-#                 : $2: 'force' will force logging to syslog and sent to stderr
-#   Globals       : $FAKE    : Are we runnig in fake mode ('true' or 'false')
-#                 : $VERBOSE : Set verbose logging ('true' or 'false')
-#                 : SYSLOG   : Should logging to to syslog ('true' or 'false')
+#   Parameters    : $1 : Log message in format "PRIORITY: MESSAGE".
+#                 : $2 : 'force' will force logging to syslog and sent to
+#                        stderr.
+#   Globals       : $FAKE    : Are we runnig in fake mode. ('true' or 'false')
+#                 : $VERBOSE : Set verbose logging. ('true' or 'false')
+#                 : $SYSLOG  : Should logging to to syslog. ('true' or 'false')
 #   Return        : 0 on success.
 #
 _log()
@@ -74,12 +72,12 @@ _log()
 ###############################################################################
 #
 #   Name          : _ping_range
-#   Parameters    : $1        : The network interface that is being worked on.
-#                 : $2        : The network interface IP address.
-#                 : $3        : IP addresses found for all network interfaces.
-#   Globals       : $PINTLIST : A file reference of IPs to be checked
-#                               (advanced).
-#                 : $RANGE    : Details of IPs to be checked.
+#   Parameters    : $1 : The network interface that is being worked on.
+#                 : $2 : The network interface IP address.
+#                 : $3 : IP addresses found for all network interfaces.
+#   Globals       : $PINTLIST       : A file reference of IPs to be checked
+#                                     (expert setting).
+#                 : $RANGE          : Details of IPs to be checked.
 #                 : $PINGLIST_IFACE : Associative array for storing network
 #                                     interface IP addresses.
 #   Return        : Number of active IP on network interfaces.
@@ -140,7 +138,7 @@ _ping_range()
     fi
 
     if [[ "${pinglist_array[0]}" == "${empty}" ]]; then
-        _log "INFO: No IP addresses specified for: ${net_iface}"
+        _log "INFO: No IP addresses specified for: ${net_iface} -> next check"
         return 0
     fi
 
@@ -150,7 +148,7 @@ _ping_range()
                         "${pinglist_array[@]}" || true)"
 
     if [ -z "${fping_result}" ]; then
-        _log "INFO: No active IPs found in the specified Range"
+        _log "INFO: No active IPs found in the specified range -> next check"
         return 0
     fi
 
@@ -158,7 +156,7 @@ _ping_range()
         _log "INFO: ${active_ip} is active"
     done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
 
-    _log "INFO: Active IPs found in the specified Range -> no shutdown"
+    _log "INFO: Active IPs found in the specified range -> no shutdown"
 
     return "$(wc -l <<< "${fping_result}")"
 }
@@ -168,7 +166,8 @@ _ping_range()
 #
 #   Name          : _shutdown
 #   Parameters    : None
-#   Globals       : None
+#   Globals       : $SHUTDOWNCOMMAND : The shutdown command to use as defined
+#                                      by the config option.
 #   Return        : None, script exit point.
 #
 _shutdown()
@@ -178,7 +177,7 @@ _shutdown()
 
     if [ -z "${SHUTDOWNCOMMAND}" ]; then
         SHUTDOWNCOMMAND="shutdown -h now"
-        _log "INFO: No shutdown command set: setting it to '${SHUTDOWNCOMMAND}'"
+        _log "WARNING: No shutdown command set. Setting it to: ${SHUTDOWNCOMMAND}"
     fi
 
     # When FAKE-Mode is on.
@@ -186,14 +185,13 @@ _shutdown()
         _log "INFO: Fake-shutdown issued: '${SHUTDOWNCOMMAND}' - Command is not executed because of Fake-Mode" force
         _log "INFO: Autoshutdown will end here"
         _log "INFO:"
-        exit 0
-    }
+        exit 0; }
 
     # Without Fake-Mode.
     _log "INFO: Shutdown issued: '${SHUTDOWNCOMMAND}'" force
     _log "INFO:"
 
-    # Write everything to disk/stick and shutdown, hibernate, $whatever is
+    # Write everything to disk/stick and shutdown, hibernate, or whatever is
     # configured.
     if sync; then eval "${SHUTDOWNCOMMAND}" && exit 0; fi
     # Sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script
@@ -204,7 +202,7 @@ _shutdown()
     _log "INFO: 5 minutes are over" force
     sleep 5m
     _log "INFO: Another 5 minutes are over" force
-    exit 0
+    exit 1
 }
 
 
@@ -310,8 +308,8 @@ _check_processes()
 #                 : 1 : If file has been found.
 #
 # With this plugin-system everyone can check if a specific file exists.
-# If it exists, the machine won't shutdown
-# You find sample plugins in /etc/autoshutdown.d
+# If it exists, the machine won't shutdown. You find sample plugins in:
+# /etc/autoshutdown.d
 #
 _check_plugin()
 {
@@ -349,14 +347,14 @@ _check_plugin()
         # Check, if plugin_content for the plugin is defined.
         if [ -z "${plugin_content}" ]; then
             # Content not defined and file found.
-            _log "INFO: Plugin: ${plugin_name}: File found - no shutdown"
+            _log "INFO: Plugin: ${plugin_name}: File found -> no shutdown"
             (( foundvalue+=1 ))
         elif grep -q "${plugin_content}" "${plugin_folder}/${plugin_file}"; then
-            _log "INFO: Plugin: ${plugin_name}: Content found (${plugin_content}) - no shutdown"
+            _log "INFO: Plugin: ${plugin_name}: Content found (${plugin_content}) -> no shutdown"
             (( foundvalue+=1 ))
         else
-            # Content not found
-            _log "INFO: Plugin: ${plugin_name}: Content not found (${plugin_content})"
+            # Content not found.
+            _log "INFO: Plugin: ${plugin_name}: Content not found (${plugin_content}) -> next check"
         fi
     done
 
@@ -381,12 +379,12 @@ _check_plugin()
 #
 #   Name          : _check_loadaverage
 #   Parameters    : None
-#   Globals       : $LOADAVERAGE: Integer load average.
-#   Return        : 1 : If loadaverage is higher (greater) than LOADAVERAGE,
+#   Globals       : $LOADAVERAGE : Integer load average.
+#   Return        : 1 : If load average is higher (greater) than LOADAVERAGE,
 #                       no shutdown.
-#                 : 0 : If loadaverage is lower (less) than LOADAVERAGE.
+#                 : 0 : If load average is lower (less) than LOADAVERAGE.
 #
-# This script checks if the loadaverage is higher than LOADAVERAGE over the
+# This script checks if the load average is higher than LOADAVERAGE over the
 # last 1 minute.
 # If yes -> no shutdown, next cycle.
 # If no  -> next check and shutdown if all cycles failed.
@@ -413,10 +411,10 @@ _check_loadaverage()
 
     local msg="INFO: Load average (${current_load_average_decimal} -> ${current_load_average}) is"
     if [ "${current_load_average}" -gt "${LOADAVERAGE}" ]; then
-        msg+=" higher than target (${LOADAVERAGE}) - no shutdown"
+        msg+=" higher than target (${LOADAVERAGE}) -> no shutdown"
         rvalue=1
     else
-        msg+=" lower than target (${LOADAVERAGE})"
+        msg+=" lower than target (${LOADAVERAGE}) -> next check"
     fi
     _log "${msg}"
 
@@ -431,7 +429,9 @@ _check_loadaverage()
 #   Name          : _check_net_status
 #   Parameters    : $1 : Network interface under test.
 #                 : $2 : The network interface IP address.
-#   Globals       : $NSOCKETNUMBERS : Socket number to check for activity.
+#   Globals       : $NSOCKETNUMBERS   : Socket number to check for activity.
+#                 : $NSOCKEIGNORESELF : If set will ignore the Network
+#                                       interface IP address as a connection.
 #   Return        : 0         : If no active socket has been found, ready for
 #                               shutdown.
 #                 : 1 or more : If at least one active socket has been found,
@@ -449,7 +449,7 @@ _check_net_status()
 
     # Check for each given socket number in NSOCKETNUMBERS to see if it is
     # currently stated active in the ss command.
-    for nsocket in ${NSOCKETNUMBERS//,/ } ; do
+    for nsocket in ${NSOCKETNUMBERS//,/ }; do
         local lines; lines="$(LC_ALL=C
             ss -n |
             awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${nsocket}$" \
@@ -508,7 +508,8 @@ _check_net_status()
 #   Name          : _check_docker_status
 #   Parameters    : None
 #   Globals       : $NSOCKETNUMBERS : Socket number to check for activity.
-#   Return        : 0 : If no active socket has been found, ready for shutdown.
+#   Return        : 0         : If no active socket has been found, ready for
+#                               shutdown.
 #                 : 1 or more : If at least one active socket has been found,
 #                               no shutdown.
 #
@@ -579,7 +580,7 @@ _check_users_cli_status()
     local users_connected; users_connected="$(LC_ALL=C w -hs)"
 
     if [ -z "${users_connected}" ]; then
-        _log "INFO: There are no users connected"
+        _log "INFO: There are no users connected -> next check"
         return 0
     fi
 
@@ -640,7 +641,7 @@ _check_smb_status()
 ###############################################################################
 #
 #   Name          : _check_ul_dl_rate
-#   Parameters    : $1            : The network interface to check.
+#   Parameters    : $1 : The network interface to check.
 #   Globals       : $ULDLRATE     : Rate in kB/s of network activity.
 #                 : $P_UL_DL_RATE : Associative array for strong a network
 #                                   interface tx, rx and epoch values.
@@ -903,7 +904,7 @@ _check_hddio()
             _log "${msg} over: ${HDDIO_RATE} kB/s -> no shutdown"
             rvalue=1
         else
-            _log "${msg} under: ${HDDIO_RATE} kB/s -> next HDD"
+            _log "${msg} under: ${HDDIO_RATE} kB/s -> next check"
         fi
 
     done < <(iostat -kdyNz | awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
@@ -924,7 +925,7 @@ _check_hddio()
 #   Parameters    : None
 #   Globals       : $CONFIG : The autoshutdown configuration.
 #                 : $*      : All options as defined in $CONFIG for validation.
-#   Return        : None
+#   Return        : 0 on success.
 #
 _check_config()
 {
@@ -1222,7 +1223,10 @@ _check_networkconfig()
 #
 #   Name          : _check_system_active
 #   Parameters    : None
-#   Globals       : None
+#   Globals       : $*         : All options as defined in $CONFIG for
+#                                validation.
+#                 : $NIC_TO_IP : Associative array for storing network
+#                                interface to IP address mappings.
 #   Return        : 0 : If no active host has been found.
 #                 : 1 : If at least one active host has been found, no
 #                       shutdown.
@@ -1337,7 +1341,7 @@ _check_system_active()
 
 
 ###############################################################
-######### START OF BODY FUNCTION SCRIPT AUTOSHUTDOWN ##########
+######### Start of body function script autoshutdown ##########
 ###############################################################
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
@@ -1441,10 +1445,10 @@ while : ; do
         [ "${FCNT}" -eq 0 ] && _shutdown
     else
         # Reset count.
-        FCNT=${CYCLES}
+        FCNT="${CYCLES}"
     fi
 
     # Wait for the required time before checking again.
-    _log "INFO: sleep for ${SLEEP}s"
+    _log "INFO: Sleep for ${SLEEP}s"
     sleep "${SLEEP}"
 done
