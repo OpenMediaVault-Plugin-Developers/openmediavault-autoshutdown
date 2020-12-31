@@ -223,21 +223,19 @@ FAKE="false"
 
 # -----------------------------------------------------------------------------
 
-#NSOCKETIGNORESELF="false"
+NSOCKETIGNORESELF="false"
     # If set to 'true' _check_net_status will ignore any sockets connected on
     # the network interface being tested. (default="false")
 
 # -----------------------------------------------------------------------------
 
-#SHUTDOWNCOMMAND="pm-hibernate" # pm-hibernate  : Puts PC in hibernate-mode.
-                                # pm-suspend    : Puts PC in suspend-mode.
-                                # shutdown -h +5: Shuts the PC down 5 min after
-                                #                 shutdown-command.
+SHUTDOWNCOMMAND="shutdown -h now"
+    # pm-hibernate    : Puts PC in hibernate-mode.
+    # pm-suspend      : Puts PC in suspend-mode.
+    # shutdown -h +5  : Shuts the PC down 5 min after shutdown-command.
+    # shutdown -h now : Shuts the PC down immediately. (default)
 
-    # If you don't want to shutdown your PC, but go in hibernate/suspend:
-    # Define the command here If nothing defined, it shuts down with
-    # "shutdown -h now" For more information and how to set up hibernate and
-    # suspend, look here:
+    # For more information and how to set up hibernate and suspend, look here:
     # http://wiki.debian.org/Suspend
     # http://wiki.debian.org/Hibernation
 
