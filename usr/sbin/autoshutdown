@@ -145,7 +145,8 @@ _ping_range()
 
     _log "INFO: Retrieve list of active IPs for: ${net_iface}"
     local fping_result
-    fping_result="$(fping --iface="${net_iface}" --quiet --alive --retry=1 \
+    fping_result="$(LC_ALL=C
+                    fping --iface="${net_iface}" --quiet --alive --retry=1 \
                         "${pinglist_array[@]}" || true)"
 
     if [ -z "${fping_result}" ]; then
@@ -232,7 +233,7 @@ _check_processes()
         local lp=0
         local l_proc=0
         for (( N=0; N < LPREPEAT; N++ )); do
-            local lp_result; lp_result="$(
+            local lp_result; lp_result="$(LC_ALL=C
                 top -i -b -d 1 -n 1 |
                     awk -v regex="^${process}$" -v count=0 \
                         '$NF ~ regex {count++} END{print count}')"
@@ -260,7 +261,7 @@ _check_processes()
         local tp=0
         local t_proc=0
         for (( N=0; N < TPREPEAT; N++ )); do
-            local tp_result; tp_result="$(
+            local tp_result; tp_result="$(LC_ALL=C
                 top -b -d 1 -n 1 |
                     awk -v regex="^${process}$" -v count=0 \
                      '$NF ~ regex {count++} END{print count}')"
@@ -268,7 +269,7 @@ _check_processes()
             # If there is no process with top, try "pgrep", but not in.tftpd.
             if [ "${tp_result}" -eq 0 ]; then
                 if [ "${process}" != "in.tftpd" ]; then
-                    tp_result="$(pgrep -fc "${process}")"
+                    tp_result="$(LC_ALL=C pgrep -fc "${process}")"
                 else
                     if [ "${DEBUG}" == "true" ]; then
                         _log "DEBUG: Temp processes: Skipping 'in.tftpd'"
@@ -910,7 +911,7 @@ _check_hddio()
             _log "${msg} under: ${HDDIO_RATE} kB/s -> next check"
         fi
 
-    done < <(iostat -kdyNz | awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
+    done < <(LC_ALL=C iostat -kdyNz | awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
 
     P_HDDIO_DEVS["epoch_sec"]="${epoch_sec}"
 

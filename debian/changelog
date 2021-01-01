@@ -6,6 +6,7 @@ openmediavault-autoshutdown (5.1.4) stable; urgency=low
   * Improve and fix shellcheck issues for NSOCKETIGNORESELF
   * Improve logging in _check_net_status and _check_docker_status
   * Used defaults from autoshutdown.default were appropriate
+  * Add some localisation setting
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Dec 2020 20:46:24 +0000
 
