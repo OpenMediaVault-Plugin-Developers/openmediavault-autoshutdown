@@ -244,8 +244,9 @@ SHUTDOWNCOMMAND="shutdown -h now"
 #PINGLIST="PATH/TO/PINGLIST"
     # Here you can define a path to a file, which contains list of IPs that
     # should be scanned only one IP per line allowed - Format mmm.nnn.ooo.ppp
-    # e.g.: 192.168.1.45. If this expert-setting is used, the IPs specified in
-    # "RANGE" or in GUI doesn't work.
+    # e.g. 192.168.1.45 or fqdn e.g. openmediavault.local. If this
+    # expert-setting is used, the details specified in "RANGE" or in GUI
+    # are not used.
 
 # -----------------------------------------------------------------------------
 

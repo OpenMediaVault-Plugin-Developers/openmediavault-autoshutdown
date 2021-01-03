@@ -124,6 +124,9 @@ _ping_range()
                     mapfile -t -O "${#ip_list[@]}" ip_list < <(
                         seq --format "${BASH_REMATCH[2]:-"${server_ip%.*}."}%g" \
                             "${min}" "${max}")
+                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))$ ]]; then
+                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
+                        "${BASH_REMATCH[2]}"
                 fi
             done
         fi
@@ -147,7 +150,8 @@ _ping_range()
     local fping_result
     fping_result="$(LC_ALL=C
                     fping --iface="${net_iface}" --quiet --alive --retry=1 \
-                        "${pinglist_array[@]}" || true)"
+                        --addr "${pinglist_array[@]}" |
+                    grep -v "${server_ips}" || true)"
 
     if [ -z "${fping_result}" ]; then
         _log "INFO: No active IPs found in the specified range -> next check"
@@ -1067,11 +1071,12 @@ _check_config()
     elif [[ -z "${RANGE:=}" || "${RANGE}" == "-" ]]; then
         _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
         IPCHECK="false"
-    elif [[ -n "${RANGE:-}" && ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})?(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})?(,(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|(([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2}))*$ ]]; then
+    elif [[ -n "${RANGE:-}" && ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))))(,(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))))))*$ ]]; then
         _log "WARNING: Invalid parameter list format: ${RANGE}"
         _log "WARNING: The 'RANGE' should be comma delimited list of the following:"
         _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
         _log "WARNING: Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
+        _log "WARNING: Define by FQDN: fqdn | iface:fqdn"
         _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used"
         _log "WARNING: Setting RANGE to default: ${DEFAULT_RANGE}"
         RANGE="${DEFAULT_RANGE}"
