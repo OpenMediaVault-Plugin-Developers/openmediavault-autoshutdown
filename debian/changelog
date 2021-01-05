@@ -10,6 +10,7 @@ openmediavault-autoshutdown (5.1.4) stable; urgency=low
   * Update logging OMV to split out function name and message
   * Add FQDN support to _ping_range
   * Fix bug in _check_config check UPHOURS
+  * Allow expert option to override default uptime check
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Dec 2020 20:46:24 +0000
 

@@ -241,6 +241,14 @@ SHUTDOWNCOMMAND="shutdown -h now"
 
 # -----------------------------------------------------------------------------
 
+#OVERRIDEUPHOURS="Sat:06:30..22:59,Sun:06:30..22:00"
+    # Allows the overriding of UPHOURS for fixed days of the week. For
+    # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
+    # Wed,Thu,Fri,Sat) colon, start hour, double dot, stop hour comma, next
+    # override. e.g. Sat:06:30..23:00,Sun:06:30..22:00.
+
+# -----------------------------------------------------------------------------
+
 #PINGLIST="PATH/TO/PINGLIST"
     # Here you can define a path to a file, which contains list of IPs that
     # should be scanned only one IP per line allowed - Format mmm.nnn.ooo.ppp
