@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# kochin <kochinc@outlook.com>, 2014,2016,2020
+# kochin <kochinc@outlook.com>, 2014,2016,2020-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2020-12-30 18:12+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2021-01-05 12:00+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "&emsp;Minute"
-msgstr ""
+msgstr "&emsp;分"
 
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
@@ -28,10 +28,10 @@ msgid "Autoshutdown"
 msgstr "Autoshutdown"
 
 msgid "Begin:&emsp;Hour"
-msgstr ""
+msgstr "開始：&emsp;時"
 
 msgid "Check Active Processes"
-msgstr ""
+msgstr "檢查啟用之進程"
 
 msgid "Check Clock"
 msgstr "檢查時鐘"
@@ -46,10 +46,10 @@ msgid "Check for connected users."
 msgstr "檢查已連接之使用者"
 
 msgid "Check for users defined plugins."
-msgstr ""
+msgstr "檢查用戶定義的插件。"
 
 msgid "Check plugins"
-msgstr ""
+msgstr "檢查插件"
 
 msgid "Check smbstatus"
 msgstr "檢查 smbstatus"
@@ -83,7 +83,7 @@ msgid "Enable"
 msgstr "啟用"
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
-msgstr ""
+msgstr "結束：&nbsp;&ensp;&emsp;時"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -137,7 +137,7 @@ msgid "Load Average"
 msgstr "負載平均值"
 
 msgid "Load Processes"
-msgstr ""
+msgstr "載入進程"
 
 msgid "Log"
 msgstr "日誌"
@@ -146,10 +146,10 @@ msgid "Log to Syslog"
 msgstr "記錄日誌到 Syslog"
 
 msgid "Names of processes only started when active Set to '-' to disable"
-msgstr ""
+msgstr "進程名稱，只有啟用的才會被啟動。設成 '-' 來停用。"
 
 msgid "Names of processes with load dependent children. Set to '-' to disable"
-msgstr ""
+msgstr "進程名稱，有載入相依的子進程。設成 '-' 來停用。"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "每個週期之間的秒數。"
@@ -195,7 +195,7 @@ msgid "Syslog Configuration"
 msgstr "Syslog 設置"
 
 msgid "Temp Processes"
-msgstr ""
+msgstr "暫時進程"
 
 msgid "The IP-Range should be comma delimited list of the following:"
 msgstr "IP 範圍應該是以下用逗號分隔的列表："
@@ -219,7 +219,7 @@ msgid "Write log informations to system logs."
 msgstr "將日誌資訊寫到系統日誌中。"
 
 msgid "autoshutdown.default"
-msgstr ""
+msgstr "autoshutdown.default"
 
 msgid "for more details."
 msgstr "中的詳細內容。"
