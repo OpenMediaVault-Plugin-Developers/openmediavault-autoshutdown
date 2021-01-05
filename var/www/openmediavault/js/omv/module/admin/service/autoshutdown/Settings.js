@@ -260,7 +260,8 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                         text: _("Define a range of IPs which should be scanned.") + "<br />" +
                               _("The IP-Range should be comma delimited list of the following:") + "<br />" + "- " +
                               _("Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end") + "<br />" + "- " +
-                              _("Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz") + "<br />" +
+                              _("Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz") + "<br />" + "- " +
+                              _("Define by FQDN: fqdn | iface:fqdn" + "<br />" +
                               _("If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used.") + "<br />" +
                               _("Please make sure to leave 1 and 255 out of the list!")
                     }]

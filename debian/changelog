@@ -1,3 +1,19 @@
+openmediavault-autoshutdown (5.1.4) stable; urgency=low
+
+  * Update/improve documentation
+  * Improve logging when CHECKPROCNAMES is set false
+  * Comment improvement and tweak script
+  * Improve and fix shellcheck issues for NSOCKETIGNORESELF
+  * Improve logging in _check_net_status and _check_docker_status
+  * Used defaults from autoshutdown.default were appropriate
+  * Add some localisation setting
+  * Update logging OMV to split out function name and message
+  * Add FQDN support to _ping_range
+  * Fix bug in _check_config check UPHOURS
+  * Allow expert option to override default uptime check
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Dec 2020 20:46:24 +0000
+
 openmediavault-autoshutdown (5.1.3) stable; urgency=low
 
   * Fix typo ture to true in _check_config

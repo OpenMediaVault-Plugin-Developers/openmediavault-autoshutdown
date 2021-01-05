@@ -21,14 +21,15 @@
 \OMV\System\LogFileSpec::registerSpecification("autoshutdown", [
     "filename" => "autoshutdown.log",
     "filepath" => "/var/log/autoshutdown.log",
-    "regex"    => "/^(\S+\s+\d+\s+\d+:\d+:\d+)\s+.*\s+root:\s+autoshutdown\[\d+\]:\s+(\S+):\s+'(.*)'$/",
+    "regex"    => "/^(\S+\s+\d+\s+\d+:\d+:\d+)\s+\S+\s+root:\s+autoshutdown\[\d+\]:\s+(\S+):\s+'(\S+):\s+(.*)'$/",
     "columns"  => [
         "date"  => [
             "index" => 1,
             "func"  => function($v) { return strpdate($v,"M j G:i:s"); }
          ],
         "type"  => 2,
-        "log"   => 3
+        "function" => 3,
+        "message" => 4
      ]
 
 ]);

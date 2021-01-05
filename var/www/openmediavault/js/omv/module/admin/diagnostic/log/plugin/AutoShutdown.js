@@ -41,10 +41,16 @@ Ext.define("OMV.module.admin.diagnostic.log.plugin.AutoShutdown", {
         stateId: "type",
         flex: 1
     },{
-        text: _("Log"),
+        text: _("Function"),
         sortable: true,
-        dataIndex: "log",
-        stateId: "log",
+        dataIndex: "function",
+        stateId: "function",
+        flex: 1
+    },{
+        text: _("Message"),
+        sortable: true,
+        dataIndex: "message",
+        stateId: "message",
         flex: 1
     }],
     rpcParams: {
@@ -53,6 +59,7 @@ Ext.define("OMV.module.admin.diagnostic.log.plugin.AutoShutdown", {
     rpcFields : [
         { name: "date", type: "string" },
         { name: "type", type: "string" },
-        { name: "log", type: "string" }
+        { name: "function", type: "string" },
+        { name: "message", type: "string" }
     ]
 });
