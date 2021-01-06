@@ -765,21 +765,27 @@ _check_ul_dl_rate()
 #
 _check_clock()
 {
-    local -r overide_uphours="${OVERRIDEUPHOURS:-}"
+    local -r epoch_sec="${EPOCHSECONDS}"
+    local -r current_time="$(date -d @"${epoch_sec}" +%R)"
 
+    local -r overide_uphours="${OVERRIDEUPHOURS:-}"
     local up_hours="${UPHOURS}"
     for override in ${overide_uphours//,/ }; do
-        [[ "$(date "+%a")" == "${override%%:*}" ]] && {
-            up_hours="${override#*:}"
-            _log "INFO: OVERRIDEUPHOURS found applying override: ${override}"
-            break; }
+        local test_hours="${override#*:}"
+        local test_start; test_start="$(date -f - "+%R" <<< "${test_hours%..*}")"
+        local test_end; test_end="$(date -f - "+%R" <<< "${test_hours#*..}")"
+        [[ "$(date "+%a")" == "${override%%:*}" ||
+           ("$(date "+%a" -d "1 day ago")" == "${override%%:*}" &&
+            "${test_start}" > "${test_end}" &&
+            ( "${current_time}" < "${test_end}" ||
+              "${current_time}" == "${test_end}" )) ]] && {
+                up_hours="${test_hours}"
+                _log "INFO: OVERRIDEUPHOURS found applying override: ${override}"
+                break; }
     done
 
     local -r range_start="$(date -f - "+%R" <<< "${up_hours%..*}")"
     local -r range_end="$(date -f - "+%R" <<< "${up_hours#*..}")"
-
-    local -r epoch_sec="${EPOCHSECONDS}"
-    local -r current_time="$(date -d @"${epoch_sec}" +%R)"
 
     local epoch_start; epoch_start="$(date -f - +%s <<< \
             "$(date -d @"$((epoch_sec))" +%D) ${range_start}")"
