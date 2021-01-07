@@ -32,6 +32,7 @@ RANGE="2..254"
     #                       iface:xxx.yyy.zzz.start..end
     # - Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz |
     #                       iface:www.xxx.yyy.zzz
+    # - Define by FQDN    : fqdn | iface:fqdn
     # If 'start..end' or 'Last octet of IP' is set the first three octets of
     # the iface IP address are used. Please make sure to leave 1 and 255 out of
     # the list !
