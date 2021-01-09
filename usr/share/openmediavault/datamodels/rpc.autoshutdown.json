@@ -100,6 +100,10 @@
 				"maximum": 65535,
 				"required": true
 			},
+			"smartcheck": {
+				"type": "boolean",
+				"required": true
+			},
 			"checksamba": {
 				"type": "boolean",
 				"required": true

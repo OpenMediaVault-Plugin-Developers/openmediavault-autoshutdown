@@ -438,6 +438,16 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 boxLabel: _("Check for connected users.")
             },{
                 xtype: "checkbox",
+                name: "smartcheck",
+                fieldLabel: _("Check Smart"),
+                checked: true,
+                boxLabel: _("Check if S.M.A.R.T. tests are running."),
+                plugins: [{
+                    ptype: "fieldinfo",
+                    text: _("This only works if S.M.A.R.T. is supported directly.")
+                }]
+            },{
+                xtype: "checkbox",
                 name: "plugincheck",
                 fieldLabel: _("Check plugins"),
                 checked: true,

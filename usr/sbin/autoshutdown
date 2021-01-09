@@ -948,6 +948,48 @@ _check_hddio()
 
 ###############################################################################
 #
+#   Name          : _check_smart
+#   Parameters    : None
+#   Globals       : None
+#   Return        : 1 : If any HDD is running smart tests then no shutdown.
+#                 : 0 : If no HDD is running smart tests.
+#
+# This checks if a device is running smart tests, if S.M.A.R.T is supported
+# directly buy the device and its controller. For example this will not work on
+# a HPE smart array. If smart tests are running on a supported device then
+# no shutdown. If no smart tests or device/controller is not supported go to
+# next check.
+#
+_check_smart()
+{
+    for hdd in /dev/sd[a-z]; do
+        if [ "${DEBUG}" == "true" ]; then
+            _log "DEBUG: Checking device for running smart tests: ${hdd}"
+        fi
+
+        local smart_output; smart_output="$(LC_ALL=C
+            smartctl --all --nocheck=standby "${hdd}" || true)"
+
+        if [ "${DEBUG}" == "true" ]; then
+            _log "DEBUG: Smartctl output: ${hdd}"
+            while read -r line; do
+               _log "DEBUG: ${line}"
+            done <<< "${smart_output}"
+        fi
+
+        if grep -q "in[ _]progress" <<< "${smart_output}"; then
+            _log "INFO: Device ${hdd} is runs a SMART tests -> no shutdown"
+            return 1
+        fi
+    done;
+
+    _log "INFO: No supported device is running SMART tests -> next check"
+    return 0
+}
+
+
+###############################################################################
+#
 #   Name          : _check_config
 #   Parameters    : None
 #   Globals       : $CONFIG    : The autoshutdown configuration.
@@ -1139,6 +1181,11 @@ _check_config()
         _log "WARNING: HDDIOCHECK is set to false"
         _log "WARNING: Ignoring HDDIO_RATE"
     fi
+
+   [[ "${SMARTCHECK}" == "true" || "${SMARTCHECK}" == "false" ]] || {
+        _log "WARNING: SMARTCHECK not set properly. It has to be 'true' or 'false'"
+        _log "WARNING: Set SMARTCHECK to default: ${DEFAULT_SMARTCHECK}"
+        SMARTCHECK="${DEFAULT_SMARTCHECK}"; }
 
     # Sleep: 1 - 9999.
     [[ "${SLEEP}" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
@@ -1367,6 +1414,14 @@ _check_system_active()
         _check_hddio || return 1
     fi
 
+    # PRIO 4: Do a hdd check to see if S.M.A.R.T tests are running.
+    if [ "${SMARTCHECK}" == "true" ]; then
+        if [ "${DEBUG}" == "true" ]; then
+            _log "DEBUG: Calling: _check_smart()"
+        fi
+        _check_smart || return 1
+    fi
+
     # PRIO 5: Do a check for some active processes.
     if [ "${CHECKPROCNAMES}" == "true" ]; then
         if [ "${DEBUG}" == "true" ]; then
@@ -1448,6 +1503,7 @@ if [ "${DEBUG}" == "true" ]; then
     _log "DEBUG: NSOCKETNUMBERS: ${NSOCKETNUMBERS}"
     _log "DEBUG: HDDIOCHECK: ${HDDIOCHECK}"
     _log "DEBUG: HDDIO_RATE: ${HDDIO_RATE}"
+    _log "DEBUG: SMARTCHECK: ${SMARTCHECK}"
     _log "DEBUG: ULDLCHECK: ${ULDLCHECK}"
     _log "DEBUG: ULDLRATE: ${ULDLRATE}"
     _log "DEBUG: LOADAVERAGECHECK: ${LOADAVERAGECHECK}"

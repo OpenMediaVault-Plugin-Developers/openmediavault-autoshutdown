@@ -3,6 +3,7 @@ openmediavault-autoshutdown (5.1.6) stable; urgency=medium
   * Improve OVERRIDEUPHOURS to allow defining over midnight
   * Add FQDN set-up instruction to etc/autoshutdown.default
   * Small fixes to comments, doc and GUI
+  * No shutdown when SMART tests are running
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 06 Jan 2021 14:11:52 +0000
 
