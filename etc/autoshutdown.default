@@ -52,27 +52,29 @@ UPHOURS="06:00..20:00"
 
 CHECKSOCKETS="true"
     # Parameter to activate or deactivate network socket feature.
-    #(default="true")
+    # (default="true")
 
 NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
-    # Socket numbers to check for activity.
+    # Socket numbers to check for activity. see form more details:
+    # https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
     # (default="21,22,80,3689,6991,9091,49152")
-    # Ports:
-    # 21 = FTP
-    # 22 = SSH
-    # 80|8080 = Web
-    # 139 = NetBIOS
-    # 443 = HTTPS
-    # 445 = Samba-Filesharing
-    # 548 = AFP
-    # 873 = Rsync
-    # 3306 = MYSQL
-    # 3689 = iTunes, DAAP
-    # 6991 = Bittorrent
-    # 9091 = Bittorrent_WebIF
-    # 32400 = Plex media server
-    # 49152 = UPnP
-    # 51413 = Bittorrent
+    #
+    # Useful Ports:
+    #   21 = FTP
+    #   22 = SSH
+    #   80|8080 = Web
+    #   139 = NetBIOS
+    #   443 = HTTPS
+    #   445 = Samba-Filesharing
+    #   548 = AFP
+    #   873 = Rsync
+    #   3306 = MYSQL
+    #   3689 = iTunes, DAAP
+    #   6991 = Bittorrent
+    #   9091 = Bittorrent_WebIF
+    #   32400 = Plex media server
+    #   49152 = UPnP
+    #   51413 = Bittorrent
 
 # -----------------------------------------------------------------------------
 
@@ -231,10 +233,11 @@ NSOCKETIGNORESELF="false"
 # -----------------------------------------------------------------------------
 
 SHUTDOWNCOMMAND="shutdown -h now"
-    # pm-hibernate    : Puts PC in hibernate-mode.
-    # pm-suspend      : Puts PC in suspend-mode.
-    # shutdown -h +5  : Shuts the PC down 5 min after shutdown-command.
-    # shutdown -h now : Shuts the PC down immediately. (default)
+    # pm-hibernate      : Puts PC into hibernate-mode.
+    # pm-suspend        : Puts PC into suspend-mode.
+    # pm-suspend-hybrid : Puts PC into suspend-hybrid-mode.
+    # shutdown -h +5    : Shuts the PC down 5 min after shutdown-command.
+    # shutdown -h now   : Shuts the PC down immediately. (default)
 
     # For more information and how to set up hibernate and suspend, look here:
     # http://wiki.debian.org/Suspend
@@ -253,7 +256,7 @@ SHUTDOWNCOMMAND="shutdown -h now"
 #PINGLIST="PATH/TO/PINGLIST"
     # Here you can define a path to a file, which contains list of IPs that
     # should be scanned only one IP per line allowed - Format mmm.nnn.ooo.ppp
-    # e.g. 192.168.1.45 or fqdn e.g. openmediavault.local. If this
+    # e.g. 192.168.1.45 or FQDN e.g. openmediavault.local. If this
     # expert-setting is used, the details specified in "RANGE" or in GUI
     # are not used.
 

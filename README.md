@@ -18,9 +18,9 @@ seconds. The checks have a different priority from 0 = high to 6 = low:
    Check for logged in user  
    Samba status check  
 3. UL/DL-Rate in kB/s over active network interfaces
-4. HDD IO Rate check in Kb/s
+4. HDD IO rate check in kB/s
 5. Check for active processes
-6. Check for User plugins
+6. Check for user plugins
 
 If a check with a higher priority gives back a positive result, then no check
 with a lower priority is executed. The script reduces the cycles by one and
