@@ -1462,16 +1462,16 @@ _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
 _log "INFO: Initialize logging to: ${FACILITY}" force
 
 [ ! -f "${CONFIG}" ] && {
-    _log "ERR: Config file not found! Please check ${CONFIG} exits ..."
+    _log "ERR: Config file not found! Please check ${CONFIG} exits ..." force
     exit 1; }
 . "${CONFIG}"
-_log "INFO: ${CONFIG} loaded"
+_log "INFO: ${CONFIG} loaded" force
 
 [ ! -f "${DEFAULT_CONFIG}" ] && {
-    _log "ERR: Default config file not found! Please check ${DEFAULT_CONFIG} exits ..."
+    _log "ERR: Default config file not found! Please check ${DEFAULT_CONFIG} exits ..." force
     exit 1; }
 . <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "DEFAULT_"$0}' "${DEFAULT_CONFIG}")
-_log "INFO: ${DEFAULT_CONFIG} loaded"
+_log "INFO: ${DEFAULT_CONFIG} loaded" force
 
 # Set-up logging and modes.
 [ "${FAKE}" == "true" ] && VERBOSE="true"
