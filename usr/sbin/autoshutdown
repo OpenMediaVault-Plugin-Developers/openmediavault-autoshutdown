@@ -330,18 +330,20 @@ _check_plugin()
             fi
             continue; }
 
-        local plugin_name
-        plugin_name="${plugin##*/}"
+        local plugin_name="${plugin##*/}"
         local plugin_folder
         plugin_folder="$(awk -F= '/folder=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
         local plugin_file
         plugin_file="$(awk -F= '/file=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
         local plugin_content
         plugin_content="$(awk -F= '/content=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
+        local plugin_enabled
+        plugin_enabled="$(awk -F= '/enabled=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
 
         if [ "${DEBUG}" == "true" ]; then
             _log "DEBUG: -----------------------------------------------------"
             _log "DEBUG: Plugin: ${plugin_name}: plugin: ${plugin}"
+            _log "DEBUG: Plugin: ${plugin_name}: plugin_enabled: ${plugin_enabled:-"true"}"
             _log "DEBUG: Plugin: ${plugin_name}: plugin_name: ${plugin_name}"
             _log "DEBUG: Plugin: ${plugin_name}: plugin_folder: ${plugin_folder}"
             _log "DEBUG: Plugin: ${plugin_name}: plugin_file: ${plugin_file}"
@@ -350,11 +352,15 @@ _check_plugin()
             fi
         fi
 
+        # Skip if plugin is not enabled.
+        [ "${plugin_enabled}" == "false" ] && {
+            _log "INFO: Plugin: ${plugin_name}: Plugin is disabled skipping -> next check"
+            continue; }
+
         # When file exists (matches regex), no shutdown.
-        if [ -z "$(find "${plugin_folder}" -regextype posix-egrep -regex ".*${plugin_file}" 2>/dev/null)" ]; then
-            _log "INFO: Plugin: ${plugin_name}: File not found"
-            continue
-        fi
+        [ -z "$(find "${plugin_folder}" -regextype posix-egrep -regex ".*${plugin_file}" 2>/dev/null)" ] && {
+            _log "INFO: Plugin: ${plugin_name}: File not found -> next check"
+            continue; }
 
         # Check, if plugin_content for the plugin is defined.
         if [ -z "${plugin_content}" ]; then

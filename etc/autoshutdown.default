@@ -166,7 +166,7 @@ TEMPPROCNAMES="in.tftpd"
 PLUGINCHECK="false"
     # PlugIns: You find sample plugins in /etc/autoshutdown.d. Set this to
     # true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d set it to
-    # "false" (or uncemmented) to skip the check. (default="false")
+    # "false" to skip the check. (default="false")
     #
     # E.g.: When ClamAV does a check, the Server shouldn't shut down. How to do
     # that?  Let's look at a example: in the clamav-plugin for autoshutdown
@@ -174,14 +174,18 @@ PLUGINCHECK="false"
     #
     #    # In which folder is the file to look for
     #    folder="/var/run/clamav"
-    #    # filename (can be expanded with regexes)
+    #    # Enable or disable this plugin.
+    #    enabled="true"
+    #    # Filename (can be expanded with regexes)
     #    file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
     #
     # Then, if a file i.e.: clamdscan-aaaa3556-adfe-5678-abcdef012345
     # (or whatever UUID) in /var/run/clamav exists, the Server isn't shutdown.
     #
     # Also possible:
+    #
     #     folder="/home/user"
+    #     enabled="true or false"
     #     file="backup.status"
     #     content="processing job"
     #
@@ -202,8 +206,6 @@ PLUGINCHECK="false"
     #
     # To delete all *.status files, which are not deleted before (loss of power
     # for example).
-    #
-    # Please have a look at the two example files in: /etc/autoshutdown.d
 
 
 ###############################################################################
