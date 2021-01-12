@@ -6,6 +6,7 @@ openmediavault-autoshutdown (5.1.6) stable; urgency=medium
   * No shutdown when SMART tests are running
   * Remove *asd_* variable references
   * Add force to _log line to reading config file
+  * Add some robustness to _check_plugin
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 06 Jan 2021 14:11:52 +0000
 
