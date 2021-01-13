@@ -9,6 +9,7 @@ openmediavault-autoshutdown (5.1.6) stable; urgency=medium
   * Add some robustness to _check_plugin
   * Enhance _check_plugin to add the ability to enable/disable a plugin
   * Small improvement to _check_loadaverage
+  * Improve/fix _check_config for OVERRIDEUPHOURS and NSOCKETIGNORESELF
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 06 Jan 2021 14:11:52 +0000
 
