@@ -412,7 +412,7 @@ _check_loadaverage()
     local rvalue=0
     # Get the load averages.
     local current_load_average_line
-    current_load_average_line="$(LC_ALL=C cat "/proc/loadavg")"
+    current_load_average_line="$(< "/proc/loadavg")"
     # Get load average in decimal notation.
     local current_load_average_decimal
     current_load_average_decimal="$(awk '{print $1}' <<< "${current_load_average_line}")"
