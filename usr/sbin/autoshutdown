@@ -169,25 +169,17 @@ _ping_range() {
 #   Return     : None, script exit point.
 #
 # We've had no responses for the required number of consecutive scans defined in
-# $CYCLES shutdown & power off.
+# $CYCLES shutdown and power off.
 #
 _shutdown() {
-    [ -z "${SHUTDOWNCOMMAND}" ] && {
-        _log "WARNING: No shutdown command set."
-        _log "WARNING: Setting it to: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }
-
     # When FAKE-Mode is on.
     [ "${FAKE}" == "true" ] && {
         _log "INFO: Fake-shutdown issued: '${SHUTDOWNCOMMAND}' - Command is not executed because of Fake-Mode" force
         _log "INFO: Autoshutdown will end here"
-        _log "INFO:"
         exit 0; }
 
     # Without Fake-Mode.
     _log "INFO: Shutdown issued: '${SHUTDOWNCOMMAND}'" force
-    _log "INFO:"
-
     # Write everything to disk/stick and shutdown, hibernate, or whatever is
     # configured.
     sync && eval "${SHUTDOWNCOMMAND}" && exit 0
@@ -1154,43 +1146,25 @@ _check_config() {
 
     # SHUTDOWNCOMMAND - Check acpi power states with pm-is-supported.
     # Thx to http://wiki.ubuntuusers.de/pm-utils.
+    [ -z "${SHUTDOWNCOMMAND}" ] && {
+        _log "WARNING: No shutdown command set."
+        _log "WARNING: Setting it to: ${DEFAULT_SHUTDOWNCOMMAND}"
+        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }
+
     _log "INFO: SHUTDOWNCOMMAND is set to: ${SHUTDOWNCOMMAND}"
-    # Check power management modes.
     _log "INFO: Kernel $(uname -r) supports the following modes from pm-utils:"
-    local pm_suspend="false"
-    pm-is-supported --suspend && {
+    pm-is-supported --suspend &&
          _log "INFO: Kernel supports: SUSPEND (SUSPEND to RAM)"
-        pm_suspend="true"; }
-
-    local pm_hibernate="false"
-    pm-is-supported --hibernate && {
+    pm-is-supported --hibernate &&
         _log "INFO: Kernel supports: HIBERNATE (SUSPEND to DISK)"
-        pm_hibernate="true"; }
-
-    local pm_suspend_hybrid="false"
-    pm-is-supported --suspend-hybrid && {
+    pm-is-supported --suspend-hybrid &&
         _log "INFO: Kernel supports: HYBRID-SUSPEND (to DISK & to RAM)"
-        pm_suspend_hybrid="true"; }
-
-    # Check, if pm-suspend is supported.
-    if [[ "${SHUTDOWNCOMMAND}" == "pm-suspend" &&
-          "${pm_suspend}" == "false" ]]; then
-        _log "WARNING: Set 'SHUTDOWNCOMMAND=\"pm-suspend\"', but the PC doesn't support this!"
+    # Check, if pm-x is supported.
+    [[ "${SHUTDOWNCOMMAND}" =~ ^pm- ]] &&
+       ! pm-is-supported --"${SHUTDOWNCOMMAND#pm-*}" &>/dev/null && {
+        _log "WARNING: Set 'SHUTDOWNCOMMAND=\"${SHUTDOWNCOMMAND}\"' which is not supported!"
         _log "WARNING: Setting it to default: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
-    # Check, if pm-hibernate is supported.
-    elif [[ "${SHUTDOWNCOMMAND}" == "pm-hibernate" &&
-            "${pm_hibernate}" == "false" ]]; then
-        _log "WARNING: Set 'SHUTDOWNCOMMAND=\"pm-hibernate\"', but the PC doesn't support this!"
-        _log "WARNING: Setting it to default: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
-    # Check, if pm-suspend-hybrid is supported.
-    elif [[ "${SHUTDOWNCOMMAND}" == "pm-suspend-hybrid" &&
-            "${pm_suspend_hybrid}" == "false" ]]; then
-        _log "WARNING: Set 'SHUTDOWNCOMMAND=\"pm-suspend-hybrid\"', but the PC doesn't support this!"
-        _log "WARNING: Setting it to default: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
-    fi
+        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }
 
     return 0
 }
