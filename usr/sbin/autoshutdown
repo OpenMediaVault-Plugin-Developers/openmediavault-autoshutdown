@@ -978,8 +978,7 @@ _check_config() {
                 unset OVERRIDEUPHOURS; }
         fi
     else
-        _log "WARNING: CHECKCLOCKACTIVE is set to false"
-        _log "WARNING: Ignoring UPHOURS and OVERRIDEUPHOURS"
+        _log "WARNING: CHECKCLOCKACTIVE is set to false. Not validating UPHOURS and OVERRIDEUPHOURS"
     fi
 
     if [ "${CHECKPROCNAMES}" == "true" ]; then
@@ -1011,8 +1010,7 @@ _check_config() {
             exit 1
         fi
     else
-        _log "WARNING: CHECKPROCNAMES is set to false"
-        _log "WARNING: Ignoring CHECKPROCNAMES and TEMPPROCNAMES"
+        _log "WARNING: CHECKPROCNAMES is set to false. Not validating CHECKPROCNAMES and TEMPPROCNAMES"
     fi
 
     # Port-Numbers with at least 2 digits.
@@ -1032,8 +1030,7 @@ _check_config() {
                 NSOCKETIGNORESELF="${DEFAULT_NSOCKETIGNORESELF}"; }
         fi
     else
-        _log "WARNING: CHECKSOCKETS is set to false"
-        _log "WARNING: Ignoring NSOCKETNUMBERS and NSOCKETIGNORESELF"
+        _log "WARNING: CHECKSOCKETS is set to false. Not validating NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
 
     # PINGLIST OR RANGE set-up.
@@ -1047,8 +1044,7 @@ _check_config() {
         _log "WARNING: Set IPCHECK to: 'false'"
         IPCHECK="false"
     elif [ "${IPCHECK}" == "false" ]; then
-        _log "WARNING: IPCHECK is set to false"
-        _log "WARNING: Ignoring RANGE"
+        _log "WARNING: IPCHECK is set to false. Not validating RANGE"
     elif [[ -z "${RANGE:=}" || "${RANGE}" == "-" ]]; then
         _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
         IPCHECK="false"
@@ -1071,8 +1067,7 @@ _check_config() {
             _log "WARNING: Set HDDIO_RATE to default: ${DEFAULT_HDDIO_RATE}"
             HDDIO_RATE="${DEFAULT_HDDIO_RATE}"; }
     else
-        _log "WARNING: HDDIOCHECK is set to false"
-        _log "WARNING: Ignoring HDDIO_RATE"
+        _log "WARNING: HDDIOCHECK is set to false. Not validating HDDIO_RATE"
     fi
 
     # Sleep: 1 - 9999.
@@ -1091,8 +1086,7 @@ _check_config() {
             _log "WARNING: Set ULDLRATE to default: ${DEFAULT_ULDLRATE}"
             ULDLRATE="${DEFAULT_ULDLRATE}"; }
     else
-        _log "WARNING: ULDLCHECK is set to false"
-        _log "WARNING: Ignoring ULDLRATE"
+        _log "WARNING: ULDLCHECK is set to false. Not validating ULDLRATE"
     fi
 
     # LOADAVERAGE (max 3 digits).
@@ -1103,8 +1097,7 @@ _check_config() {
             _log "WARNING: Set LOADAVERAGECHECK to default: ${DEFAULT_LOADAVERAGE}"
             LOADAVERAGE="${DEFAULT_LOADAVERAGE}"; }
     else
-        _log "WARNING: LOADAVERAGECHECK is set to false"
-        _log "WARNING: Ignoring LOADAVERAGE"
+        _log "WARNING: LOADAVERAGECHECK is set to false. Not validating LOADAVERAGE"
     fi
 
     # SHUTDOWNCOMMAND - Check acpi power states with pm-is-supported.
