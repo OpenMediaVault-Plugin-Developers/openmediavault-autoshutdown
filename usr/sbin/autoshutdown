@@ -298,47 +298,40 @@ _check_plugin() {
                 _log "DEBUG: Ignoring: ${plugin} as is it not a plugin file"
             continue; }
 
-        local plugin_name="${plugin##*/}"
-        local plugin_folder
-        plugin_folder="$(awk -F= '/folder=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
-        local plugin_file
-        plugin_file="$(awk -F= '/file=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
-        local plugin_content
-        plugin_content="$(awk -F= '/content=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
-        local plugin_enabled
-        plugin_enabled="$(awk -F= '/enabled=/{gsub(/["]/,"",$2);print $2}' "${plugin}")"
-
+        local name="${plugin##*/}"
         [ "${DEBUG}" == "true" ] && {
             _log "DEBUG: -----------------------------------------------------"
-            _log "DEBUG: Plugin: ${plugin_name}: plugin: ${plugin}"
-            _log "DEBUG: Plugin: ${plugin_name}: plugin_enabled: ${plugin_enabled:-"true"}"
-            _log "DEBUG: Plugin: ${plugin_name}: plugin_name: ${plugin_name}"
-            _log "DEBUG: Plugin: ${plugin_name}: plugin_folder: ${plugin_folder}"
-            _log "DEBUG: Plugin: ${plugin_name}: plugin_file: ${plugin_file}"
-            [ -n "${plugin_content}" ] &&
-                _log "DEBUG: Plugin: ${plugin_name}: plugin_content: ${plugin_content}"; }
+            _log "DEBUG: ${name}: plugin: ${plugin}"; }
 
-        # Skip if plugin is not enabled.
-        [ "${plugin_enabled}" == "false" ] && {
-            _log "INFO: Plugin: ${plugin_name}: Plugin is disabled skipping -> next check"
+        for var in "enabled:true" "folder:N/A" "file:N/A" "content:N/A"; do
+            local value="${var%:*}"
+            declare "${value}"="$(
+                awk -F= -v regex="${var%:*}=" \
+                    '$0 ~ regex {gsub(/["]/,"",$2);print $2}' "${plugin}")"
+             [ "${DEBUG}" == "true" ] &&
+                _log "DEBUG: ${name}: ${value}: ${!value:-"${var#*:}"}"
+        done
+
+        # shellcheck disable=SC2154
+        [ "${enabled}" == "false" ] && {
+            _log "INFO: ${name}: Plugin is disabled skipping -> next check"
             continue; }
 
-        # When file exists (matches regex), no shutdown.
-        [ -z "$(find "${plugin_folder}" -regextype posix-egrep -regex ".*${plugin_file}" 2>/dev/null)" ] && {
-            _log "INFO: Plugin: ${plugin_name}: File not found -> next check"
+        # shellcheck disable=SC2154
+        [ -z "$(find "${folder}" -regextype posix-egrep \
+                    -regex ".*${file}" 2>/dev/null)" ] && {
+            _log "INFO: ${name}: File not found -> next check"
             continue; }
 
-        # Check, if plugin_content for the plugin is defined.
-        if [ -z "${plugin_content}" ]; then
-            # Content not defined and file found.
-            _log "INFO: Plugin: ${plugin_name}: File found -> no shutdown"
+        # shellcheck disable=SC2154
+        if [ -z "${content}" ]; then
+            _log "INFO: ${name}: File found -> no shutdown"
             (( foundvalue+=1 ))
-        elif grep -q "${plugin_content}" "${plugin_folder}/${plugin_file}"; then
-            _log "INFO: Plugin: ${plugin_name}: Content found (${plugin_content}) -> no shutdown"
+        elif grep -q "${content}" "${folder}/${file}"; then
+            _log "INFO: ${name}: Content found (${content}) -> no shutdown"
             (( foundvalue+=1 ))
         else
-            # Content not found.
-            _log "INFO: Plugin: ${plugin_name}: Content not found (${plugin_content}) -> next check"
+            _log "INFO: ${name}: Content not found (${content}) -> next check"
         fi
     done
 

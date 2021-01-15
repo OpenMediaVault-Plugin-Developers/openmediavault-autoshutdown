@@ -15,6 +15,7 @@ openmediavault-autoshutdown (5.1.6) stable; urgency=medium
   * Add common method for validating *CHECK* variables
   * Tweak log when check value is set false
   * Tweaking of log messages to help clarity in _check_config
+  * Refactor _check_plugin to remove repeted statments
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 06 Jan 2021 14:11:52 +0000
 
