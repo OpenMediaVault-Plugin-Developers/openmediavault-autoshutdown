@@ -924,12 +924,14 @@ _check_config() {
     _log "INFO: Checking config: ${CONFIG}"
 
     [[ "${ENABLE}" == "true" || "${ENABLE}" == "false" ]] || {
-        _log "WARNING: ENABLE not set properly. It has to be 'true' or 'false'"
+        _log "WARNING: ENABLE not set properly: ${ENABLE}"
+        _log "WARNING: ENABLE has to be set to 'true' or 'false'"
         _log "ERR: Exiting ..."
         exit 1; }
 
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
-        _log "WARNING: FAKE not set properly. It has to be 'true' or 'false'"
+        _log "WARNING: FAKE not set properly: ${FAKE}"
+        _log "WARNING: FAKE has to be set to 'true' or 'false'"
         _log "WARNING: Set FAKE to true -> Test-mode with VERBOSE true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
@@ -944,8 +946,9 @@ _check_config() {
     while read -r var; do
         local default_var="DEFAULT_${var}"
         [[ "${!var}" == "true" || "${!var}" == "false" ]] || {
-            _log "WARNING: ${var} not set properly. It has to be 'true' or 'false'"
-            _log "WARNING: Set ${var} to default: ${!default_var}"
+            _log "WARNING: ${var} not set properly: ${!var}"
+            _log "WARNING: ${var} has to be set to 'true' or 'false'"
+            _log "WARNING: ${var} set to default: ${!default_var}"
             declare -g "${var}"="${!default_var}"; }
     done < <(awk -F= '$0 !~ /^#/ && /.*CHECK.*/{print $1}' "${CONFIG}")
 
@@ -988,7 +991,7 @@ _check_config() {
             _log "INFO: LOADPROCNAMES is disabled - No load processes being checked"
             LOADPROCNAMES=""
         elif [ -z "${LOADPROCNAMES}" ]; then
-            _log "INFO: LOADPROCNAMES is set to default: ${DEFAULT_LOADPROCNAMES}"
+            _log "INFO: LOADPROCNAMES set to default: ${DEFAULT_LOADPROCNAMES}"
             LOADPROCNAMES="${DEFAULT_LOADPROCNAMES}"
         elif [[ ! "${LOADPROCNAMES}" =~ ${regex} ]]; then
             _log "WARNING: Invalid parameter list format: LOADPROCNAMES [lproc1,lproc2,lproc3,...]"
@@ -1001,7 +1004,7 @@ _check_config() {
             _log "INFO: TEMPPROCNAMES is disabled - No temp processes being checked"
             TEMPPROCNAMES=""
         elif  [ -z "${TEMPPROCNAMES}" ]; then
-            _log "INFO: TEMPPROCNAMES is set to default: ${DEFAULT_TEMPPROCNAMES}"
+            _log "INFO: TEMPPROCNAMES set to default: ${DEFAULT_TEMPPROCNAMES}"
             TEMPPROCNAMES="${DEFAULT_TEMPPROCNAMES}"
         elif [[ ! "${TEMPPROCNAMES}" =~ ${regex} ]]; then
             _log "WARNING: Invalid parameter list format: TEMPPROCNAMES [tproc1,tproc2,tproc3,...]"
@@ -1022,13 +1025,13 @@ _check_config() {
             _log "WARNING: Setting NSOCKETNUMBERS to default: ${DEFAULT_NSOCKETNUMBERS}"
             NSOCKETNUMBERS="${DEFAULT_NSOCKETNUMBERS}"; }
 
-        if [ -n "${NSOCKETIGNORESELF:-}" ]; then
+        [ -n "${NSOCKETIGNORESELF:-}" ] && {
             [[ "${NSOCKETIGNORESELF}" == "true" ||
                "${NSOCKETIGNORESELF}" == "false" ]] || {
-                _log "WARNING: NSOCKETIGNORESELF not set properly. It has to be 'true' or 'false'"
-                _log "WARNING: Set NSOCKETIGNORESELF to default: ${DEFAULT_NSOCKETIGNORESELF}"
-                NSOCKETIGNORESELF="${DEFAULT_NSOCKETIGNORESELF}"; }
-        fi
+                _log "WARNING: NSOCKETIGNORESELF not set properly: ${NSOCKETIGNORESELF}"
+                _log "WARNING: NSOCKETIGNORESELF has to be set to 'true' or 'false'"
+                _log "WARNING: NSOCKETIGNORESELF set to default: ${DEFAULT_NSOCKETIGNORESELF}"
+                NSOCKETIGNORESELF="${DEFAULT_NSOCKETIGNORESELF}"; }; }
     else
         _log "WARNING: CHECKSOCKETS is set to false. Not validating NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
@@ -1328,8 +1331,8 @@ _check_networkconfig
     _log "DEBUG: LOADAVERAGECHECK: ${LOADAVERAGECHECK}"
     _log "DEBUG: LOADAVERAGE: ${LOADAVERAGE}"
     _log "DEBUG: CHECKPROCNAMES: ${CHECKPROCNAMES}"
-    _log "DEBUG: LOADPROCNAMES: ${LOADPROCNAMES}"
-    _log "DEBUG: TEMPPROCNAMES: ${TEMPPROCNAMES}"
+    _log "DEBUG: LOADPROCNAMES: ${LOADPROCNAMES:-"disabled"}"
+    _log "DEBUG: TEMPPROCNAMES: ${TEMPPROCNAMES:-"disabled"}"
     _log "DEBUG: NSOCKETIGNORESELF: ${NSOCKETIGNORESELF:-"${DEFAULT_NSOCKETIGNORESELF}"}"
     _log "DEBUG: PLUGINCHECK: ${PLUGINCHECK}"
     _log "DEBUG: Available plugins found in: /etc/autoshutdown.d"
