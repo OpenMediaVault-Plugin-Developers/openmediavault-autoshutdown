@@ -400,7 +400,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
-                        text: _("Names of processes with load dependent children. Set to '-' to disable")
+                        text: _("Names of processes with load dependent children. Set to '-' to disable.")
                     }]
                 }]
             },{
@@ -421,7 +421,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
-                        text: _("Names of processes only started when active Set to '-' to disable")
+                        text: _("Names of processes only started when active. Set to '-' to disable.")
                     }]
                 }]
             },{
@@ -438,13 +438,23 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 boxLabel: _("Check for connected users.")
             },{
                 xtype: "checkbox",
+                name: "smartcheck",
+                fieldLabel: _("Check Smart"),
+                checked: true,
+                boxLabel: _("Check if S.M.A.R.T. tests are running."),
+                plugins: [{
+                    ptype: "fieldinfo",
+                    text: _("This only works if S.M.A.R.T. is supported directly.")
+                }]
+            },{
+                xtype: "checkbox",
                 name: "plugincheck",
                 fieldLabel: _("Check plugins"),
                 checked: true,
                 boxLabel: _("Check for users defined plugins."),
                 plugins: [{
                     ptype: "fieldinfo",
-                    text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
+                    text: _("Please check") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
                           _("autoshutdown.default") + "</a> " +
                           _("for more details.")
                 }]
@@ -487,7 +497,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 allowBlank: true,
                 plugins: [{
                     ptype: "fieldinfo",
-                    text: _("Please check the") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
+                    text: _("Please check") + " <a href='https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default' target='_blank'>" +
                           _("autoshutdown.default") + "</a> " +
                           _("for more details.")
                 }]

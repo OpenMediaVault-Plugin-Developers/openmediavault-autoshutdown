@@ -3,5 +3,8 @@
 # In which folder is the file to look for
 folder="/var/run/clamav"
 
+# Enable or disable this plugin.
+enabled="true"
+
 # filename (can be expanded with regexes)
 file="clamdscan-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"

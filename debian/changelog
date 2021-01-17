@@ -1,3 +1,24 @@
+openmediavault-autoshutdown (5.1.6) stable; urgency=medium
+
+  * Improve OVERRIDEUPHOURS to allow defining over midnight
+  * Add FQDN set-up instruction to etc/autoshutdown.default
+  * Small fixes to comments, doc and GUI
+  * No shutdown when SMART tests are running
+  * Remove *asd_* variable references
+  * Add force to _log line to reading config file
+  * Add some robustness to _check_plugin
+  * Enhance _check_plugin to add the ability to enable/disable a plugin
+  * Small improvement to _check_loadaverage
+  * Improve/fix _check_config for OVERRIDEUPHOURS and NSOCKETIGNORESELF
+  * Clean-up and simplify autoshutdown script
+  * Re-work checking for SHUTDOWNCOMMAND
+  * Add common method for validating *CHECK* variables
+  * Tweak log when check value is set false
+  * Tweaking of log messages to help clarity in _check_config
+  * Refactor _check_plugin to remove repeted statments
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 06 Jan 2021 14:11:52 +0000
+
 openmediavault-autoshutdown (5.1.5) stable; urgency=low
 
   * Bug fix add back missing bracker in Setting.js

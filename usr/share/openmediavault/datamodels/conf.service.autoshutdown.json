@@ -103,6 +103,10 @@
 			"maximum": 65535,
 			"default": 401
 		},
+		"smartcheck": {
+			"type": "boolean",
+			"default": false
+		},
 		"checksamba": {
 			"type": "boolean",
 			"default": true
