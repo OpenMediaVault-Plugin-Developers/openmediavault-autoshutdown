@@ -1095,26 +1095,26 @@ _check_config() {
     fi
 
     # SHUTDOWNCOMMAND - Check acpi power states with pm-is-supported.
-    # Thx to http://wiki.ubuntuusers.de/pm-utils.
     [ -z "${SHUTDOWNCOMMAND}" ] && {
         _log "WARNING: No shutdown command set."
         _log "WARNING: Setting it to: ${DEFAULT_SHUTDOWNCOMMAND}"
         SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }
 
     _log "INFO: SHUTDOWNCOMMAND is set to: ${SHUTDOWNCOMMAND}"
-    _log "INFO: Kernel $(uname -r) supports the following modes from pm-utils:"
-    pm-is-supported --suspend &&
-         _log "INFO: Kernel supports: SUSPEND (SUSPEND to RAM)"
-    pm-is-supported --hibernate &&
-        _log "INFO: Kernel supports: HIBERNATE (SUSPEND to DISK)"
-    pm-is-supported --suspend-hybrid &&
-        _log "INFO: Kernel supports: HYBRID-SUSPEND (to DISK & to RAM)"
-    # Check, if pm-x is supported.
-    [[ "${SHUTDOWNCOMMAND}" =~ ^pm- ]] &&
-       ! pm-is-supported --"${SHUTDOWNCOMMAND#pm-*}" &>/dev/null && {
-        _log "WARNING: Set 'SHUTDOWNCOMMAND=\"${SHUTDOWNCOMMAND}\"' which is not supported!"
+    _log "INFO: Kernel $(uname -r) supports power management modes:"
+    declare -A pm_map=( ["suspend"]="--suspend:suspend to RAM" \
+                        ["hibernate"]="--hibernate:suspend to DISK" \
+                        ["hybrid"]="--suspend-hybrid:suspend to RAM and DISK" )
+    for check in "${!pm_map[@]}"; do
+        pm-is-supported "${pm_map["${check}"]%:*}" &&
+            _log "INFO: Kernel supports: ${check^^} (${pm_map["${check}"]#*:})"
+    done
+    # Check, if shutdown hybrid, suspend and hibernate are supported.
+    [[ "${SHUTDOWNCOMMAND}" =~ ^systemctl\ (hybrid|suspend|hibernate)$ ]] && {
+        pm-is-supported "${pm_map["${BASH_REMATCH[1]}"]%:*}" || {
+        _log "WARNING: 'SHUTDOWNCOMMAND=\"${SHUTDOWNCOMMAND}\"' not supported!"
         _log "WARNING: Setting it to default: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }
+        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }; }
 
     return 0
 }

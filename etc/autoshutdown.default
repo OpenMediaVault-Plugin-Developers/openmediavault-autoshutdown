@@ -243,11 +243,11 @@ NSOCKETIGNORESELF="false"
 # -----------------------------------------------------------------------------
 
 SHUTDOWNCOMMAND="shutdown -h now"
-    # pm-hibernate      : Puts PC into hibernate-mode.
-    # pm-suspend        : Puts PC into suspend-mode.
-    # pm-suspend-hybrid : Puts PC into suspend-hybrid-mode.
-    # shutdown -h +5    : Shuts the PC down 5 min after shutdown-command.
-    # shutdown -h now   : Shuts the PC down immediately. (default)
+    # systemctl hibernate : Puts PC into hibernate-mode.
+    # systemctl suspend   : Puts PC into suspend-mode.
+    # systemctl hybrid    : Puts PC into hybrid-mode.
+    # shutdown -h +5      : Shuts the PC down 5 min after shutdown-command.
+    # shutdown -h now     : Shuts the PC down immediately. (default)
 
     # For more information and how to set up hibernate and suspend, look here:
     # http://wiki.debian.org/Suspend
