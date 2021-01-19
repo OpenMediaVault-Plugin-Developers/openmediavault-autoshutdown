@@ -361,22 +361,21 @@ _check_plugin() {
 #
 _check_loadaverage() {
     # Get the load averages.
-    local -r load_average_line="$(< "/proc/loadavg")"
+    local -r loadavg_line="$(< "/proc/loadavg")"
     # Get load average in decimal notation.
-    local -r load_average_decimal="$(
-        awk '{print $1}' <<< "${load_average_line}")"
-    # Convert to integer value by removing decimal point and assuming two fixed decimal places.
-    local -r load_average="$(
-        sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${load_average_decimal}")"
+    local -r loadavg_dec="$(awk '{print $1}' <<< "${loadavg_line}")"
+    # Convert to integer value by removing decimal point and assuming two fixed
+    # decimal places.
+    local -r loadavg="$(sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${loadavg_dec}")"
 
     [ "${DEBUG}" == "true" ] && {
         _log "DEBUG: -----------------------------------------------------"
-        _log "DEBUG: Output from '/proc/loadavg': ${load_average_line}"
-        _log "DEBUG: load_average_decimal: ${load_average_decimal}"
-        _log "DEBUG: load_average: ${load_average}"; }
+        _log "DEBUG: Output from '/proc/loadavg': ${loadavg_line}"
+        _log "DEBUG: load average decimal: ${loadavg_dec}"
+        _log "DEBUG: load average: ${loadavg}"; }
 
-    local msg="INFO: Load average (${load_average_decimal} -> ${load_average}) is"
-    [ "${load_average}" -gt "${LOADAVERAGE}" ] && {
+    local msg="INFO: Load average (${loadavg_dec} -> ${loadavg}) is"
+    [ "${loadavg}" -gt "${LOADAVERAGE}" ] && {
         _log "${msg} higher than target (${LOADAVERAGE}) -> no shutdown"
         return 1; }
 
