@@ -6,6 +6,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Clean-up up GUI Setting.js
   * Script improvement
   * Reduce var name length and set read-only in _check_loadaverage
+  * Rework how we set NSOCKETIGNORESELF to default
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 
