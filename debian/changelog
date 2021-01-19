@@ -3,6 +3,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Clean-up log function and fix journalctl output
   * Make sure read command variables are as local variables
   * Correct Shutdown command check and Docs to use systemd
+  * Clean-up up GUI Setting.js
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 

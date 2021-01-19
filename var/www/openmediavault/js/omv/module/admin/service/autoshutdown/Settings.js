@@ -179,7 +179,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             items: [{
                 xtype: "checkbox",
                 name: "checkclockactive",
-                fieldLabel: _("Check Clock"),
+                fieldLabel: _("Clock"),
                 checked: false,
                 boxLabel: _("Check Clock to identify forced uptime.")
             },{
@@ -237,7 +237,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             },
             items: [{
                 xtype: "fieldcontainer",
-                fieldLabel: _("IP-Range"),
+                fieldLabel: _("IP Range"),
                 layout: "hbox",
                 items: [{
                     xtype: "checkbox",
@@ -318,7 +318,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
-                        text: _("Define the network traffic in kB/s")
+                        text: _("Define the network traffic in kB/s.")
                     }]
                 }]
             },{
@@ -375,12 +375,12 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     width: 600,
                     plugins: [{
                         ptype: "fieldinfo",
-                        text: _("If the HDD-IO-average of the server is above this value, then no shutdown.")
+                        text: _("If the HDD-IO-average of the server is above this value in kB/s, then no shutdown.")
                     }]
                 }]
             },{
                 xtype: "fieldcontainer",
-                fieldLabel: _("Check Active Processes"),
+                fieldLabel: _("Active Processes"),
                 layout: "hbox",
                 items: [{
                     xtype: "checkbox",
@@ -427,19 +427,19 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             },{
                 xtype: "checkbox",
                 name: "checksamba",
-                fieldLabel: _("Check smbstatus"),
+                fieldLabel: _("SMB Status"),
                 checked: true,
-                boxLabel: _("Check smbstatus for connected clients.")
+                boxLabel: _("Check SMB status for connected clients.")
             },{
                 xtype: "checkbox",
                 name: "checkcli",
-                fieldLabel: _("Check Users"),
+                fieldLabel: _("Users"),
                 checked: true,
                 boxLabel: _("Check for connected users.")
             },{
                 xtype: "checkbox",
                 name: "smartcheck",
-                fieldLabel: _("Check Smart"),
+                fieldLabel: _("Smart Tests"),
                 checked: true,
                 boxLabel: _("Check if S.M.A.R.T. tests are running."),
                 plugins: [{
@@ -449,7 +449,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             },{
                 xtype: "checkbox",
                 name: "plugincheck",
-                fieldLabel: _("Check plugins"),
+                fieldLabel: _("Plugins"),
                 checked: true,
                 boxLabel: _("Check for users defined plugins."),
                 plugins: [{
@@ -493,7 +493,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             items: [{
                 xtype: "textarea",
                 name: "extraoptions",
-                fieldLabel: _("Extra options"),
+                fieldLabel: _("Extra Options"),
                 allowBlank: true,
                 plugins: [{
                     ptype: "fieldinfo",
