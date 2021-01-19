@@ -1294,30 +1294,18 @@ _check_networkconfig
 
 [ "${DEBUG}" == "true" ] && {
     _log "DEBUG: -----------------------------------------------------"
-    _log "DEBUG: CYCLES: ${CYCLES}"
-    _log "DEBUG: SLEEP: ${SLEEP}"
-    _log "DEBUG: VERBOSE: ${VERBOSE}"
-    _log "DEBUG: FAKE: ${FAKE}"
-    _log "DEBUG: SHUTDOWNCOMMAND: ${SHUTDOWNCOMMAND}"
-    _log "DEBUG: CHECKCLOCKACTIVE: ${CHECKCLOCKACTIVE}"
-    _log "DEBUG: UPHOURS: ${UPHOURS}"
-    _log "DEBUG: OVERRIDEUPHOURS: ${OVERRIDEUPHOURS:-"N/A"}"
-    _log "DEBUG: IPCHECK: ${IPCHECK}"
-    _log "DEBUG: RANGE: ${RANGE}"
-    _log "DEBUG: CHECKSOCKETS: ${CHECKSOCKETS}"
-    _log "DEBUG: NSOCKETNUMBERS: ${NSOCKETNUMBERS}"
-    _log "DEBUG: HDDIOCHECK: ${HDDIOCHECK}"
-    _log "DEBUG: HDDIO_RATE: ${HDDIO_RATE}"
-    _log "DEBUG: SMARTCHECK: ${SMARTCHECK}"
-    _log "DEBUG: ULDLCHECK: ${ULDLCHECK}"
-    _log "DEBUG: ULDLRATE: ${ULDLRATE}"
-    _log "DEBUG: LOADAVERAGECHECK: ${LOADAVERAGECHECK}"
-    _log "DEBUG: LOADAVERAGE: ${LOADAVERAGE}"
-    _log "DEBUG: CHECKPROCNAMES: ${CHECKPROCNAMES}"
-    _log "DEBUG: LOADPROCNAMES: ${LOADPROCNAMES:-"disabled"}"
-    _log "DEBUG: TEMPPROCNAMES: ${TEMPPROCNAMES:-"disabled"}"
-    _log "DEBUG: NSOCKETIGNORESELF: ${NSOCKETIGNORESELF}"
-    _log "DEBUG: PLUGINCHECK: ${PLUGINCHECK}"
+    for var in "CYCLES:N/A" "SLEEP:N/A" "VERBOSE:N/A" "FAKE:N/A" \
+               "SHUTDOWNCOMMAND:N/A" "CHECKCLOCKACTIVE:N/A" "UPHOURS:N/A" \
+               "OVERRIDEUPHOURS:N/A" "IPCHECK:N/A" "RANGE:N/A" \
+               "CHECKSOCKETS:N/A" "NSOCKETNUMBERS:N/A" \
+               "NSOCKETIGNORESELF:N/A" "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" \
+               "SMARTCHECK:N/A" "ULDLCHECK:N/A" "ULDLRATE:N/A" \
+               "LOADAVERAGECHECK:N/A" "LOADAVERAGE:N/A" "LOADAVERAGE:N/A" \
+               "CHECKPROCNAMES:N/A" "LOADPROCNAMES:disabled" \
+               "TEMPPROCNAMES:disabled" "PLUGINCHECK:N/A"; do
+        value=${var%:*}
+        _log "DEBUG: ${value}: ${!value:-${var#*:}}"
+    done
     _log "DEBUG: Available plugins found in: /etc/autoshutdown.d"
     for _plugin in /etc/autoshutdown.d/*; do
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"

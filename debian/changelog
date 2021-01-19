@@ -9,6 +9,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Rework how we set NSOCKETIGNORESELF to default
   * Make sure we check fake-mode set-up in config first
   * Rework/simplify how we validate OVERRIDEUPHOURS
+  * Rework debug of config variable outputted in main
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 
