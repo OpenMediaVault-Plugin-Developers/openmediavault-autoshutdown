@@ -413,7 +413,9 @@ _check_net_status() {
             awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${nsocket}$" \
                 -v ignore_self="${NSOCKETIGNORESELF}" \
                 -v server_ip="${server_ip}" \
-                '(ignore_self == "false") ? $2 ~ /^ESTAB$/ && $5 ~ regex : $2 ~ /^ESTAB$/ && $5 ~ regex && $6 !~ server_ip')"
+                "(ignore_self == \"false\") ? \
+                    \$2 ~ /^ESTAB$/ && \$5 ~ regex : \
+                    \$2 ~ /^ESTAB$/ && \$5 ~ regex && \$6 !~ server_ip")"
 
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Port ${nsocket}: ${lines:-"${empty}"}"

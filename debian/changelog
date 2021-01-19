@@ -11,6 +11,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Rework/simplify how we validate OVERRIDEUPHOURS
   * Rework debug of config variable outputted in main
   * Update some details in the README.md
+  * Tweak _check_net_status NSOCKETIGNORESELF set-up
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 
