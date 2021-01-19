@@ -912,17 +912,17 @@ _check_config() {
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Checking config: ${CONFIG}"
 
-    [[ "${ENABLE}" == "true" || "${ENABLE}" == "false" ]] || {
-        _log "WARNING: ENABLE not set properly: ${ENABLE}"
-        _log "WARNING: ENABLE has to be set to 'true' or 'false'"
-        _log "ERR: Exiting ..."
-        exit 1; }
-
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
         _log "WARNING: FAKE has to be set to 'true' or 'false'"
         _log "WARNING: Set FAKE to true -> Test-mode with VERBOSE true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
+
+    [[ "${ENABLE}" == "true" || "${ENABLE}" == "false" ]] || {
+        _log "WARNING: ENABLE not set properly: ${ENABLE}"
+        _log "WARNING: ENABLE has to be set to 'true' or 'false'"
+        _log "ERR: Exiting ..."
+        exit 1; }
 
     # Flag: 1 - 999 (cycles).
     [[ "${CYCLES}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
