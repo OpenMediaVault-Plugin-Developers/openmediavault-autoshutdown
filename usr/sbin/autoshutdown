@@ -19,12 +19,7 @@ LPREPEAT=5                  # Number of test cycles for finding and active LOADP
 TPREPEAT=5                  # Number of test cycles for finding and active TEMPPROCNAMES-Process (default=5).
 
 ############## LOGGING ##############
-FACILITY="local6"           # Facility to log to -> see rsyslog.conf.
-DEBUG="false"               # Default debug logging mode is enabled.
-VERBOSE="false"             # Default if verbose logging mode is enabled.
-SYSLOG="false"              # Default if logging should go to syslog.
-
-FAKE="false"                # Default fake mode operation.
+DEBUG="false"               # Default debug logging mode (see VERBOSE).
 
 ######## STORAGE DEFINITION #########
 declare -A NIC_TO_IP        # Associative array for storing _check_networkconfig network interface to IP address mappings.
@@ -42,27 +37,30 @@ readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}" # Autoshutdown default
 #
 #   Name       : _log
 #   Parameters : $1 : Log message in format "PRIORITY: MESSAGE".
-#              : $2 : 'force' will force logging to syslog and sent to stderr.
-#   Globals    : $FAKE    : Are we runnig in fake mode. ('true' or 'false')
-#              : $VERBOSE : Set verbose logging. ('true' or 'false')
-#              : $SYSLOG  : Should logging to to syslog. ('true' or 'false')
+#              : $2 : 'force' will force logging to Syslog and sent to stderr.
+#   Globals    : $FAKE       : Are we running in fake mode. ('true' or 'false')
+#              : $SYSLOG     : Should logging to to Syslog. ('true' or 'false')
+#              : $LOG_STDOUT : Suppress logging to stdout. Set 'false' in a
+#                              systemd service. (default 'true')
 #   Return     : 0 on success.
 #
 _log() {
+    local -r user="$(id -nu "$(< "/proc/self/loginuid")" 2>/dev/null || true)"
+    local tag; tag="$(basename "${0}")"
+
     [[ "${1}" =~ ^([A-Za-z]*):\ *(.*) ]] && {
-       local priority=${BASH_REMATCH[1]}
-       local message="${FUNCNAME[1]}(): ${BASH_REMATCH[2]}"
-    }
-    [ "${FAKE}" == "true" ] && message="FAKE-Mode: ${message}"
-    message="$(basename "${0}")[$$]: ${priority}: '${message}'"
+       local -r priority=${BASH_REMATCH[1]}
+       local message="${FUNCNAME[1]}(): ${BASH_REMATCH[2]}"; }
 
-    [[ "${VERBOSE}" == "true" || "${FAKE}" == "true" ]] &&
-        echo "$(date '+%b %e %H:%M:%S') ${USER}: ${message}"
+    [ "${FAKE:-}" == "true" ] && message="FAKE-Mode: ${message}"
+    message="${user:-${USER}}: ${priority}: '${message}'"
 
-    local stderr=""
-    [ "${2:-}" == "force" ] && stderr="--stderr"
-    [[ "${SYSLOG}" == "true" || "${2:-}" == "force" ]] &&
-       logger "${stderr}" -p "${FACILITY}.${priority,,}" "${message}"
+    [ "${LOG_STDOUT:-"true"}" == "true" ] &&
+        echo "$(date '+%b %e %H:%M:%S') $(hostname -s
+                ) ${tag}}[${$}]: ${message}"
+
+    [[ "${SYSLOG:-}" == "true" || "${2:-}" == "force" ]] &&
+        logger --id="${$}" -t "${tag}" -p "syslog.${priority,,}" "${message}"
 
     return 0
 }
@@ -1274,7 +1272,6 @@ _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
 _log "INFO: Openmediavault-autoshutdown version: $(
     dpkg -s openmediavault-autoshutdown | awk '/Version:/{print $2}')" force
 _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
-_log "INFO: Initialize logging to: ${FACILITY}" force
 
 [ ! -f "${CONFIG}" ] && {
     _log "ERR: Config file not found! Please check ${CONFIG} exits ..." force
@@ -1289,8 +1286,8 @@ _log "INFO: ${CONFIG} loaded" force
 _log "INFO: ${DEFAULT_CONFIG} loaded" force
 
 # Set-up logging and modes.
-[ "${FAKE}" == "true" ] && VERBOSE="true"
-[ "${VERBOSE}" == "true" ] && DEBUG="true"
+[ "${FAKE:-}" == "true" ] && VERBOSE="true"
+[ "${VERBOSE:-}" == "true" ] && DEBUG="true"
 
 _check_config
 
