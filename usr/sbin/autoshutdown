@@ -146,7 +146,7 @@ _ping_range() {
         _log "INFO: No active IPs found in the specified range -> next check"
         return 0; }
 
-    while read -r active_ip; do
+    local active_ip; while read -r active_ip; do
         _log "INFO: ${active_ip} is active"
     done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
 
@@ -536,11 +536,11 @@ _check_users_cli_status() {
 
     [ "${DEBUG}" == "true" ] && {
         _log "DEBUG: Connected users:"
-        while read -r user; do
+        local user; while read -r user; do
             _log "DEBUG: ${user}"
         done <<< "${users_connected}"; }
 
-    while read -r connecton; do
+    local connecton; while read -r connecton; do
         local connected_user; connected_user="$(
             awk '{print $1}' <<< "${connecton}")"
         local connecton_from; connecton_from="$(
@@ -574,7 +574,7 @@ _check_smb_status() {
         _log "INFO: No SMB clients connected with locks -> next check"
         return 0; }
 
-    while read -r pid user host proto; do
+    local pid user host proto; while read -r pid user host proto; do
         [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] &&
             _log "INFO: SMB client with locks - PID: ${pid} USER: ${user} HOST: ${host} PROTO: ${proto}"
     done < <(awk '{print $1 " " $2":"$3 " " $4 " " $6}' <<< "${smb_connectons}")
@@ -773,7 +773,7 @@ _check_hddio() {
     local -r epoch_sec="${EPOCHSECONDS}"
     local -r last_checked_sec=$((epoch_sec - ${P_HDDIO_DEVS["epoch_sec"]:-${epoch_sec}}))
 
-    while read -r hdd hdd_in hdd_out; do
+    local hdd hdd_in hdd_out; while read -r hdd hdd_in hdd_out; do
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: ========== Device: ${hdd} =========="
 
@@ -783,9 +783,9 @@ _check_hddio() {
             continue; }
 
         [ "${DEBUG}" == "true" ] && {
-            blkid -s LABEL -s UUID | grep "${hdd}" | while read -r line; do
+            local line; while read -r line; do
                 _log "DEBUG: ${line}"
-            done
+            done < <(blkid -s LABEL -s UUID | grep "${hdd}")
             _log "DEBUG: Actual: kB_read: ${hdd_in}, kB_wrtn: ${hdd_out}"; }
 
         [[ "${rvalue}" -eq 1 || "${last_checked_sec}" -eq 0 ||
@@ -884,7 +884,7 @@ _check_smart() {
 
         [ "${DEBUG}" == "true" ] && {
             _log "DEBUG: Smartctl output: ${hdd}"
-            while read -r line; do
+            local line; while read -r line; do
                _log "DEBUG: ${line}"
             done <<< "${smart_output}"; }
 
@@ -934,7 +934,7 @@ _check_config() {
         CYCLES="${DEFAULT_CYCLES}"; }
 
     # Validate *CHECK* variables.
-    while read -r var; do
+    local var; while read -r var; do
         local default_var="DEFAULT_${var}"
         [[ "${!var}" == "true" || "${!var}" == "false" ]] || {
             _log "WARNING: ${var} not set properly: ${!var}"
@@ -1136,7 +1136,7 @@ _check_networkconfig() {
     _log "INFO: Finding up network interfaces and associated IPv4 address"
 
     local -r net_ifaces="${FORCE_NIC:-"en,eth,wlan,bond,usb"}"
-    while read -r net_iface ip; do
+    local net_iface ip; while read -r net_iface ip; do
         local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
         local ipv4_valid="true"
         [[ "${ip}" =~ ^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$ ]] ||
