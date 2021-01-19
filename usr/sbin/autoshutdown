@@ -951,23 +951,20 @@ _check_config() {
 
         if [ -n "${OVERRIDEUPHOURS:-}" ]; then
            local -r short_days="$(locale abday | sed 's:;:|:g')"
-           local override_uphours_valid="true"
            if [[ ! "${OVERRIDEUPHOURS}" =~ ^(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))(,(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?))))*$ ]]; then
-                override_uphours_valid="false"
+                _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
+                unset OVERRIDEUPHOURS
            else
                 for override in ${OVERRIDEUPHOURS//,/ }; do
                     [[ "${override}" =~ ^(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))$ &&
                         "${BASH_REMATCH[3]}" == "${BASH_REMATCH[7]}" ]] && {
-                            echo "${BASH_REMATCH[3]}"  "${BASH_REMATCH[7]}"
                             _log "WARNING: OVERRIDEUPHOURS invalid at: ${override}"
-                            override_uphours_valid="false"
+                            unset OVERRIDEUPHOURS
                             break; }
                 done
             fi
-            [ "${override_uphours_valid}" == "false" ] && {
-                _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
+            [ -z "${OVERRIDEUPHOURS:-}" ] &&
                 _log "WARNING: Unset OVERRIDEUPHOURS"
-                unset OVERRIDEUPHOURS; }
         fi
     else
         _log "WARNING: CHECKCLOCKACTIVE is set to false. Not validating UPHOURS and OVERRIDEUPHOURS"
