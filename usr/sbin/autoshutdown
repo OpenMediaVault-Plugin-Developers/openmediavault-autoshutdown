@@ -1157,9 +1157,10 @@ _check_networkconfig() {
             _log "DEBUG: Network interfaces: ${net_iface}"
             _log "DEBUG: Network interfaces status: ${state}"
             _log "DEBUG: Network interfaces IPv4 address: ${ip}"
-            _log "DEBUG: Network interfaces IPv4 address valid: ${ipv4_valid}"; }
+            _log "DEBUG: Network interfaces address valid: ${ipv4_valid}"; }
 
-        [ "${ipv4_valid}" == "true" ] && [ "${state}" != "down" ] && {
+        [[ "${ipv4_valid}" == "true" &&
+           "${state}" =~ ^(unknown|dormant|up)$ ]] && {
             _log "INFO: '${net_iface}' has IPv4 address: ${ip}"
             NIC_TO_IP["${net_iface}"]="${ip}"; }
 
