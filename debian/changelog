@@ -17,6 +17,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Improve how we find disk for SMART check
   * Improve the handling of network interface lookups
   * Clean-up the shutdown command
+  * Add/improve new autoshutdown exit codes
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 

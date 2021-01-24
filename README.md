@@ -76,3 +76,13 @@ Meaning of configuration setting:
 ---------------------------------
 For details of what value should be set in the autoshutdown.conf, and there
 meaning, see [autoshutdown.default](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default)
+
+
+Exit codes and meanings:
+------------------------
+0 - Script completed successfully.  
+142 - Shutdown mechanism failed to run correctly.  
+141 - Initialisation failed for a component.  
+140 - Invalid configuration value where no default is available.  
+139 - A required configuration file was not found.  
+138 - No valid network interface found on system.

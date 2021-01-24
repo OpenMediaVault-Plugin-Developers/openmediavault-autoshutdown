@@ -12,6 +12,7 @@ User=root
 Type=simple
 Restart=always
 RestartSec=3
+RestartPreventExitStatus=0 138 139 140 141 142
 PIDFile=/run/autoshutdown.pid
 ExecStart=/usr/sbin/autoshutdown
 
@@ -20,4 +21,3 @@ WantedBy=multi-user.target
 WantedBy=suspend.target
 WantedBy=hibernate.target
 WantedBy=hybrid-sleep.target
-

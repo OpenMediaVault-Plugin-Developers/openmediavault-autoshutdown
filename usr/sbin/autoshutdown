@@ -177,7 +177,7 @@ _shutdown() {
     # Write everything to disk/stick and shutdown, hibernate, ....
     sync && eval "${SHUTDOWNCOMMAND}" && exit 0
     _log "ERR: Shutdown failed. Exiting ..." force
-    exit 1
+    exit 142
 }
 
 
@@ -973,7 +973,7 @@ _check_config() {
             _log "WARNING: LOADPROCNAMES not set properly: ${LOADPROCNAMES}"
             _log "WARNING: LOADPROCNAMES must be in the format: [lproc1,lproc2,lproc3,...]"
             _log "ERR: Exiting ..."
-            exit 1
+            exit 140
         fi
 
         if [ "${TEMPPROCNAMES}" == "-" ]; then
@@ -986,7 +986,7 @@ _check_config() {
             _log "WARNING: TEMPPROCNAMES not set properly: ${TEMPPROCNAMES}"
             _log "WARNING: TEMPPROCNAMES must be in the format: [tproc1,tproc2,tproc3,...]"
             _log "ERR: Exiting ..."
-            exit 1
+            exit 140
         fi
 
         for var in "LPREPEAT" "TPREPEAT"; do
@@ -1159,7 +1159,7 @@ _check_networkconfig() {
 
     [ -z "${!NIC_TO_IP[*]}" ] && {
         _log "ERR: No valid network interface found, exiting ..."
-        exit 1; }
+        exit 138; }
     return 0
 }
 
@@ -1271,13 +1271,13 @@ _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
 
 [ ! -f "${CONFIG}" ] && {
     _log "ERR: Config file not found! Check ${CONFIG} exits ..." force
-    exit 1; }
+    exit 139; }
 . "${CONFIG}"
 _log "INFO: ${CONFIG} loaded" force
 
 [ ! -f "${DEFAULT_CONFIG}" ] && {
     _log "ERR: Default file not found! Check ${DEFAULT_CONFIG} exits ..." force
-    exit 1; }
+    exit 139; }
 . <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "DEFAULT_"$0}' "${DEFAULT_CONFIG}")
 _log "INFO: ${DEFAULT_CONFIG} loaded" force
 
@@ -1318,12 +1318,12 @@ _log "INFO: --------------- Initialise states --------------------"
 
 [ "${HDDIOCHECK}" == "true" ] && ! _check_hddio && {
     _log "ERR: Initialising _check_hddio(): Check using verbose mode"
-    exit 1; }
+    exit 141; }
 
 for net_iface in "${!NIC_TO_IP[@]}"; do
     [ "${ULDLCHECK}" == "true" ] && ! _check_ul_dl_rate "${net_iface}" && {
         _log "ERR: Initialising _check_ul_dl_rate(): check using verbose mode"
-        exit 1; }
+        exit 141; }
 done
 
 _log "INFO: ---------------- Script started ----------------------"
