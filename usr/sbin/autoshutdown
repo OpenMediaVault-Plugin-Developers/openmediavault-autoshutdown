@@ -869,7 +869,8 @@ _check_hddio() {
 # next check.
 #
 _check_smart() {
-    for hdd in /dev/sd[a-z]; do
+    for hdd in $(LC_ALL=C lsblk --nodeps --noheadings -o "name,type" |
+                 awk '/disk/{print $1}'); do
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Checking device for running smart tests: ${hdd}"
 

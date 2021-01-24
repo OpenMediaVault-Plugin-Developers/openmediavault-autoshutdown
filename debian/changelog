@@ -14,6 +14,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Tweak _check_net_status NSOCKETIGNORESELF set-up
   * Fix/rework outputs in _check_config
   * Add LPREPEAT and TPREPEAT to defaults
+  * Improve how we find disk for SMART check
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 
