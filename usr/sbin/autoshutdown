@@ -13,14 +13,6 @@
 
 set -euo pipefail
 
-######## VARIABLE DEFINITION ########
-# Variables that normal users should normally not define - PowerUsers can do it
-# here or add it to the config.
-LPREPEAT=5                # Number of test cycles for finding and active
-                          # LOADPROCNAMES-Process (default=5).
-TPREPEAT=5                # Number of test cycles for finding and active
-                          # TEMPPROCNAMES-Process (default=5).
-
 ############## LOGGING ##############
 DEBUG="false"             # Default debug logging mode (see VERBOSE).
 
@@ -1006,8 +998,22 @@ _check_config() {
             _log "ERR: Exiting ..."
             exit 1
         fi
+
+        for var in "LPREPEAT" "TPREPEAT"; do
+            local default_var="DEFAULT_${var}"
+            [ -z "${!var:-}" ] && {
+                declare -g "${var}"="${!default_var}"
+                continue; }
+
+             local default_var="DEFAULT_${var}"
+             [[ "${!var}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
+                _log "WARNING: ${var} not set properly: ${!var}"
+                _log "WARNING: ${var} must be in the range: '1' - '999'"
+                _log "WARNING: ${var} set to default: ${!default_var}"
+                declare -g "${var}"="${!default_var}"; }
+        done
     else
-        _log "WARNING: CHECKPROCNAMES is set to false. Not validating CHECKPROCNAMES and TEMPPROCNAMES"
+        _log "WARNING: CHECKPROCNAMES set false not validating LOADPROCNAMES, LPREPEAT, TEMPPROCNAMES and TPREPEAT"
     fi
 
     # Port-Numbers with at least 2 digits.

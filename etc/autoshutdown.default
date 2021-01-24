@@ -230,9 +230,21 @@ FAKE="false"
 ###############################################################################
 # Expert Settings
 
-# You should know, what you are doing
-# Add these settings to the "Expert Settings" textfield in the OMV-GUI
-# make sure # isn't the first character in the line if you add it.
+# You should know, what you are doing. Add these settings to the "Expert
+# Settings" textfield in the OMV-GUI make sure # isn't the first character in
+# the line if you add it.
+
+# -----------------------------------------------------------------------------
+
+LPREPEAT=5
+    # Number of test cycles for finding and active LOADPROCNAMES-Process
+    # allowed 1 - 999. (default=5)
+
+# -----------------------------------------------------------------------------
+
+TPREPEAT=5
+    # Number of test cycles for finding and active TEMPPROCNAMES-Process
+    # allowed 1 - 999. (default=5)
 
 # -----------------------------------------------------------------------------
 
