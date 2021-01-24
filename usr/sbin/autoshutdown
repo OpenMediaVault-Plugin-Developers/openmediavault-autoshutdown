@@ -166,28 +166,17 @@ _ping_range() {
 #                                   not real shutdown command just stop.
 #   Return     : None, script exit point.
 #
-# We've had no responses for the required number of consecutive scans defined in
-# $CYCLES shutdown and power off.
-#
 _shutdown() {
-    # When FAKE-Mode is on.
+    _log "INFO: Shutdown issued: '${SHUTDOWNCOMMAND}'" force
+
     [ "${FAKE}" == "true" ] && {
-        _log "INFO: Fake-shutdown issued: '${SHUTDOWNCOMMAND}' - Command is not executed because of Fake-Mode" force
+        _log "INFO: Shutdown command not executed in Fake-Mode" force
         _log "INFO: Autoshutdown will end here"
         exit 0; }
 
-    # Without Fake-Mode.
-    _log "INFO: Shutdown issued: '${SHUTDOWNCOMMAND}'" force
     # Write everything to disk/stick and shutdown, hibernate, ....
     sync && eval "${SHUTDOWNCOMMAND}" && exit 0
-    # Sleep 5 minutes to allow the /etc/init.d/autoshutdown to kill the script
-    # and give the right log-message. If we exit here immediately, there are
-    # errors in the log.
-    sleep 5m
-    # We need this just for debugging - the system should be shutdown here.
-    _log "INFO: 5 minutes are over" force
-    sleep 5m
-    _log "INFO: Another 5 minutes are over" force
+    _log "ERR: Shutdown failed. Exiting ..." force
     exit 1
 }
 

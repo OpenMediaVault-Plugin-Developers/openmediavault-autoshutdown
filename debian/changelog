@@ -16,6 +16,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Add LPREPEAT and TPREPEAT to defaults
   * Improve how we find disk for SMART check
   * Improve the handling of network interface lookups
+  * Clean-up the shutdown command
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 
