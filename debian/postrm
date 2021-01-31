@@ -28,7 +28,7 @@ remove_action() {
     dpkg-trigger update-fixperms
 }
 
-case "$1" in
+case "${1}" in
     purge)
         remove_action
         # Remove the configuration data
@@ -42,7 +42,7 @@ case "$1" in
     ;;
 
     *)
-        echo "postrm called with unknown argument '$1'" >&2
+        echo "postrm called with unknown argument '${1}'" >&2
         exit 1
     ;;
 esac

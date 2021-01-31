@@ -13,3 +13,6 @@ Files: /var/www/openmediavault/images/autoshutdown.png
 Copyright: IcoMoon <http://www.icomoon.io>
 Homepage: http://www.icomoon.io
 License: GPL-3
+
+License: GPL-3
+    /usr/share/common-licenses/GPL-3
