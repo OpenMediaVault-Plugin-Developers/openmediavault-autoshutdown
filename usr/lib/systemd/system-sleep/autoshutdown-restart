@@ -1,0 +1,20 @@
+#!/bin/bash
+# Make sure autoshutdown in stopped if it was running before a suspend/hibernate
+# (It may not be autoshutdown that caused the state change) and if not active on
+# a resume start the autoshutdown service.
+case "${1}" in
+    pre)
+        if systemctl is-active --quiet autoshutdown.service; then
+            systemctl --no-block stop autoshutdown.service
+            logger -t "autoshutdown[${$}]" -p "syslog.info" \
+                "${USER}: INFO: 'autoshutdown-restart(): Autoshutdown stopping'"
+        fi
+        ;;
+    post)
+        if ! systemctl is-active --quiet autoshutdown.service; then
+            systemctl --no-block start autoshutdown.service
+            logger -t "autoshutdown[${$}]" -p "syslog.info" \
+                "${USER}: INFO: 'autoshutdown-restart(): Autoshutdown starting'"
+        fi
+        ;;
+esac

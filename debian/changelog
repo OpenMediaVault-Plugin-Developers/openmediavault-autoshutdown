@@ -18,6 +18,7 @@ openmediavault-autoshutdown (5.1.7) stable; urgency=low
   * Improve the handling of network interface lookups
   * Clean-up the shutdown command
   * Add/improve new autoshutdown exit codes
+  * Rework etc/pm/sleep.d to usr/lib/systemd/system-sleep
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Jan 2021 14:13:12 +0000
 
