@@ -42,6 +42,11 @@ case "${1}" in
             omv-confdbadm migrate "conf.service.autoshutdown" "${2}"
         fi
 
+        if dpkg --compare-versions "${2}" lt-nl "5.1.7"; then
+            echo "Removing /etc/pm/sleep.d/autoshutdown-restart"
+            rm -f "/etc/pm/sleep.d/autoshutdown-restart"
+        fi
+
         # Deploy the configuration for autoshutdown services.
         echo "Deploying autoshutdown service configuration"
         LANG=C.UTF-8 omv-salt deploy run --no-color --quiet autoshutdown

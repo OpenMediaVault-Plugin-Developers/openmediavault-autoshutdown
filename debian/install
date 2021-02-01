@@ -1,5 +1,6 @@
 etc/* etc
 srv/* srv
+usr/lib/systemd/system-sleep/* usr/lib/systemd/system-sleep/
 usr/share/openmediavault/* usr/share/openmediavault
 usr/sbin/* usr/sbin
 var/www/openmediavault/* var/www/openmediavault

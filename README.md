@@ -1,5 +1,5 @@
-Autoshutdown-Plugin for OpenMediaVault
-======================================
+openmediavault-autoshutdown plugin
+==================================
 
 __Bugs and feature-requests:__  
 Please provide a _full_ DEBUG- or FAKE-Mode-log with the git issue.
@@ -56,7 +56,7 @@ further checks needed, the script sleeps until 8pm.
 It is 20:01 (8:01pm) now and Autoshutdown does further checks:
 
 Prio 0: UPHOURS  
-The server is not in the (forced) stayup-range (06::00..20:00) => negative, next check
+The server is not in the (forced) stay-up-range (06::00..20:00) => negative, next check
 
 Prio 1: IPs  
 Let's assume, that only IP 137 is online, so the check is negative, next check
@@ -69,6 +69,20 @@ Maybe a DL is running with 238 kB/s over the last minute. The check is positive,
 Autoshutdown goes to sleep for x seconds.
 
 Prio 4 and 6:  
-not needed, because a check with a higher priority is positive
+Not needed, because a check with a higher priority is positive
 
-For details of seting up the autoshutdown.conf see [autoshutdown.default](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default)
+
+Meaning of configuration setting:
+---------------------------------
+For details of what value should be set in the autoshutdown.conf, and there
+meaning, see [autoshutdown.default](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default)
+
+
+Exit codes and meanings:
+------------------------
+0 - Script completed successfully.  
+142 - Shutdown mechanism failed to run correctly.  
+141 - Initialisation failed for a component.  
+140 - Invalid configuration value where no default is available.  
+139 - A required configuration file was not found.  
+138 - No valid network interface found on system.

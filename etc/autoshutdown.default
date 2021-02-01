@@ -230,9 +230,21 @@ FAKE="false"
 ###############################################################################
 # Expert Settings
 
-# You should know, what you are doing
-# Add these settings to the "Expert Settings" textfield in the OMV-GUI
-# make sure # isn't the first character in the line if you add it.
+# You should know, what you are doing. Add these settings to the "Expert
+# Settings" textfield in the OMV-GUI make sure # isn't the first character in
+# the line if you add it.
+
+# -----------------------------------------------------------------------------
+
+LPREPEAT=5
+    # Number of test cycles for finding and active LOADPROCNAMES-Process
+    # allowed 1 - 999. (default=5)
+
+# -----------------------------------------------------------------------------
+
+TPREPEAT=5
+    # Number of test cycles for finding and active TEMPPROCNAMES-Process
+    # allowed 1 - 999. (default=5)
 
 # -----------------------------------------------------------------------------
 
@@ -243,11 +255,11 @@ NSOCKETIGNORESELF="false"
 # -----------------------------------------------------------------------------
 
 SHUTDOWNCOMMAND="shutdown -h now"
-    # pm-hibernate      : Puts PC into hibernate-mode.
-    # pm-suspend        : Puts PC into suspend-mode.
-    # pm-suspend-hybrid : Puts PC into suspend-hybrid-mode.
-    # shutdown -h +5    : Shuts the PC down 5 min after shutdown-command.
-    # shutdown -h now   : Shuts the PC down immediately. (default)
+    # systemctl hibernate : Puts PC into hibernate-mode.
+    # systemctl suspend   : Puts PC into suspend-mode.
+    # systemctl hybrid    : Puts PC into hybrid-mode.
+    # shutdown -h +5      : Shuts the PC down 5 min after shutdown-command.
+    # shutdown -h now     : Shuts the PC down immediately. (default)
 
     # For more information and how to set up hibernate and suspend, look here:
     # http://wiki.debian.org/Suspend
