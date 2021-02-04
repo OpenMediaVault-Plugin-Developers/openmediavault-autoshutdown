@@ -47,7 +47,7 @@ readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}"
 #
 _log() {
     local -r user="$(id -nu "$(< "/proc/self/loginuid")" 2>/dev/null || true)"
-    local tag; tag="$(basename "${0}")"
+    local -r tag="$(basename "${0}")"
 
     [[ "${1}" =~ ^([A-Za-z]*):\ *(.*) ]] && {
        local -r priority=${BASH_REMATCH[1]}
@@ -56,9 +56,9 @@ _log() {
     [ "${FAKE:-}" == "true" ] && message="FAKE-Mode: ${message}"
     message="${user:-${USER}}: ${priority}: '${message}'"
 
-    [ "${LOG_STDOUT:-"true"}" == "true" ] &&
-        echo "$(date '+%b %e %H:%M:%S') $(hostname -s
-                ) ${tag}}[${$}]: ${message}"
+    [ "${LOG_STDOUT:-}" != "false" ] &&
+        echo "$(date "+%b %e %H:%M:%S") $(hostname -s
+                ) ${tag}[${$}]: ${message}"
 
     [[ "${SYSLOG:-}" == "true" || "${2:-}" == "force" ]] &&
         logger --id="${$}" -t "${tag}" -p "syslog.${priority,,}" "${message}"
@@ -73,11 +73,11 @@ _log() {
 #   Parameters : $1 : The network interface that is being worked on.
 #              : $2 : The network interface IP address.
 #              : $3 : IP addresses found for all network interfaces.
-#   Globals    : $PINTLIST       : A file reference of IPs to be checked
-#                                  (expert setting).
-#              : $RANGE          : Details of IPs to be checked.
-#              : $PINGLIST_IFACE : Associative array for storing network
-#                                  interface IP addresses.
+#   Globals    : $PINTLIST       : File reference of IP's/FQDN's to be checked
+#                                  (expert setting overrides $RANGE).
+#              : $RANGE          : Details of IP's/FQDN's to be checked.
+#              : $PINGLIST_IFACE : Associative array storing network interface
+#                                  IP addresses.
 #   Return     : Number of active IP on network interfaces.
 #
 _ping_range() {
@@ -167,10 +167,10 @@ _ping_range() {
 #   Return     : None, script exit point.
 #
 _shutdown() {
-    _log "INFO: Shutdown issued: '${SHUTDOWNCOMMAND}'" force
+    _log "INFO: Shutdown issued: ${SHUTDOWNCOMMAND}" force
 
     [ "${FAKE}" == "true" ] && {
-        _log "INFO: Shutdown command not executed in Fake-Mode" force
+        _log "INFO: Shutdown command not executed in FAKE-Mode" force
         _log "INFO: Autoshutdown will end here"
         exit 0; }
 
@@ -185,16 +185,15 @@ _shutdown() {
 #
 #   Name       : _check_processes
 #   Parameters : None
-#   Globals    : $LOADPROCNAMES : Command names of processes with load
-#                                 dependent children.
-#              : $TEMPPROCNAMES : Command names of processes only started when
-#                                 active.
+#   Globals    : $LOADPROCNAMES : Names of processes with load dependent
+#                                 children.
+#              : $TEMPPROCNAMES : Names of processes only stated when active.
 #   Return     : 0         : If no active process has been found.
 #              : 1 or more : If at least one active process has been found.
 #
 _check_processes() {
     # Check for each given command name in LOADPROCNAMES if it is currently
-    # stated active in "top". It has been found, that smbd, proftpd, nsfd,
+    # stated active in "top". If it has been found, that smbd, proftpd, nsfd,
     # ... There are processes always present in "ps" or "top" output (This
     # could be due to the "daemon" mechanism.) So the only chance to identify
     # there is something happening with these processes, is to check if "top"
@@ -221,8 +220,8 @@ _check_processes() {
     # Check for each given command name in TEMPPROCNAMES if it is currently
     # stated present in "top". It is not guaranteed, that top states these
     # services active, as they usually wait for user input, so no "-i"
-    # parameter on the command line, but shear presence of the process is
-    # enough.
+    # parameter is used on the command line, but the shear presence of the
+    # process is enough.
     local num_temp_proc=0
     for process in ${TEMPPROCNAMES//,/ }; do
         local tp=0
@@ -253,11 +252,11 @@ _check_processes() {
 
     local active=$(( num_load_proc + num_temp_proc ))
     local msg="INFO: Found ${active} process(es) active -> "
-    if [ "${active}" -eq 0 ]; then
+    [ "${active}" -eq 0 ] && {
         _log "${msg}next check"
-    else
-        _log "${msg}no shutdown"
-    fi
+        return 0; }
+
+    _log "${msg}no shutdown"
     return "${active}"
 }
 
@@ -267,8 +266,8 @@ _check_processes() {
 #   Name       : _check_plugin
 #   Parameters : None
 #   Globals    : None
-#   Return     : 0 : If file has not been found.
-#              : 1 : If file has been found.
+#   Return     : 0 : If file specified by the plugin has not been found.
+#              : 1 : If file specified by the plugin has been found.
 #
 # With this plugin-system we can check if a specific file exists. If it exists,
 # the machine won't shutdown. You find sample plugins in: /etc/autoshutdown.d
@@ -332,9 +331,8 @@ _check_plugin() {
 #   Name       : _check_loadaverage
 #   Parameters : None
 #   Globals    : $LOADAVERAGE : Integer load average.
-#   Return     : 1 : If load average is higher (greater) than LOADAVERAGE, no
-#                    shutdown.
-#              : 0 : If load average is lower (less) than LOADAVERAGE.
+#   Return     : 0 : If load average is lower than LOADAVERAGE, shutdown.
+#              : 1 : If load average is higher than LOADAVERAGE, no shutdown.
 #
 # Checks if the load average is higher than LOADAVERAGE over the last 1 minute.
 # If yes -> no shutdown, next cycle. If no  -> next check and shutdown if all
@@ -345,8 +343,7 @@ _check_loadaverage() {
     local -r loadavg_line="$(< "/proc/loadavg")"
     # Get load average in decimal notation.
     local -r loadavg_dec="$(awk '{print $1}' <<< "${loadavg_line}")"
-    # Convert to integer value by removing decimal point and assuming two fixed
-    # decimal places.
+    # Convert to integer by removing decimal point, assumes two decimal places.
     local -r loadavg="$(sed 's/[.]//;s/^0*//g;s/^$/0/' <<< "${loadavg_dec}")"
 
     [ "${DEBUG}" == "true" ] && {
@@ -374,8 +371,7 @@ _check_loadaverage() {
 #              : $NSOCKETIGNORESELF : If set will ignore the network interface
 #                                     IP address as a connection.
 #   Return     : 0         : If no active socket has been found, shutdown.
-#              : 1 or more : If at least one active socket has been found, no
-#                            shutdown.
+#              : 1 or more : If an active socket has been found, no shutdown.
 #
 _check_net_status() {
     local -r net_iface="${1}"
@@ -386,8 +382,7 @@ _check_net_status() {
 
     _log "INFO: Check connections for: ${net_iface}"
 
-    # Check for each given socket number in NSOCKETNUMBERS to see if it is
-    # currently stated active by the ss command.
+    # For each socket see if it is stated active using ss command.
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
         local lines; lines="$(LC_ALL=C
             ss -n |
@@ -448,8 +443,7 @@ _check_net_status() {
 #   Parameters : None
 #   Globals    : $NSOCKETNUMBERS : Socket number to check for activity.
 #   Return     : 0         : If no active socket has been found, shutdown.
-#              : 1 or more : If at least one active socket has been found,
-#                            no shutdown.
+#              : 1 or more : If an active socket is found, no shutdown.
 #
 _check_docker_status() {
     command -v docker &>/dev/null || return 0
@@ -662,17 +656,15 @@ _check_ul_dl_rate() {
 #   Parameters : None
 #   Globals    : $UPHOURS         : Range of hours, where system should go to
 #                                   sleep. e.g. 06:00..20:00.
-#              : $OVERRIDEUPHOURS : Range of hours overriding default UPHOURS
+#              : $OVERRIDEUPHOURS : Range of hours overriding default $UPHOURS
 #                                   for days of the week. e.g.
 #                                   Sat:00:00..23:59,Sun:00:00..21:59
-#   Return     : 0 : If actual value of hours is in DOWN range, ready for
-#                    shutdown.
-#              : 1 : If actual value of hours is in UP range, sleep till DOWN
-#                    range, block shutdown.
+#   Return     : 0 : If the time is in the DOWN range, ready for shutdown.
+#              : 1 : If the time is in the UP range, sleep till DOWN time.
 #
 _check_clock() {
     local -r epoch_sec="${EPOCHSECONDS}"
-    local -r current_time="$(date -d @"${epoch_sec}" +%R)"
+    local -r current_time="$(date -d @"${epoch_sec}" "+%R")"
 
     local -r overide_uphours="${OVERRIDEUPHOURS:-}"
     local up_hours="${UPHOURS}"
@@ -693,22 +685,21 @@ _check_clock() {
     local -r range_start="$(date -f - "+%R" <<< "${up_hours%..*}")"
     local -r range_end="$(date -f - "+%R" <<< "${up_hours#*..}")"
 
-    local epoch_start; epoch_start="$(date -f - +%s <<< \
-            "$(date -d @"$((epoch_sec))" +%D) ${range_start}")"
-    local epoch_end; epoch_end="$(date -f - +%s <<< \
-            "$(date -d @"$((epoch_sec))" +%D) ${range_end}")"
-    # Fix epoch if we are wrapped around midnight applying a lexicographic
-    # comparison.
+    local epoch_start; epoch_start="$(date -f - "+%s" <<< \
+            "$(date -d @"$((epoch_sec))" "+%D") ${range_start}")"
+    local epoch_end; epoch_end="$(date -f - "+%s" <<< \
+            "$(date -d @"$((epoch_sec))" "+%D") ${range_end}")"
+    # Allow epoch to wrapped around midnight using a lexicographic comparison.
     [[ "${range_start}" > "${range_end}" ]] &&
         if [[ "${current_time}" > "${range_start}" ||
               "${current_time}" == "${range_start}" ||
               "${current_time}" > "${range_end}" ||
               "${current_time}" == "${range_end}" ]]; then
-            epoch_end="$(date -f - +%s <<< \
-                "$(date -d @"$((epoch_sec + 86400))" +%D) ${range_end}")"
+            epoch_end="$(date -f - "+%s" <<< \
+                "$(date -d @"$((epoch_sec + 86400))" "+%D") ${range_end}")"
         else
-            epoch_start="$(date -f - +%s <<< \
-                "$(date -d @"$((epoch_sec - 86400))" +%D) ${range_start}")"
+            epoch_start="$(date -f - "+%s" <<< \
+                "$(date -d @"$((epoch_sec - 86400))" "+%D") ${range_start}")"
         fi
 
     # If it negative or zero we already in the shutdown window.
@@ -723,8 +714,7 @@ _check_clock() {
        return 0; }
 
     [ "${DEBUG}" == "true" ] && _log "${msg}stay up"
-    _log "INFO: System is in stay up range"
-    _log "INFO: Sleeping until: $(
+    _log "INFO: System is in stay up range. Sleeping until: $(
             date -d @"$((epoch_sec + seconds_to_sleep))"
                 ) -> ${seconds_to_sleep}s"
     sleep "${seconds_to_sleep}"
@@ -739,16 +729,15 @@ _check_clock() {
 #   Globals    : $HDDIO_RATE   : Rate in kB/s of HDD-IO.
 #              : $P_HDDIO_DEVS : Associative array for storing read, wrtn and
 #                                epoch values.
-#   Return     : 0 : If actual value of hddio is lower than the defined value,
-#                    ready for shutdown.
-#              : 1 : If actual value of hddio is higher than the defined value,
+#   Return     : 0 : If value of hdd IO is lower than the defined value, ready
+#                    for shutdown.
+#              : 1 : If value of hdd IO is higher than the defined value,
 #                    no shutdown.
 #
 _check_hddio() {
     local rvalue=0
 
-    [ "${DEBUG}" == "true" ] &&
-        _log "DEBUG: HDDIO_RATE: ${HDDIO_RATE} kB/s"
+    [ "${DEBUG}" == "true" ] && _log "DEBUG: HDDIO_RATE: ${HDDIO_RATE} kB/s"
 
     local -r epoch_sec="${EPOCHSECONDS}"
     local -r last_checked_sec=$((
@@ -812,8 +801,8 @@ _check_hddio() {
             _log "DEBUG: diff_hddio_read: ${diff_hddio_read}"
             _log "DEBUG: t_hddio_write: ${t_hddio_write}"
             _log "DEBUG: diff_hddio_write: ${diff_hddio_write}"
-            _log "DEBUG: Check: 'hdd_in: ${hdd_in}' <= 't_hddio_read: ${t_hddio_read}'"
-            _log "DEBUG: Check: 'hdd_out: ${hdd_out}' <= 't_hddio_write: ${t_hddio_write}'"; }
+            _log "DEBUG: Check: hdd_in: ${hdd_in} <= t_hddio_read: ${t_hddio_read}"
+            _log "DEBUG: Check: hdd_out: ${hdd_out} <= t_hddio_write: ${t_hddio_write}"; }
 
         # Store current value.
         P_HDDIO_DEVS["${hdd}_r"]="${hdd_in}"
@@ -940,11 +929,11 @@ _check_config() {
             UPHOURS="${DEFAULT_UPHOURS}"; }
 
         if [ -n "${OVERRIDEUPHOURS:-}" ]; then
-           local -r short_days="$(locale abday | sed 's:;:|:g')"
-           if [[ ! "${OVERRIDEUPHOURS}" =~ ^(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))(,(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?))))*$ ]]; then
+            local -r short_days="$(locale abday | sed 's:;:|:g')"
+            if [[ ! "${OVERRIDEUPHOURS}" =~ ^(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))(,(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?))))*$ ]]; then
                 _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
                 unset OVERRIDEUPHOURS
-           else
+            else
                 for override in ${OVERRIDEUPHOURS//,/ }; do
                     [[ "${override}" =~ ^(${short_days}):((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))$ &&
                         "${BASH_REMATCH[3]}" == "${BASH_REMATCH[7]}" ]] && {
@@ -963,12 +952,12 @@ _check_config() {
     if [ "${CHECKPROCNAMES}" == "true" ]; then
         local -r regex="^([A-Za-z0-9_.-]+)+(,[A-Za-z0-9_.-]+)*$"
 
-        if [ "${LOADPROCNAMES}" == "-" ]; then
-            _log "INFO: LOADPROCNAMES disabled, load processes not checked"
-            LOADPROCNAMES=""
-        elif [ -z "${LOADPROCNAMES}" ]; then
+        if [ -z "${LOADPROCNAMES}" ]; then
             _log "INFO: LOADPROCNAMES set to default: ${DEFAULT_LOADPROCNAMES}"
             LOADPROCNAMES="${DEFAULT_LOADPROCNAMES}"
+        elif [ "${LOADPROCNAMES}" == "-" ]; then
+            _log "INFO: LOADPROCNAMES disabled, load processes not checked"
+            LOADPROCNAMES=""
         elif [[ ! "${LOADPROCNAMES}" =~ ${regex} ]]; then
             _log "WARNING: LOADPROCNAMES not set properly: ${LOADPROCNAMES}"
             _log "WARNING: LOADPROCNAMES must be in the format: [lproc1,lproc2,lproc3,...]"
@@ -976,12 +965,12 @@ _check_config() {
             exit 140
         fi
 
-        if [ "${TEMPPROCNAMES}" == "-" ]; then
-            _log "INFO: TEMPPROCNAMES disabled, temp processes not checked"
-            TEMPPROCNAMES=""
-        elif  [ -z "${TEMPPROCNAMES}" ]; then
+        if  [ -z "${TEMPPROCNAMES}" ]; then
             _log "INFO: TEMPPROCNAMES set to default: ${DEFAULT_TEMPPROCNAMES}"
             TEMPPROCNAMES="${DEFAULT_TEMPPROCNAMES}"
+        elif [ "${TEMPPROCNAMES}" == "-" ]; then
+            _log "INFO: TEMPPROCNAMES disabled, temp processes not checked"
+            TEMPPROCNAMES=""
         elif [[ ! "${TEMPPROCNAMES}" =~ ${regex} ]]; then
             _log "WARNING: TEMPPROCNAMES not set properly: ${TEMPPROCNAMES}"
             _log "WARNING: TEMPPROCNAMES must be in the format: [tproc1,tproc2,tproc3,...]"
@@ -1059,7 +1048,7 @@ _check_config() {
         [[ "${HDDIO_RATE}" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
             _log "WARNING: HDDIO_RATE not set properly: ${HDDIO_RATE}"
             _log "WARNING: HDDIO_RATE only '1' - '999999' kB/s is allowed"
-            _log "WARNING: Set HDDIO_RATE to default: ${DEFAULT_HDDIO_RATE}"
+            _log "WARNING: HDDIO_RATE set to default: ${DEFAULT_HDDIO_RATE}"
             HDDIO_RATE="${DEFAULT_HDDIO_RATE}"; }
     else
         _log "WARNING: HDDIOCHECK set false not validating HDDIO_RATE"
@@ -1086,7 +1075,7 @@ _check_config() {
     # LOADAVERAGE (max 3 digits).
     if [ "${LOADAVERAGECHECK}" == "true" ]; then
         [[ "${LOADAVERAGE}" =~ ^([1-9]|[1-9][0-9]{1,2})$ ]] || {
-            _log "WARNING: LOADAVERAGE: not set properly: ${LOADAVERAGE}"
+            _log "WARNING: LOADAVERAGE not set properly: ${LOADAVERAGE}"
             _log "WARNING: LOADAVERAGE must be a maximum of 3 digits."
             _log "WARNING: LOADAVERAGE set to default: ${DEFAULT_LOADAVERAGE}"
             LOADAVERAGE="${DEFAULT_LOADAVERAGE}"; }
@@ -1095,12 +1084,6 @@ _check_config() {
     fi
 
     # SHUTDOWNCOMMAND - Check acpi power states with pm-is-supported.
-    [ -z "${SHUTDOWNCOMMAND}" ] && {
-        _log "WARNING: No shutdown command set."
-        _log "WARNING: Setting it to: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }
-
-    _log "INFO: SHUTDOWNCOMMAND is set to: ${SHUTDOWNCOMMAND}"
     _log "INFO: Kernel $(uname -r) supports power management modes:"
     declare -A pm_map=( ["suspend"]="--suspend:suspend to RAM" \
                         ["hibernate"]="--hibernate:suspend to DISK" \
@@ -1109,12 +1092,21 @@ _check_config() {
         pm-is-supported "${pm_map["${check}"]%:*}" &&
             _log "INFO: Kernel supports: ${check^^} (${pm_map["${check}"]#*:})"
     done
+    if [ -z "${SHUTDOWNCOMMAND}" ]; then
+        _log "WARNING: SHUTDOWNCOMMAND not set"
+        _log "WARNING: SHUTDOWNCOMMAND set to default: ${DEFAULT_SHUTDOWNCOMMAND}"
+        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
     # Check, if shutdown hybrid, suspend and hibernate are supported.
-    [[ "${SHUTDOWNCOMMAND}" =~ ^systemctl\ (hybrid|suspend|hibernate)$ ]] && {
-        pm-is-supported "${pm_map["${BASH_REMATCH[1]}"]%:*}" || {
-        _log "WARNING: 'SHUTDOWNCOMMAND=\"${SHUTDOWNCOMMAND}\"' not supported!"
-        _log "WARNING: Setting it to default: ${DEFAULT_SHUTDOWNCOMMAND}"
-        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"; }; }
+    elif [[ "${SHUTDOWNCOMMAND}" =~ \
+            ^systemctl\ +(hybrid|suspend|hibernate)$ ]] &&
+         ! pm-is-supported \
+            "${pm_map["${BASH_REMATCH[1]}"]%:*}" 2>/dev/null; then
+        _log "WARNING: SHUTDOWNCOMMAND not supported: ${SHUTDOWNCOMMAND}"
+        _log "WARNING: SHUTDOWNCOMMAND set to default: ${DEFAULT_SHUTDOWNCOMMAND}"
+        SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
+    else
+        _log "INFO: SHUTDOWNCOMMAND is set to: ${SHUTDOWNCOMMAND}"
+    fi
 
     return 0
 }
@@ -1175,7 +1167,7 @@ _check_networkconfig() {
 #              : 1 : If at least one active host has been found, no shutdown.
 #
 _check_system_active() {
-    # PRIO 0: Check if time is within the STAYUP-phase e.g. 06:00 - 20:00.
+    # PRIO 0: Check if time is within the STAYUP range e.g. 06:00 - 20:00.
     [ "${CHECKCLOCKACTIVE}" == "true" ] && {
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Calling: _check_clock()"
@@ -1289,8 +1281,7 @@ _check_config
 
 # Enable / disable check here.
 [ "${ENABLE}" == "false" ] && {
-    _log "INFO: Script disabled by: ${CONFIG}"
-    _log "INFO: Nothing to do. Exiting here ..."
+    _log "INFO: Script disabled, exiting here ..."
     exit 0; }
 
 _check_networkconfig
@@ -1306,7 +1297,7 @@ _check_networkconfig
                "LOADAVERAGECHECK:N/A" "LOADAVERAGE:N/A" "LOADAVERAGE:N/A" \
                "CHECKPROCNAMES:N/A" "LOADPROCNAMES:disabled" \
                "TEMPPROCNAMES:disabled" "PLUGINCHECK:N/A"; do
-        value=${var%:*}
+        value="${var%:*}"
         _log "DEBUG: ${value}: ${!value:-${var#*:}}"
     done
     _log "DEBUG: Available plugins found in: /etc/autoshutdown.d"
@@ -1328,28 +1319,23 @@ done
 
 _log "INFO: ---------------- Script started ----------------------"
 
-if [ "${FAKE}" == "true" ]; then
-    _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
-    sleep 1
-else
-    _log "INFO: Waiting 5 minutes until the first check"
-    sleep 5m
-fi
+[ "${FAKE}" == "true" ] && { sleep_time=1; sleep_string="second"; }
+_log "INFO: Waiting ${sleep_time:-5} ${sleep_string:-"minutes"} until the first check"
+sleep "${sleep_time:-5m}"
 
 for net_iface in "${!NIC_TO_IP[@]}"; do
-    _log "INFO: Checking NIC(s): ${net_iface} - ${NIC_TO_IP[${net_iface}]}"
+    _log "INFO: Checking network interface: ${net_iface} - ${NIC_TO_IP[${net_iface}]}"
 done
 
-_log "INFO: ${CYCLES} test cycles until shutdown is issued"
+_log "INFO: ${CYCLES} cycles until shutdown is issued"
 # Initialise the loop counter.
 FCNT="${CYCLES}"
 while : ; do
     _log "INFO: ------------------------------------------------------"
     _log "INFO: New supervision cycle started, checking system activity"
-
     # Check _check_system_active, to decide if we should shutdown or not.
     if _check_system_active; then
-        # Nothing found so subtract one for FCNT and check can we shutdown.
+        # Nothing found so subtract one for FCNT and check if we can shutdown.
         FCNT=$(( FCNT - 1 ))
         _log "INFO: All active check passed, ${FCNT} cycles until shutdown..."
         [ "${FCNT}" -eq 0 ] && _shutdown
