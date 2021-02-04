@@ -160,7 +160,6 @@ TEMPPROCNAMES="in.tftpd"
     # The following scheme is mandatory for both LOADPROCNAMES and
     # TEMPPROCNAMES: process1,process2, all processes separated by comma ','.
 
-
 # -----------------------------------------------------------------------------
 
 PLUGINCHECK="false"
@@ -221,9 +220,8 @@ VERBOSE="false"
 FAKE="false"
     # Set it to "true" for a Fake-Mode: The script runs dry: You can test what
     # happens, without shutting down your PC. This mode includes VERBOSE-output
-    # automatically, even if VERBOSE is set to "false". Setting it to "false"
-    # or if it is not set, the script will run normally. With Fake-Mode ON, the
-    # script doesn't sleep 5 minutes after it starts, so you can see what
+    # automatically, even if VERBOSE is set to "false". With Fake-Mode ON, the
+    # script does not sleep 5 minutes after it starts, so you can see what
     # happens immediately. (default="false")
 
 
