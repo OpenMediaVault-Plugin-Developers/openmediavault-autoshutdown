@@ -1332,7 +1332,7 @@ if [ "${FAKE}" == "true" ]; then
     _log "INFO: FAKE-Mode in on, waiting 1 second for first check"
     sleep 1
 else
-    _log "INFO: Waiting 5 minuets until the first check"
+    _log "INFO: Waiting 5 minutes until the first check"
     sleep 5m
 fi
 
