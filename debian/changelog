@@ -1,3 +1,12 @@
+openmediavault-autoshutdown (5.1.8) stable; urgency=low
+
+  * Fix typo in script
+  * Check service is enabled in autoshutdown-restart post and move
+  * Documentation implements
+  * Small set of script imporvments
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 04 Feb 2021 10:00:01 +0000
+
 openmediavault-autoshutdown (5.1.7) stable; urgency=low
 
   * Clean-up log function and fix journalctl output

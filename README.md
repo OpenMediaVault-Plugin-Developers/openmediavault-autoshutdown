@@ -1,15 +1,16 @@
 openmediavault-autoshutdown plugin
 ==================================
 
-__Bugs and feature-requests:__  
-Please provide a _full_ DEBUG- or FAKE-Mode-log with the git issue.
+__Bugs reports:__  Please provide a _full_ Verbose or FAKE-Mode log with the
+git issue.
 
 
 How it works:
 -------------
-Autoshutdown, does some checks on the network or on the server itself. A
-"cycle" is a set of checks. Between the cycles goes into sleep for x
-seconds. The checks have a different priority from 0 = high to 6 = low:
+Autoshutdown, does some checks on the network and on the server status. A
+"cycle" is a set of checks run on the server. Between the cycles the script
+goes into sleep for x seconds. The checks run on the system have a different
+priority from 0 = high to 6 = low:
 
 0. Stay up-range: UPHOURS (Server in the time range, where it should be online)
 1. Check for active IPs over network interfaces
@@ -72,14 +73,14 @@ Prio 4 and 6:
 Not needed, because a check with a higher priority is positive
 
 
-Meaning of configuration setting:
----------------------------------
+Configuration options details:
+------------------------------
 For details of what value should be set in the autoshutdown.conf, and there
 meaning, see [autoshutdown.default](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/blob/master/etc/autoshutdown.default)
 
 
-Exit codes and meanings:
-------------------------
+Exit code details:
+-------------------
 0 - Script completed successfully.  
 142 - Shutdown mechanism failed to run correctly.  
 141 - Initialisation failed for a component.  

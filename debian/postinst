@@ -47,6 +47,11 @@ case "${1}" in
             rm -f "/etc/pm/sleep.d/autoshutdown-restart"
         fi
 
+        if dpkg --compare-versions "${2}" lt-nl "5.1.8"; then
+            echo "Removing /usr/lib/systemd/system-sleep/autoshutdown-restart"
+            rm -f "/usr/lib/systemd/system-sleep/autoshutdown-restart"
+        fi
+
         # Deploy the configuration for autoshutdown services.
         echo "Deploying autoshutdown service configuration"
         LANG=C.UTF-8 omv-salt deploy run --no-color --quiet autoshutdown

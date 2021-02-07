@@ -11,7 +11,8 @@ case "${1}" in
         fi
         ;;
     post)
-        if ! systemctl is-active --quiet autoshutdown.service; then
+        if systemctl is-enabled --quiet autoshutdown.service &&
+           ! systemctl is-active --quiet autoshutdown.service; then
             systemctl --no-block start autoshutdown.service
             logger -t "autoshutdown[${$}]" -p "syslog.info" \
                 "${USER}: INFO: 'autoshutdown-restart(): Autoshutdown starting'"
