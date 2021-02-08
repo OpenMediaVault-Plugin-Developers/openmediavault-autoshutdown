@@ -1125,7 +1125,7 @@ _check_config() {
 #
 _check_networkconfig() {
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: Finding available network interfaces and there IPv4 addresses"
+    _log "INFO: Finding available network interfaces and their IPv4 addresses"
 
     local -r net_ifaces="${FORCE_NIC:-"en,eth,wlan,bond,usb"}"
     local net_iface ip; while read -r net_iface ip; do
@@ -1337,7 +1337,7 @@ while : ; do
     if _check_system_active; then
         # Nothing found so subtract one for FCNT and check if we can shutdown.
         FCNT=$(( FCNT - 1 ))
-        _log "INFO: All active check passed, ${FCNT} cycles until shutdown..."
+        _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
         [ "${FCNT}" -eq 0 ] && _shutdown
     else
         # Reset count.
