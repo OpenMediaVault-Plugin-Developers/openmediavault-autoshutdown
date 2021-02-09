@@ -1,16 +1,16 @@
 openmediavault-autoshutdown plugin
 ==================================
 
-__Bugs reports:__  Please provide a _full_ Verbose or FAKE-Mode log with the
+__Bugs reports:__  Please provide a _full_ verbose or FAKE-Mode log with the
 git issue.
 
 
 How it works:
 -------------
-Autoshutdown, does some checks on the network and on the server status. A
-"cycle" is a set of checks run on the server. Between the cycles the script
-goes into sleep for x seconds. The checks run on the system have a different
-priority from 0 = high to 6 = low:
+Autoshutdown, checks status of the network and the server status its self. The
+script runs a set of checks on the server known as a "cycle". Between the
+cycles the script goes into sleep for x seconds. The checks run on the system
+have a different priority from 0 = highest to 6 = lowest:
 
 0. Stay up-range: UPHOURS (Server in the time range, where it should be online)
 1. Check for active IPs over network interfaces
@@ -27,7 +27,7 @@ priority from 0 = high to 6 = low:
 If a check with a higher priority gives back a positive result, then no check
 with a lower priority is executed. The script reduces the cycles by one and
 goes to sleep for x seconds until the next cycle. If all cycles are 0 (zero)
-the server is shutting down.
+the server is shutdown.
 
 Let's have a look at a simple example:
 
@@ -50,27 +50,26 @@ Let's have a look at a simple example:
 
 It is 10:00 am. Autoshutdown does the first check:
 
-Prio 0: UPHOURS  
+__Prio 0:__ UPHOURS  
 They are set to "06:00..20:00" which means 06:00 - 20:00 (6am to 8pm). No
 further checks needed, the script sleeps until 8pm.
 
 It is 20:01 (8:01pm) now and Autoshutdown does further checks:
 
-Prio 0: UPHOURS  
-The server is not in the (forced) stay-up-range (06::00..20:00) => negative, next check
+__Prio 1:__ IPs  
+Let's assume, that only IP 137 is online, so the check is negative, next check.
 
-Prio 1: IPs  
-Let's assume, that only IP 137 is online, so the check is negative, next check
+__Prio 2:__ Ports  
+Let's assume, that there is no connection on any port to watch. The check is
+negative, next check.
 
-Prio 2: Ports  
-Let's assume, that there is no connection on any port to watch. The check is negative, next check
-
-Prio 3: UL/DL-Rate  
-Maybe a DL is running with 238 kB/s over the last minute. The check is positive, no more checks needed.
+__Prio 3:__ UL/DL-Rate  
+Maybe a DL is running with 238 kB/s over the last minute. The check is
+positive, no more checks needed.
 Autoshutdown goes to sleep for x seconds.
 
-Prio 4 and 6:  
-Not needed, because a check with a higher priority is positive
+__Prio 4 and 6:__  
+Not needed, because a check with a higher priority is positive.
 
 
 Configuration options details:
