@@ -915,7 +915,7 @@ _check_config() {
             _log "WARNING: ${var} has to be set to 'true' or 'false'"
             _log "WARNING: ${var} set to default: ${!default_var}"
             declare -g "${var}"="${!default_var}"; }
-    done < <(awk -F= '$0 !~ /^#/ && /.*CHECK.*/{print $1}' "${CONFIG}")
+    done < <(awk -F= '$0 !~ /^#/ && /.*CHECK.*/{print $1}' "${DEFAULT_CONFIG}")
 
     if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
         [[ "${UPHOURS}" =~ ^((([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)).{2}(([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)))$ &&

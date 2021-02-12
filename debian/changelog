@@ -6,6 +6,7 @@ openmediavault-autoshutdown (5.1.10) stable; urgency=low
   * Small tweak to debian/install
   * Add bridge network interface support
   * Re-work how DEBUG couples to VERBOSE mode
+  * Use DEFAULT_CONFIG instead of CONFIG to get *CHEKC* variables
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 08 Feb 2021 19:35:14 +0000
 
