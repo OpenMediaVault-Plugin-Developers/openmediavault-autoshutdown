@@ -1127,7 +1127,7 @@ _check_networkconfig() {
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Find available network interfaces and their IPv4 addresses"
 
-    local -r net_ifaces="${FORCE_NIC:-"en,eth,wlan,bond,usb"}"
+    local -r net_ifaces="${FORCE_NIC:-"en,eth,wlan,bond,br,usb"}"
     local net_iface ip; while read -r net_iface ip; do
         local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
         local ipv4_valid="true"
