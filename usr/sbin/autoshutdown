@@ -13,9 +13,6 @@
 
 set -euo pipefail
 
-############## LOGGING ##############
-DEBUG="false"             # Default debug logging mode (see VERBOSE).
-
 ######## STORAGE DEFINITION #########
 declare -A NIC_TO_IP      # Associative array for storing _check_networkconfig
                           # network interface to IP address mappings.
@@ -1275,7 +1272,7 @@ _log "INFO: ${DEFAULT_CONFIG} loaded" force
 
 # Set-up logging and modes.
 [ "${FAKE:-}" == "true" ] && VERBOSE="true"
-[ "${VERBOSE:-}" == "true" ] && DEBUG="true"
+DEBUG="${VERBOSE:-"${DEFAULT_VERBOSE}"}"
 
 _check_config
 

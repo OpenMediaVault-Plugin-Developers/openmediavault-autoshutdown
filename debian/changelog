@@ -5,6 +5,7 @@ openmediavault-autoshutdown (5.1.10) stable; urgency=low
   * Fix a small typo in Settings.js
   * Small tweak to debian/install
   * Add bridge network interface support
+  * Re-work how DEBUG couples to VERBOSE mode
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 08 Feb 2021 19:35:14 +0000
 
