@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Miguel Anxo Bouzada <mbouzada@gmail.com>, 2014-2015,2020
+# Miguel Anxo Bouzada <mbouzada@gmail.com>, 2014-2015,2020-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2020-12-30 18:12+0000\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
+"PO-Revision-Date: 2021-02-12 14:56+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Galician (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/gl/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "&emsp;Minute"
+msgstr "&emsp;Minuto"
+
+msgid "Active Processes"
 msgstr ""
 
 msgid "AutoShutdown"
@@ -28,34 +31,25 @@ msgid "Autoshutdown"
 msgstr "Apagado automático"
 
 msgid "Begin:&emsp;Hour"
-msgstr ""
-
-msgid "Check Active Processes"
-msgstr ""
-
-msgid "Check Clock"
-msgstr "Comprobar o reloxo"
+msgstr "Comezar:&emsp;Hora"
 
 msgid "Check Clock to identify forced uptime."
 msgstr "Comprobar o reloxo para identificar o tempo máximo forzado."
 
-msgid "Check Users"
-msgstr "Comprobar os usuarios"
+msgid "Check SMB status for connected clients."
+msgstr ""
 
 msgid "Check for connected users."
 msgstr "Comprobare se hai usuarios conectados."
 
 msgid "Check for users defined plugins."
+msgstr "Comprobar se hai engadidos definidos polos usuarios."
+
+msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
-msgid "Check plugins"
+msgid "Clock"
 msgstr ""
-
-msgid "Check smbstatus"
-msgstr "Comprobar o estado smb"
-
-msgid "Check smbstatus for connected clients."
-msgstr "Comprobar o estado smb para os clientes conectados."
 
 msgid "Cycles"
 msgstr "Ciclos"
@@ -76,14 +70,17 @@ msgid ""
 " iface:xxx.yyy.zzz.start..end"
 msgstr "Defina un intervalo de IP: inicio..final | iface: inicio..final | www.xxx.yyy.inicio..final | | iface: xxx.yyy.zzz.inicio..final"
 
-msgid "Define the network traffic in kB/s"
-msgstr "Definir o tráfico de rede en kB/s"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
 
 msgid "Enable"
 msgstr "Activar"
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
-msgstr ""
+msgstr "Fin:&nbsp;&ensp;&emsp;Hora"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -93,8 +90,8 @@ msgstr "Exemplo: 50 significa unha carga media de 0,50, 8 significa una carga me
 msgid "Expert Settings"
 msgstr "Axustes avanzados"
 
-msgid "Extra options"
-msgstr "Opcións adicionais"
+msgid "Extra Options"
+msgstr ""
 
 msgid "Fake"
 msgstr "Falso"
@@ -105,6 +102,9 @@ msgstr "Falso/Modo de probas."
 msgid "Forced Uptime"
 msgstr "Tempo máximo forzado."
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr "Axustes xerais"
 
@@ -114,8 +114,8 @@ msgstr "Taxa HDDIO"
 msgid "Hibernate"
 msgstr "Hibernar"
 
-msgid "IP-Range"
-msgstr "Intervalo-IP"
+msgid "IP Range"
+msgstr ""
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -123,8 +123,9 @@ msgid ""
 msgstr "Se se define «inicio..final» ou «Último octeto de IP» úsanse os tres primeiros octetos da dirección IP iface."
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "Se a media do valor de E/S do disco do servidor está por riba deste valor, entón non apagar."
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr ""
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -137,28 +138,35 @@ msgid "Load Average"
 msgstr "Carga media"
 
 msgid "Load Processes"
-msgstr ""
-
-msgid "Log"
-msgstr "Rexistro"
+msgstr "Procesos de carga"
 
 msgid "Log to Syslog"
 msgstr "Rexistrar no rexistro do sistema"
 
-msgid "Names of processes only started when active Set to '-' to disable"
+msgid "Message"
 msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "O número de segundos entre cada ciclo."
 
-msgid "Please check the"
-msgstr "Comprobe"
+msgid "Please check"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "Asegúrese de deixar o 1 e o 255 fora da lista!"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -175,6 +183,9 @@ msgstr "Orde de apagado"
 
 msgid "Sleep"
 msgstr "Durmir"
+
+msgid "Smart Tests"
+msgstr ""
 
 msgid "Socket number to check for activity."
 msgstr "Número do zócolo ao que comprobar a súa actividade."
@@ -195,10 +206,13 @@ msgid "Syslog Configuration"
 msgstr "Configuración do rexistro do sistema"
 
 msgid "Temp Processes"
+msgstr "Procesos temporais"
+
+msgid "The IP-Range should be a comma delimited list of the following:"
 msgstr ""
 
-msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "O intervalo de IP debe ser unha lista delimitada por comas das seguintes:"
+msgid "This only works if S.M.A.R.T. is supported directly."
+msgstr ""
 
 msgid "Type"
 msgstr "Tipo"
@@ -208,6 +222,9 @@ msgstr "Taxa ULDL"
 
 msgid "Uphours"
 msgstr "Horas acendido"
+
+msgid "Users"
+msgstr ""
 
 msgid "Verbose"
 msgstr "Detallado"
@@ -219,7 +236,7 @@ msgid "Write log informations to system logs."
 msgstr "Escribir as informacións do rexistro no rexistro do sistema"
 
 msgid "autoshutdown.default"
-msgstr ""
+msgstr "autoshutdown.default"
 
 msgid "for more details."
 msgstr "para obter máis detalles."

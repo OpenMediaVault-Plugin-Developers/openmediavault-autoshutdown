@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2020-12-30 18:12+0000\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
+"PO-Revision-Date: 2021-02-12 14:56+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,9 @@ msgstr ""
 msgid "&emsp;Minute"
 msgstr ""
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "AutomatischHerunterfahren"
 
@@ -35,17 +38,11 @@ msgstr "AutomatischHerunterfahren"
 msgid "Begin:&emsp;Hour"
 msgstr ""
 
-msgid "Check Active Processes"
-msgstr ""
-
-msgid "Check Clock"
-msgstr "Uhr überprüfen"
-
 msgid "Check Clock to identify forced uptime."
 msgstr "Uhr überprüfen um die erzwungene Betriebszeit zu ermitteln."
 
-msgid "Check Users"
-msgstr "Benutzer überprüfen"
+msgid "Check SMB status for connected clients."
+msgstr ""
 
 msgid "Check for connected users."
 msgstr "Auf verbundene Benutzer prüfen."
@@ -53,14 +50,11 @@ msgstr "Auf verbundene Benutzer prüfen."
 msgid "Check for users defined plugins."
 msgstr ""
 
-msgid "Check plugins"
+msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
-msgid "Check smbstatus"
-msgstr "smbstatus überprüfen"
-
-msgid "Check smbstatus for connected clients."
-msgstr "smbstatus für verbundene Clients überprüfen."
+msgid "Clock"
+msgstr ""
 
 msgid "Cycles"
 msgstr "Durchläufe"
@@ -81,8 +75,11 @@ msgid ""
 " iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
-msgid "Define the network traffic in kB/s"
-msgstr "Bestimmen Sie den Netzwerkverkehr in kB/s"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
 
 msgid "Enable"
 msgstr "Aktivieren"
@@ -98,8 +95,8 @@ msgstr "Beispiel: 50 bedeutet eine Durchschnittslast von 0.50; 8 bedeutet eine D
 msgid "Expert Settings"
 msgstr "Experteneinstellungen"
 
-msgid "Extra options"
-msgstr "Zusätzliche Optionen"
+msgid "Extra Options"
+msgstr ""
 
 msgid "Fake"
 msgstr "Fake"
@@ -110,6 +107,9 @@ msgstr "Fake-/Testmodus."
 msgid "Forced Uptime"
 msgstr "Erzwungene Betriebszeit"
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
@@ -119,8 +119,8 @@ msgstr "HDD-EA-Rate"
 msgid "Hibernate"
 msgstr "Ruhezustand"
 
-msgid "IP-Range"
-msgstr "IP-Bereich"
+msgid "IP Range"
+msgstr ""
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -128,8 +128,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "Wenn der HDD-EA-Durchschnitt des Servers über diesem Wert ist wird dieser nicht heruntergefahren."
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr ""
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -144,26 +145,33 @@ msgstr "Durchschnittslast "
 msgid "Load Processes"
 msgstr ""
 
-msgid "Log"
-msgstr "Protokoll"
-
 msgid "Log to Syslog"
 msgstr "Im Syslog protokollieren"
 
-msgid "Names of processes only started when active Set to '-' to disable"
+msgid "Message"
 msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Anzahl der Sekunden zwischen jedem Durchlauf."
 
-msgid "Please check the"
-msgstr "Bitte überprüfen Sie die"
+msgid "Please check"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "Bitte stellen Sie sicher, dass weder 1 noch 255 in dieser Liste auftauchen!"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -180,6 +188,9 @@ msgstr "Abschaltbefehl"
 
 msgid "Sleep"
 msgstr "Warten"
+
+msgid "Smart Tests"
+msgstr ""
 
 msgid "Socket number to check for activity."
 msgstr "Socketnummer, die auf Aktivität überprüft werden soll."
@@ -202,7 +213,10 @@ msgstr "Syslog-Konfiguration"
 msgid "Temp Processes"
 msgstr ""
 
-msgid "The IP-Range should be comma delimited list of the following:"
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr ""
 
 msgid "Type"
@@ -213,6 +227,9 @@ msgstr "ULDL-Rate"
 
 msgid "Uphours"
 msgstr "Verfügbarkeitsstunden"
+
+msgid "Users"
+msgstr ""
 
 msgid "Verbose"
 msgstr "Ausführlich"

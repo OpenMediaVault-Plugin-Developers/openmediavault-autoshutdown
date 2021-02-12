@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2020-12-30 18:12+0000\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
+"PO-Revision-Date: 2021-02-12 14:56+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,9 @@ msgstr ""
 msgid "&emsp;Minute"
 msgstr ""
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
@@ -30,17 +33,11 @@ msgstr "Autoshutdown"
 msgid "Begin:&emsp;Hour"
 msgstr ""
 
-msgid "Check Active Processes"
-msgstr ""
-
-msgid "Check Clock"
-msgstr "시각 확인"
-
 msgid "Check Clock to identify forced uptime."
 msgstr "강제 가동시간을 식별하는 시각을 확인합니다."
 
-msgid "Check Users"
-msgstr "사용자 확인"
+msgid "Check SMB status for connected clients."
+msgstr ""
 
 msgid "Check for connected users."
 msgstr "접속된 사용자를 확인합니다."
@@ -48,13 +45,10 @@ msgstr "접속된 사용자를 확인합니다."
 msgid "Check for users defined plugins."
 msgstr ""
 
-msgid "Check plugins"
+msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
-msgid "Check smbstatus"
-msgstr "smbstatus 확인"
-
-msgid "Check smbstatus for connected clients."
+msgid "Clock"
 msgstr ""
 
 msgid "Cycles"
@@ -76,8 +70,11 @@ msgid ""
 " iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
-msgid "Define the network traffic in kB/s"
-msgstr "KiB/s 단위의 네트워크 전송량을 정의"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
 
 msgid "Enable"
 msgstr "활성화"
@@ -93,8 +90,8 @@ msgstr "예 : 50은 부하-평균 0.50, 8은 부하-평균 0.08, 220은 부하-�
 msgid "Expert Settings"
 msgstr "전문가 설정"
 
-msgid "Extra options"
-msgstr "추가 선택 사항"
+msgid "Extra Options"
+msgstr ""
 
 msgid "Fake"
 msgstr "가상"
@@ -105,6 +102,9 @@ msgstr "가상/시험 방식."
 msgid "Forced Uptime"
 msgstr "강제 가동시간"
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr "일반 설정"
 
@@ -114,8 +114,8 @@ msgstr "HDDIO 비율"
 msgid "Hibernate"
 msgstr "휴면"
 
-msgid "IP-Range"
-msgstr "IP-범위"
+msgid "IP Range"
+msgstr ""
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -123,8 +123,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "서버의 HDD 입출력 평균이 이 값 이상이면, 종료하지 않습니다."
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr ""
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -139,26 +140,33 @@ msgstr "적재 평균"
 msgid "Load Processes"
 msgstr ""
 
-msgid "Log"
-msgstr "기록"
-
 msgid "Log to Syslog"
 msgstr "Syslog에 기록"
 
-msgid "Names of processes only started when active Set to '-' to disable"
+msgid "Message"
 msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "각 주기 사이의 초 단위 수"
 
-msgid "Please check the"
-msgstr "상세한 정보는 "
+msgid "Please check"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "목록에 1과 255는 없어야 합니다. 확인 바랍니다!"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -175,6 +183,9 @@ msgstr "종료 명령"
 
 msgid "Sleep"
 msgstr "수면"
+
+msgid "Smart Tests"
+msgstr ""
 
 msgid "Socket number to check for activity."
 msgstr "소켓 번호가 활성인지 확인 바랍니다."
@@ -197,7 +208,10 @@ msgstr "Syslog 구성"
 msgid "Temp Processes"
 msgstr ""
 
-msgid "The IP-Range should be comma delimited list of the following:"
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr ""
 
 msgid "Type"
@@ -208,6 +222,9 @@ msgstr "ULDL 비율"
 
 msgid "Uphours"
 msgstr "경과시간"
+
+msgid "Users"
+msgstr ""
 
 msgid "Verbose"
 msgstr "상세한"

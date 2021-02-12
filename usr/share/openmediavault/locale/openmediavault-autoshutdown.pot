@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,9 @@ msgstr ""
 msgid "&emsp;Minute"
 msgstr ""
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr ""
 
@@ -29,16 +32,10 @@ msgstr ""
 msgid "Begin:&emsp;Hour"
 msgstr ""
 
-msgid "Check Active Processes"
-msgstr ""
-
-msgid "Check Clock"
-msgstr ""
-
 msgid "Check Clock to identify forced uptime."
 msgstr ""
 
-msgid "Check Users"
+msgid "Check SMB status for connected clients."
 msgstr ""
 
 msgid "Check for connected users."
@@ -47,13 +44,10 @@ msgstr ""
 msgid "Check for users defined plugins."
 msgstr ""
 
-msgid "Check plugins"
+msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
-msgid "Check smbstatus"
-msgstr ""
-
-msgid "Check smbstatus for connected clients."
+msgid "Clock"
 msgstr ""
 
 msgid "Cycles"
@@ -71,7 +65,10 @@ msgstr ""
 msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
-msgid "Define the network traffic in kB/s"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
 msgstr ""
 
 msgid "Enable"
@@ -86,7 +83,7 @@ msgstr ""
 msgid "Expert Settings"
 msgstr ""
 
-msgid "Extra options"
+msgid "Extra Options"
 msgstr ""
 
 msgid "Fake"
@@ -98,6 +95,9 @@ msgstr ""
 msgid "Forced Uptime"
 msgstr ""
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr ""
 
@@ -107,13 +107,13 @@ msgstr ""
 msgid "Hibernate"
 msgstr ""
 
-msgid "IP-Range"
+msgid "IP Range"
 msgstr ""
 
 msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
 msgstr ""
 
-msgid "If the HDD-IO-average of the server is above this value, then no shutdown."
+msgid "If the HDD-IO-average of the server is above this value in kB/s, then no shutdown."
 msgstr ""
 
 msgid "If the load average of the server is above this value, then no shutdown."
@@ -128,25 +128,31 @@ msgstr ""
 msgid "Load Processes"
 msgstr ""
 
-msgid "Log"
-msgstr ""
-
 msgid "Log to Syslog"
 msgstr ""
 
-msgid "Names of processes only started when active Set to '-' to disable"
+msgid "Message"
 msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr ""
 
-msgid "Please check the"
+msgid "Please check"
 msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
 msgstr ""
 
 msgid "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -162,6 +168,9 @@ msgid "Shutdown Command"
 msgstr ""
 
 msgid "Sleep"
+msgstr ""
+
+msgid "Smart Tests"
 msgstr ""
 
 msgid "Socket number to check for activity."
@@ -185,7 +194,10 @@ msgstr ""
 msgid "Temp Processes"
 msgstr ""
 
-msgid "The IP-Range should be comma delimited list of the following:"
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr ""
 
 msgid "Type"
@@ -195,6 +207,9 @@ msgid "ULDL Rate"
 msgstr ""
 
 msgid "Uphours"
+msgstr ""
+
+msgid "Users"
 msgstr ""
 
 msgid "Verbose"

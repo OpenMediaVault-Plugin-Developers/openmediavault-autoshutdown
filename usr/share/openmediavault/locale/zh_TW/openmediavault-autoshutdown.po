@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2021-01-05 12:00+0000\n"
-"Last-Translator: kochin <kochinc@outlook.com>\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
+"PO-Revision-Date: 2021-02-12 14:56+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +21,9 @@ msgstr ""
 msgid "&emsp;Minute"
 msgstr "&emsp;分"
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
@@ -30,17 +33,11 @@ msgstr "Autoshutdown"
 msgid "Begin:&emsp;Hour"
 msgstr "開始：&emsp;時"
 
-msgid "Check Active Processes"
-msgstr "檢查啟用之進程"
-
-msgid "Check Clock"
-msgstr "檢查時鐘"
-
 msgid "Check Clock to identify forced uptime."
 msgstr "檢查時鐘來辨認強制的運行時間。"
 
-msgid "Check Users"
-msgstr "檢查使用者"
+msgid "Check SMB status for connected clients."
+msgstr ""
 
 msgid "Check for connected users."
 msgstr "檢查已連接之使用者"
@@ -48,14 +45,11 @@ msgstr "檢查已連接之使用者"
 msgid "Check for users defined plugins."
 msgstr "檢查用戶定義的插件。"
 
-msgid "Check plugins"
-msgstr "檢查插件"
+msgid "Check if S.M.A.R.T. tests are running."
+msgstr ""
 
-msgid "Check smbstatus"
-msgstr "檢查 smbstatus"
-
-msgid "Check smbstatus for connected clients."
-msgstr "檢查已連接使用者之 smbstatus"
+msgid "Clock"
+msgstr ""
 
 msgid "Cycles"
 msgstr "循環數"
@@ -76,8 +70,11 @@ msgid ""
 " iface:xxx.yyy.zzz.start..end"
 msgstr "定義一個 IP 範圍：start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
-msgid "Define the network traffic in kB/s"
-msgstr "以 kB/s 來定義網路流量"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
 
 msgid "Enable"
 msgstr "啟用"
@@ -93,8 +90,8 @@ msgstr "範例：50 表示平均負載為 0.50，8 表示平均負載為 0.08，
 msgid "Expert Settings"
 msgstr "專家設定"
 
-msgid "Extra options"
-msgstr "額外選項"
+msgid "Extra Options"
+msgstr ""
 
 msgid "Fake"
 msgstr "假冒"
@@ -105,6 +102,9 @@ msgstr "假冒/測試模式"
 msgid "Forced Uptime"
 msgstr "強制運行時間"
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr "一般設定"
 
@@ -114,8 +114,8 @@ msgstr "HDDIO 速率"
 msgid "Hibernate"
 msgstr "休眠"
 
-msgid "IP-Range"
-msgstr "IP-範圍"
+msgid "IP Range"
+msgstr ""
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -123,8 +123,9 @@ msgid ""
 msgstr "如果設定用 'start..end' 或 'IP 的最後一個八位元組'，則會使用 iface IP 地址的前三個八位元組。"
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "如果伺服器的 HDD-IO-average 在這個數值以上，則不做關機。"
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr ""
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -139,26 +140,33 @@ msgstr "負載平均值"
 msgid "Load Processes"
 msgstr "載入進程"
 
-msgid "Log"
-msgstr "日誌"
-
 msgid "Log to Syslog"
 msgstr "記錄日誌到 Syslog"
 
-msgid "Names of processes only started when active Set to '-' to disable"
-msgstr "進程名稱，只有啟用的才會被啟動。設成 '-' 來停用。"
+msgid "Message"
+msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
-msgstr "進程名稱，有載入相依的子進程。設成 '-' 來停用。"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
+msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "每個週期之間的秒數。"
 
-msgid "Please check the"
-msgstr "請查看"
+msgid "Please check"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "請確定 1 與 255 不在列表中！"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -175,6 +183,9 @@ msgstr "關機指令"
 
 msgid "Sleep"
 msgstr "睡眠"
+
+msgid "Smart Tests"
+msgstr ""
 
 msgid "Socket number to check for activity."
 msgstr "用以檢查活動狀況的插槽號碼。"
@@ -197,8 +208,11 @@ msgstr "Syslog 設置"
 msgid "Temp Processes"
 msgstr "暫時進程"
 
-msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "IP 範圍應該是以下用逗號分隔的列表："
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
+msgstr ""
 
 msgid "Type"
 msgstr "型式"
@@ -208,6 +222,9 @@ msgstr "ULDL 速率"
 
 msgid "Uphours"
 msgstr "運作時數"
+
+msgid "Users"
+msgstr ""
 
 msgid "Verbose"
 msgstr "詳盡"

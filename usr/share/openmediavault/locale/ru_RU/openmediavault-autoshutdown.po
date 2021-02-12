@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2020-12-30 18:12+0000\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
+"PO-Revision-Date: 2021-02-12 14:56+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,9 @@ msgstr ""
 msgid "&emsp;Minute"
 msgstr ""
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "Автовыключение"
 
@@ -32,17 +35,11 @@ msgstr "Автовыключение"
 msgid "Begin:&emsp;Hour"
 msgstr ""
 
-msgid "Check Active Processes"
-msgstr ""
-
-msgid "Check Clock"
-msgstr "Проверить часы"
-
 msgid "Check Clock to identify forced uptime."
 msgstr "Проверьте часы, чтобы определить принудительное время безотказной работы."
 
-msgid "Check Users"
-msgstr "Проверить пользователей"
+msgid "Check SMB status for connected clients."
+msgstr ""
 
 msgid "Check for connected users."
 msgstr "Проверьте подключенных пользователей."
@@ -50,14 +47,11 @@ msgstr "Проверьте подключенных пользователей."
 msgid "Check for users defined plugins."
 msgstr ""
 
-msgid "Check plugins"
+msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
-msgid "Check smbstatus"
-msgstr "Проверьте smbstatus"
-
-msgid "Check smbstatus for connected clients."
-msgstr "Проверьте smbstatus для подключенных клиентов."
+msgid "Clock"
+msgstr ""
 
 msgid "Cycles"
 msgstr "Циклы"
@@ -78,8 +72,11 @@ msgid ""
 " iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
-msgid "Define the network traffic in kB/s"
-msgstr "Определить сетевой трафик в kB/s"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
 
 msgid "Enable"
 msgstr "Включить"
@@ -95,8 +92,8 @@ msgstr "Пример: 50 означает среднее значение наг
 msgid "Expert Settings"
 msgstr "Раширенные настройки"
 
-msgid "Extra options"
-msgstr "Дополнительные опции"
+msgid "Extra Options"
+msgstr ""
 
 msgid "Fake"
 msgstr "Не настоящий"
@@ -107,6 +104,9 @@ msgstr "Фальшивый /Тестовый режим."
 msgid "Forced Uptime"
 msgstr "Принудительное время работы"
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr "Основные настройки"
 
@@ -116,8 +116,8 @@ msgstr "Оценить HDDIO"
 msgid "Hibernate"
 msgstr "Hibernate"
 
-msgid "IP-Range"
-msgstr "IP-диапазон"
+msgid "IP Range"
+msgstr ""
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -125,8 +125,9 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "Если среднее значение HDD-IO на сервере выше этого значения, то нет выключать."
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr ""
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -141,26 +142,33 @@ msgstr "Средняя нагрузка"
 msgid "Load Processes"
 msgstr ""
 
-msgid "Log"
-msgstr "Журнал"
-
 msgid "Log to Syslog"
 msgstr "Лог в Syslog"
 
-msgid "Names of processes only started when active Set to '-' to disable"
+msgid "Message"
 msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Количество секунд между циклами."
 
-msgid "Please check the"
-msgstr "Пожалуйста, проверьте"
+msgid "Please check"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "Пожалуйста, не забудьте вставить 1 и 255 из списка!"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -177,6 +185,9 @@ msgstr "Команда выключения"
 
 msgid "Sleep"
 msgstr "Спать"
+
+msgid "Smart Tests"
+msgstr ""
 
 msgid "Socket number to check for activity."
 msgstr "Номер сокета для проверки активности."
@@ -199,7 +210,10 @@ msgstr "Настройка Syslog"
 msgid "Temp Processes"
 msgstr ""
 
-msgid "The IP-Range should be comma delimited list of the following:"
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr ""
 
 msgid "Type"
@@ -210,6 +224,9 @@ msgstr "Оценить ULDL"
 
 msgid "Uphours"
 msgstr "Время работы"
+
+msgid "Users"
+msgstr ""
 
 msgid "Verbose"
 msgstr "Подробный"

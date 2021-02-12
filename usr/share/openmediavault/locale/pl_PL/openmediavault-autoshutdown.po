@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-30 12:12-0600\n"
-"PO-Revision-Date: 2020-12-30 18:12+0000\n"
+"POT-Creation-Date: 2021-02-12 08:56-0600\n"
+"PO-Revision-Date: 2021-02-12 14:56+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/pl_PL/)\n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,9 @@ msgstr ""
 msgid "&emsp;Minute"
 msgstr ""
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "Automatyczne wyłączenie"
 
@@ -31,16 +34,10 @@ msgstr "Automatyczne wyłączenie"
 msgid "Begin:&emsp;Hour"
 msgstr ""
 
-msgid "Check Active Processes"
-msgstr ""
-
-msgid "Check Clock"
-msgstr "Wybierz czas"
-
 msgid "Check Clock to identify forced uptime."
 msgstr "Sprawdź zegar do identyfikacji wymuszonych przestojów."
 
-msgid "Check Users"
+msgid "Check SMB status for connected clients."
 msgstr ""
 
 msgid "Check for connected users."
@@ -49,13 +46,10 @@ msgstr ""
 msgid "Check for users defined plugins."
 msgstr ""
 
-msgid "Check plugins"
+msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
-msgid "Check smbstatus"
-msgstr ""
-
-msgid "Check smbstatus for connected clients."
+msgid "Clock"
 msgstr ""
 
 msgid "Cycles"
@@ -77,8 +71,11 @@ msgid ""
 " iface:xxx.yyy.zzz.start..end"
 msgstr ""
 
-msgid "Define the network traffic in kB/s"
-msgstr "Zdefiniuj ruch sieciowy w kB/s"
+msgid "Define by FQDN: fqdn | iface:fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
 
 msgid "Enable"
 msgstr "Włączone"
@@ -94,8 +91,8 @@ msgstr "Przykładowo: 50 oznacza loadaverage 0.50, 8 oznacza loadaverage 0.08, 2
 msgid "Expert Settings"
 msgstr "Dodatkowe ustawienia"
 
-msgid "Extra options"
-msgstr "Dodatkowe opcje"
+msgid "Extra Options"
+msgstr ""
 
 msgid "Fake"
 msgstr "Fałsz"
@@ -106,6 +103,9 @@ msgstr "Tryb Test/Fałszu"
 msgid "Forced Uptime"
 msgstr "Wymuszony uptime"
 
+msgid "Function"
+msgstr ""
+
 msgid "General settings"
 msgstr "Ustawienia główne"
 
@@ -115,8 +115,8 @@ msgstr ""
 msgid "Hibernate"
 msgstr "Hibernacja"
 
-msgid "IP-Range"
-msgstr "Zakres IP"
+msgid "IP Range"
+msgstr ""
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -124,7 +124,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
 msgstr ""
 
 msgid ""
@@ -140,26 +141,33 @@ msgstr ""
 msgid "Load Processes"
 msgstr ""
 
-msgid "Log"
-msgstr "Logi"
-
 msgid "Log to Syslog"
 msgstr "Logi do Syslog-a"
 
-msgid "Names of processes only started when active Set to '-' to disable"
+msgid "Message"
 msgstr ""
 
-msgid "Names of processes with load dependent children. Set to '-' to disable"
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Liczba sekund między każdym cyklem"
 
-msgid "Please check the"
-msgstr "Proszę sprawdzić"
+msgid "Please check"
+msgstr ""
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "Upewnij się, że lista ta nie obejmuje 1 i 255!"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -176,6 +184,9 @@ msgstr "Polecenie wyłączenia"
 
 msgid "Sleep"
 msgstr "Uśpij"
+
+msgid "Smart Tests"
+msgstr ""
 
 msgid "Socket number to check for activity."
 msgstr "Porty na których sprawdzamy aktywność."
@@ -198,7 +209,10 @@ msgstr "Konfiguracja Syslog-a"
 msgid "Temp Processes"
 msgstr ""
 
-msgid "The IP-Range should be comma delimited list of the following:"
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr ""
 
 msgid "Type"
@@ -208,6 +222,9 @@ msgid "ULDL Rate"
 msgstr ""
 
 msgid "Uphours"
+msgstr ""
+
+msgid "Users"
 msgstr ""
 
 msgid "Verbose"
