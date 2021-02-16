@@ -2,6 +2,7 @@ openmediavault-autoshutdown (5.1.11) stable; urgency=low
 
   * Misc script improvements
   * Fix hybrid suspend and add suspend-then-hibernate
+  * Rework _check_networkconfig and drop FORCE_NIC comma support
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 15 Feb 2021 21:17:58 +0000
 
