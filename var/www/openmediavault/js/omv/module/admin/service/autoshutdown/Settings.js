@@ -160,7 +160,8 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                         [ 0, _("Shutdown") ],
                         [ 1, _("Hibernate") ],
                         [ 2, _("Suspend") ],
-                        [ 3, _("Suspend-Hybrid") ]
+                        [ 3, _("Hybrid Sleep") ],
+                        [ 4, _("Suspend then Hibernate") ]
                     ]
                 }),
                 displayField: "text",

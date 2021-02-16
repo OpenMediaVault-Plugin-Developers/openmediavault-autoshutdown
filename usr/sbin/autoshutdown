@@ -1081,7 +1081,7 @@ _check_config() {
     _log "INFO: Kernel $(uname -r) supports power management modes:"
     declare -A pm_map=( ["suspend"]="--suspend:suspend to RAM" \
                         ["hibernate"]="--hibernate:suspend to DISK" \
-                        ["hybrid"]="--suspend-hybrid:suspend to RAM and DISK" )
+                        ["hybrid-sleep"]="--suspend-hybrid:suspend to RAM and DISK" )
     for check in "${!pm_map[@]}"; do
         pm-is-supported "${pm_map["${check}"]%:*}" &&
             _log "INFO: Kernel supports: ${check^^} (${pm_map["${check}"]#*:})"
@@ -1090,11 +1090,15 @@ _check_config() {
         _log "WARNING: SHUTDOWNCOMMAND not set"
         _log "WARNING: SHUTDOWNCOMMAND set to default: ${DEFAULT_SHUTDOWNCOMMAND}"
         SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
-    # Check, if shutdown hybrid, suspend and hibernate are supported.
-    elif [[ "${SHUTDOWNCOMMAND}" =~ \
-            ^systemctl\ +(hybrid|suspend|hibernate)$ ]] &&
-         ! pm-is-supported \
-            "${pm_map["${BASH_REMATCH[1]}"]%:*}" 2>/dev/null; then
+    # Check, if shutdown hybrid-sleep, suspend and hibernate are supported.
+    elif ( [[ "${SHUTDOWNCOMMAND}" =~ \
+                    ^systemctl\ +(hybrid-sleep|suspend|hibernate)$ ]] &&
+              ! pm-is-supported \
+                    "${pm_map["${BASH_REMATCH[1]}"]%:*}" 2>/dev/null ) ||
+         ( [[  "${SHUTDOWNCOMMAND}" =~ \
+                    ^systemctl\ +suspend-then-hibernate$ ]] &&
+               ( ! pm-is-supported --suspend 2>/dev/null ||
+                 ! pm-is-supported --hibernate 2>/dev/null ) ); then
         _log "WARNING: SHUTDOWNCOMMAND not supported: ${SHUTDOWNCOMMAND}"
         _log "WARNING: SHUTDOWNCOMMAND set to default: ${DEFAULT_SHUTDOWNCOMMAND}"
         SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"

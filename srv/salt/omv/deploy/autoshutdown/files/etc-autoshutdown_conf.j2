@@ -12,7 +12,9 @@ SHUTDOWNCOMMAND="systemctl hibernate"
 {%- elif config.shutdowncommand == 2 %}
 SHUTDOWNCOMMAND="systemctl suspend"
 {%- elif config.shutdowncommand == 3 %}
-SHUTDOWNCOMMAND="systemctl hybrid"
+SHUTDOWNCOMMAND="systemctl hybrid-sleep"
+{%- elif config.shutdowncommand == 4 %}
+SHUTDOWNCOMMAND="systemctl suspend-then-hibernate"
 {%- endif %}
 CHECKCLOCKACTIVE="{{ config.checkclockactive | to_bool | lower }}"
 UPHOURS="{{
