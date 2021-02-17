@@ -1309,16 +1309,17 @@ _check_config
 
 [ "${DEBUG}" == "true" ] && {
     _log "DEBUG: -----------------------------------------------------"
-    for var in "FAKE:N/A" "VERBOSE:N/A" "CYCLES:N/A" "SLEEP:N/A" \
+    for var in "FAKE:N/A" "VERBOSE:N/A" "SYSLOG:N/A" "CYCLES:N/A" "SLEEP:N/A" \
                "FORCE_NIC:N/A" "NET_IFACE_RETRY:N/A" "NET_IFACE_SLEEP:N/A" \
                "SHUTDOWNCOMMAND:N/A" "CHECKCLOCKACTIVE:N/A" "UPHOURS:N/A" \
-               "OVERRIDEUPHOURS:N/A" "IPCHECK:N/A" "RANGE:N/A" \
+               "OVERRIDEUPHOURS:N/A" "IPCHECK:N/A" "PINGLIST:N/A" "RANGE:N/A" \
                "CHECKSOCKETS:N/A" "NSOCKETNUMBERS:N/A" \
-               "NSOCKETIGNORESELF:N/A" "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" \
-               "SMARTCHECK:N/A" "ULDLCHECK:N/A" "ULDLRATE:N/A" \
-               "LOADAVERAGECHECK:N/A" "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
-               "LOADPROCNAMES:disabled" "TEMPPROCNAMES:disabled" \
-               "PLUGINCHECK:N/A"; do
+               "NSOCKETIGNORESELF:N/A" "CHECK_SAMBA:N/A" "CHECK_CLI:N/A" \
+               "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" "SMARTCHECK:N/A" \
+               "ULDLCHECK:N/A" "ULDLRATE:N/A" "LOADAVERAGECHECK:N/A" \
+               "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
+               "LOADPROCNAMES:disabled" "LPREPEAT:N/A" \
+               "TEMPPROCNAMES:disabled" "TPREPEAT:N/A" "PLUGINCHECK:N/A"; do
         value="${var%:*}"
         _log "DEBUG: ${value}: ${!value:-${var#*:}}"
     done
