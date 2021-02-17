@@ -897,37 +897,25 @@ _check_config() {
         _log "ERR: Exiting ..."
         exit 140; }
 
-    [[ -z "${FORCE_NIC:-}" ||
-        "${FORCE_NIC}" =~ ^([^ /]{1,15})([ ][^ /]{1,15})*$ ]] || {
+    [[ "${FORCE_NIC}" =~ ^([^ /]{1,15})([ ][^ /]{1,15})*$ ]] || {
         _log "WARNING: FORCE_NIC not set properly: ${FORCE_NIC}"
         _log "WARNING: FORCE_NIC must be in a space delimited list"
         _log "ERR: Exiting ..."
         exit 140; }
 
-    [ -z "${FORCE_NIC:-}" ] &&
-        FORCE_NIC="${DEFAULT_FORCE_NIC}"
-
     # NET_IFACE_RETRY (1 - 100).
-    [[ -z "${NET_IFACE_RETRY:-}" ||
-       "${NET_IFACE_RETRY}" =~ ^([1-9][0-9]|100)$ ]] || {
+    [[ "${NET_IFACE_RETRY}" =~ ^([1-9][0-9]|100)$ ]] || {
         _log "WARNING: NET_IFACE_RETRY not set properly: ${NET_IFACE_RETRY}"
         _log "WARNING: NET_IFACE_RETRY must be in the range: '1' - '100'"
         _log "WARNING: NET_IFACE_RETRY set to default: ${DEFAULT_NET_IFACE_RETRY}"
         NET_IFACE_RETRY="${DEFAULT_NET_IFACE_RETRY}"; }
 
-    [ -z "${NET_IFACE_RETRY:-}" ] &&
-        NET_IFACE_RETRY="${DEFAULT_NET_IFACE_RETRY}"
-
     # NET_IFACE_SLEEP (1 - 60 seconds).
-    [[ -z "${NET_IFACE_SLEEP:-}" ||
-       "${NET_IFACE_SLEEP}" =~ ^([1-5][0-9]*|60)$ ]] || {
+    [[ "${NET_IFACE_SLEEP}" =~ ^([1-5][0-9]*|60)$ ]] || {
         _log "WARNING: NET_IFACE_SLEEP not set properly: ${NET_IFACE_SLEEP}"
         _log "WARNING: NET_IFACE_SLEEP must be in the range: '1' - '60' seconds"
         _log "WARNING: NET_IFACE_RETRY set to default: ${DEFAULT_NET_IFACE_SLEEP}"
         NET_IFACE_SLEEP="${DEFAULT_NET_IFACE_SLEEP}"; }
-
-    [ -z "${NET_IFACE_SLEEP:-}" ] &&
-        NET_IFACE_SLEEP="${DEFAULT_NET_IFACE_SLEEP}"
 
     # CYCLES (1 - 999).
     [[ "${CYCLES}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
@@ -935,6 +923,13 @@ _check_config() {
         _log "WARNING: CYCLES must be in the range: '1' - '999'"
         _log "WARNING: CYCLES set to default: ${DEFAULT_CYCLES}"
         CYCLES="${DEFAULT_CYCLES}"; }
+
+    # SLEEP (1 - 9999 seconds).
+    [[ "${SLEEP}" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
+        _log "WARNING: SLEEP not set properly: ${SLEEP}"
+        _log "WARNING: SLEEP must be in the range: '1' - '9999' seconds"
+        _log "WARNING: SLEEP set to default: ${DEFAULT_SLEEP}"
+        SLEEP="${DEFAULT_SLEEP}"; }
 
     # Validate *CHECK* variables.
     local var; while read -r var; do
@@ -976,42 +971,22 @@ _check_config() {
     fi
 
     if [ "${CHECKPROCNAMES}" == "true" ]; then
-        local -r regex="^([A-Za-z0-9_.-]+)+(,[A-Za-z0-9_.-]+)*$"
-
-        if [ -z "${LOADPROCNAMES}" ]; then
-            _log "INFO: LOADPROCNAMES set to default: ${DEFAULT_LOADPROCNAMES}"
-            LOADPROCNAMES="${DEFAULT_LOADPROCNAMES}"
-        elif [ "${LOADPROCNAMES}" == "-" ]; then
-            _log "INFO: LOADPROCNAMES disabled, load processes not checked"
-            LOADPROCNAMES=""
-        elif [[ ! "${LOADPROCNAMES}" =~ ${regex} ]]; then
-            _log "WARNING: LOADPROCNAMES not set properly: ${LOADPROCNAMES}"
-            _log "WARNING: LOADPROCNAMES must be in the format: [lproc1,lproc2,lproc3,...]"
-            _log "ERR: Exiting ..."
-            exit 140
-        fi
-
-        if  [ -z "${TEMPPROCNAMES}" ]; then
-            _log "INFO: TEMPPROCNAMES set to default: ${DEFAULT_TEMPPROCNAMES}"
-            TEMPPROCNAMES="${DEFAULT_TEMPPROCNAMES}"
-        elif [ "${TEMPPROCNAMES}" == "-" ]; then
-            _log "INFO: TEMPPROCNAMES disabled, temp processes not checked"
-            TEMPPROCNAMES=""
-        elif [[ ! "${TEMPPROCNAMES}" =~ ${regex} ]]; then
-            _log "WARNING: TEMPPROCNAMES not set properly: ${TEMPPROCNAMES}"
-            _log "WARNING: TEMPPROCNAMES must be in the format: [tproc1,tproc2,tproc3,...]"
-            _log "ERR: Exiting ..."
-            exit 140
-        fi
+        for var in "LOADPROCNAMES" "TEMPPROCNAMES"; do
+            if [ "${!var}" == "-" ]; then
+                _log "INFO: ${var} disabled, load processes not checked"
+                declare -g "${var}"=''
+            elif [[ ! "${!var}" =~ \
+                        ^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$ ]]; then
+                _log "WARNING: ${var} not set properly: ${!var}"
+                _log "WARNING: ${var} must be in the format: [proc1,...,procN]"
+                _log "ERR: Exiting ..."
+                exit 140
+            fi
+        done
 
         for var in "LPREPEAT" "TPREPEAT"; do
             local default_var="DEFAULT_${var}"
-            [ -z "${!var:-}" ] && {
-                declare -g "${var}"="${!default_var}"
-                continue; }
-
-             local default_var="DEFAULT_${var}"
-             [[ "${!var}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
+            [[ "${!var}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
                 _log "WARNING: ${var} not set properly: ${!var}"
                 _log "WARNING: ${var} must be in the range: '1' - '999'"
                 _log "WARNING: ${var} set to default: ${!default_var}"
@@ -1029,16 +1004,12 @@ _check_config() {
             _log "WARNING: NSOCKETNUMBERS set to default: ${DEFAULT_NSOCKETNUMBERS}"
             NSOCKETNUMBERS="${DEFAULT_NSOCKETNUMBERS}"; }
 
-        [[ -z "${NSOCKETIGNORESELF:-}" ||
-           "${NSOCKETIGNORESELF}" == "true" ||
+        [[ "${NSOCKETIGNORESELF}" == "true" ||
            "${NSOCKETIGNORESELF}" == "false" ]] || {
             _log "WARNING: NSOCKETIGNORESELF not set properly: ${NSOCKETIGNORESELF}"
             _log "WARNING: NSOCKETIGNORESELF has to be set to 'true' or 'false'"
             _log "WARNING: NSOCKETIGNORESELF set to default: ${DEFAULT_NSOCKETIGNORESELF}"
             NSOCKETIGNORESELF="${DEFAULT_NSOCKETIGNORESELF}"; }
-
-        [ -z "${NSOCKETIGNORESELF:-}" ] &&
-            NSOCKETIGNORESELF="${DEFAULT_NSOCKETIGNORESELF}"
     else
         _log "WARNING: CHECKSOCKETS set false not validating NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
@@ -1055,10 +1026,10 @@ _check_config() {
         IPCHECK="false"
     elif [ "${IPCHECK}" == "false" ]; then
         _log "WARNING: IPCHECK set false not validating RANGE"
-    elif [[ -z "${RANGE:=}" || "${RANGE}" == "-" ]]; then
+    elif [[ "${RANGE}" == "-" ]]; then
         _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
         IPCHECK="false"
-    elif [[ -n "${RANGE:-}" && ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))))(,(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))))))*$ ]]; then
+    elif [[ ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))))(,(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))))))*$ ]]; then
         _log "WARNING: RANGE not set properly: ${RANGE}"
         _log "WARNING: The 'RANGE' should be a comma delimited list of the following:"
         _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
@@ -1068,6 +1039,7 @@ _check_config() {
         _log "WARNING: Setting RANGE to default: ${DEFAULT_RANGE}"
         RANGE="${DEFAULT_RANGE}"
     fi
+
 
     # HDDIO_RATE (1 - 999999 kB/s).
     if [ "${HDDIOCHECK}" == "true" ]; then
@@ -1079,13 +1051,6 @@ _check_config() {
     else
         _log "WARNING: HDDIOCHECK set false not validating HDDIO_RATE"
     fi
-
-    # SLEEP (1 - 9999 seconds).
-    [[ "${SLEEP}" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
-        _log "WARNING: SLEEP not set properly: ${SLEEP}"
-        _log "WARNING: SLEEP must be in the range: '1' - '9999' seconds"
-        _log "WARNING: SLEEP set to default: ${DEFAULT_SLEEP}"
-        SLEEP="${DEFAULT_SLEEP}"; }
 
     # ULDLRATE (1 - 999999 kB/s).
     if [ "${ULDLCHECK}" == "true" ]; then
@@ -1284,17 +1249,18 @@ _log "INFO: Openmediavault-autoshutdown version: $(
     dpkg -s openmediavault-autoshutdown | awk '/Version:/{print $2}')" force
 _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
 
+[ ! -f "${DEFAULT_CONFIG}" ] && {
+    _log "ERR: Default file not found! Check ${DEFAULT_CONFIG} exits ..." force
+    exit 139; }
+. "${DEFAULT_CONFIG}"
+. <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "DEFAULT_"$0}' "${DEFAULT_CONFIG}")
+_log "INFO: ${DEFAULT_CONFIG} loaded" force
+
 [ ! -f "${CONFIG}" ] && {
     _log "ERR: Config file not found! Check ${CONFIG} exits ..." force
     exit 139; }
 . "${CONFIG}"
 _log "INFO: ${CONFIG} loaded" force
-
-[ ! -f "${DEFAULT_CONFIG}" ] && {
-    _log "ERR: Default file not found! Check ${DEFAULT_CONFIG} exits ..." force
-    exit 139; }
-. <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "DEFAULT_"$0}' "${DEFAULT_CONFIG}")
-_log "INFO: ${DEFAULT_CONFIG} loaded" force
 
 # Set-up logging and modes.
 [ "${FAKE:-}" == "true" ] && VERBOSE="true"
