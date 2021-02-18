@@ -253,15 +253,43 @@ NSOCKETIGNORESELF="false"
 # -----------------------------------------------------------------------------
 
 SHUTDOWNCOMMAND="shutdown -h now"
-    # systemctl hibernate : Puts PC into hibernate-mode.
-    # systemctl suspend   : Puts PC into suspend-mode.
-    # systemctl hybrid    : Puts PC into hybrid-mode.
-    # shutdown -h +5      : Shuts the PC down 5 min after shutdown-command.
-    # shutdown -h now     : Shuts the PC down immediately. (default)
+    # systemctl hibernate              : Puts PC into hibernate-mode.
+    # systemctl suspend                : Puts PC into suspend-mode.
+    # systemctl hybrid-sleep           : Puts PC into hybrid-mode.
+    # systemctl suspend-then-hibernate : Puts PC into suspend-mode then uses an
+    #                                    rtc-alarm to wake the system and go
+    #                                    into hibernate-mode.
+    # shutdown -h +5                   : Shut PC down in 5 min.
+    # shutdown -h now                  : Shut PC down immediately.(default)
 
     # For more information and how to set up hibernate and suspend, look here:
     # http://wiki.debian.org/Suspend
     # http://wiki.debian.org/Hibernation
+
+# -----------------------------------------------------------------------------
+
+NET_IFACE_RETRY=12
+    # If a network interface is not found in unknown, dormant or up state this
+    # states how many times to retry the interface to see if it change to a
+    # one of the above mentioned states. This combiners with NET_IFACE_SLEEP to
+    # make the network interface retry mechanism. (default=12)
+
+NET_IFACE_SLEEP=5
+    # The amount of time to sleep between re-checking a network interface
+    # state is valid. This combines with NET_IFACE_RETRYNET to make the network
+    # interface retry mechanism. (default=5)
+
+# -----------------------------------------------------------------------------
+
+FORCE_NIC="en eth wlan bond br usb"
+    # You can set network interfaces to look for an IP. This is useful, if you
+    # don't use eth0 make sure you insert a space between each network
+    # interface. Note you can use the first part of the network interface name
+    # to select all related interfaces i.e. eth will select eth0, eth1, ...
+    # This setting can also be used to optimise script start-up time so that
+    # only the relevant network interface are scanned, rather that the script
+    # having to scan all interface and wait for a valid respnce or timeout.
+    # (default="en eth wlan bond br usb")
 
 # -----------------------------------------------------------------------------
 
@@ -279,9 +307,3 @@ SHUTDOWNCOMMAND="shutdown -h now"
     # e.g. 192.168.1.45 or FQDN e.g. openmediavault.local. If this
     # expert-setting is used, the details specified in "RANGE" or in GUI
     # are not used.
-
-# -----------------------------------------------------------------------------
-
-#FORCE_NIC="eth1"
-    # You can set NICs to look for a IP. This is useful, if you don't use eth0
-    # make sure you insert a comma or space between each NIC.
