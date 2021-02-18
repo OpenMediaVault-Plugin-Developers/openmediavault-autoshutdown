@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-12 08:56-0600\n"
-"PO-Revision-Date: 2021-02-12 14:56+0000\n"
+"POT-Creation-Date: 2021-02-18 09:23-0600\n"
+"PO-Revision-Date: 2021-02-18 15:23+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgid "&emsp;Minute"
 msgstr "&emsp;分"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "啟用之進程"
 
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
@@ -37,7 +37,7 @@ msgid "Check Clock to identify forced uptime."
 msgstr "檢查時鐘來辨認強制的運行時間。"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "檢查已連接用戶之 SMB 狀態。"
 
 msgid "Check for connected users."
 msgstr "檢查已連接之使用者"
@@ -46,10 +46,10 @@ msgid "Check for users defined plugins."
 msgstr "檢查用戶定義的插件。"
 
 msgid "Check if S.M.A.R.T. tests are running."
-msgstr ""
+msgstr "檢查是否 S.M.A.R.T. 測試已在執行中。"
 
 msgid "Clock"
-msgstr ""
+msgstr "時鐘"
 
 msgid "Cycles"
 msgstr "循環數"
@@ -71,10 +71,10 @@ msgid ""
 msgstr "定義一個 IP 範圍：start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "Define by FQDN: fqdn | iface:fqdn"
-msgstr ""
+msgstr "定義方式 FQDN: fqdn | iface:fqdn"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "以 kB/s 來定義網路流量"
 
 msgid "Enable"
 msgstr "啟用"
@@ -91,7 +91,7 @@ msgid "Expert Settings"
 msgstr "專家設定"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "額外選項"
 
 msgid "Fake"
 msgstr "假冒"
@@ -103,7 +103,7 @@ msgid "Forced Uptime"
 msgstr "強制運行時間"
 
 msgid "Function"
-msgstr ""
+msgstr "功能"
 
 msgid "General settings"
 msgstr "一般設定"
@@ -114,8 +114,11 @@ msgstr "HDDIO 速率"
 msgid "Hibernate"
 msgstr "休眠"
 
-msgid "IP Range"
+msgid "Hybrid Sleep"
 msgstr ""
+
+msgid "IP Range"
+msgstr "IP 範圍"
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
@@ -125,7 +128,7 @@ msgstr "如果設定用 'start..end' 或 'IP 的最後一個八位元組'，則�
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "如果伺服器的 HDD-IO-average 在這個 kB/s 數值以上，則不做關機。"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -144,29 +147,29 @@ msgid "Log to Syslog"
 msgstr "記錄日誌到 Syslog"
 
 msgid "Message"
-msgstr ""
+msgstr "訊息"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "進程名稱，只有啟用的才會被啟動。設成 '-' 來停用。"
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "進程名稱，有載入相依的子進程。設成 '-' 來停用。"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "每個週期之間的秒數。"
 
 msgid "Please check"
-msgstr ""
+msgstr "請檢查"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "請確定 1 與 255 不在列表中！"
 
 msgid "Plugins"
-msgstr ""
+msgstr "插件"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB 狀態"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -185,7 +188,7 @@ msgid "Sleep"
 msgstr "睡眠"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Smart 檢驗"
 
 msgid "Socket number to check for activity."
 msgstr "用以檢查活動狀況的插槽號碼。"
@@ -199,8 +202,8 @@ msgstr "監督設定"
 msgid "Suspend"
 msgstr "暫停"
 
-msgid "Suspend-Hybrid"
-msgstr "暫停-混合"
+msgid "Suspend then Hibernate"
+msgstr ""
 
 msgid "Syslog Configuration"
 msgstr "Syslog 設置"
@@ -209,10 +212,10 @@ msgid "Temp Processes"
 msgstr "暫時進程"
 
 msgid "The IP-Range should be a comma delimited list of the following:"
-msgstr ""
+msgstr "IP-Range 應該是以下用逗號分隔的列表："
 
 msgid "This only works if S.M.A.R.T. is supported directly."
-msgstr ""
+msgstr "這只有在 S.M.A.R.T. 被直接支援下才有效。"
 
 msgid "Type"
 msgstr "型式"
@@ -224,7 +227,7 @@ msgid "Uphours"
 msgstr "運作時數"
 
 msgid "Users"
-msgstr ""
+msgstr "使用者"
 
 msgid "Verbose"
 msgstr "詳盡"

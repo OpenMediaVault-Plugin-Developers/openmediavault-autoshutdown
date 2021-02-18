@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Toshihiro Kan <kansuke4649@gmail.com>, 2014,2016
+# Toshihiro Kan <kansuke4649@gmail.com>, 2014,2016,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-12 08:56-0600\n"
-"PO-Revision-Date: 2021-02-12 14:56+0000\n"
+"POT-Creation-Date: 2021-02-18 09:23-0600\n"
+"PO-Revision-Date: 2021-02-18 15:23+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -19,10 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "&emsp;Minute"
-msgstr ""
+msgstr "&emsp;分"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "アクティブプロセス"
 
 msgid "AutoShutdown"
 msgstr "自動シャットダウン"
@@ -31,25 +31,25 @@ msgid "Autoshutdown"
 msgstr "自動シャットダウン"
 
 msgid "Begin:&emsp;Hour"
-msgstr ""
+msgstr "開始:&emsp;時"
 
 msgid "Check Clock to identify forced uptime."
 msgstr "強制アップタイムを識別するために時計を確認してください。"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "接続しているクライアントのSMBステータスを確認します。"
 
 msgid "Check for connected users."
 msgstr "接続済みのユーザーをチェックします。"
 
 msgid "Check for users defined plugins."
-msgstr ""
+msgstr "ユーザー定義のプラグインを確認します。"
 
 msgid "Check if S.M.A.R.T. tests are running."
-msgstr ""
+msgstr "S.M.A.R.T. テストが実行されているかを確認します。"
 
 msgid "Clock"
-msgstr ""
+msgstr "時計"
 
 msgid "Cycles"
 msgstr "サイクル"
@@ -58,29 +58,29 @@ msgid "Date & Time"
 msgstr "日付 & 時間"
 
 msgid "Define a range of IPs which should be scanned."
-msgstr ""
+msgstr "スキャンする必要のあるIPの範囲を定義します。"
 
 msgid ""
 "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
 "iface:www.xxx.yyy.zzz"
-msgstr ""
+msgstr "単一のIPを定義します:IPの最後のオクテット zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
 
 msgid ""
 "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
 " iface:xxx.yyy.zzz.start..end"
-msgstr ""
+msgstr "IP範囲を定義します: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
 
 msgid "Define by FQDN: fqdn | iface:fqdn"
-msgstr ""
+msgstr "FQDNで定義: fqdn | iface:fqdn"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "ネットワークトラフィックをkB/sで定義します。"
 
 msgid "Enable"
 msgstr "有効"
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
-msgstr ""
+msgstr "終了:&nbsp;&ensp;&emsp;時"
 
 msgid ""
 "Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
@@ -91,7 +91,7 @@ msgid "Expert Settings"
 msgstr "エキスパート設定"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "特別なオプション"
 
 msgid "Fake"
 msgstr "フェイク"
@@ -103,7 +103,7 @@ msgid "Forced Uptime"
 msgstr "強制アップタイム"
 
 msgid "Function"
-msgstr ""
+msgstr "機能"
 
 msgid "General settings"
 msgstr "一般設定"
@@ -114,18 +114,21 @@ msgstr "HDDIOレート"
 msgid "Hibernate"
 msgstr "ハイバネーション"
 
-msgid "IP Range"
+msgid "Hybrid Sleep"
 msgstr ""
+
+msgid "IP Range"
+msgstr "IPの範囲"
 
 msgid ""
 "If 'start..end' or 'Last octet of IP' is set the first three octets of the "
 "iface IP address are used."
-msgstr ""
+msgstr "'start..end'または 'IPの最後のオクテット'が設定されている場合、iface IPアドレスの最初の3オクテットが使用されます。"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "サーバーのHDD-IO-averageがkB/s単位で指定されたこの値を超えている場合、シャットダウンは行われません。"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown."
@@ -138,35 +141,35 @@ msgid "Load Average"
 msgstr "ロードアベレージ"
 
 msgid "Load Processes"
-msgstr ""
+msgstr "プロセスのロード"
 
 msgid "Log to Syslog"
 msgstr "ログをSyslogへ"
 
 msgid "Message"
-msgstr ""
+msgstr "メッセージ"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "プロセスの名前は、アクティブなときにのみ開始されます。 無効にするには、'-' に設定します。"
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "負荷に依存する子を持つプロセスの名前。無効にするには、'-' に設定します。"
 
 msgid "Numbers of seconds between each cycle."
 msgstr "各サイクル間の秒数。"
 
 msgid "Please check"
-msgstr ""
+msgstr "確認してください"
 
 msgid "Please make sure to leave 1 and 255 out of the list!"
 msgstr "リストから1と255を残していることを確認してください！"
 
 msgid "Plugins"
-msgstr ""
+msgstr "プラグイン"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMBステータス"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -185,7 +188,7 @@ msgid "Sleep"
 msgstr "スリープ"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Smartテスト"
 
 msgid "Socket number to check for activity."
 msgstr "アクティビティをチェックするソケット番号。"
@@ -199,20 +202,20 @@ msgstr "スーパーバイザー設定"
 msgid "Suspend"
 msgstr "サスペンド"
 
-msgid "Suspend-Hybrid"
-msgstr "サスペンド-ハイブリッド"
+msgid "Suspend then Hibernate"
+msgstr ""
 
 msgid "Syslog Configuration"
 msgstr "Syslog設定"
 
 msgid "Temp Processes"
-msgstr ""
+msgstr "温度プロセス"
 
 msgid "The IP-Range should be a comma delimited list of the following:"
-msgstr ""
+msgstr "IPの範囲は、コンマ区切りのリストである必要があります:"
 
 msgid "This only works if S.M.A.R.T. is supported directly."
-msgstr ""
+msgstr "S.M.A.R.T.が直接サポートされているときのみ動作します。"
 
 msgid "Type"
 msgstr "タイプ"
@@ -224,7 +227,7 @@ msgid "Uphours"
 msgstr "Up時間"
 
 msgid "Users"
-msgstr ""
+msgstr "ユーザー"
 
 msgid "Verbose"
 msgstr "冗長"
@@ -236,7 +239,7 @@ msgid "Write log informations to system logs."
 msgstr "システムログへログ情報を書き込みます。"
 
 msgid "autoshutdown.default"
-msgstr ""
+msgstr "autoshutdown.default"
 
 msgid "for more details."
 msgstr "詳細。"
