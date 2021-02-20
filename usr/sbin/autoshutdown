@@ -80,7 +80,7 @@ _log() {
 _ping_range() {
     local -r net_iface="${1}"
     local -r server_ip="${2}"
-    local -r server_ips="${3// /\\|}"
+    local -r server_ips="^\\(${3// /\\|}\\)$"
 
     local ip_list=()
     local pinglist_array=()
