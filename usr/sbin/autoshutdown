@@ -1148,7 +1148,7 @@ _check_networkconfig() {
         done
     done < <(LC_ALL=C ip -br link show |
                 awk -v regex="^(${FORCE_NIC// /|})" \
-                    '$1 ~ regex && !/SLAVE/ {print $1}')
+                    '$1 ~ regex && !/SLAVE/{sub(/@.*/,"",$1); print $1}')
 
     [ -z "${!NIC_TO_IP[*]}" ] && {
         _log "ERR: No valid network interface found, exiting ..."
