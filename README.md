@@ -7,10 +7,10 @@ git issue.
 
 How it works:
 -------------
-Autoshutdown, checks status of the network and the server status its self. The
-script runs a set of checks on the server known as a "cycle". Between the
-cycles the script goes into sleep for x seconds. The checks run on the system
-have a different priority from 0 = highest to 6 = lowest:
+The Autoshutdown script checks the status of the network and the server. A set
+of check in the script are known as a "cycle". Between the cycles the script
+goes into sleep for x seconds. The checks run on the system have a different
+priority from 0 = highest to 6 = lowest:
 
 0. Stay up-range: UPHOURS (Server in the time range, where it should be online)
 1. Check for active IPs over network interfaces

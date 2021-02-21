@@ -4,6 +4,7 @@ openmediavault-autoshutdown (5.1.12) stable; urgency=low
   * Fix regex in _ping_range that set the IP's to remove
   * Adjust _ping_range regex network interface to match FORCE_NIC
   * Further clean-up _check_config and reduce repeated code
+  * Small Doc improvements
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 20 Feb 2021 20:57:18 +0000
 
