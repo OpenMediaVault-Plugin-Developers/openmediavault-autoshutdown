@@ -80,7 +80,7 @@ _log() {
 _ping_range() {
     local -r net_iface="${1}"
     local -r server_ip="${2}"
-    local -r server_ips="${3// /\\|}"
+    local -r server_ips="^\\(${3// /\\|}\\)$"
 
     local ip_list=()
     local pinglist_array=()
@@ -102,20 +102,20 @@ _ping_range() {
             mapfile -t ip_list < "${PINGLIST}"
         else
             for rg in ${RANGE//,/ }; do
-                if [[ "${rg}" =~ ^([a-z]+[0-9]+)[:] &&
+                if [[ "${rg}" =~ ^([^ /]{1,15})[:] &&
                         "${BASH_REMATCH[1]}" != "${net_iface}" ]]; then
                     continue
-                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})$ ]]; then
+                elif [[ "${rg}" =~ ^([^ /]{1,15}[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})$ ]]; then
                     mapfile -t -O "${#ip_list[@]}" ip_list <<< \
                         "${BASH_REMATCH[2]:-"${server_ip%.*}."}${BASH_REMATCH[4]}"
-                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})\.{2}([1-9][0-9]{0,2})$ ]]; then
+                elif [[ "${rg}" =~ ^([^ /]{1,15}[:])?(([0-9]{1,3}\.){3})?([1-9][0-9]{0,2})\.{2}([1-9][0-9]{0,2})$ ]]; then
                     local min="${BASH_REMATCH[4]}" max="${BASH_REMATCH[5]}"
                     [ "${BASH_REMATCH[5]}" -lt "${BASH_REMATCH[4]}" ] && {
                         min="${BASH_REMATCH[5]}"; max="${BASH_REMATCH[4]}"; }
                     mapfile -t -O "${#ip_list[@]}" ip_list < <(
                         seq -f "${BASH_REMATCH[2]:-"${server_ip%.*}."}%g" \
                             "${min}" "${max}")
-                elif [[ "${rg}" =~ ^([a-z]+[0-9]+[:])?(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))$ ]]; then
+                elif [[ "${rg}" =~ ^([^ /]{1,15}[:])?(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))$ ]]; then
                     mapfile -t -O "${#ip_list[@]}" ip_list <<< \
                         "${BASH_REMATCH[2]}"
                 fi
@@ -876,69 +876,68 @@ _check_smart() {
 #   Return     : 0 on success.
 #
 _check_config() {
+    __check_value() {
+        local -r var="${1}"
+        local -r regex="${2}"
+        local -r msg="${3}"
+        local -r default="${4:-"true"}"
+
+        [[ "${!var}" =~ ${regex} ]] || {
+            _log "WARNING: ${var} not set properly: ${!var}"
+            _log "WARNING: ${var} must be ${msg}"
+            [ "${default}" == "false" ] && {
+                _log "ERR: Exiting ..."
+                exit 140; }
+
+            local -r default_var="DEFAULT_${var}"
+            _log "WARNING: ${var} set to default: ${!default_var}"
+            declare -g "${var}"="${!default_var}"; }
+    }
+
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Checking config: ${CONFIG}"
 
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
-        _log "WARNING: FAKE has to be set to 'true' or 'false'"
+        _log "WARNING: FAKE must be set to: 'true' or 'false'"
         _log "WARNING: FAKE set to true -> Test-mode, with VERBOSE -> true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
     [[ "${VERBOSE}" == "true" || "${VERBOSE}" == "false" ]] || {
         _log "WARNING: VERBOSE not set properly: ${VERBOSE}"
-        _log "WARNING: VERBOSE has to be set to 'true' or 'false'"
-        _log "WARNING: VERBOSE set to ${DEFAULT_VERBOSE}"
+        _log "WARNING: VERBOSE must be set to: 'true' or 'false'"
+        _log "WARNING: VERBOSE set to default: ${DEFAULT_VERBOSE}"
         VERBOSE="${DEFAULT_VERBOSE}"; DEBUG="${DEFAULT_VERBOSE}"; }
 
-    [[ "${ENABLE}" == "true" || "${ENABLE}" == "false" ]] || {
-        _log "WARNING: ENABLE not set properly: ${ENABLE}"
-        _log "WARNING: ENABLE has to be set to 'true' or 'false'"
-        _log "ERR: Exiting ..."
-        exit 140; }
+    # SYSLOG (true or false).
+    __check_value "SYSLOG" "^(true|false)$" "set to: 'true' or 'false'"
 
-    [[ "${FORCE_NIC}" =~ ^([^ /]{1,15})([ ][^ /]{1,15})*$ ]] || {
-        _log "WARNING: FORCE_NIC not set properly: ${FORCE_NIC}"
-        _log "WARNING: FORCE_NIC must be in a space delimited list"
-        _log "ERR: Exiting ..."
-        exit 140; }
+    # ENABLE (true or false).
+    __check_value "ENABLE" "^(true|false)$" "set to: 'true' or 'false'" "false"
+
+    # FORCE_NIC.
+    __check_value "FORCE_NIC" "^([^ /]{1,15})([ ][^ /]{1,15})*$" \
+        "in a space delimited list and entries less than 15 charters" "false"
 
     # NET_IFACE_RETRY (1 - 100).
-    [[ "${NET_IFACE_RETRY}" =~ ^([1-9][0-9]|100)$ ]] || {
-        _log "WARNING: NET_IFACE_RETRY not set properly: ${NET_IFACE_RETRY}"
-        _log "WARNING: NET_IFACE_RETRY must be in the range: '1' - '100'"
-        _log "WARNING: NET_IFACE_RETRY set to default: ${DEFAULT_NET_IFACE_RETRY}"
-        NET_IFACE_RETRY="${DEFAULT_NET_IFACE_RETRY}"; }
+    __check_value "NET_IFACE_RETRY" "^([1-9][0-9]|100)$" \
+        "in the range: '1' - '100'"
 
     # NET_IFACE_SLEEP (1 - 60 seconds).
-    [[ "${NET_IFACE_SLEEP}" =~ ^([1-5][0-9]*|60)$ ]] || {
-        _log "WARNING: NET_IFACE_SLEEP not set properly: ${NET_IFACE_SLEEP}"
-        _log "WARNING: NET_IFACE_SLEEP must be in the range: '1' - '60' seconds"
-        _log "WARNING: NET_IFACE_RETRY set to default: ${DEFAULT_NET_IFACE_SLEEP}"
-        NET_IFACE_SLEEP="${DEFAULT_NET_IFACE_SLEEP}"; }
+    __check_value "NET_IFACE_SLEEP" "^([1-5][0-9]*|60)$" \
+        "in the range: '1' - '60' seconds"
 
     # CYCLES (1 - 999).
-    [[ "${CYCLES}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
-        _log "WARNING: CYCLES not set properly: ${CYCLES}"
-        _log "WARNING: CYCLES must be in the range: '1' - '999'"
-        _log "WARNING: CYCLES set to default: ${DEFAULT_CYCLES}"
-        CYCLES="${DEFAULT_CYCLES}"; }
+    __check_value "CYCLES" "^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$" \
+        "in the range: '1' - '999'"
 
     # SLEEP (1 - 9999 seconds).
-    [[ "${SLEEP}" =~ ^([1-9]|[1-9][0-9]{1,3})$ ]] || {
-        _log "WARNING: SLEEP not set properly: ${SLEEP}"
-        _log "WARNING: SLEEP must be in the range: '1' - '9999' seconds"
-        _log "WARNING: SLEEP set to default: ${DEFAULT_SLEEP}"
-        SLEEP="${DEFAULT_SLEEP}"; }
+    __check_value "SLEEP" "^([1-9]|[1-9][0-9]{1,3})$" \
+        "in the range: '1' - '9999' seconds"
 
     # Validate *CHECK* variables.
     local var; while read -r var; do
-        local default_var="DEFAULT_${var}"
-        [[ "${!var}" == "true" || "${!var}" == "false" ]] || {
-            _log "WARNING: ${var} not set properly: ${!var}"
-            _log "WARNING: ${var} has to be set to 'true' or 'false'"
-            _log "WARNING: ${var} set to default: ${!default_var}"
-            declare -g "${var}"="${!default_var}"; }
+        __check_value "${var}" "^(true|false)$" "set to: 'true' or 'false'"
     done < <(awk -F= '$0 !~ /^#/ && /.*CHECK.*/{print $1}' "${DEFAULT_CONFIG}")
 
     if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
@@ -972,25 +971,18 @@ _check_config() {
 
     if [ "${CHECKPROCNAMES}" == "true" ]; then
         for var in "LOADPROCNAMES" "TEMPPROCNAMES"; do
-            if [ "${!var}" == "-" ]; then
-                _log "INFO: ${var} disabled, load processes not checked"
+            [ "${!var}" == "-" ] && {
+                _log "INFO: ${var} disabled, processes not checked"
                 declare -g "${var}"=''
-            elif [[ ! "${!var}" =~ \
-                        ^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$ ]]; then
-                _log "WARNING: ${var} not set properly: ${!var}"
-                _log "WARNING: ${var} must be in the format: [proc1,...,procN]"
-                _log "ERR: Exiting ..."
-                exit 140
-            fi
+                continue; }
+
+            __check_value "${var}" "^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$" \
+                "in the format: [proc1,proc2,...,procN]" "false"
         done
 
         for var in "LPREPEAT" "TPREPEAT"; do
-            local default_var="DEFAULT_${var}"
-            [[ "${!var}" =~ ^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$ ]] || {
-                _log "WARNING: ${var} not set properly: ${!var}"
-                _log "WARNING: ${var} must be in the range: '1' - '999'"
-                _log "WARNING: ${var} set to default: ${!default_var}"
-                declare -g "${var}"="${!default_var}"; }
+            __check_value "${var}" "^([1-9]|[1-9][0-9]|[1-9][0-9]{2})$" \
+                "in the range: '1' - '999'"
         done
     else
         _log "WARNING: CHECKPROCNAMES set false not validating LOADPROCNAMES, LPREPEAT, TEMPPROCNAMES and TPREPEAT"
@@ -998,18 +990,11 @@ _check_config() {
 
     # Port-Numbers with at least 2 digits.
     if [ "${CHECKSOCKETS}" == "true" ]; then
-        [[ "${NSOCKETNUMBERS}" =~ ^([0-9]{2,5})+(,[0-9]{2,5})*$ ]] || {
-            _log "WARNING: NSOCKETNUMBERS not set properly: ${NSOCKETNUMBERS}"
-            _log "WARNING: NSOCKETNUMBERS ports must be at least 2 digit in the format: [nsocket1,nsocket2,nsocket3,...]"
-            _log "WARNING: NSOCKETNUMBERS set to default: ${DEFAULT_NSOCKETNUMBERS}"
-            NSOCKETNUMBERS="${DEFAULT_NSOCKETNUMBERS}"; }
+        __check_value "NSOCKETNUMBERS" "^([0-9]{2,5})+(,[0-9]{2,5})*$" \
+            "at least 2 digit in the format: [nsocket1,nsocket2,...,nsocketN]"
 
-        [[ "${NSOCKETIGNORESELF}" == "true" ||
-           "${NSOCKETIGNORESELF}" == "false" ]] || {
-            _log "WARNING: NSOCKETIGNORESELF not set properly: ${NSOCKETIGNORESELF}"
-            _log "WARNING: NSOCKETIGNORESELF has to be set to 'true' or 'false'"
-            _log "WARNING: NSOCKETIGNORESELF set to default: ${DEFAULT_NSOCKETIGNORESELF}"
-            NSOCKETIGNORESELF="${DEFAULT_NSOCKETIGNORESELF}"; }
+        __check_value "NSOCKETIGNORESELF" "^(true|false)$" \
+            "set to: 'true' or 'false'"
     else
         _log "WARNING: CHECKSOCKETS set false not validating NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
@@ -1029,7 +1014,7 @@ _check_config() {
     elif [[ "${RANGE}" == "-" ]]; then
         _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
         IPCHECK="false"
-    elif [[ ! "${RANGE}" =~ ^(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))))(,(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))))))*$ ]]; then
+    elif [[ ! "${RANGE}" =~ ^(([^ /]{1,15}[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])))))(,(([a-z]+[0-9]+[:])?(((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2})|((([0-9]{1,3}\.){3})?[1-9][0-9]{0,2}\.{2}[1-9][0-9]{0,2})|(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))))))*$ ]]; then
         _log "WARNING: RANGE not set properly: ${RANGE}"
         _log "WARNING: The 'RANGE' should be a comma delimited list of the following:"
         _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
@@ -1040,36 +1025,26 @@ _check_config() {
         RANGE="${DEFAULT_RANGE}"
     fi
 
-
-    # HDDIO_RATE (1 - 999999 kB/s).
     if [ "${HDDIOCHECK}" == "true" ]; then
-        [[ "${HDDIO_RATE}" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
-            _log "WARNING: HDDIO_RATE not set properly: ${HDDIO_RATE}"
-            _log "WARNING: HDDIO_RATE must be in the range: '1' - '999999' kB/s"
-            _log "WARNING: HDDIO_RATE set to default: ${DEFAULT_HDDIO_RATE}"
-            HDDIO_RATE="${DEFAULT_HDDIO_RATE}"; }
+        # HDDIO_RATE (1 - 999999 kB/s).
+        __check_value "HDDIO_RATE" "^([1-9]|[1-9][0-9]{1,5})$" \
+            "in the range: '1' - '999999' kB/s"
     else
         _log "WARNING: HDDIOCHECK set false not validating HDDIO_RATE"
     fi
 
-    # ULDLRATE (1 - 999999 kB/s).
     if [ "${ULDLCHECK}" == "true" ]; then
-        [[ "${ULDLRATE}" =~ ^([1-9]|[1-9][0-9]{1,5})$ ]] || {
-            _log "WARNING: ULDLRATE not set properly: ${ULDLCHECK}"
-            _log "WARNING: ULDLRATE must be in the range: '1' - '999999' kB/s"
-            _log "WARNING: ULDLRATE set to default: ${DEFAULT_ULDLRATE}"
-            ULDLRATE="${DEFAULT_ULDLRATE}"; }
+        # ULDLRATE (1 - 999999 kB/s).
+        __check_value "ULDLRATE" "^([1-9]|[1-9][0-9]{1,5})$" \
+            "in the range: '1' - '999999' kB/s"
     else
         _log "WARNING: ULDLCHECK set false not validating ULDLRATE"
     fi
 
-    # LOADAVERAGE (max 3 digits).
     if [ "${LOADAVERAGECHECK}" == "true" ]; then
-        [[ "${LOADAVERAGE}" =~ ^([1-9]|[1-9][0-9]{1,2})$ ]] || {
-            _log "WARNING: LOADAVERAGE not set properly: ${LOADAVERAGE}"
-            _log "WARNING: LOADAVERAGE must be a maximum of 3 digits."
-            _log "WARNING: LOADAVERAGE set to default: ${DEFAULT_LOADAVERAGE}"
-            LOADAVERAGE="${DEFAULT_LOADAVERAGE}"; }
+        # LOADAVERAGE (max 3 digits).
+        __check_value "LOADAVERAGE" "^([1-9]|[1-9][0-9]{1,2})$" \
+                 "a maximum of 3 digits"
     else
         _log "WARNING: LOADAVERAGECHECK set false not validating LOADAVERAGE"
     fi
@@ -1148,7 +1123,7 @@ _check_networkconfig() {
         done
     done < <(LC_ALL=C ip -br link show |
                 awk -v regex="^(${FORCE_NIC// /|})" \
-                    '$1 ~ regex && !/SLAVE/ {print $1}')
+                    '$1 ~ regex && !/SLAVE/{sub(/@.*/,"",$1); print $1}')
 
     [ -z "${!NIC_TO_IP[*]}" ] && {
         _log "ERR: No valid network interface found, exiting ..."

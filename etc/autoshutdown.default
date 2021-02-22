@@ -72,7 +72,7 @@ NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     #   3689 = iTunes, DAAP
     #   6991 = Bittorrent
     #   9091 = Bittorrent_WebIF
-    #   32400 = Plex media server
+    #   32400 = Plex Media Server
     #   49152 = UPnP
     #   51413 = Bittorrent
 
