@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-######## STORAGE DEFINITION #########
+######## STORAGE DEFINITIONS #########
 declare -A NIC_TO_IP      # Associative array for storing _check_networkconfig
                           # network interface to IP address mappings.
 declare -A PINGLIST_IFACE # Associative array for storing _ping_range network
@@ -23,13 +23,13 @@ declare -A P_HDDIO_DEVS   # Associative array for storing _check_hddio read,
 declare -A P_UL_DL_RATE   # Associative array for storing _check_ul_dl_rate a
                           # network interface tx, rx and epoch values.
 
-######## CONSTANT DEFINITION ########
+######## CONSTANT DEFINITIONS ########
                           # Autoshutdown configuration.
 readonly CONFIG="${1:-/etc/autoshutdown.conf}"
                           # Autoshutdown default configuration.
 readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}"
 
-######## FUNCTION DECLARATION ########
+####### FUNCTION DECLARATIONS ########
 
 ###############################################################################
 #
@@ -190,11 +190,11 @@ _shutdown() {
 #
 _check_processes() {
     # Check for each given command name in LOADPROCNAMES if it is currently
-    # stated active in "top". If it has been found, that smbd, proftpd, nsfd,
-    # ... There are processes always present in "ps" or "top" output (This
-    # could be due to the "daemon" mechanism.) So the only chance to identify
-    # there is something happening with these processes, is to check if "top"
-    # states them active hence the "-i" parameter is required.
+    # stated active in "top". If the proceess has been found, there are
+    # processes that are always present in "ps" or "top" output (This could be
+    # due to the "daemon" mechanism.) So to identify if is something happening
+    # with these processes, is to check if "top" states them active hence the
+    # "-i" parameter is required.
     local num_load_proc=0
     for process in ${LOADPROCNAMES//,/ }; do
         local lp=0 l_proc=0
@@ -330,7 +330,7 @@ _check_plugin() {
 #              : 1 : If load average is higher than LOADAVERAGE, no shutdown.
 #
 # Checks if the load average is higher than LOADAVERAGE over the last 1 minute.
-# If yes -> no shutdown, next cycle. If no  -> next check and shutdown if all
+# If yes -> no shutdown, next cycle. If no -> next check and shutdown if all
 # cycles failed.
 #
 _check_loadaverage() {
@@ -723,10 +723,8 @@ _check_clock() {
 #   Globals    : $HDDIO_RATE   : Rate in kB/s of HDD-IO.
 #              : $P_HDDIO_DEVS : Associative array for storing read, wrtn and
 #                                epoch values.
-#   Return     : 0 : If value of hdd IO is lower than the defined value, ready
-#                    for shutdown.
-#              : 1 : If value of hdd IO is higher than the defined value,
-#                    no shutdown.
+#   Return     : 0 : If hdd IO is lower than defined value, ready for shutdown.
+#              : 1 : If hdd IO is higher than defined value, no shutdown.
 #
 _check_hddio() {
     local rvalue=0
@@ -966,7 +964,7 @@ _check_config() {
                 _log "WARNING: Unset OVERRIDEUPHOURS"
         fi
     else
-        _log "WARNING: CHECKCLOCKACTIVE set false not validating UPHOURS and OVERRIDEUPHOURS"
+        _log "WARNING: CHECKCLOCKACTIVE set false not validating: UPHOURS and OVERRIDEUPHOURS"
     fi
 
     if [ "${CHECKPROCNAMES}" == "true" ]; then
@@ -985,10 +983,9 @@ _check_config() {
                 "in the range: '1' - '999'"
         done
     else
-        _log "WARNING: CHECKPROCNAMES set false not validating LOADPROCNAMES, LPREPEAT, TEMPPROCNAMES and TPREPEAT"
+        _log "WARNING: CHECKPROCNAMES set false not validating: LOADPROCNAMES, LPREPEAT, TEMPPROCNAMES and TPREPEAT"
     fi
 
-    # Port-Numbers with at least 2 digits.
     if [ "${CHECKSOCKETS}" == "true" ]; then
         __check_value "NSOCKETNUMBERS" "^([0-9]{2,5})+(,[0-9]{2,5})*$" \
             "at least 2 digit in the format: [nsocket1,nsocket2,...,nsocketN]"
@@ -996,7 +993,7 @@ _check_config() {
         __check_value "NSOCKETIGNORESELF" "^(true|false)$" \
             "set to: 'true' or 'false'"
     else
-        _log "WARNING: CHECKSOCKETS set false not validating NSOCKETNUMBERS and NSOCKETIGNORESELF"
+        _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
 
     # PINGLIST OR RANGE set-up.
@@ -1030,7 +1027,7 @@ _check_config() {
         __check_value "HDDIO_RATE" "^([1-9]|[1-9][0-9]{1,5})$" \
             "in the range: '1' - '999999' kB/s"
     else
-        _log "WARNING: HDDIOCHECK set false not validating HDDIO_RATE"
+        _log "WARNING: HDDIOCHECK set false not validating: HDDIO_RATE"
     fi
 
     if [ "${ULDLCHECK}" == "true" ]; then
@@ -1038,7 +1035,7 @@ _check_config() {
         __check_value "ULDLRATE" "^([1-9]|[1-9][0-9]{1,5})$" \
             "in the range: '1' - '999999' kB/s"
     else
-        _log "WARNING: ULDLCHECK set false not validating ULDLRATE"
+        _log "WARNING: ULDLCHECK set false not validating: ULDLRATE"
     fi
 
     if [ "${LOADAVERAGECHECK}" == "true" ]; then
@@ -1046,7 +1043,7 @@ _check_config() {
         __check_value "LOADAVERAGE" "^([1-9]|[1-9][0-9]{1,2})$" \
                  "a maximum of 3 digits"
     else
-        _log "WARNING: LOADAVERAGECHECK set false not validating LOADAVERAGE"
+        _log "WARNING: LOADAVERAGECHECK set false not validating: LOADAVERAGE"
     fi
 
     # SHUTDOWNCOMMAND - Check acpi power states with pm-is-supported.
@@ -1137,8 +1134,7 @@ _check_networkconfig() {
 #   Name       : _check_system_active
 #   Parameters : None
 #   Globals    : $*         : All options as defined in $CONFIG for validation.
-#              : $NIC_TO_IP : Associative array storing network interface to IP
-#                             address mappings.
+#              : $NIC_TO_IP : Associative array storing interface to IP map.
 #   Return     : 0 : If no active host has been found.
 #              : 1 : If at least one active host has been found, no shutdown.
 #
@@ -1192,7 +1188,7 @@ _check_system_active() {
         [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_hddio()"
         _check_hddio || return 1; }
 
-    # PRIO 4: Do a hdd check to see if S.M.A.R.T tests are running.
+    # PRIO 4: Do a hdd check to see if S.M.A.R.T. tests are running.
     [ "${SMARTCHECK}" == "true" ] && {
         [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_smart()"
         _check_smart || return 1; }
