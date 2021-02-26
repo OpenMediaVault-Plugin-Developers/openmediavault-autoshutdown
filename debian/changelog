@@ -2,6 +2,7 @@ openmediavault-autoshutdown (5.1.13) stable; urgency=low
 
   * Fix 'Shutdown Command' combo value validation
   * Small comment changes
+  * Small Debian install tweaks
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 26 Feb 2021 15:01:12 +0000
 
