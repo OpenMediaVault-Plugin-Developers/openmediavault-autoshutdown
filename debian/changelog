@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.1.13) stable; urgency=low
+
+  * Fix 'Shutdown Command' combo value validation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 26 Feb 2021 15:01:12 +0000
+
 openmediavault-autoshutdown (5.1.12) stable; urgency=low
 
   * Fix to allows vlan with @ in names in _check_networkconfig
