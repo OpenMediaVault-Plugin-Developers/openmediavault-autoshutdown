@@ -1,5 +1,5 @@
 [Unit]
-Description=openmediavault-autoshutdown plugin service
+Description=debian-autoshutdown plugin service
 Requires=network-online.target local-fs.target
 After=network-online.target local-fs.target
 After=suspend.target
