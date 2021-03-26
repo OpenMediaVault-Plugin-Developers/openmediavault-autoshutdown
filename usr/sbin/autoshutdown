@@ -1238,8 +1238,8 @@ _check_system_active() {
 ################# Start of body function script autoshutdown ##################
 ###############################################################################
 _log "INFO: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" force
-_log "INFO: Openmediavault-autoshutdown version: $(
-    dpkg-query -f='${Version}' --show openmediavault-autoshutdown)" force
+_log "INFO: debain-autoshutdown version: $(
+    dpkg-query -f='${Version}' --show debian-autoshutdown)" force
 _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
 
 [ ! -f "${DEFAULT_CONFIG}" ] && {
