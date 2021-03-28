@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (5.1.14) stable; urgency=low
 
   * Improve debug with _check_net_status
+  * Remove loop from _check_net_status
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 28 Mar 2021 15:28:33 +0100
 

@@ -378,8 +378,7 @@ _check_loadaverage() {
 ###############################################################################
 #
 #   Name       : _check_net_status
-#   Parameters : $1 : Network interface under test.
-#              : $2 : The network interface IP address.
+#   Parameters : $1 : IP addresses found for all network interfaces.
 #   Globals    : $NSOCKETNUMBERS    : Socket number to check for activity.
 #              : $NSOCKETIGNORESELF : If set will ignore the network interface
 #                                     IP address as a connection.
@@ -387,13 +386,9 @@ _check_loadaverage() {
 #              : 1 or more : If an active socket has been found, no shutdown.
 #
 _check_net_status() {
-    local -r net_iface="${1}"
-    local -r server_ip="${2}"
+    local -r server_ip="${1}"
 
     local active=0
-    local -r empty="Found no active connections"
-
-    _log "INFO: Check connections for: ${net_iface}"
 
     # For each socket see if it is stated active using ss command.
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
@@ -451,7 +446,7 @@ _check_net_status() {
         _log "INFO: Found ${no_lines} active connection on port ${nsocket} (${portprotocol}) from: ${conips//$'\n'/, }"
     done
 
-    _log "INFO: Found ${active} active socket(s) on ${net_iface}, from port(s): ${NSOCKETNUMBERS}"
+    _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
 
     # Return the number of active sockets found.
     return "${active}"
@@ -1183,13 +1178,12 @@ _check_system_active() {
             _ping_range "${net_iface}" \
                         "${NIC_TO_IP["${net_iface}"]}" \
                         "${NIC_TO_IP[*]}" || return 1; }
-
-        # PRIO 2: Do a check for active network sockets.
-        [ "${CHECKSOCKETS}" == "true" ] && {
-            [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_net_status()"
-            _check_net_status "${net_iface}" "${NIC_TO_IP["${net_iface}"]}" ||
-                return 1; }
     done
+
+    # PRIO 2: Do a check for active network sockets.
+    [ "${CHECKSOCKETS}" == "true" ] && {
+        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_net_status()"
+        _check_net_status "${NIC_TO_IP["${net_iface}"]}" || return 1; }
 
     # PRIO 2: Do a check docker sockets for active network sockets.
     [ "${CHECKSOCKETS}" == "true" ] && {
