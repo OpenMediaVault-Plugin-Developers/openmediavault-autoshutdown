@@ -25,17 +25,25 @@ SLEEP=180
 IPCHECK="true"
     # Parameter to activate or deactivate this feature. (default="true")
 
-RANGE="2..254"
-    # Define a range of IPs which should be scanned. (default="2..254")
-    # The 'RANGE' should be comma delimited list of the following:
-    # - Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |
-    #                       iface:xxx.yyy.zzz.start..end
-    # - Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz |
-    #                       iface:www.xxx.yyy.zzz
-    # - Define by FQDN    : fqdn | iface:fqdn
-    # If 'start..end' or 'Last octet of IP' is set the first three octets of
-    # the iface IP address are used. Please make sure to leave 1 and 255 out of
-    # the list !
+RANGE="2..254,0x0..0xFFFF"
+    # Define a range of IPs which should be scanned. (default="2..254,
+    # 0x0..0xFFFF"). The 'RANGE' should be comma delimited list of the
+    # following:
+    # - Define an IPv4 range: <START>..<END> | iface@<START>..<END> |
+    #                         www.xxx.yyy.<START>..<END> |
+    #                         iface@xxx.yyy.zzz.<START>..<END>
+    # - Define a single IPv4: Last octet of IPv4 zzz | iface@zzz |
+    #                         www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz
+    # - Define an IPv6 range: 0x<START>..0x<END> | iface@0x<START>..0x<END> |
+    #                         s:t:u:v:w:x:y:0x<START>..0x<END> |
+    #                         iface@s:t:u:v:w:x:y:0x<START>..0x<END>
+    # - Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz |
+    #                         s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z"
+    # - Define by FQDN      : fqdn | iface@fqdn
+    # If '<START>..<END>' or 'Last octet of IPv4' is set the first three octets
+    # of the iface IPv4 address are used. If '0x<START>..0x<END>' or 'Last
+    # hextet of IPv6' is set the first seven hextets of the iface IPv6 address
+    # is used. Please make sure to leave 1 and 255 out of the IPv4 range!
 
 # -----------------------------------------------------------------------------
 

@@ -3,6 +3,9 @@ openmediavault-autoshutdown (5.1.14) stable; urgency=low
   * Improve debug with _check_net_status
   * Remove loop from _check_net_status
   * Add IPv6 support to _check_net_status and _check_networkconfig
+  * Add IPv6 support to _ping_range
+    Note: Iface:ip has changed to iface@ip this is a non-backwardly
+          compatible change.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 28 Mar 2021 15:28:33 +0100
 

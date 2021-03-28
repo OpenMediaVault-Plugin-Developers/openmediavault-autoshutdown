@@ -32,7 +32,7 @@ if ! omv_config_exists "${SERVICE_XPATH}"; then
     omv_config_add_key "${SERVICE_XPATH}" "cycles" "6"
     omv_config_add_key "${SERVICE_XPATH}" "sleep" "180"
     omv_config_add_key "${SERVICE_XPATH}" "ipcheck" "1"
-    omv_config_add_key "${SERVICE_XPATH}" "range" "2..254"
+    omv_config_add_key "${SERVICE_XPATH}" "range" "2..254,0x0..0xFFFF"
     omv_config_add_key "${SERVICE_XPATH}" "shutdowncommand" "0"
     omv_config_add_key "${SERVICE_XPATH}" "checkclockactive" "0"
     omv_config_add_key "${SERVICE_XPATH}" "uphours_begin" "6"

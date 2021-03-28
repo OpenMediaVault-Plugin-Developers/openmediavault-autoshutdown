@@ -43,7 +43,7 @@ readonly R_FQDN="(${R_PART})([.](${R_PART}))"
 readonly R_OCTET="25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]"
 readonly R_IPV4="(((${R_OCTET})[.]){3})(${R_OCTET})"
                           # IPv4 address range regular expression for IPCHECK.
-readonly R_RANGE="(((${R_OCTET})[.]){3})?((${R_OCTET})[.]{2}(${R_OCTET}))"
+readonly R_RANGE_IPV4="(((${R_OCTET})[.]){3})?((${R_OCTET})[.]{2}(${R_OCTET}))"
                           # IPv6 address regular expression parts.
 readonly R_HEXTET="[0-9a-fA-F]{1,4}"
 R_IPV6="(${R_HEXTET}:){7}${R_HEXTET}|"
@@ -59,6 +59,17 @@ R_IPV6+="[fF][eE]80:(:${R_HEXTET}){0,4}%[${R_IFACE}]|"
 R_IPV6+="::([fF]{4}(:0{1,4}){0,1}:){0,1}${R_IPV4}|"
 R_IPV6+="(${R_HEXTET}:){1,4}:${R_IPV4}"
 readonly R_IPV6
+                          # IPv6 address range regular expression for IPCHECK.
+R_RANGE_IPV6="((${R_HEXTET}:){7}|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,6}:|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,5}(:${R_HEXTET}):|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,4}(:${R_HEXTET}){1,2}:|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,3}(:${R_HEXTET}){1,3}:|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,2}(:${R_HEXTET}){1,4}:|"
+R_RANGE_IPV6+="${R_HEXTET}:((:${R_HEXTET}){1,5}):|"
+R_RANGE_IPV6+=":((:${R_HEXTET}){1,6}:|:))?"
+R_RANGE_IPV6+="((0[xX](${R_HEXTET}))[.]{2}(0[xX](${R_HEXTET})))"
+readonly R_RANGE_IPV6
 
 ####### FUNCTION DECLARATIONS ########
 
@@ -99,8 +110,9 @@ _log() {
 #
 #   Name       : _ping_range
 #   Parameters : $1 : The network interface that is being worked on.
-#              : $2 : The network interface IP address.
-#              : $3 : IP addresses found for all network interfaces.
+#              : $2 : The network interface IPv4 address.
+#              : $3 : The network interface IPv6 address.
+#              : $4 : IP addresses found for all network interfaces.
 #   Globals    : $PINTLIST       : File reference of IP's/FQDN's to be checked
 #                                  (expert setting overrides $RANGE).
 #              : $RANGE          : Details of IP's/FQDN's to be checked.
@@ -108,24 +120,39 @@ _log() {
 #                                  IP addresses.
 #              : $R_IFACE        : Network interface name regular expression.
 #              : $R_OCTET        : Octet regular expression.
-#              : $R_IPV4         : IPV4 address regular expression.
-#              : $R_RANGE        : Ping range regular expression.
+#              : $R_IPV4         : IPv4 address regular expression.
+#              : $R_RANGE_IPV4   : IPv4 ping range regular expression.
+#              : R_HEXTET        : Fore hexadecimal digits.
+#              : $R_IPV6         : IPv6 address regular expression.
+#              : $R_RANGE_IPV6   : IPv6 ping range regular expression.
 #              : $R_FQDN         : FQDN regular expression.
 #   Return     : Number of active IP on network interfaces.
 #
 _ping_range() {
     local -r net_iface="${1}"
-    local -r srv_ip="${2}"
-    local -r srv_ips="^\\(${3// /\\|}\\)$"
+    local -r srv_ipv4="${2}"
+    local -r srv_ipv6="${3}"
+    local -r ips_regex="^\\(${4// /\\|}\\)$"
 
     local ip_list=()
     local pinglist_array=()
+
     local -r empty="No IP addresses specified"
+    local -r v4_c="${srv_ipv4%.*}"
+
+    if [[ "${srv_ipv6}" =~ ((%${R_IFACE})|(${R_IPV4}))$ ]]; then
+        local -r v6_c=""
+    elif [[ "${srv_ipv6}" =~ ^((${R_HEXTET}:){6}${R_HEXTET})::$ ]]; then
+        local -r v6_c="${BASH_REMATCH[1]}"
+    else
+        local -r v6_c="${srv_ipv6%:*}"
+    fi
 
     [ "${DEBUG}" == "true" ] && {
         _log "DEBUG: INTERFACE: ${net_iface}"
-        _log "DEBUG: ADRESSES TO EXTRACT: ${srv_ips}"
-        _log "DEBUG: CLASS: ${srv_ip%.*}"
+        _log "DEBUG: ADRESSES TO EXTRACT: ${ips_regex}"
+        _log "DEBUG: IPv4 CLASS: ${v4_c:-N/A}"
+        _log "DEBUG: IPv6 CLASS: ${v6_c:-N/A}"
         _log "DEBUG: PINGLIST: ${PINGLIST:-N/A}"
         _log "DEBUG: RANGE: ${RANGE:-N/A}"; }
 
@@ -138,45 +165,70 @@ _ping_range() {
             mapfile -t ip_list < "${PINGLIST}"
         else
             for rg in ${RANGE//,/ }; do
-                if [[ "${rg}" =~ ^(${R_IFACE})[:] &&
+                if [[ "${rg}" =~ ^(${R_IFACE})[@] &&
                         "${BASH_REMATCH[1]}" != "${net_iface}" ]]; then
                     continue
-                elif [[ "${rg}" =~ \
-                            ^(${R_IFACE}[:])?((${R_OCTET})|(${R_IPV4}))$ ]]; then
+
+                elif [[ "${rg}" =~ ^(${R_IFACE}[@])?(${R_FQDN})$ ]]; then
                     mapfile -t -O "${#ip_list[@]}" ip_list <<< \
-                        "${BASH_REMATCH[4]:-"${srv_ip%.*}."}${BASH_REMATCH[3]}"
-                elif [[ "${rg}" =~ ^(${R_IFACE}[:])?(${R_RANGE})$ ]]; then
+                        "${BASH_REMATCH[2]}"
+
+                elif [[ -n "${srv_ipv4}" && "${rg}" =~ \
+                        ^(${R_IFACE}[@])?((${R_OCTET})|(${R_IPV4}))$ ]]; then
+                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
+                        "${BASH_REMATCH[4]:-"${v4_c}."}${BASH_REMATCH[3]}"
+                elif [[ -n "${srv_ipv4}" &&
+                        "${rg}" =~ ^(${R_IFACE}[@])?(${R_RANGE_IPV4})$ ]]; then
                     local min="${BASH_REMATCH[7]}" max="${BASH_REMATCH[8]}"
                     [ "${BASH_REMATCH[8]}" -lt "${BASH_REMATCH[7]}" ] && {
                         min="${BASH_REMATCH[8]}"; max="${BASH_REMATCH[7]}"; }
                     mapfile -t -O "${#ip_list[@]}" ip_list < <(
-                        seq -f "${BASH_REMATCH[3]:-"${srv_ip%.*}."}%g" \
+                        seq -f "${BASH_REMATCH[3]:-"${v4_c}."}%g" \
                             "${min}" "${max}")
-                elif [[ "${rg}" =~ ^(${R_IFACE}[:])?(${R_FQDN})$ ]]; then
-                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
-                        "${BASH_REMATCH[2]}"
+
+                elif [[ -n "${srv_ipv6}" && "${rg}" =~ \
+                        ^(${R_IFACE}[@])?((0[xX](${R_HEXTET}))|(${R_IPV6}))$ ]]
+                then
+                    mapfile -t -O "${#ip_list[@]}" ip_list < <(
+                        awk '{sub(/::0$/,"::",$0); print tolower($0)}' <<< \
+                            "$(printf "${BASH_REMATCH[5]:-"${v6_c}:"}%x\\n" \
+                                "$((16#${BASH_REMATCH[4]}))")")
+                elif [[ -n "${srv_ipv6}" && "${rg}" =~ \
+                        ^(${R_IFACE}[@])?(${R_RANGE_IPV6})$ ]]; then
+                    local min="${BASH_REMATCH[20]}" max="${BASH_REMATCH[22]}"
+                    [ $((16#${BASH_REMATCH[22]})) -lt \
+                            $((16#${BASH_REMATCH[20]})) ] && {
+                        min="${BASH_REMATCH[22]}"; max="${BASH_REMATCH[20]}"; }
+                    mapfile -t -O "${#ip_list[@]}" ip_list < <(
+                        awk '{sub(/::0$/,"::",$0); print tolower($0)}' <<< \
+                            "$(printf "${BASH_REMATCH[3]:-"${v6_c}:"}%x\\n" \
+                                $(seq $((16#${min})) $((16#${max}))))")
                 fi
             done
         fi
         PINGLIST_IFACE["${key}"]="$(
             printf '%s\n' "${ip_list[@]}" |
-            sort -t . -k 3,3n -k 4,4n | uniq |
-            grep -v "${srv_ips}")"
+            awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
+            awk -Fz '/:/{print $2}!/:/{print}' |
+            grep -v "${ips_regex,,}")"
     fi
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
 
     [ "${DEBUG}" == "true" ] &&
-        _log "DEBUG: pinglist_array: ${pinglist_array[*]:-"${empty}"}"
+        local pinglist_subset; while read -r pinglist_subset; do
+            _log "DEBUG: pinglist_array${cont:-}: ${pinglist_subset}"
+            local cont=" continued"
+        done < <(xargs -n 2048 <<< "${pinglist_array[*]}")
 
-    [[ "${pinglist_array[0]}" == "${empty}" ]] && {
+    [ "${pinglist_array[0]}" == "${empty}" ] && {
         _log "INFO: No IP addresses specified for: ${net_iface} -> next check"
         return 0; }
 
     _log "INFO: Retrieve list of active IPs for: ${net_iface}"
     local -r fping_result="$(LC_ALL=C
-        fping --iface="${net_iface}" --quiet --alive --retry=1 \
-              --addr "${pinglist_array[@]}" |
-        grep -v "${srv_ips}" || true)"
+        xargs fping --iface="${net_iface}" --quiet --alive \
+                    --retry=1 --addr <<< "${pinglist_array[*]}" |
+        grep -v "${ips_regex,,}" || true)"
 
     [ -z "${fping_result}" ] && {
         _log "INFO: No active IPs found in the specified range -> next check"
@@ -184,7 +236,8 @@ _ping_range() {
 
     local active_ip; while read -r active_ip; do
         _log "INFO: ${active_ip} is active"
-    done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
+    done < <(awk '/:/{print "z"$0}!/:/{print}' <<< "${fping_result}" |
+             sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')
 
     _log "INFO: Active IPs found in the specified range -> no shutdown"
     return "$(wc -l <<< "${fping_result}")"
@@ -1041,7 +1094,10 @@ _check_config() {
     fi
 
     # PINGLIST OR RANGE set-up.
-    local -r regex_ipcheck="(${R_IFACE}[:])?((${R_OCTET})|(${R_IPV4})|(${R_RANGE})|(${R_FQDN}))"
+    local regex_ipcheck="(${R_IFACE}[@])?"
+    regex_ipcheck+="((${R_OCTET})|(${R_IPV4})|(${R_RANGE_IPV4})|"
+    regex_ipcheck+="(0[xX]${R_HEXTET})|(${R_IPV6})|(${R_RANGE_IPV6})|(${R_FQDN}))"
+    local -r regex_ipcheck="${regex_ipcheck}"
     if [[ -n "${PINGLIST:-}" && -f "${PINGLIST}" ]]; then
         _log "INFO: PINGLIST is set, reading IPs from: ${PINGLIST}"
         _log "INFO: Overidding IPCHECK to: 'true'"
@@ -1053,16 +1109,19 @@ _check_config() {
         IPCHECK="false"
     elif [ "${IPCHECK}" == "false" ]; then
         _log "WARNING: IPCHECK set false not validating: RANGE"
-    elif [[ "${RANGE}" == "-" ]]; then
+    elif [ "${RANGE}" == "-" ]; then
         _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
         IPCHECK="false"
     elif [[ ! "${RANGE}" =~ ^(${regex_ipcheck})(,(${regex_ipcheck}))*$ ]]; then
         _log "WARNING: RANGE not set properly: ${RANGE}"
         _log "WARNING: The 'RANGE' should be a comma delimited list of the following:"
-        _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-        _log "WARNING: Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-        _log "WARNING: Define by FQDN: fqdn | iface:fqdn"
-        _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used"
+        _log "WARNING: Define an IPv4 range: <START>..<END> | iface@<START>..<END> | www.xxx.yyy.<START>..<END> | iface@xxx.yyy.zzz.<START>..<END>"
+        _log "WARNING: Define a single IPv4: Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz"
+        _log "WARNING: Define an IPv6 range: 0x<START>..0x<END> | iface@0x<START>..0x<END> | s:t:u:v:w:x:y:0x<START>..0x<END> | ifaces@s:t:u:v:w:x:y:0x<START>..0x<END>"
+        _log "WARNING: Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z"
+        _log "WARNING: Define by FQDN: fqdn | iface@fqdn"
+        _log "WARNING: If '<START>..<END>' or 'Last octet of IPv4' is set the first three octets of the iface IPv4 address is used"
+        _log "WARNING: If '0x<START>..0x<END>' or 'Last hextet of IPv6' is set the first seven hextets of the iface IPv6 address is used"
         _log "WARNING: Setting RANGE to default: ${DEFAULT_RANGE}"
         RANGE="${DEFAULT_RANGE}"
     fi
@@ -1221,8 +1280,9 @@ _check_system_active() {
         [ "${IPCHECK}" == "true" ] && {
             [ "${DEBUG}" == "true" ] && _log "DEBUG: Calling: _ping_range()"
             _ping_range "${net_iface}" \
-                        "${NIC_2_IPV4["${net_iface}"]}" \
-                        "${NIC_2_IPV4[*]}" || return 1; }
+                        "${NIC_2_IPV4["${net_iface}"]:-}" \
+                        "${NIC_2_IPV6["${net_iface}"]:-}" \
+                        "${ips}" || return 1; }
     done
 
     # PRIO 2: Do a check for active network sockets.
