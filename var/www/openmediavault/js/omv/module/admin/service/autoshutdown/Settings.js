@@ -253,18 +253,21 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     xtype: "textfield",
                     name: "range",
                     fieldLabel: "",
-                    value: "2..254",
-                    width: 600,
+                    value: "2..254,0x0..0xFFFF",
+                    width: 800,
                     allowBlank: false,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("Define a range of IPs which should be scanned.") + "<br />" +
                               _("The IP-Range should be a comma delimited list of the following:") + "<br />" + "- " +
-                              _("Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end") + "<br />" + "- " +
-                              _("Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz") + "<br />" + "- " +
-                              _("Define by FQDN: fqdn | iface:fqdn") + "<br />" +
-                              _("If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used.") + "<br />" +
-                              _("Please make sure to leave 1 and 255 out of the list!")
+                              _("Define an IPv4 range: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;") + "<br />" + "- " +
+                              _("Define a single IPv4: Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz") + "<br />" + "- " +
+                              _("Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;") + "<br />" + "- " +
+                              _("Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz  | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z") + "<br />" + "- " +
+                              _("Define by FQDN: fqdn | iface@fqdn") + "<br />" +
+                              _("If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first three octets of the iface IPv4 address is used.") + "<br />" +
+                              _("If '0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first seven hextets of the iface IPv6 address is used.") + "<br />" +
+                              _("Please make sure to leave 1 and 255 out of the IPv4 range!")
                     }]
                 }]
             },{
@@ -285,7 +288,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     name: "nsocketnumbers",
                     fieldLabel: "",
                     value: "21,22,80,3689,6991,9091,49152",
-                    width: 600,
+                    width: 800,
                     allowBlank: false,
                     plugins: [{
                         ptype: "fieldinfo",
@@ -316,7 +319,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 50,
-                    width: 600,
+                    width: 800,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("Define the network traffic in kB/s.")
@@ -344,7 +347,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 40,
-                    width: 600,
+                    width: 800,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("If the load average of the server is above this value, then no shutdown.") + "<br />" +
@@ -373,7 +376,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 400,
-                    width: 600,
+                    width: 800,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("If the HDD-IO-average of the server is above this value in kB/s, then no shutdown.")
@@ -398,7 +401,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     fieldLabel: _("Load Processes"),
                     allowBlank: false,
                     value: "smbd,nfsd,mt-daapd,forked-daapd",
-                    width: 600,
+                    width: 800,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("Names of processes with load dependent children. Set to '-' to disable.")
@@ -419,7 +422,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     fieldLabel: _("Temp Processes"),
                     allowBlank: false,
                     value: "in.tftpd",
-                    width: 600,
+                    width: 800,
                     plugins: [{
                         ptype: "fieldinfo",
                         text: _("Names of processes only started when active. Set to '-' to disable.")
