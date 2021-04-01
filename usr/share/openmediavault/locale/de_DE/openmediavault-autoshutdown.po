@@ -4,7 +4,7 @@
 # 
 # Translators:
 # David Hönel <davidh1990@gmx.de>, 2013
-# Ettore Atalan <atalanttore@googlemail.com>, 2014,2016
+# Ettore Atalan <atalanttore@googlemail.com>, 2014,2016,2021
 # Wikinaut, 2019
 # Micha K <pikim@web.de>, 2018
 # Raiko, 2015
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 09:23-0600\n"
-"PO-Revision-Date: 2021-02-18 15:23+0000\n"
+"POT-Creation-Date: 2021-04-01 09:52-0500\n"
+"PO-Revision-Date: 2021-04-01 14:52+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -24,10 +24,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "&emsp;Minute"
-msgstr ""
+msgstr "&emsp;Minute"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Aktive Prozesse"
 
 msgid "AutoShutdown"
 msgstr "AutomatischHerunterfahren"
@@ -54,7 +54,7 @@ msgid "Check if S.M.A.R.T. tests are running."
 msgstr ""
 
 msgid "Clock"
-msgstr ""
+msgstr "Uhr"
 
 msgid "Cycles"
 msgstr "Durchläufe"
@@ -66,16 +66,29 @@ msgid "Define a range of IPs which should be scanned."
 msgstr ""
 
 msgid ""
-"Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | "
-"iface:www.xxx.yyy.zzz"
+"Define a single IPv4: Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz |"
+" iface@www.xxx.yyy.zzz"
 msgstr ""
 
 msgid ""
-"Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |"
-" iface:xxx.yyy.zzz.start..end"
+"Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz  | "
+"s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z"
 msgstr ""
 
-msgid "Define by FQDN: fqdn | iface:fqdn"
+msgid ""
+"Define an IPv4 range: &lt;START&gt;..&lt;END&gt; | "
+"iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | "
+"iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;"
+msgstr ""
+
+msgid ""
+"Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; | "
+"iface@0x&lt;START&gt;..0x&lt;END&gt; | "
+"s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | "
+"iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;"
+msgstr ""
+
+msgid "Define by FQDN: fqdn | iface@fqdn"
 msgstr ""
 
 msgid "Define the network traffic in kB/s."
@@ -96,7 +109,7 @@ msgid "Expert Settings"
 msgstr "Experteneinstellungen"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Zusätzliche Optionen"
 
 msgid "Fake"
 msgstr "Fake"
@@ -108,7 +121,7 @@ msgid "Forced Uptime"
 msgstr "Erzwungene Betriebszeit"
 
 msgid "Function"
-msgstr ""
+msgstr "Funktion"
 
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
@@ -120,14 +133,19 @@ msgid "Hibernate"
 msgstr "Ruhezustand"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Hybridschlaf"
 
 msgid "IP Range"
+msgstr "IP-Bereich"
+
+msgid ""
+"If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first "
+"three octets of the iface IPv4 address is used."
 msgstr ""
 
 msgid ""
-"If 'start..end' or 'Last octet of IP' is set the first three octets of the "
-"iface IP address are used."
+"If '0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the "
+"first seven hextets of the iface IPv6 address is used."
 msgstr ""
 
 msgid ""
@@ -146,13 +164,13 @@ msgid "Load Average"
 msgstr "Durchschnittslast "
 
 msgid "Load Processes"
-msgstr ""
+msgstr "Prozesse laden"
 
 msgid "Log to Syslog"
 msgstr "Im Syslog protokollieren"
 
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
 msgstr ""
@@ -165,16 +183,16 @@ msgid "Numbers of seconds between each cycle."
 msgstr "Anzahl der Sekunden zwischen jedem Durchlauf."
 
 msgid "Please check"
-msgstr ""
+msgstr "Bitte überprüfen"
 
-msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "Bitte stellen Sie sicher, dass weder 1 noch 255 in dieser Liste auftauchen!"
+msgid "Please make sure to leave 1 and 255 out of the IPv4 range!"
+msgstr ""
 
 msgid "Plugins"
 msgstr ""
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB-Status"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -232,7 +250,7 @@ msgid "Uphours"
 msgstr "Verfügbarkeitsstunden"
 
 msgid "Users"
-msgstr ""
+msgstr "Benutzer"
 
 msgid "Verbose"
 msgstr "Ausführlich"
