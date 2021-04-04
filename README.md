@@ -16,6 +16,7 @@ There are 3 ways how you can install this on your machine:
 
 ### One-Line-Command
 just copy and paste this to your terminal everything is done for you. 
+
 `curl -sSL https://raw.githubusercontent.com/mnul/debian-autoshutdown/master/install.sh | sudo bash`
 
 ### Download and install script
