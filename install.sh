@@ -75,6 +75,7 @@ echo "all files copied to their location!"
 echo ""
 
 
+sudo systemctl daemon-reload
 sudo systemctl start $SERVICE
 sudo systemctl enable $SERVICE
 
