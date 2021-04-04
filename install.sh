@@ -11,7 +11,7 @@ giturl="https://github.com/mnul/debian-autoshutdown/archive/refs/heads/master.zi
 OLDPWD=$(pwd) #save current working dir
 TMPDIR=/tmp/debian-autoshutdown
 ZIPNAME="debian-autoshutdown.zip"
-service=autoshutdown.service
+service="autoshutdown.service"
 
 
 #Install-Script starts here
@@ -78,6 +78,7 @@ echo ""
 sudo systemctl daemon-reload
 sudo systemctl start $SERVICE
 sudo systemctl enable $SERVICE
+sudo systemctl daemon-reload
 
 echo "" && echo "" && echo ""
 echo "" && echo "" && echo ""
@@ -85,15 +86,15 @@ echo "Autoshutdown is now active with its default configuration"
 echo ""
 echo "to finish and configure the service you must copy the default config file to /etc/autoshutdown.conf"
 echo ""
-echo "    sudo cp /etc/autoshutdown.default"
+echo "->  sudo cp /etc/autoshutdown.default"
 echo ""
 echo "and edit its configuration file (in this case using the nano editor:"
 echo ""
-echo "    sudo nano /etc/autoshutdown.conf"
+echo "->    sudo nano /etc/autoshutdown.conf"
 echo ""
 echo "Finally restart autoshutdown to enable your changes"
 echo ""
-echo "    sudo systemctl restart autoshutdown"
+echo "->    sudo systemctl restart autoshutdown"
 echo ""
 echo ""
 echo "all done. "
