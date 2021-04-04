@@ -1,6 +1,0 @@
-etc/* etc/
-srv/* srv/
-lib/systemd/system-sleep/* lib/systemd/system-sleep/
-usr/share/openmediavault/* usr/share/openmediavault/
-usr/sbin/* usr/sbin/
-var/www/openmediavault/* var/www/openmediavault/
