@@ -63,6 +63,6 @@ fi
 cd debian-autoshutdown-master
 
 sudo cp -R etc/* /etc/
-sudo cp -R srv/* /srv/
+sudo cp -R usr/* /usr/
 sudo cp -R lib/* /lib/
 
