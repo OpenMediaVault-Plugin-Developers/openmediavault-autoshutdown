@@ -8,11 +8,8 @@
 
 #Variables
 giturl="https://github.com/mnul/debian-autoshutdown/archive/refs/heads/master.zip"
-OLDPWD=$(pwd) #save current working dir
 TMPDIR=/tmp/debian-autoshutdown
 ZIPNAME="debian-autoshutdown.zip"
-service="autoshutdown.service"
-
 
 #Install-Script starts here
 
@@ -95,3 +92,4 @@ echo "->    sudo systemctl restart autoshutdown"
 echo ""
 echo ""
 echo "all done. Goodbye."
+sudo rm -rf $TMPDIR
