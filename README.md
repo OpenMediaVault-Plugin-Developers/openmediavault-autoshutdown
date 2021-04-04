@@ -6,6 +6,28 @@ This is a fork from the awesome openmediavault-auotshutdown-plugin
 I do not take any credit for the work, I just try and make it usable on a standard Debian/Ubuntu System.
 Pleas go check them out [here](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown)
 
+
+Installation
+------------
+There are 3 ways how you can install this on your machine:
+1. curl one-line command
+2. download install script
+3. clone git-repo
+
+### One-Line-Command
+just copy and paste this to your terminal everything is done for you. 
+`curl -sSL https://raw.githubusercontent.com/mnul/debian-autoshutdown/master/install.sh | sudo bash`
+
+### Download and install script
+
+tbd.
+
+### clone git repo
+
+tbd.
+
+
+
 Original README.md
 -------------------
 
