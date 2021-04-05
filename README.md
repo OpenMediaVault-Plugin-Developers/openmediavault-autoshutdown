@@ -24,7 +24,7 @@ Piping to bash is controversal, therefore there are other options, if you want t
 ### Download and install script
 
 ```bash
-wget -O install.sh https://github.com/mnul/debian-autoshutdown/master/install.sh
+wget -O install.sh https://raw.githubusercontent.com/mnul/debian-autoshutdown/master/install.sh
 sudo bash install.sh
 ```
 
