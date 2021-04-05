@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (5.1.15) stable; urgency=low
 
   * Tweak spelling
+  * Fix a bug in _check_net_status if two active interfaces
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 05 Apr 2021 21:06:57 +0100
 

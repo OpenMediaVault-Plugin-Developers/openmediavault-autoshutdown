@@ -460,15 +460,18 @@ _check_loadaverage() {
 _check_net_status() {
     local -r ips_regex="${1// /|}"
 
+    local -r regex_s="[[]?(::(ffff|FFFF):)?"
+    local -r regex_e="[]]?([%][^ /]+)?"
+
     local active=0
 
     # For each socket see if it is stated active using ss command.
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
         local lines; lines="$(LC_ALL=C
             ss -n |
-            awk -v regex="^[[]?(::(ffff|FFFF):)?${ips_regex}[]]?:${nsocket}$" \
+            awk -v regex="^${regex_s}(${ips_regex})${regex_e}:${nsocket}$" \
+                -v ips_regex="^${regex_s}(${ips_regex})${regex_e}:[0-9]+$" \
                 -v ignore_self="${NSOCKETIGNORESELF}" \
-                -v ips_regex="${ips_regex}" \
                 "(ignore_self == \"false\") ? \
                     \$2 ~ /^ESTAB$/ && \$5 ~ regex : \
                     \$2 ~ /^ESTAB$/ && \$5 ~ regex && \$6 !~ ips_regex")"
@@ -491,8 +494,10 @@ _check_net_status() {
         ((active+="${no_lines}"))
 
         local conips; conips="$(
-            awk '{gsub(/^[[]?(::(ffff|FFFF):)?/,"",$6);
-                  gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${lines}" |
+            awk -v regex_start="^${regex_s}" \
+                -v regex_end="${regex_e}:[0-9]+$" \
+                '{gsub(regex_start,"",$6);
+                  gsub(regex_end,"",$6); print $6}' <<< "${lines}" |
             awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
             awk -Fz '/:/{print $2}!/:/{print}')"
 
