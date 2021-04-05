@@ -43,12 +43,12 @@ Once the setup is done, there is a config file located in `/etc/autoshutdown.con
 
 Using nano this is:
 
-##`sudo nano /etc/autoshutdown.conf`
+## `sudo nano /etc/autoshutdown.conf`
 
 once you're done editing, save using [CTRL]+[o], press [y] to overwrite the current config and exit out with [CTRL]+[x].
 Finally you need to restart the autoshutdown-service for the changes to take effect.
 
-##`sudo systemctl restart autoshutdown`
+## `sudo systemctl restart autoshutdown`
 
 Below you find the original README from OMV-Autoshutdown where things are explained nicely. 
 
