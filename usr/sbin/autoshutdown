@@ -122,7 +122,7 @@ _log() {
 #              : $R_OCTET        : Octet regular expression.
 #              : $R_IPV4         : IPv4 address regular expression.
 #              : $R_RANGE_IPV4   : IPv4 ping range regular expression.
-#              : R_HEXTET        : Fore hexadecimal digits.
+#              : $R_HEXTET       : Fore hexadecimal digits.
 #              : $R_IPV6         : IPv6 address regular expression.
 #              : $R_RANGE_IPV6   : IPv6 ping range regular expression.
 #              : $R_FQDN         : FQDN regular expression.
@@ -516,7 +516,7 @@ _check_net_status() {
             *)       portprotocol="unknown" ;;
         esac
 
-        _log "INFO: Found ${no_lines} active connection on port ${nsocket} (${portprotocol}) from: ${conips//$'\n'/, }"
+        _log "INFO: Found ${no_lines} active connection(s) on port ${nsocket} (${portprotocol}) from: ${conips//$'\n'/, }"
     done
 
     _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
@@ -578,7 +578,7 @@ _check_docker_status() {
             [ -n "${lines}" ] &&
                 { local no_lines; no_lines="$(wc -l <<< "${lines}")"
                   ((active+="${no_lines}"))
-                  _log "INFO: Found ${no_lines} active connection on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
+                  _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
     _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}"

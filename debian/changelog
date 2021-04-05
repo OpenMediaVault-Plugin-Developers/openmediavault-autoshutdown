@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (5.1.15) stable; urgency=low
+
+  * Tweak spelling
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 05 Apr 2021 21:06:57 +0100
+
 openmediavault-autoshutdown (5.1.14) stable; urgency=low
 
   * Improve debug with _check_net_status
