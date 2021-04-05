@@ -17,19 +17,41 @@ There are 3 ways how you can install this on your machine:
 ### One-Line-Command
 just copy and paste this to your terminal everything is done for you. 
 
-`curl -sSL https://raw.githubusercontent.com/mnul/debian-autoshutdown/master/install.sh | sudo bash`
+### `curl -sSL https://raw.githubusercontent.com/mnul/debian-autoshutdown/master/install.sh | sudo bash`
+
+Piping to bash is controversal, therefore there are other options, if you want to read the script beforehand:
 
 ### Download and install script
 
-tbd.
+```bash
+wget -O install.sh https://github.com/mnul/debian-autoshutdown/master/install.sh
+sudo bash install.sh
+```
 
 ### clone git repo
 
-tbd.
+```bash
+git clone https://github.com/mnul/debian-autoshutdown debian-autoshutdown
+cd "debian-autoshutdown"
+sudo bash local-install.sh
+```
+
+Configuraton
+--------------
+
+Once the setup is done, there is a config file located in `/etc/autoshutdown.conf` that you can edit to your needs. Just open it with your favourite editor (eg. vim, nano, ...) and change the settings accordingly. Everything is explained nicely.
+Using nano this is:
+#`sudo nano /etc/autoshutdown.conf`
+once you're done editing, save using [CTRL]+[o], press [y] to overwrite the current config and exit out with [CTRL]+[x].
+Finally you need to restart the autoshutdown-service for the changes to take effect.
+#`sudo systemctl restart autoshutdown`
+
+Below you find the original README from OMV-Autoshutdown where things are explained nicely. 
+
+If you have further questions hit me up on reddit @manukimmerle
 
 
-
-Original README.md
+Original README.md from OMV-Autoshutdown
 -------------------
 
 __Bugs reports:__  Please provide a _full_ verbose or FAKE-Mode log with the
