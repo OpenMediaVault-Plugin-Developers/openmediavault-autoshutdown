@@ -3,6 +3,7 @@ openmediavault-autoshutdown (5.1.16) stable; urgency=low
   * Improve validation of UPHOURS and OVERRIDEUPHOURS
   * Fix inconstancy in documentation of defaults
   * Add a new debian lintian-override
+  * Add Kernel RTC wakealarm functionality
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 13 Apr 2021 15:10:11 +0100
 

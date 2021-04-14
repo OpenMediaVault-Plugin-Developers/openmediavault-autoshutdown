@@ -58,6 +58,21 @@ UPHOURS="06:00..20:00"
 
 # -----------------------------------------------------------------------------
 
+WAKEALARM_SET="false"
+    # Parameter to activate or deactivate the WAKEALARM_SET feature
+    # (default="false") per default this is deactivated.
+
+WAKEALARM="8:00"
+   # The time in 24 hour clock, the system should wake up at each day unless
+   # OVERRIDEWAKEALARM or WAKEALARM_UPHOURS are set. (default="8:00")
+
+WAKEALARM_UPHOURS="false"
+   # If set "true" it will override WAKEALARM and OVERRIDEWAKEALARM and set
+   # them using the start times from UPHOURS and OVERRIDEUPHOURS. Note for this
+   # to work "CHECKCLOCKACTIVE must also be set to "true". (default="false")
+
+# -----------------------------------------------------------------------------
+
 CHECKSOCKETS="true"
     # Parameter to activate or deactivate network socket feature.
     # (default="true")
@@ -301,11 +316,26 @@ FORCE_NIC="en eth wlan bond br usb"
 
 # -----------------------------------------------------------------------------
 
+RTC="rtc0"
+    # The systems real time clock that will be used by the script to set a
+    # wakealarm. (default="rtc0")
+
+# -----------------------------------------------------------------------------
+
 #OVERRIDEUPHOURS="Sat:06:30..22:59,Sun:06:30..22:00"
     # Allows the overriding of UPHOURS for fixed days of the week. For
     # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
     # Wed,Thu,Fri,Sat) colon, start time, double dot, stop time, comma, next
     # override. e.g. Sat:06:30..23:00,Sun:06:30..22:00.
+
+# -----------------------------------------------------------------------------
+
+# OVERRIDEWAKEALARM="Sat:06:30,Sun:06:30"
+    # Allows the overriding of WAKEALARM for fixed days of the week. For
+    # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
+    # Wed,Thu,Fri,Sat) colon, alarm time, comma, next override. e.g. Sat:06:30,
+    # Sun:06:30. Note this setting is overridden if WAKEALARM_UPHOURS is set
+    # "true".
 
 # -----------------------------------------------------------------------------
 

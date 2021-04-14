@@ -816,6 +816,56 @@ _check_clock() {
 
 ###############################################################################
 #
+#   Name       : _set_wakealarm
+#   Parameters : None
+#   Globals    : $WAKEALARM         : The time the system should wake up. (24
+#                                     hour clock value)
+#              : $OVERRIDEWAKEALARM : Overriding default $WAKEALARM for days
+#                                     of the week. e.g. Sat:06:30,Sun:06:30
+#
+#   Return     : 0 on success.
+#
+_set_wakealarm() {
+    local wakealarm="${WAKEALARM}"
+    local alarm_time; alarm_time="$(date --date "today ${wakealarm}" "+%s")"
+    [ "${EPOCHSECONDS}" -ge "${alarm_time}" ] &&
+        alarm_time="$(date --date "tomorrow ${wakealarm}" "+%s")"
+
+    local -r overide_wakealarm="${OVERRIDEWAKEALARM:-}"
+    for override in ${overide_wakealarm//,/ }; do
+        [[ "$(date -d @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
+                wakealarm="${override#*:}"
+                alarm_time="$(date --date "${override/:/ }" "+%s")"
+                _log "INFO: OVERRIDEWAKEALARM found applying: ${override}"
+                break; }
+    done
+
+    [[ "$(LC_ALL=C timedatectl |
+            awk '/RTC in local TZ/{print $NF}')" == 'yes' ]] &&
+        alarm_time="$(date --utc --date \
+                        "$(date -d @"${alarm_time}" +%F" "%T)" "+%s")"
+
+    if [ "${FAKE}" == "false" ]; then
+        echo 0 > "/sys/class/rtc/${RTC}/wakealarm"
+        echo "${alarm_time}" > "/sys/class/rtc/${RTC}/wakealarm"
+    else
+        _log "INFO: Wakealarm will not be set in FAKE-Mode" force
+    fi
+
+    _log "INFO: Wake alarm set: ${wakealarm}, RTC time: ${alarm_time} -> $(
+            date --utc --date @"${alarm_time}")"
+    [ "${DEBUG}" == "true" ] && {
+        _log "DEBUG: Output from: /proc/driver/rtc"
+        local line; while read -r line; do
+            _log "DEBUG: ${line}"
+        done < "/proc/driver/rtc"; }
+
+    return 0
+}
+
+
+###############################################################################
+#
 #   Name       : _check_hddio
 #   Parameters : None
 #   Globals    : $HDDIO_RATE   : Rate in kB/s of HDD-IO.
@@ -1035,10 +1085,13 @@ _check_config() {
     # Validate *CHECK* variables.
     local var; while read -r var; do
         __check_value "${var}" "^(true|false)$" "set to: 'true' or 'false'"
-    done < <(awk -F= '$0 !~ /^#/ && /.*CHECK.*/{print $1}' "${DEFAULT_CONFIG}")
+    done < <(awk -F= '$0 !~ /^[ ]*#/ && /(.*CHECK.*|.*_SET)/{print $1}' \
+                "${DEFAULT_CONFIG}")
+
+    local -r regex_hours="(2[0-3]|[01]?[0-9])((:[0-5]?[0-9])?)"
+    local -r short_days="$(locale abday | sed 's:;:|:g')"
 
     if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
-        local -r regex_hours="(2[0-3]|[01]?[0-9])((:[0-5]?[0-9])?)"
         local -r regex_uphours="(${regex_hours})[.]{2}(${regex_hours})"
         [[ "${UPHOURS}" =~ ^(${regex_uphours})$ &&
            "${BASH_REMATCH[2]}" != "${BASH_REMATCH[6]}" ]] || {
@@ -1048,7 +1101,6 @@ _check_config() {
             UPHOURS="${DEFAULT_UPHOURS}"; }
 
         [ -n "${OVERRIDEUPHOURS:-}" ] && {
-            local -r short_days="$(locale abday | sed 's:;:|:g')"
             local -r regex_o="(${short_days}):(${regex_uphours})"
             if [[ ! "${OVERRIDEUPHOURS}" =~ ^${regex_o}(,${regex_o})*$ ]]; then
                 _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
@@ -1066,6 +1118,49 @@ _check_config() {
                 _log "WARNING: Unset OVERRIDEUPHOURS"; }
     else
         _log "WARNING: CHECKCLOCKACTIVE set false not validating: UPHOURS and OVERRIDEUPHOURS"
+    fi
+
+    [ -f "/sys/class/rtc/${RTC}/wakealarm" ] &&
+        _log "INFO: ${RTC} supports: wakealarm"
+    if [ "${WAKEALARM_SET}" == "true" ]; then
+        [ -f "/sys/class/rtc/${RTC}/wakealarm" ] || {
+            _log "ERROR ${RTC} does not support wakealarm but it is set"
+            exit 140; }
+
+        __check_value "WAKEALARM_UPHOURS" "^(true|false)$" \
+            "set to: 'true' or 'false'"
+
+        [ "${WAKEALARM_UPHOURS}" == "true" ] && {
+            [ "${CHECKCLOCKACTIVE}" == "true" ] || {
+                _log "ERROR: WAKEALARM_UPHOURS is set but CHECKCLOCKACTIVE is not"
+                exit 140; }
+
+            _log "INFO: Setting WAKEALARM and OVERRIDEWAKEALARM using UPHOURS and OVERRIDEUPHOURS start times"
+            WAKEALARM="${UPHOURS%..*}"
+            OVERRIDEWAKEALARM="$(sed -E "s/[.]{2}${regex_hours}//g" <<< \
+                "${OVERRIDEUPHOURS:-}")"; }
+
+        __check_value "WAKEALARM" "^${regex_hours}$" \
+            "a valid 24 hour clock time" "false"
+
+        [ -n "${OVERRIDEWAKEALARM:-}" ] && {
+            local -r regex_a_o="(${short_days}):(${regex_hours})"
+            if [[ ! "${OVERRIDEWAKEALARM}" =~ \
+                        ^${regex_a_o}(,${regex_a_o})*$ ]]; then
+                _log "WARNING: OVERRIDEWAKEALARM is invalid: ${OVERRIDEWAKEALARM}"
+                unset OVERRIDEWAKEALARM
+            else
+                for override in ${OVERRIDEWAKEALARM//,/ }; do
+                    [[ "${override}" =~ ^${regex_a_o}$ ]] || {
+                        _log "WARNING: OVERRIDEWAKEALARM invalid at: ${override}"
+                        unset OVERRIDEWAKEALARM
+                        break; }
+                done
+            fi
+            [ -z "${OVERRIDEWAKEALARM:-}" ] &&
+                _log "WARNING: Unset OVERRIDEWAKEALARM"; }
+    else
+        _log "WARNING: WAKEALARM_SET set false not validating: WAKEALARM and OVERRIDEWAKEALARM"
     fi
 
     if [ "${CHECKPROCNAMES}" == "true" ]; then
@@ -1382,12 +1477,13 @@ _check_config
     for var in "FAKE:N/A" "VERBOSE:N/A" "SYSLOG:N/A" "CYCLES:N/A" "SLEEP:N/A" \
                "FORCE_NIC:N/A" "NET_IFACE_RETRY:N/A" "NET_IFACE_SLEEP:N/A" \
                "SHUTDOWNCOMMAND:N/A" "CHECKCLOCKACTIVE:N/A" "UPHOURS:N/A" \
-               "OVERRIDEUPHOURS:N/A" "IPCHECK:N/A" "PINGLIST:N/A" "RANGE:N/A" \
-               "CHECKSOCKETS:N/A" "NSOCKETNUMBERS:N/A" \
-               "NSOCKETIGNORESELF:N/A" "CHECK_SAMBA:N/A" "CHECK_CLI:N/A" \
-               "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" "SMARTCHECK:N/A" \
-               "ULDLCHECK:N/A" "ULDLRATE:N/A" "LOADAVERAGECHECK:N/A" \
-               "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
+               "OVERRIDEUPHOURS:N/A" "WAKEALARM_SET:N/A" "WAKEALARM:N/A" \
+               "OVERRIDEWAKEALARM:N/A" "WAKEALARM_UPHOURS:N/A"  "RTC:N/A" \
+               "IPCHECK:N/A" "PINGLIST:N/A" "RANGE:N/A" "CHECKSOCKETS:N/A" \
+               "NSOCKETNUMBERS:N/A" "NSOCKETIGNORESELF:N/A" "CHECK_SAMBA:N/A" \
+               "CHECK_CLI:N/A" "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" \
+               "SMARTCHECK:N/A" "ULDLCHECK:N/A" "ULDLRATE:N/A" \
+               "LOADAVERAGECHECK:N/A" "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
                "LOADPROCNAMES:disabled" "LPREPEAT:N/A" \
                "TEMPPROCNAMES:disabled" "TPREPEAT:N/A" "PLUGINCHECK:N/A"; do
         value="${var%:*}"
@@ -1414,6 +1510,10 @@ done
 
 _log "INFO: ---------------- Script started ----------------------"
 
+_log "INFO: Registered trap on signal EXIT"
+trap  '{ _log "INFO: Calling signal EXIT trap" &&
+         [ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm; }' EXIT
+
 [ "${FAKE}" == "true" ] && { sleep_time=1; sleep_string="second"; }
 _log "INFO: Waiting ${sleep_time:-5} ${sleep_string:-"minutes"} until the first check"
 sleep "${sleep_time:-5m}"
@@ -1435,7 +1535,10 @@ while : ; do
         # Nothing found so subtract one for FCNT and check if we can shutdown.
         FCNT=$((FCNT - 1))
         _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
-        [ "${FCNT}" -eq 0 ] && _shutdown
+        [ "${FCNT}" -eq 0 ] && {
+            [ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm
+            trap - EXIT
+            _shutdown; }
     else
         # Reset count.
         FCNT="${CYCLES}"
