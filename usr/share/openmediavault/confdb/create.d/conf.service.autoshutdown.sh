@@ -4,7 +4,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2013-2021 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,6 +39,10 @@ if ! omv_config_exists "${SERVICE_XPATH}"; then
     omv_config_add_key "${SERVICE_XPATH}" "upmins_begin" "0"
     omv_config_add_key "${SERVICE_XPATH}" "uphours_end" "20"
     omv_config_add_key "${SERVICE_XPATH}" "upmins_end" "0"
+    omv_config_add_key "${SERVICE_XPATH}" "wakealarm_set" "0"
+    omv_config_add_key "${SERVICE_XPATH}" "wakealarm_hour" "8"
+    omv_config_add_key "${SERVICE_XPATH}" "wakealarm_mins" "0"
+    omv_config_add_key "${SERVICE_XPATH}" "wakealarm_uphours" "0"
     omv_config_add_key "${SERVICE_XPATH}" "checksockets" "1"
     omv_config_add_key "${SERVICE_XPATH}" "nsocketnumbers" "21,22,80,3689,6991,9091,49152"
     omv_config_add_key "${SERVICE_XPATH}" "uldlcheck" "1"

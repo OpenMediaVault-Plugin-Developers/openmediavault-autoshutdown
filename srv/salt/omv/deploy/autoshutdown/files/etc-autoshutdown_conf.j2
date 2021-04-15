@@ -20,6 +20,10 @@ CHECKCLOCKACTIVE="{{ config.checkclockactive | to_bool | lower }}"
 UPHOURS="{{
     '%02d' % config.uphours_begin }}:{{ '%02d' % config.upmins_begin }}..{{
     '%02d' % config.uphours_end }}:{{ '%02d' % config.upmins_end }}"
+WAKEALARM_SET="{{ config.wakealarm_set | to_bool | lower }}"
+WAKEALARM="{{
+    '%02d' % config.wakealarm_hour }}:{{ '%02d' % config.wakealarm_mins }}"
+WAKEALARM_UPHOURS="{{ config.wakealarm_uphours | to_bool | lower }}"
 CHECKSOCKETS="{{ config.checksockets | to_bool | lower }}"
 NSOCKETNUMBERS="{{ config.nsocketnumbers }}"
 ULDLCHECK="{{ config.uldlcheck | to_bool | lower }}"

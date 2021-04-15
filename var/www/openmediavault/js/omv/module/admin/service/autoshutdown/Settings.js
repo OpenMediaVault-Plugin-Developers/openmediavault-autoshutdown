@@ -3,7 +3,7 @@
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
  * @copyright Copyright (c) 2009-2013 Volker Theile
- * @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2013-2021 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,6 +106,17 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
             properties: [
                 "!readOnly",
                 "!allowBlank"
+            ]
+        },{
+            name: [
+                "wakealarm_uphours"
+            ],
+            conditions: [
+                { name: "checkclockactive", value: true },
+                { name: "wakealarm_set", value: true }
+            ],
+            properties: [
+                "!readOnly"
             ]
         }]
     }],
@@ -228,6 +239,52 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                     allowDecimals: false,
                     allowBlank: false,
                     value: 0
+                }]
+            }]
+        },{
+            xtype: "fieldset",
+            title: _("WakeAlarm"),
+            fieldDefaults: {
+                labelSeparator: ""
+            },
+            items: [{
+                xtype: "checkbox",
+                name: "wakealarm_set",
+                fieldLabel: _("WakeAlarm"),
+                checked: false,
+                boxLabel: _("Enable wake alarm on system.")
+            },{
+                xtype: "fieldcontainer",
+                fieldLabel: _("WakeAlarm"),
+                layout: "hbox",
+                items: [{
+                    xtype: "numberfield",
+                    name: "wakealarm_hour",
+                    fieldLabel: _("Time:&emsp;Hour"),
+                    minValue: 0,
+                    maxValue: 23,
+                    allowDecimals: false,
+                    allowBlank: false,
+                    value: 8
+                },{
+                    xtype: "numberfield",
+                    name: "wakealarm_mins",
+                    fieldLabel: _("&emsp;Minute"),
+                    minValue: 0,
+                    maxValue: 59,
+                    allowDecimals: false,
+                    allowBlank: false,
+                    value: 0
+                }]
+            },{
+                xtype: "checkbox",
+                name: "wakealarm_uphours",
+                fieldLabel: _("WakeAlarm from Uphours"),
+                checked: false,
+                boxLabel: _("Set wake alarm using force uptime settings."),
+                plugins: [{
+                    ptype: "fieldinfo",
+                    text: _("This only avalible if forced uptime is enabled.")
                 }]
             }]
         },{

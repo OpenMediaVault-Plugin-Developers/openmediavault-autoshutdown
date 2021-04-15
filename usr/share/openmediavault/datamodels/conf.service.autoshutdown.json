@@ -65,6 +65,26 @@
 			"maximum": 59,
 			"default": 0
 		},
+		"wakealarm_set": {
+			"type": "boolean",
+			"default": false
+		},
+		"wakealarm_hour": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 23,
+			"default": 8
+		},
+		"wakealarm_mins": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 59,
+			"default": 0
+		},
+		"wakealarm_uphours": {
+			"type": "boolean",
+			"default": false
+		},
 		"checksockets": {
 			"type": "boolean",
 			"default": true
