@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 09:52-0500\n"
-"PO-Revision-Date: 2021-04-01 14:52+0000\n"
+"POT-Creation-Date: 2021-04-15 09:35-0500\n"
+"PO-Revision-Date: 2021-04-15 14:35+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -91,6 +91,9 @@ msgstr "ネットワークトラフィックをkB/sで定義します。"
 
 msgid "Enable"
 msgstr "有効"
+
+msgid "Enable wake alarm on system."
+msgstr ""
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr "終了:&nbsp;&ensp;&emsp;時"
@@ -193,6 +196,9 @@ msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
 msgstr "シャットダウン前の無応答（PCがオフラインなど）のサイクル数を設定します。"
 
+msgid "Set wake alarm using force uptime settings."
+msgstr ""
+
 msgid "Settings"
 msgstr "設定"
 
@@ -232,8 +238,14 @@ msgstr "温度プロセス"
 msgid "The IP-Range should be a comma delimited list of the following:"
 msgstr "IPの範囲は、コンマ区切りのリストである必要があります:"
 
+msgid "This only avalible if forced uptime is enabled."
+msgstr ""
+
 msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr "S.M.A.R.T.が直接サポートされているときのみ動作します。"
+
+msgid "Time:&emsp;Hour"
+msgstr ""
 
 msgid "Type"
 msgstr "タイプ"
@@ -252,6 +264,12 @@ msgstr "冗長"
 
 msgid "Verbose mode."
 msgstr "冗長モード"
+
+msgid "WakeAlarm"
+msgstr ""
+
+msgid "WakeAlarm from Uphours"
+msgstr ""
 
 msgid "Write log informations to system logs."
 msgstr "システムログへログ情報を書き込みます。"

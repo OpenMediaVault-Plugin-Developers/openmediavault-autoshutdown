@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 09:52-0500\n"
-"PO-Revision-Date: 2021-04-01 14:52+0000\n"
+"POT-Creation-Date: 2021-04-15 09:35-0500\n"
+"PO-Revision-Date: 2021-04-15 14:35+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -96,6 +96,9 @@ msgstr ""
 
 msgid "Enable"
 msgstr "Activer"
+
+msgid "Enable wake alarm on system."
+msgstr ""
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr ""
@@ -198,6 +201,9 @@ msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
 msgstr "Définissez le nombre de cycles sans résultat (aucun ordinateur en ligne, etc) avant l'arrêt."
 
+msgid "Set wake alarm using force uptime settings."
+msgstr ""
+
 msgid "Settings"
 msgstr "Paramètres"
 
@@ -237,7 +243,13 @@ msgstr ""
 msgid "The IP-Range should be a comma delimited list of the following:"
 msgstr ""
 
+msgid "This only avalible if forced uptime is enabled."
+msgstr ""
+
 msgid "This only works if S.M.A.R.T. is supported directly."
+msgstr ""
+
+msgid "Time:&emsp;Hour"
 msgstr ""
 
 msgid "Type"
@@ -257,6 +269,12 @@ msgstr "Verbeux"
 
 msgid "Verbose mode."
 msgstr "Mode verbeux."
+
+msgid "WakeAlarm"
+msgstr ""
+
+msgid "WakeAlarm from Uphours"
+msgstr ""
 
 msgid "Write log informations to system logs."
 msgstr "Inscrire les informations du journal dans le journal système."

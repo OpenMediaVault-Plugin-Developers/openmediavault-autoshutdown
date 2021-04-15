@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-01 09:52-0500\n"
-"PO-Revision-Date: 2021-04-01 14:52+0000\n"
+"POT-Creation-Date: 2021-04-15 09:35-0500\n"
+"PO-Revision-Date: 2021-04-15 14:35+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -92,6 +92,9 @@ msgstr "定义网速 kB/s."
 
 msgid "Enable"
 msgstr "启动"
+
+msgid "Enable wake alarm on system."
+msgstr ""
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr "End:&nbsp;&ensp;&emsp;Hour"
@@ -194,6 +197,9 @@ msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
 msgstr "几个周期没客户端(局域网没客户端在线)就关机"
 
+msgid "Set wake alarm using force uptime settings."
+msgstr ""
+
 msgid "Settings"
 msgstr "设置"
 
@@ -233,8 +239,14 @@ msgstr "临时进程"
 msgid "The IP-Range should be a comma delimited list of the following:"
 msgstr "IP 范围应该用半角逗号分隔："
 
+msgid "This only avalible if forced uptime is enabled."
+msgstr ""
+
 msgid "This only works if S.M.A.R.T. is supported directly."
 msgstr "只有直接支持 S.M.A.R.T. 时这才有效。"
+
+msgid "Time:&emsp;Hour"
+msgstr ""
 
 msgid "Type"
 msgstr "类型"
@@ -253,6 +265,12 @@ msgstr "详细"
 
 msgid "Verbose mode."
 msgstr "详细记录"
+
+msgid "WakeAlarm"
+msgstr ""
+
+msgid "WakeAlarm from Uphours"
+msgstr ""
 
 msgid "Write log informations to system logs."
 msgstr "记录到系统日志"
