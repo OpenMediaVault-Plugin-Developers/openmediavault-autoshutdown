@@ -62,9 +62,9 @@ WAKEALARM_SET="false"
     # Parameter to activate or deactivate the WAKEALARM_SET feature
     # (default="false") per default this is deactivated.
 
-WAKEALARM="8:00"
+WAKEALARM="08:00"
    # The time in 24 hour clock, the system should wake up at each day unless
-   # OVERRIDEWAKEALARM or WAKEALARM_UPHOURS are set. (default="8:00")
+   # OVERRIDEWAKEALARM or WAKEALARM_UPHOURS are set. (default="08:00")
 
 WAKEALARM_UPHOURS="false"
    # If set "true" it will override WAKEALARM and OVERRIDEWAKEALARM and set

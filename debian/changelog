@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (5.1.17) stable; urgency=low
 
   * Re-work disable default so they are always defined
+  * Tweak autoshutdown.default so they are consistent
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 20 Apr 2021 10:58:05 +0100
 
