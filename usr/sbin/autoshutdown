@@ -161,7 +161,7 @@ _ping_range() {
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Generating new PINGLIST_IFACE[${key}]"
 
-        if [ -n "${PINGLIST:-}" ]; then
+        if [ -n "${PINGLIST}" ]; then
             mapfile -t ip_list < "${PINGLIST}"
         else
             for rg in ${RANGE//,/ }; do
@@ -758,9 +758,8 @@ _check_clock() {
     local -r epoch_sec="${EPOCHSECONDS}"
     local -r current_time="$(date -d @"${epoch_sec}" "+%R")"
 
-    local -r overide_uphours="${OVERRIDEUPHOURS:-}"
     local up_hours="${UPHOURS}"
-    for override in ${overide_uphours//,/ }; do
+    for override in ${OVERRIDEUPHOURS//,/ }; do
         local o_hours="${override#*:}"
         local o_start; o_start="$(date -f - "+%R" <<< "${o_hours%..*}")"
         local o_end; o_end="$(date -f - "+%R" <<< "${o_hours#*..}")"
@@ -831,8 +830,7 @@ _set_wakealarm() {
     [ "${EPOCHSECONDS}" -ge "${alarm_time}" ] &&
         alarm_time="$(date --date "tomorrow ${wakealarm}" "+%s")"
 
-    local -r overide_wakealarm="${OVERRIDEWAKEALARM:-}"
-    for override in ${overide_wakealarm//,/ }; do
+    for override in ${OVERRIDEWAKEALARM//,/ }; do
         [[ "$(date -d @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
                 wakealarm="${override#*:}"
                 alarm_time="$(date --date "${override/:/ }" "+%s")"
@@ -1100,22 +1098,22 @@ _check_config() {
             _log "WARNING: UPHOURS set to default: ${DEFAULT_UPHOURS}"
             UPHOURS="${DEFAULT_UPHOURS}"; }
 
-        [ -n "${OVERRIDEUPHOURS:-}" ] && {
+        [ -n "${OVERRIDEUPHOURS}" ] && {
             local -r regex_o="(${short_days}):(${regex_uphours})"
             if [[ ! "${OVERRIDEUPHOURS}" =~ ^${regex_o}(,${regex_o})*$ ]]; then
                 _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
-                unset OVERRIDEUPHOURS
+                _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
+                OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
             else
                 for override in ${OVERRIDEUPHOURS//,/ }; do
                     [[ "${override}" =~ ^${regex_o}$ &&
                         "${BASH_REMATCH[3]}" != "${BASH_REMATCH[7]}" ]] || {
                             _log "WARNING: OVERRIDEUPHOURS invalid at: ${override}"
-                            unset OVERRIDEUPHOURS
+                            _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
+                            OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
                             break; }
                 done
-            fi
-            [ -z "${OVERRIDEUPHOURS:-}" ] &&
-                _log "WARNING: Unset OVERRIDEUPHOURS"; }
+            fi; }
     else
         _log "WARNING: CHECKCLOCKACTIVE set false not validating: UPHOURS and OVERRIDEUPHOURS"
     fi
@@ -1137,28 +1135,28 @@ _check_config() {
 
             _log "INFO: Setting WAKEALARM and OVERRIDEWAKEALARM using UPHOURS and OVERRIDEUPHOURS start times"
             WAKEALARM="${UPHOURS%..*}"
-            OVERRIDEWAKEALARM="$(sed -E "s/[.]{2}${regex_hours}//g" <<< \
-                "${OVERRIDEUPHOURS:-}")"; }
+            OVERRIDEWAKEALARM="$(
+                sed -E "s/[.]{2}${regex_hours}//g" <<< "${OVERRIDEUPHOURS}")"; }
 
         __check_value "WAKEALARM" "^${regex_hours}$" \
             "a valid 24 hour clock time" "false"
 
-        [ -n "${OVERRIDEWAKEALARM:-}" ] && {
+        [ -n "${OVERRIDEWAKEALARM}" ] && {
             local -r regex_a_o="(${short_days}):(${regex_hours})"
             if [[ ! "${OVERRIDEWAKEALARM}" =~ \
                         ^${regex_a_o}(,${regex_a_o})*$ ]]; then
                 _log "WARNING: OVERRIDEWAKEALARM is invalid: ${OVERRIDEWAKEALARM}"
-                unset OVERRIDEWAKEALARM
+                _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
+                OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
             else
                 for override in ${OVERRIDEWAKEALARM//,/ }; do
                     [[ "${override}" =~ ^${regex_a_o}$ ]] || {
                         _log "WARNING: OVERRIDEWAKEALARM invalid at: ${override}"
-                        unset OVERRIDEWAKEALARM
+                        _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
+                        OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
                         break; }
                 done
-            fi
-            [ -z "${OVERRIDEWAKEALARM:-}" ] &&
-                _log "WARNING: Unset OVERRIDEWAKEALARM"; }
+            fi; }
     else
         _log "WARNING: WAKEALARM_SET set false not validating: WAKEALARM and OVERRIDEWAKEALARM"
     fi
@@ -1197,12 +1195,12 @@ _check_config() {
     regex_ipcheck+="((${R_OCTET})|(${R_IPV4})|(${R_RANGE_IPV4})|"
     regex_ipcheck+="(0[xX]${R_HEXTET})|(${R_IPV6})|(${R_RANGE_IPV6})|(${R_FQDN}))"
     local -r regex_ipcheck="${regex_ipcheck}"
-    if [[ -n "${PINGLIST:-}" && -f "${PINGLIST}" ]]; then
+    if [[ -n "${PINGLIST}" && -f "${PINGLIST}" ]]; then
         _log "INFO: PINGLIST is set, reading IPs from: ${PINGLIST}"
         _log "INFO: Overidding IPCHECK to: 'true'"
         unset RANGE
         IPCHECK="true"
-    elif [[ -n "${PINGLIST:-}" && ! -f "${PINGLIST}" ]]; then
+    elif [[ -n "${PINGLIST}" && ! -f "${PINGLIST}" ]]; then
         _log "WARNING: PINGLIST is set, but file not found: ${PINGLIST}"
         _log "WARNING: Set IPCHECK to: 'false'"
         IPCHECK="false"
