@@ -32,6 +32,8 @@ declare -A P_UL_DL_RATE   # Associative array for storing _check_ul_dl_rate a
 readonly CONFIG="${1:-/etc/autoshutdown.conf}"
                           # Autoshutdown default configuration.
 readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}"
+                          # Directory containing plugin checks.
+readonly PLUGIN_DIR="/etc/autoshutdown.d"
 
 ### REGULAR EXPRESSION DEFINITIONS ###
                           # Network interface name regular expression.
@@ -355,11 +357,11 @@ _check_processes() {
 #              : 1 : If file specified by the plugin has been found.
 #
 # With this plugin-system we can check if a specific file exists. If it exists,
-# the machine won't shutdown. You find sample plugins in: /etc/autoshutdown.d
+# the machine won't shutdown.
 #
 _check_plugin() {
     local foundvalue=0
-    for plugin in /etc/autoshutdown.d/*; do
+    for plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${plugin}" ] && {
             [ "${DEBUG}" == "true" ] &&
                 _log "DEBUG: Ignoring: ${plugin} as is it not a plugin file"
@@ -1487,8 +1489,8 @@ _check_config
         value="${var%:*}"
         _log "DEBUG: ${value}: ${!value:-${var#*:}}"
     done
-    _log "DEBUG: Available plugins found in: /etc/autoshutdown.d"
-    for _plugin in /etc/autoshutdown.d/*; do
+    _log "DEBUG: Available plugins found in: ${PLUGIN_DIR}"
+    for _plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"
     done; }
 
