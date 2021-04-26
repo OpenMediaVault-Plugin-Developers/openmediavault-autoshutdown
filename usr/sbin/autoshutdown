@@ -788,11 +788,9 @@ _check_clock() {
               "${current_time}" == "${range_start}" ||
               "${current_time}" > "${range_end}" ||
               "${current_time}" == "${range_end}" ]]; then
-            epoch_end="$(date -f - "+%s" <<< \
-                "$(date -d @"$((epoch_sec + 86400))" "+%D") ${range_end}")"
+            epoch_end=$((epoch_end + 86400))
         else
-            epoch_start="$(date -f - "+%s" <<< \
-                "$(date -d @"$((epoch_sec - 86400))" "+%D") ${range_start}")"
+            epoch_start=$((epoch_start - 86400))
         fi
 
     # If it negative or zero we already in the shutdown window.

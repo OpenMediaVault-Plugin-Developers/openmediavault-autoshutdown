@@ -5,6 +5,7 @@ openmediavault-autoshutdown (5.1.17) stable; urgency=low
   * Add a plugin directory constant
   * Fix some typos and comments
   * Rework active check loop
+  * Simplify check_clock calculation over midnight
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 20 Apr 2021 10:58:05 +0100
 
