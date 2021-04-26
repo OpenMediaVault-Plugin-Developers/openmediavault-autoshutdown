@@ -1527,23 +1527,19 @@ done
 _log "INFO: ${CYCLES} cycles until shutdown is issued"
 # Initialise the loop counter.
 FCNT="${CYCLES}"
-while : ; do
+while [ "${FCNT}" -ne 0 ]; do
     _log "INFO: ------------------------------------------------------"
     _log "INFO: New supervision cycle started, checking system activity"
-    # Check _check_system_active, to decide if we should shutdown or not.
-    if _check_system_active; then
-        # Nothing found so subtract one for FCNT and check if we can shutdown.
-        FCNT=$((FCNT - 1))
-        _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
-        [ "${FCNT}" -eq 0 ] && {
-            [ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm
-            trap - EXIT
-            _shutdown; }
-    else
-        # Reset count.
-        FCNT="${CYCLES}"
-    fi
-    # Wait before checking again.
-    _log "INFO: Sleep for ${SLEEP}s"
-    sleep "${SLEEP}"
+    _check_system_active || FCNT=$((CYCLES + 1))
+    FCNT=$((FCNT - 1))
+    [ "${FCNT}" -ne 0 ] && {
+        [ "${FCNT}" -ne "${CYCLES}" ] &&
+            _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
+        # Wait before checking again.
+        _log "INFO: Sleep for ${SLEEP}s"
+        sleep "${SLEEP}"; }
 done
+_log "INFO: Shutting down system..."
+[ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm
+trap - EXIT
+_shutdown
