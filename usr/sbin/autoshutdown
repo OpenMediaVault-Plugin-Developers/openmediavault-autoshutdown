@@ -159,7 +159,7 @@ _ping_range() {
         _log "DEBUG: RANGE: ${RANGE:-N/A}"; }
 
     local key="${PINGLIST:-"${net_iface}"}"
-    if [ -z "${PINGLIST_IFACE["${key}"]:-}" ]; then
+    [ -z "${PINGLIST_IFACE["${key}"]:-}" ] && {
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Generating new PINGLIST_IFACE[${key}]"
 
@@ -212,8 +212,7 @@ _ping_range() {
             printf '%s\n' "${ip_list[@]}" |
             awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
             awk -Fz '/:/{print $2}!/:/{print}' |
-            grep -v "${ips_regex,,}")"
-    fi
+            grep -v "${ips_regex,,}")"; }
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
 
     [ "${DEBUG}" == "true" ] &&
@@ -319,14 +318,12 @@ _check_processes() {
                 awk -v regex="^${process}$" -v count=0 \
                     '$NF ~ regex {count++} END{print count}')"
             # If there is no process with top, try "pgrep", but not in.tftpd.
-            [ "${tp_result}" -eq 0 ] &&
-                if [ "${process}" != "in.tftpd" ]; then
-                    tp_result="$(LC_ALL=C pgrep -fc "${process}")"
-                else
-                    [ "${DEBUG}" == "true" ] && {
+            [ "${tp_result}" -eq 0 ] && {
+                [ "${process}" == "in.tftpd" ] && {
+                    [ "${DEBUG}" == "true" ] &&
                         _log "DEBUG: Temp processes: Skipping 'in.tftpd'"
-                        break; }
-                fi
+                    break; }
+                tp_result="$(LC_ALL=C pgrep -fc "${process}")"; }
             tp=$((tp | tp_result))
             t_proc=$((t_proc + tp_result))
         done

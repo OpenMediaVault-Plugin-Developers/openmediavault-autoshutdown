@@ -8,6 +8,7 @@ openmediavault-autoshutdown (5.1.17) stable; urgency=low
   * Simplify check_clock calculation over midnight
   * Clean-up usage of date to use long version of options
   * Modify check_clock override mechanism to used epoch_sec
+  * Script improvement/refactoring
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 20 Apr 2021 10:58:05 +0100
 
