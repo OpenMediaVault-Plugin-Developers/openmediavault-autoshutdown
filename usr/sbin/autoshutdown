@@ -758,15 +758,15 @@ _check_ul_dl_rate() {
 #
 _check_clock() {
     local -r epoch_sec="${EPOCHSECONDS}"
-    local -r current_time="$(date -d @"${epoch_sec}" "+%R")"
+    local -r current_time="$(date --date @"${epoch_sec}" "+%R")"
 
     local up_hours="${UPHOURS}"
     for override in ${OVERRIDEUPHOURS//,/ }; do
         local o_hours="${override#*:}"
-        local o_start; o_start="$(date -f - "+%R" <<< "${o_hours%..*}")"
-        local o_end; o_end="$(date -f - "+%R" <<< "${o_hours#*..}")"
+        local o_start; o_start="$(date --file - "+%R" <<< "${o_hours%..*}")"
+        local o_end; o_end="$(date --file - "+%R" <<< "${o_hours#*..}")"
         [[ "$(date "+%a")" == "${override%%:*}" ||
-           ("$(date "+%a" -d "1 day ago")" == "${override%%:*}" &&
+           ("$(date "+%a" --date "1 day ago")" == "${override%%:*}" &&
             "${o_start}" > "${o_end}" &&
             ( "${current_time}" < "${o_end}" ||
               "${current_time}" == "${o_end}" )) ]] && {
@@ -775,13 +775,13 @@ _check_clock() {
                 break; }
     done
 
-    local -r range_start="$(date -f - "+%R" <<< "${up_hours%..*}")"
-    local -r range_end="$(date -f - "+%R" <<< "${up_hours#*..}")"
+    local -r range_start="$(date --file - "+%R" <<< "${up_hours%..*}")"
+    local -r range_end="$(date --file - "+%R" <<< "${up_hours#*..}")"
 
-    local epoch_start; epoch_start="$(date -f - "+%s" <<< \
-            "$(date -d @"$((epoch_sec))" "+%D") ${range_start}")"
-    local epoch_end; epoch_end="$(date -f - "+%s" <<< \
-            "$(date -d @"$((epoch_sec))" "+%D") ${range_end}")"
+    local epoch_start; epoch_start="$(date --file - "+%s" <<< \
+            "$(date --date @"${epoch_sec}" "+%D") ${range_start}")"
+    local epoch_end; epoch_end="$(date --file - "+%s" <<< \
+            "$(date --date @"${epoch_sec}" "+%D") ${range_end}")"
     # Allow epoch to wrapped around midnight using a lexicographic comparison.
     [[ "${range_start}" > "${range_end}" ]] &&
         if [[ "${current_time}" > "${range_start}" ||
@@ -794,8 +794,8 @@ _check_clock() {
         fi
 
     # If it negative or zero we already in the shutdown window.
-    local seconds_to_sleep="$((epoch_end - epoch_sec))"
-    local msg; msg="DEBUG: Current time: $(date -d @"${epoch_sec}"), "
+    local seconds_to_sleep=$((epoch_end - epoch_sec))
+    local msg; msg="DEBUG: Current time: $(date --date @"${epoch_sec}"), "
           msg+="Stay up range - start: ${range_start}, end: ${range_end} -> "
     [[ "${epoch_sec}" -lt "${epoch_start}" ||
           "${epoch_sec}" -ge "${epoch_end}" ||
@@ -806,7 +806,7 @@ _check_clock() {
 
     [ "${DEBUG}" == "true" ] && _log "${msg}stay up"
     _log "INFO: System is in stay up range. Sleeping until: $(
-            date -d @"$((epoch_sec + seconds_to_sleep))"
+            date --date @$((epoch_sec + seconds_to_sleep))
                 ) -> ${seconds_to_sleep}s"
     sleep "${seconds_to_sleep}"
     return 1
@@ -831,7 +831,7 @@ _set_wakealarm() {
         alarm_time="$(date --date "tomorrow ${wakealarm}" "+%s")"
 
     for override in ${OVERRIDEWAKEALARM//,/ }; do
-        [[ "$(date -d @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
+        [[ "$(date --date @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
                 wakealarm="${override#*:}"
                 alarm_time="$(date --date "${override/:/ }" "+%s")"
                 _log "INFO: OVERRIDEWAKEALARM found applying: ${override}"
@@ -840,8 +840,8 @@ _set_wakealarm() {
 
     [[ "$(LC_ALL=C timedatectl |
             awk '/RTC in local TZ/{print $NF}')" == 'yes' ]] &&
-        alarm_time="$(date --utc --date \
-                        "$(date -d @"${alarm_time}" +%F" "%T)" "+%s")"
+        alarm_time="$(date --utc --file - "+%s" <<< \
+                        "$(date --date @"${alarm_time}" "+c")")"
 
     if [ "${FAKE}" == "false" ]; then
         echo 0 > "/sys/class/rtc/${RTC}/wakealarm"
