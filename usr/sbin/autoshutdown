@@ -765,9 +765,9 @@ _check_clock() {
         local o_hours="${override#*:}"
         local o_start; o_start="$(date --file - "+%R" <<< "${o_hours%..*}")"
         local o_end; o_end="$(date --file - "+%R" <<< "${o_hours#*..}")"
-        [[ "$(date "+%a")" == "${override%%:*}" ||
-           ("$(date "+%a" --date "1 day ago")" == "${override%%:*}" &&
-            "${o_start}" > "${o_end}" &&
+        [[ "$(date --date @"${epoch_sec}" "+%a")" == "${override%%:*}" ||
+           ("$(date --date @$((epoch_sec - 86400)) "+%a")" == \
+                "${override%%:*}" && "${o_start}" > "${o_end}" &&
             ( "${current_time}" < "${o_end}" ||
               "${current_time}" == "${o_end}" )) ]] && {
                 up_hours="${o_hours}"
