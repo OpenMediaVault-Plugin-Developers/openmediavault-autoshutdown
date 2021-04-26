@@ -4,7 +4,7 @@
 #  FILE         : autoshutdown
 #  DESCRIPTION  : Shuts-down a server based on a set of configurable checks.
 #  REQUIREMENTS : Debian / Ubuntu-based system.
-#  BUGS         : If you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
+#  BUGS         : https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
 #  AUTHOR       : Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes)
 #                 based on autoshutdown.sh v0.7.008 by chrikai, see:
 #                 https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
@@ -14,7 +14,7 @@
 set -euo pipefail
 
 ######## STORAGE DEFINITIONS #########
-declare -a NICS           # Array for stroing active _check_networkconfig
+declare -a NICS           # Array for storing active _check_networkconfig
                           # network interface names.
 declare -A NIC_2_IPV4     # Associative array for storing _check_networkconfig
                           # network interface to IPv4 address mappings.
@@ -251,8 +251,8 @@ _ping_range() {
 #   Name       : _shutdown
 #   Parameters : None
 #   Globals    : $SHUTDOWNCOMMAND : The shutdown command to use.
-#              : $FAKE            : Are we in fake mode and hence do not run
-#                                   the real shutdown command just stop.
+#              : $FAKE            : In fake mode do not run the shutdown
+#                                   command just stop.
 #   Return     : None, script exit point.
 #
 _shutdown() {
@@ -282,7 +282,7 @@ _shutdown() {
 #
 _check_processes() {
     # Check for each given command name in LOADPROCNAMES if it is currently
-    # stated active in "top". If the proceess has been found, there are
+    # stated active in "top". If the process has been found, there are
     # processes that are always present in "ps" or "top" output (This could be
     # due to the "daemon" mechanism.) So to identify if is something happening
     # with these processes, is to check if "top" states them active hence the
@@ -633,8 +633,8 @@ _check_users_status() {
 #   Name       : _check_smb_status
 #   Parameters : None
 #   Globals    : None
-#   Return     : 0 : If there are no smb client connected, ready for shutdown.
-#              : 1 : If there are smb client connected, no shutdown.
+#   Return     : 0 : If there are no SMB client connected, ready for shutdown.
+#              : 1 : If there are SMB client connected, no shutdown.
 #
 _check_smb_status() {
     local -r smb_conns="$(LC_ALL=C smbstatus --brief | awk 'NR>4')"
@@ -823,7 +823,7 @@ _check_clock() {
 #                                     hour clock value)
 #              : $OVERRIDEWAKEALARM : Overriding default $WAKEALARM for days
 #                                     of the week. e.g. Sat:06:30,Sun:06:30
-#
+#              : $FAKE              : In fake mode do not set a real wakealarm.
 #   Return     : 0 on success.
 #
 _set_wakealarm() {
@@ -1047,7 +1047,7 @@ _check_config() {
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
         _log "WARNING: FAKE must be set to: 'true' or 'false'"
-        _log "WARNING: FAKE set to true -> Test-mode, with VERBOSE -> true"
+        _log "WARNING: FAKE set to true -> FAKE-mode, with VERBOSE -> true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
     [[ "${VERBOSE}" == "true" || "${VERBOSE}" == "false" ]] || {
@@ -1192,7 +1192,7 @@ _check_config() {
         _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
 
-    # PINGLIST OR RANGE set-up.
+    # PINGLIST or RANGE set-up.
     local regex_ipcheck="(${R_IFACE}[@])?"
     regex_ipcheck+="((${R_OCTET})|(${R_IPV4})|(${R_RANGE_IPV4})|"
     regex_ipcheck+="(0[xX]${R_HEXTET})|(${R_IPV6})|(${R_RANGE_IPV6})|(${R_FQDN}))"
@@ -1289,7 +1289,7 @@ _check_config() {
 #   Globals    : $FORCE_NIC  : Force network interface lookup using a space
 #                              delimited list of network interface or partial
 #                              interface names to be checked.
-#              : $NICS       : Array for stroing active network interface
+#              : $NICS       : Array for storing active network interface
 #                              names.
 #              : $NIC_2_IPV4 : Associative array for storing network interface
 #                              to IPv4 address mappings.
@@ -1301,7 +1301,7 @@ _check_config() {
 #
 _check_networkconfig() {
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: Find available network interfaces and their IPv4 addresses"
+    _log "INFO: Find available network interfaces and their IP addresses"
 
     local net_iface; while read -r net_iface; do
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
@@ -1355,7 +1355,7 @@ _check_networkconfig() {
 #   Name       : _check_system_active
 #   Parameters : None
 #   Globals    : $*          : All options defined in $CONFIG for validation.
-#              : $NICS       : Array for stroing active network interface
+#              : $NICS       : Array for storing active network interface
 #                              names.
 #              : $NIC_2_IPV4 : Associative array for storing network interface
 #                              to IPv4 address mappings.
@@ -1504,7 +1504,7 @@ _log "INFO: --------------- Initialise states --------------------"
 
 for net_iface in "${NICS[@]}"; do
     [ "${ULDLCHECK}" == "true" ] && ! _check_ul_dl_rate "${net_iface}" && {
-        _log "ERR: Initialising _check_ul_dl_rate(): check using verbose mode"
+        _log "ERR: Initialising _check_ul_dl_rate(): Check using verbose mode"
         exit 141; }
 done
 
