@@ -1,3 +1,19 @@
+openmediavault-autoshutdown (5.1.17) stable; urgency=low
+
+  * Re-work disable default so they are always defined
+  * Tweak autoshutdown.default so they are consistent
+  * Add a plugin directory constant
+  * Fix some typos and comments
+  * Rework active check loop
+  * Simplify check_clock calculation over midnight
+  * Clean-up usage of date to use long version of options
+  * Modify check_clock override mechanism to used epoch_sec
+  * Script improvement/refactoring
+  * Force a reload/cache update in the GUI
+  * Move lowest supported OMV to 5.5.12
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 20 Apr 2021 10:58:05 +0100
+
 openmediavault-autoshutdown (5.1.16) stable; urgency=low
 
   * Improve validation of UPHOURS and OVERRIDEUPHOURS

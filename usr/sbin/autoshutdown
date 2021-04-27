@@ -4,7 +4,7 @@
 #  FILE         : autoshutdown
 #  DESCRIPTION  : Shuts-down a server based on a set of configurable checks.
 #  REQUIREMENTS : Debian / Ubuntu-based system.
-#  BUGS         : If you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
+#  BUGS         : https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
 #  AUTHOR       : Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes)
 #                 based on autoshutdown.sh v0.7.008 by chrikai, see:
 #                 https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
@@ -14,7 +14,7 @@
 set -euo pipefail
 
 ######## STORAGE DEFINITIONS #########
-declare -a NICS           # Array for stroing active _check_networkconfig
+declare -a NICS           # Array for storing active _check_networkconfig
                           # network interface names.
 declare -A NIC_2_IPV4     # Associative array for storing _check_networkconfig
                           # network interface to IPv4 address mappings.
@@ -32,6 +32,8 @@ declare -A P_UL_DL_RATE   # Associative array for storing _check_ul_dl_rate a
 readonly CONFIG="${1:-/etc/autoshutdown.conf}"
                           # Autoshutdown default configuration.
 readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}"
+                          # Directory containing plugin checks.
+readonly PLUGIN_DIR="/etc/autoshutdown.d"
 
 ### REGULAR EXPRESSION DEFINITIONS ###
                           # Network interface name regular expression.
@@ -157,11 +159,11 @@ _ping_range() {
         _log "DEBUG: RANGE: ${RANGE:-N/A}"; }
 
     local key="${PINGLIST:-"${net_iface}"}"
-    if [ -z "${PINGLIST_IFACE["${key}"]:-}" ]; then
+    [ -z "${PINGLIST_IFACE["${key}"]:-}" ] && {
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Generating new PINGLIST_IFACE[${key}]"
 
-        if [ -n "${PINGLIST:-}" ]; then
+        if [ -n "${PINGLIST}" ]; then
             mapfile -t ip_list < "${PINGLIST}"
         else
             for rg in ${RANGE//,/ }; do
@@ -210,8 +212,7 @@ _ping_range() {
             printf '%s\n' "${ip_list[@]}" |
             awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
             awk -Fz '/:/{print $2}!/:/{print}' |
-            grep -v "${ips_regex,,}")"
-    fi
+            grep -v "${ips_regex,,}")"; }
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
 
     [ "${DEBUG}" == "true" ] &&
@@ -249,8 +250,8 @@ _ping_range() {
 #   Name       : _shutdown
 #   Parameters : None
 #   Globals    : $SHUTDOWNCOMMAND : The shutdown command to use.
-#              : $FAKE            : Are we in fake mode and hence do not run
-#                                   the real shutdown command just stop.
+#              : $FAKE            : In fake mode do not run the shutdown
+#                                   command just stop.
 #   Return     : None, script exit point.
 #
 _shutdown() {
@@ -280,7 +281,7 @@ _shutdown() {
 #
 _check_processes() {
     # Check for each given command name in LOADPROCNAMES if it is currently
-    # stated active in "top". If the proceess has been found, there are
+    # stated active in "top". If the process has been found, there are
     # processes that are always present in "ps" or "top" output (This could be
     # due to the "daemon" mechanism.) So to identify if is something happening
     # with these processes, is to check if "top" states them active hence the
@@ -317,14 +318,12 @@ _check_processes() {
                 awk -v regex="^${process}$" -v count=0 \
                     '$NF ~ regex {count++} END{print count}')"
             # If there is no process with top, try "pgrep", but not in.tftpd.
-            [ "${tp_result}" -eq 0 ] &&
-                if [ "${process}" != "in.tftpd" ]; then
-                    tp_result="$(LC_ALL=C pgrep -fc "${process}")"
-                else
-                    [ "${DEBUG}" == "true" ] && {
+            [ "${tp_result}" -eq 0 ] && {
+                [ "${process}" == "in.tftpd" ] && {
+                    [ "${DEBUG}" == "true" ] &&
                         _log "DEBUG: Temp processes: Skipping 'in.tftpd'"
-                        break; }
-                fi
+                    break; }
+                tp_result="$(LC_ALL=C pgrep -fc "${process}")"; }
             tp=$((tp | tp_result))
             t_proc=$((t_proc + tp_result))
         done
@@ -355,11 +354,11 @@ _check_processes() {
 #              : 1 : If file specified by the plugin has been found.
 #
 # With this plugin-system we can check if a specific file exists. If it exists,
-# the machine won't shutdown. You find sample plugins in: /etc/autoshutdown.d
+# the machine won't shutdown.
 #
 _check_plugin() {
     local foundvalue=0
-    for plugin in /etc/autoshutdown.d/*; do
+    for plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${plugin}" ] && {
             [ "${DEBUG}" == "true" ] &&
                 _log "DEBUG: Ignoring: ${plugin} as is it not a plugin file"
@@ -631,8 +630,8 @@ _check_users_status() {
 #   Name       : _check_smb_status
 #   Parameters : None
 #   Globals    : None
-#   Return     : 0 : If there are no smb client connected, ready for shutdown.
-#              : 1 : If there are smb client connected, no shutdown.
+#   Return     : 0 : If there are no SMB client connected, ready for shutdown.
+#              : 1 : If there are SMB client connected, no shutdown.
 #
 _check_smb_status() {
     local -r smb_conns="$(LC_ALL=C smbstatus --brief | awk 'NR>4')"
@@ -756,17 +755,16 @@ _check_ul_dl_rate() {
 #
 _check_clock() {
     local -r epoch_sec="${EPOCHSECONDS}"
-    local -r current_time="$(date -d @"${epoch_sec}" "+%R")"
+    local -r current_time="$(date --date @"${epoch_sec}" "+%R")"
 
-    local -r overide_uphours="${OVERRIDEUPHOURS:-}"
     local up_hours="${UPHOURS}"
-    for override in ${overide_uphours//,/ }; do
+    for override in ${OVERRIDEUPHOURS//,/ }; do
         local o_hours="${override#*:}"
-        local o_start; o_start="$(date -f - "+%R" <<< "${o_hours%..*}")"
-        local o_end; o_end="$(date -f - "+%R" <<< "${o_hours#*..}")"
-        [[ "$(date "+%a")" == "${override%%:*}" ||
-           ("$(date "+%a" -d "1 day ago")" == "${override%%:*}" &&
-            "${o_start}" > "${o_end}" &&
+        local o_start; o_start="$(date --file - "+%R" <<< "${o_hours%..*}")"
+        local o_end; o_end="$(date --file - "+%R" <<< "${o_hours#*..}")"
+        [[ "$(date --date @"${epoch_sec}" "+%a")" == "${override%%:*}" ||
+           ("$(date --date @$((epoch_sec - 86400)) "+%a")" == \
+                "${override%%:*}" && "${o_start}" > "${o_end}" &&
             ( "${current_time}" < "${o_end}" ||
               "${current_time}" == "${o_end}" )) ]] && {
                 up_hours="${o_hours}"
@@ -774,29 +772,27 @@ _check_clock() {
                 break; }
     done
 
-    local -r range_start="$(date -f - "+%R" <<< "${up_hours%..*}")"
-    local -r range_end="$(date -f - "+%R" <<< "${up_hours#*..}")"
+    local -r range_start="$(date --file - "+%R" <<< "${up_hours%..*}")"
+    local -r range_end="$(date --file - "+%R" <<< "${up_hours#*..}")"
 
-    local epoch_start; epoch_start="$(date -f - "+%s" <<< \
-            "$(date -d @"$((epoch_sec))" "+%D") ${range_start}")"
-    local epoch_end; epoch_end="$(date -f - "+%s" <<< \
-            "$(date -d @"$((epoch_sec))" "+%D") ${range_end}")"
+    local epoch_start; epoch_start="$(date --file - "+%s" <<< \
+            "$(date --date @"${epoch_sec}" "+%D") ${range_start}")"
+    local epoch_end; epoch_end="$(date --file - "+%s" <<< \
+            "$(date --date @"${epoch_sec}" "+%D") ${range_end}")"
     # Allow epoch to wrapped around midnight using a lexicographic comparison.
     [[ "${range_start}" > "${range_end}" ]] &&
         if [[ "${current_time}" > "${range_start}" ||
               "${current_time}" == "${range_start}" ||
               "${current_time}" > "${range_end}" ||
               "${current_time}" == "${range_end}" ]]; then
-            epoch_end="$(date -f - "+%s" <<< \
-                "$(date -d @"$((epoch_sec + 86400))" "+%D") ${range_end}")"
+            epoch_end=$((epoch_end + 86400))
         else
-            epoch_start="$(date -f - "+%s" <<< \
-                "$(date -d @"$((epoch_sec - 86400))" "+%D") ${range_start}")"
+            epoch_start=$((epoch_start - 86400))
         fi
 
     # If it negative or zero we already in the shutdown window.
-    local seconds_to_sleep="$((epoch_end - epoch_sec))"
-    local msg; msg="DEBUG: Current time: $(date -d @"${epoch_sec}"), "
+    local seconds_to_sleep=$((epoch_end - epoch_sec))
+    local msg; msg="DEBUG: Current time: $(date --date @"${epoch_sec}"), "
           msg+="Stay up range - start: ${range_start}, end: ${range_end} -> "
     [[ "${epoch_sec}" -lt "${epoch_start}" ||
           "${epoch_sec}" -ge "${epoch_end}" ||
@@ -807,7 +803,7 @@ _check_clock() {
 
     [ "${DEBUG}" == "true" ] && _log "${msg}stay up"
     _log "INFO: System is in stay up range. Sleeping until: $(
-            date -d @"$((epoch_sec + seconds_to_sleep))"
+            date --date @$((epoch_sec + seconds_to_sleep))
                 ) -> ${seconds_to_sleep}s"
     sleep "${seconds_to_sleep}"
     return 1
@@ -822,7 +818,7 @@ _check_clock() {
 #                                     hour clock value)
 #              : $OVERRIDEWAKEALARM : Overriding default $WAKEALARM for days
 #                                     of the week. e.g. Sat:06:30,Sun:06:30
-#
+#              : $FAKE              : In fake mode do not set a real wakealarm.
 #   Return     : 0 on success.
 #
 _set_wakealarm() {
@@ -831,9 +827,8 @@ _set_wakealarm() {
     [ "${EPOCHSECONDS}" -ge "${alarm_time}" ] &&
         alarm_time="$(date --date "tomorrow ${wakealarm}" "+%s")"
 
-    local -r overide_wakealarm="${OVERRIDEWAKEALARM:-}"
-    for override in ${overide_wakealarm//,/ }; do
-        [[ "$(date -d @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
+    for override in ${OVERRIDEWAKEALARM//,/ }; do
+        [[ "$(date --date @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
                 wakealarm="${override#*:}"
                 alarm_time="$(date --date "${override/:/ }" "+%s")"
                 _log "INFO: OVERRIDEWAKEALARM found applying: ${override}"
@@ -842,8 +837,8 @@ _set_wakealarm() {
 
     [[ "$(LC_ALL=C timedatectl |
             awk '/RTC in local TZ/{print $NF}')" == 'yes' ]] &&
-        alarm_time="$(date --utc --date \
-                        "$(date -d @"${alarm_time}" +%F" "%T)" "+%s")"
+        alarm_time="$(date --utc --file - "+%s" <<< \
+                        "$(date --date @"${alarm_time}" "+c")")"
 
     if [ "${FAKE}" == "false" ]; then
         echo 0 > "/sys/class/rtc/${RTC}/wakealarm"
@@ -1047,7 +1042,7 @@ _check_config() {
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
         _log "WARNING: FAKE must be set to: 'true' or 'false'"
-        _log "WARNING: FAKE set to true -> Test-mode, with VERBOSE -> true"
+        _log "WARNING: FAKE set to true -> FAKE-mode, with VERBOSE -> true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
     [[ "${VERBOSE}" == "true" || "${VERBOSE}" == "false" ]] || {
@@ -1100,22 +1095,22 @@ _check_config() {
             _log "WARNING: UPHOURS set to default: ${DEFAULT_UPHOURS}"
             UPHOURS="${DEFAULT_UPHOURS}"; }
 
-        [ -n "${OVERRIDEUPHOURS:-}" ] && {
+        [ -n "${OVERRIDEUPHOURS}" ] && {
             local -r regex_o="(${short_days}):(${regex_uphours})"
             if [[ ! "${OVERRIDEUPHOURS}" =~ ^${regex_o}(,${regex_o})*$ ]]; then
                 _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
-                unset OVERRIDEUPHOURS
+                _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
+                OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
             else
                 for override in ${OVERRIDEUPHOURS//,/ }; do
                     [[ "${override}" =~ ^${regex_o}$ &&
                         "${BASH_REMATCH[3]}" != "${BASH_REMATCH[7]}" ]] || {
                             _log "WARNING: OVERRIDEUPHOURS invalid at: ${override}"
-                            unset OVERRIDEUPHOURS
+                            _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
+                            OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
                             break; }
                 done
-            fi
-            [ -z "${OVERRIDEUPHOURS:-}" ] &&
-                _log "WARNING: Unset OVERRIDEUPHOURS"; }
+            fi; }
     else
         _log "WARNING: CHECKCLOCKACTIVE set false not validating: UPHOURS and OVERRIDEUPHOURS"
     fi
@@ -1137,28 +1132,28 @@ _check_config() {
 
             _log "INFO: Setting WAKEALARM and OVERRIDEWAKEALARM using UPHOURS and OVERRIDEUPHOURS start times"
             WAKEALARM="${UPHOURS%..*}"
-            OVERRIDEWAKEALARM="$(sed -E "s/[.]{2}${regex_hours}//g" <<< \
-                "${OVERRIDEUPHOURS:-}")"; }
+            OVERRIDEWAKEALARM="$(
+                sed -E "s/[.]{2}${regex_hours}//g" <<< "${OVERRIDEUPHOURS}")"; }
 
         __check_value "WAKEALARM" "^${regex_hours}$" \
             "a valid 24 hour clock time" "false"
 
-        [ -n "${OVERRIDEWAKEALARM:-}" ] && {
+        [ -n "${OVERRIDEWAKEALARM}" ] && {
             local -r regex_a_o="(${short_days}):(${regex_hours})"
             if [[ ! "${OVERRIDEWAKEALARM}" =~ \
                         ^${regex_a_o}(,${regex_a_o})*$ ]]; then
                 _log "WARNING: OVERRIDEWAKEALARM is invalid: ${OVERRIDEWAKEALARM}"
-                unset OVERRIDEWAKEALARM
+                _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
+                OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
             else
                 for override in ${OVERRIDEWAKEALARM//,/ }; do
                     [[ "${override}" =~ ^${regex_a_o}$ ]] || {
                         _log "WARNING: OVERRIDEWAKEALARM invalid at: ${override}"
-                        unset OVERRIDEWAKEALARM
+                        _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
+                        OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
                         break; }
                 done
-            fi
-            [ -z "${OVERRIDEWAKEALARM:-}" ] &&
-                _log "WARNING: Unset OVERRIDEWAKEALARM"; }
+            fi; }
     else
         _log "WARNING: WAKEALARM_SET set false not validating: WAKEALARM and OVERRIDEWAKEALARM"
     fi
@@ -1192,17 +1187,17 @@ _check_config() {
         _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
 
-    # PINGLIST OR RANGE set-up.
+    # PINGLIST or RANGE set-up.
     local regex_ipcheck="(${R_IFACE}[@])?"
     regex_ipcheck+="((${R_OCTET})|(${R_IPV4})|(${R_RANGE_IPV4})|"
     regex_ipcheck+="(0[xX]${R_HEXTET})|(${R_IPV6})|(${R_RANGE_IPV6})|(${R_FQDN}))"
     local -r regex_ipcheck="${regex_ipcheck}"
-    if [[ -n "${PINGLIST:-}" && -f "${PINGLIST}" ]]; then
+    if [[ -n "${PINGLIST}" && -f "${PINGLIST}" ]]; then
         _log "INFO: PINGLIST is set, reading IPs from: ${PINGLIST}"
         _log "INFO: Overidding IPCHECK to: 'true'"
         unset RANGE
         IPCHECK="true"
-    elif [[ -n "${PINGLIST:-}" && ! -f "${PINGLIST}" ]]; then
+    elif [[ -n "${PINGLIST}" && ! -f "${PINGLIST}" ]]; then
         _log "WARNING: PINGLIST is set, but file not found: ${PINGLIST}"
         _log "WARNING: Set IPCHECK to: 'false'"
         IPCHECK="false"
@@ -1289,7 +1284,7 @@ _check_config() {
 #   Globals    : $FORCE_NIC  : Force network interface lookup using a space
 #                              delimited list of network interface or partial
 #                              interface names to be checked.
-#              : $NICS       : Array for stroing active network interface
+#              : $NICS       : Array for storing active network interface
 #                              names.
 #              : $NIC_2_IPV4 : Associative array for storing network interface
 #                              to IPv4 address mappings.
@@ -1301,7 +1296,7 @@ _check_config() {
 #
 _check_networkconfig() {
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: Find available network interfaces and their IPv4 addresses"
+    _log "INFO: Find available network interfaces and their IP addresses"
 
     local net_iface; while read -r net_iface; do
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
@@ -1355,7 +1350,7 @@ _check_networkconfig() {
 #   Name       : _check_system_active
 #   Parameters : None
 #   Globals    : $*          : All options defined in $CONFIG for validation.
-#              : $NICS       : Array for stroing active network interface
+#              : $NICS       : Array for storing active network interface
 #                              names.
 #              : $NIC_2_IPV4 : Associative array for storing network interface
 #                              to IPv4 address mappings.
@@ -1489,8 +1484,8 @@ _check_config
         value="${var%:*}"
         _log "DEBUG: ${value}: ${!value:-${var#*:}}"
     done
-    _log "DEBUG: Available plugins found in: /etc/autoshutdown.d"
-    for _plugin in /etc/autoshutdown.d/*; do
+    _log "DEBUG: Available plugins found in: ${PLUGIN_DIR}"
+    for _plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"
     done; }
 
@@ -1504,7 +1499,7 @@ _log "INFO: --------------- Initialise states --------------------"
 
 for net_iface in "${NICS[@]}"; do
     [ "${ULDLCHECK}" == "true" ] && ! _check_ul_dl_rate "${net_iface}" && {
-        _log "ERR: Initialising _check_ul_dl_rate(): check using verbose mode"
+        _log "ERR: Initialising _check_ul_dl_rate(): Check using verbose mode"
         exit 141; }
 done
 
@@ -1527,23 +1522,19 @@ done
 _log "INFO: ${CYCLES} cycles until shutdown is issued"
 # Initialise the loop counter.
 FCNT="${CYCLES}"
-while : ; do
+while [ "${FCNT}" -ne 0 ]; do
     _log "INFO: ------------------------------------------------------"
     _log "INFO: New supervision cycle started, checking system activity"
-    # Check _check_system_active, to decide if we should shutdown or not.
-    if _check_system_active; then
-        # Nothing found so subtract one for FCNT and check if we can shutdown.
-        FCNT=$((FCNT - 1))
-        _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
-        [ "${FCNT}" -eq 0 ] && {
-            [ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm
-            trap - EXIT
-            _shutdown; }
-    else
-        # Reset count.
-        FCNT="${CYCLES}"
-    fi
-    # Wait before checking again.
-    _log "INFO: Sleep for ${SLEEP}s"
-    sleep "${SLEEP}"
+    _check_system_active || FCNT=$((CYCLES + 1))
+    FCNT=$((FCNT - 1))
+    [ "${FCNT}" -ne 0 ] && {
+        [ "${FCNT}" -ne "${CYCLES}" ] &&
+            _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
+        # Wait before checking again.
+        _log "INFO: Sleep for ${SLEEP}s"
+        sleep "${SLEEP}"; }
 done
+_log "INFO: Shutting down system..."
+[ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm
+trap - EXIT
+_shutdown

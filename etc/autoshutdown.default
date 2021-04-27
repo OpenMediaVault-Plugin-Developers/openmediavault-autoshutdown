@@ -62,9 +62,9 @@ WAKEALARM_SET="false"
     # Parameter to activate or deactivate the WAKEALARM_SET feature
     # (default="false") per default this is deactivated.
 
-WAKEALARM="8:00"
+WAKEALARM="08:00"
    # The time in 24 hour clock, the system should wake up at each day unless
-   # OVERRIDEWAKEALARM or WAKEALARM_UPHOURS are set. (default="8:00")
+   # OVERRIDEWAKEALARM or WAKEALARM_UPHOURS are set. (default="08:00")
 
 WAKEALARM_UPHOURS="false"
    # If set "true" it will override WAKEALARM and OVERRIDEWAKEALARM and set
@@ -252,8 +252,7 @@ FAKE="false"
 # Expert Settings
 
 # You should know, what you are doing. Add these settings to the "Expert
-# Settings" textfield in the OMV-GUI make sure # isn't the first character in
-# the line if you add it.
+# Settings" textfield in the OMV-GUI.
 
 # -----------------------------------------------------------------------------
 
@@ -322,26 +321,26 @@ RTC="rtc0"
 
 # -----------------------------------------------------------------------------
 
-#OVERRIDEUPHOURS="Sat:06:30..22:59,Sun:06:30..22:00"
+OVERRIDEUPHOURS=""
     # Allows the overriding of UPHOURS for fixed days of the week. For
     # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
     # Wed,Thu,Fri,Sat) colon, start time, double dot, stop time, comma, next
-    # override. e.g. Sat:06:30..23:00,Sun:06:30..22:00.
+    # override. e.g. Sat:06:30..23:00,Sun:06:30..22:00. (default="")
 
 # -----------------------------------------------------------------------------
 
-# OVERRIDEWAKEALARM="Sat:06:30,Sun:06:30"
+OVERRIDEWAKEALARM=""
     # Allows the overriding of WAKEALARM for fixed days of the week. For
     # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
     # Wed,Thu,Fri,Sat) colon, alarm time, comma, next override. e.g. Sat:06:30,
     # Sun:06:30. Note this setting is overridden if WAKEALARM_UPHOURS is set
-    # "true".
+    # "true". (default="")
 
 # -----------------------------------------------------------------------------
 
-#PINGLIST="PATH/TO/PINGLIST"
+PINGLIST=""
     # Here you can define a path to a file, which contains list of IPs that
     # should be scanned only one IP per line allowed - Format mmm.nnn.ooo.ppp
     # e.g. 192.168.1.45 or FQDN e.g. openmediavault.local. If this
     # expert-setting is used, the details specified in "RANGE" or in GUI
-    # are not used.
+    # are not used. (default="")
