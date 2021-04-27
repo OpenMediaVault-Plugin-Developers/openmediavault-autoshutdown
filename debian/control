@@ -10,7 +10,7 @@ Homepage: http://omv-extras.org
 Package: openmediavault-autoshutdown
 Architecture: all
 Depends: fping,
-         openmediavault (>= 4.0.16),
+         openmediavault (>= 5.5.12),
          pm-utils,
          sysstat,
          net-tools,
