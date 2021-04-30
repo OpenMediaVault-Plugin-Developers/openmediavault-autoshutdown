@@ -475,19 +475,16 @@ _check_net_status() {
                     \$2 ~ /^ESTAB$/ && \$5 ~ regex : \
                     \$2 ~ /^ESTAB$/ && \$5 ~ regex && \$6 !~ ips_regex")"
 
-        [ "${DEBUG}" == "true" ] && {
-            local msg="DEBUG: Port ${nsocket}: "
-            if [ -n "${lines}" ]; then
-                _log "${msg}Found active connections"
-                local line; while read -r line; do
-                    _log "DEBUG: $(sed 's:\s\s*: :g' <<< "${line}")"
-                done <<< "${lines}";
-            else
-                _log "${msg}Found no active connections"
-            fi; }
+        local msg="DEBUG: Port ${nsocket}: Found "
+        [ -z "${lines}" ] && {
+            [ "${DEBUG}" == "true" ] && _log "${msg}no active connections"
+            continue; }
 
-        # No active connection found.
-        [ -z "${lines}" ] && continue
+        [ "${DEBUG}" == "true" ] && {
+            _log "${msg}active connections:"
+            local line; while read -r line; do
+                _log "DEBUG: $(sed 's:\s\s*: :g' <<< "${line}")"
+            done <<< "${lines}"; }
 
         local no_lines; no_lines="$(wc -l <<< "${lines}")"
         ((active+="${no_lines}"))
