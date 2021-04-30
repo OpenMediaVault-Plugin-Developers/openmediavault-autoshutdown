@@ -284,7 +284,7 @@ Ext.define("OMV.module.admin.service.autoshutdown.Settings", {
                 boxLabel: _("Set wake alarm using force uptime settings."),
                 plugins: [{
                     ptype: "fieldinfo",
-                    text: _("This only avalible if forced uptime is enabled.")
+                    text: _("This is only avalible if forced uptime is enabled.")
                 }]
             }]
         },{
