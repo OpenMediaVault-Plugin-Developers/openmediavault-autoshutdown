@@ -12,6 +12,7 @@
 #==============================================================================
 
 set -euo pipefail
+shopt -s extglob
 
 ######## STORAGE DEFINITIONS #########
 declare -a NICS=()        # Array for storing active _check_networkconfig
@@ -95,7 +96,7 @@ _log() {
        local message="${FUNCNAME[1]}(): ${BASH_REMATCH[2]}"; }
 
     [ "${FAKE:-}" == "true" ] && message="FAKE-Mode: ${message}"
-    message="${user:-${USER}}: ${priority}: '${message}'"
+    local -r message="${user:-${USER}}: ${priority}: '${message}'"
 
     [ "${LOG_STDOUT:-}" != "false" ] &&
         echo "$(date "+%b %e %H:%M:%S") $(hostname -s
@@ -158,7 +159,7 @@ _ping_range() {
         _log "DEBUG: PINGLIST: ${PINGLIST:-N/A}"
         _log "DEBUG: RANGE: ${RANGE:-N/A}"; }
 
-    local key="${PINGLIST:-"${net_iface}"}"
+    local -r key="${PINGLIST:-"${net_iface}"}"
     [ -z "${PINGLIST_IFACE["${key}"]:-}" ] && {
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Generating new PINGLIST_IFACE[${key}]"
@@ -209,8 +210,8 @@ _ping_range() {
             done
         fi
         PINGLIST_IFACE["${key}"]="$(
-            printf '%s\n' "${ip_list[@]}" |
-            awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
+            awk '{gsub(/ /,"\n",$0)}
+                 /:/{print "z"$0}!/:/{print}' <<< "${ip_list[@]}" | sort -Vu |
             awk -Fz '/:/{print $2}!/:/{print}' |
             grep -v "${ips_regex,,}")"; }
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
@@ -362,7 +363,7 @@ _check_plugin() {
     for plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${plugin}" ] && {
             [ "${DEBUG}" == "true" ] &&
-                _log "DEBUG: Ignoring: ${plugin} as is it not a plugin file"
+                _log "DEBUG: Ignoring: ${plugin} as it is not a plugin file"
             continue; }
 
         local name="${plugin##*/}"
@@ -484,7 +485,7 @@ _check_net_status() {
         [ "${DEBUG}" == "true" ] && {
             _log "${msg}active connections:"
             local line; while read -r line; do
-                _log "DEBUG: $(sed 's:\s\s*: :g' <<< "${line}")"
+                _log "DEBUG: ${line//+([[:space:]])/ }"
             done <<< "${lines}"; }
 
         local no_lines; no_lines="$(wc -l <<< "${lines}")"
@@ -493,10 +494,9 @@ _check_net_status() {
         local conips; conips="$(
             awk -v regex_start="^${regex_s}" \
                 -v regex_end="${regex_e}:[0-9]+$" \
-                '{gsub(regex_start,"",$6);
-                  gsub(regex_end,"",$6); print $6}' <<< "${lines}" |
-            awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
-            awk -Fz '/:/{print $2}!/:/{print}')"
+                '{sub(regex_start,"",$6); sub(regex_end,"",$6)}
+                  $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
+            sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')"
 
         # Set portprotocol - Only default ports are defined here.
         local portprotocol
@@ -573,10 +573,10 @@ _check_docker_status() {
                     '$2 ~ /^ESTAB$/ && $5 ~ regex' ||
                 true)"
             local con_ips; con_ips="$(
-                awk '{gsub(/^[[]?{::(ffff|FFFF):)?/,"",$6);
-                      gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${lines}" |
-                awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
-                awk -Fz '/:/{print $2}!/:/{print}')"
+                awk '{sub(/^[[]?{::(ffff|FFFF):)?/,"",$6);
+                      sub(/[]]?:[0-9]+$/,"",$6)}
+                      $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
+                sort -Vu |  awk -Fz '/:/{print $2}!/:/{print}')"
             [ -n "${lines}" ] &&
                 { local no_lines; no_lines="$(wc -l <<< "${lines}")"
                   ((active+="${no_lines}"))
@@ -610,12 +610,9 @@ _check_users_status() {
         done <<< "${users_connected}"; }
 
     local connecton; while read -r connecton; do
-        local connected_user; connected_user="$(
-            awk '{print $1}' <<< "${connecton}")"
-        local connecton_from; connecton_from="$(
-            awk '{gsub(/^-$/,"localhost",$3);
-                  print $2 " " $3}' <<< "${connecton}" )"
-        _log "INFO: User: ${connected_user} on from ${connecton_from}"
+        _log "$(awk '{sub(/^-$/,"localhost",$3);
+                      printf "INFO: User: %s on from %s at %s",$1,$2,$3}' <<< \
+                "${connecton}")"
     done <<< "${users_connected}"
 
     _log "INFO: There are users connected -> no shutdown"
@@ -827,10 +824,10 @@ _set_wakealarm() {
 
     for override in ${OVERRIDEWAKEALARM//,/ }; do
         [[ "$(date --date @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
-                wakealarm="${override#*:}"
-                alarm_time="$(date --date "${override/:/ }" "+%s")"
-                _log "INFO: OVERRIDEWAKEALARM found applying: ${override}"
-                break; }
+            wakealarm="${override#*:}"
+            alarm_time="$(date --date "${override/:/ }" "+%s")"
+            _log "INFO: OVERRIDEWAKEALARM found applying: ${override}"
+            break; }
     done
 
     [[ "$(LC_ALL=C timedatectl |
@@ -957,9 +954,6 @@ _check_hddio() {
              awk 'NR>3 && !/^$/{print $1 " " $5 " " $6}')
 
     P_HDDIO_DEVS["epoch_sec"]="${epoch_sec}"
-
-    [ "${DEBUG}" == "true" ] && _log "DEBUG: rvalue: ${rvalue}"
-
     _log "INFO: All checks complete"
     return "${rvalue}"
 }
@@ -980,8 +974,7 @@ _check_hddio() {
 # next check.
 #
 _check_smart() {
-    for hdd in $(LC_ALL=C lsblk --nodeps --noheadings -o "name,type" |
-                 awk '/disk/{print $1}'); do
+    local hdd; while read -r hdd; do
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Checking device for running smart tests: ${hdd}"
 
@@ -995,9 +988,10 @@ _check_smart() {
             done <<< "${smart_output}"; }
 
         grep -q "in[ _]progress" <<< "${smart_output}" && {
-            _log "INFO: Device ${hdd} is runs a SMART tests -> no shutdown"
+            _log "INFO: Device ${hdd} is running SMART tests -> no shutdown"
             return 1; }
-    done
+    done < <(LC_ALL=C lsblk --nodeps --noheadings --output "name,type" |
+             awk '/disk/{print $1}');
 
     _log "INFO: No supported device is running SMART tests -> next check"
     return 0
@@ -1221,7 +1215,7 @@ _check_config() {
     if [ "${LOADAVERAGECHECK}" == "true" ]; then
         # LOADAVERAGE (max 3 digits).
         __check_value "LOADAVERAGE" "^([1-9][0-9]{0,2})$" \
-                 "a maximum of 3 digits"
+            "a maximum of 3 digits"
     else
         _log "WARNING: LOADAVERAGECHECK set false not validating: LOADAVERAGE"
     fi
