@@ -25,28 +25,51 @@ SLEEP=180
 IPCHECK="true"
     # Parameter to activate or deactivate this feature. (default="true")
 
-RANGE="2..254"
-    # Define a range of IPs which should be scanned. (default="2..254")
-    # The 'RANGE' should be comma delimited list of the following:
-    # - Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end |
-    #                       iface:xxx.yyy.zzz.start..end
-    # - Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz |
-    #                       iface:www.xxx.yyy.zzz
-    # - Define by FQDN    : fqdn | iface:fqdn
-    # If 'start..end' or 'Last octet of IP' is set the first three octets of
-    # the iface IP address are used. Please make sure to leave 1 and 255 out of
-    # the list !
+RANGE="2..254,0x0..0xFFFF"
+    # Define a range of IPs which should be scanned. (default="2..254,
+    # 0x0..0xFFFF"). The 'RANGE' should be comma delimited list of the
+    # following:
+    # - Define an IPv4 range: <START>..<END> | iface@<START>..<END> |
+    #                         www.xxx.yyy.<START>..<END> |
+    #                         iface@xxx.yyy.zzz.<START>..<END>
+    # - Define a single IPv4: Last octet of IPv4 zzz | iface@zzz |
+    #                         www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz
+    # - Define an IPv6 range: 0x<START>..0x<END> | iface@0x<START>..0x<END> |
+    #                         s:t:u:v:w:x:y:0x<START>..0x<END> |
+    #                         iface@s:t:u:v:w:x:y:0x<START>..0x<END>
+    # - Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz |
+    #                         s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z"
+    # - Define by FQDN      : fqdn | iface@fqdn
+    # If '<START>..<END>' or 'Last octet of IPv4' is set the first three octets
+    # of the iface IPv4 address are used. If '0x<START>..0x<END>' or 'Last
+    # hextet of IPv6' is set the first seven hextets of the iface IPv6 address
+    # is used. Please make sure to leave 1 and 255 out of the IPv4 range!
 
 # -----------------------------------------------------------------------------
 
 CHECKCLOCKACTIVE="false"
-    # Parameter to activate or deactivate this feature (default="false")
-    # per default this is deactivated.
+    # Parameter to activate or deactivate this feature (default="false") per
+    # default this is deactivated.
 
 UPHOURS="06:00..20:00"
     # Define a range of hours, in which the system should stay up
     # (default="06:00..20:00") without checking any other parameter to stay
     # awake.
+
+# -----------------------------------------------------------------------------
+
+WAKEALARM_SET="false"
+    # Parameter to activate or deactivate the WAKEALARM_SET feature
+    # (default="false") per default this is deactivated.
+
+WAKEALARM="08:00"
+   # The time in 24 hour clock, the system should wake up at each day unless
+   # OVERRIDEWAKEALARM or WAKEALARM_UPHOURS are set. (default="08:00")
+
+WAKEALARM_UPHOURS="false"
+   # If set "true" it will override WAKEALARM and OVERRIDEWAKEALARM and set
+   # them using the start times from UPHOURS and OVERRIDEUPHOURS. Note for this
+   # to work "CHECKCLOCKACTIVE must also be set to "true". (default="false")
 
 # -----------------------------------------------------------------------------
 
@@ -129,18 +152,18 @@ SMARTCHECK="false"
 # -----------------------------------------------------------------------------
 
 CHECK_SAMBA="true"
-    # If set to true, smbstatus will be checked for connected clients.
+    # If set to "true", smbstatus will be checked for connected clients.
     # (default="true")
 
 # -----------------------------------------------------------------------------
 
 CHECK_CLI="true"
-    # If set to true, will check for connected users. (default="true")
+    # If set to "true", will check for connected users. (default="true")
 
 # -----------------------------------------------------------------------------
 
 CHECKPROCNAMES="true"
-    # If set to true, will enable LOADPROCNAMES and TEMPPROCNAMES checks.
+    # If set to "true", will enable LOADPROCNAMES and TEMPPROCNAMES checks.
     # (default="true")
 
 LOADPROCNAMES="smbd,nfsd,mt-daapd,forked-daapd"
@@ -164,8 +187,8 @@ TEMPPROCNAMES="in.tftpd"
 
 PLUGINCHECK="false"
     # PlugIns: You find sample plugins in /etc/autoshutdown.d. Set this to
-    # true, if autoshutdown checks for PlugIns in /etc/autoshutdown.d set it to
-    # "false" to skip the check. (default="false")
+    # "true", if autoshutdown checks for PlugIns in /etc/autoshutdown.d set it
+    # to "false" to skip the check. (default="false")
     #
     # E.g.: When ClamAV does a check, the Server shouldn't shut down. How to do
     # that?  Let's look at a example: in the clamav-plugin for autoshutdown
@@ -229,8 +252,7 @@ FAKE="false"
 # Expert Settings
 
 # You should know, what you are doing. Add these settings to the "Expert
-# Settings" textfield in the OMV-GUI make sure # isn't the first character in
-# the line if you add it.
+# Settings" textfield in the OMV-GUI.
 
 # -----------------------------------------------------------------------------
 
@@ -247,7 +269,7 @@ TPREPEAT=5
 # -----------------------------------------------------------------------------
 
 NSOCKETIGNORESELF="false"
-    # If set to 'true' _check_net_status will ignore any sockets connected on
+    # If set to "true" _check_net_status will ignore any sockets connected on
     # the network interface being tested. (default="false")
 
 # -----------------------------------------------------------------------------
@@ -293,17 +315,32 @@ FORCE_NIC="en eth wlan bond br usb"
 
 # -----------------------------------------------------------------------------
 
-#OVERRIDEUPHOURS="Sat:06:30..22:59,Sun:06:30..22:00"
-    # Allows the overriding of UPHOURS for fixed days of the week. For
-    # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
-    # Wed,Thu,Fri,Sat) colon, start hour, double dot, stop hour comma, next
-    # override. e.g. Sat:06:30..23:00,Sun:06:30..22:00.
+RTC="rtc0"
+    # The systems real time clock that will be used by the script to set a
+    # wakealarm. (default="rtc0")
 
 # -----------------------------------------------------------------------------
 
-#PINGLIST="PATH/TO/PINGLIST"
+OVERRIDEUPHOURS=""
+    # Allows the overriding of UPHOURS for fixed days of the week. For
+    # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
+    # Wed,Thu,Fri,Sat) colon, start time, double dot, stop time, comma, next
+    # override. e.g. Sat:06:30..23:00,Sun:06:30..22:00. (default="")
+
+# -----------------------------------------------------------------------------
+
+OVERRIDEWAKEALARM=""
+    # Allows the overriding of WAKEALARM for fixed days of the week. For
+    # example weekend. The format is sort day of week (for en.gb: Sun,Mon,Tue,
+    # Wed,Thu,Fri,Sat) colon, alarm time, comma, next override. e.g. Sat:06:30,
+    # Sun:06:30. Note this setting is overridden if WAKEALARM_UPHOURS is set
+    # "true". (default="")
+
+# -----------------------------------------------------------------------------
+
+PINGLIST=""
     # Here you can define a path to a file, which contains list of IPs that
     # should be scanned only one IP per line allowed - Format mmm.nnn.ooo.ppp
     # e.g. 192.168.1.45 or FQDN e.g. openmediavault.local. If this
     # expert-setting is used, the details specified in "RANGE" or in GUI
-    # are not used.
+    # are not used. (default="")

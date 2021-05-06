@@ -4,7 +4,7 @@
 #  FILE         : autoshutdown
 #  DESCRIPTION  : Shuts-down a server based on a set of configurable checks.
 #  REQUIREMENTS : Debian / Ubuntu-based system.
-#  BUGS         : If you find any: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
+#  BUGS         : https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown
 #  AUTHOR       : Solo0815 - R. Lindlein (Ubuntu-Port, OMV-Changes)
 #                 based on autoshutdown.sh v0.7.008 by chrikai, see:
 #                 https://sourceforge.net/apps/phpbb/freenas/viewtopic.php?f=12&t=2158&start=60
@@ -14,8 +14,12 @@
 set -euo pipefail
 
 ######## STORAGE DEFINITIONS #########
-declare -A NIC_TO_IP      # Associative array for storing _check_networkconfig
-                          # network interface to IP address mappings.
+declare -a NICS           # Array for storing active _check_networkconfig
+                          # network interface names.
+declare -A NIC_2_IPV4     # Associative array for storing _check_networkconfig
+                          # network interface to IPv4 address mappings.
+declare -A NIC_2_IPV6     # Associative array for storing _check_networkconfig
+                          # network interface to IPv6 address mappings.
 declare -A PINGLIST_IFACE # Associative array for storing _ping_range network
                           # interface IP addresses.
 declare -A P_HDDIO_DEVS   # Associative array for storing _check_hddio read,
@@ -28,6 +32,8 @@ declare -A P_UL_DL_RATE   # Associative array for storing _check_ul_dl_rate a
 readonly CONFIG="${1:-/etc/autoshutdown.conf}"
                           # Autoshutdown default configuration.
 readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}"
+                          # Directory containing plugin checks.
+readonly PLUGIN_DIR="/etc/autoshutdown.d"
 
 ### REGULAR EXPRESSION DEFINITIONS ###
                           # Network interface name regular expression.
@@ -35,11 +41,37 @@ readonly R_IFACE="[^ /]{1,15}"
                           # FQDN validation regular expression parts.
 readonly R_PART="[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]"
 readonly R_FQDN="(${R_PART})([.](${R_PART}))"
-                          # IP address regular expression parts.
+                          # IPv4 address regular expression parts.
 readonly R_OCTET="25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]"
-readonly R_IP="(((${R_OCTET})[.]){3})(${R_OCTET})"
-                          # IP address range regular expression for IPCHECK.
-readonly R_RANGE="(((${R_OCTET})[.]){3})?((${R_OCTET})[.]{2}(${R_OCTET}))"
+readonly R_IPV4="(((${R_OCTET})[.]){3})(${R_OCTET})"
+                          # IPv4 address range regular expression for IPCHECK.
+readonly R_RANGE_IPV4="(((${R_OCTET})[.]){3})?((${R_OCTET})[.]{2}(${R_OCTET}))"
+                          # IPv6 address regular expression parts.
+readonly R_HEXTET="[0-9a-fA-F]{1,4}"
+R_IPV6="(${R_HEXTET}:){7}${R_HEXTET}|"
+R_IPV6+="(${R_HEXTET}:){1,7}:|"
+R_IPV6+="(${R_HEXTET}:){1,6}:${R_HEXTET}|"
+R_IPV6+="(${R_HEXTET}:){1,5}(:${R_HEXTET}){1,2}|"
+R_IPV6+="(${R_HEXTET}:){1,4}(:${R_HEXTET}){1,3}|"
+R_IPV6+="(${R_HEXTET}:){1,3}(:${R_HEXTET}){1,4}|"
+R_IPV6+="(${R_HEXTET}:){1,2}(:${R_HEXTET}){1,5}|"
+R_IPV6+="${R_HEXTET}:((:${R_HEXTET}){1,6})|"
+R_IPV6+=":((:${R_HEXTET}){1,7}|:)|"
+R_IPV6+="[fF][eE]80:(:${R_HEXTET}){0,4}%[${R_IFACE}]|"
+R_IPV6+="::([fF]{4}(:0{1,4}){0,1}:){0,1}${R_IPV4}|"
+R_IPV6+="(${R_HEXTET}:){1,4}:${R_IPV4}"
+readonly R_IPV6
+                          # IPv6 address range regular expression for IPCHECK.
+R_RANGE_IPV6="((${R_HEXTET}:){7}|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,6}:|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,5}(:${R_HEXTET}):|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,4}(:${R_HEXTET}){1,2}:|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,3}(:${R_HEXTET}){1,3}:|"
+R_RANGE_IPV6+="(${R_HEXTET}:){1,2}(:${R_HEXTET}){1,4}:|"
+R_RANGE_IPV6+="${R_HEXTET}:((:${R_HEXTET}){1,5}):|"
+R_RANGE_IPV6+=":((:${R_HEXTET}){1,6}:|:))?"
+R_RANGE_IPV6+="((0[xX](${R_HEXTET}))[.]{2}(0[xX](${R_HEXTET})))"
+readonly R_RANGE_IPV6
 
 ####### FUNCTION DECLARATIONS ########
 
@@ -80,8 +112,9 @@ _log() {
 #
 #   Name       : _ping_range
 #   Parameters : $1 : The network interface that is being worked on.
-#              : $2 : The network interface IP address.
-#              : $3 : IP addresses found for all network interfaces.
+#              : $2 : The network interface IPv4 address.
+#              : $3 : The network interface IPv6 address.
+#              : $4 : IP addresses found for all network interfaces.
 #   Globals    : $PINTLIST       : File reference of IP's/FQDN's to be checked
 #                                  (expert setting overrides $RANGE).
 #              : $RANGE          : Details of IP's/FQDN's to be checked.
@@ -89,75 +122,114 @@ _log() {
 #                                  IP addresses.
 #              : $R_IFACE        : Network interface name regular expression.
 #              : $R_OCTET        : Octet regular expression.
-#              : $R_IP           : IP address regular expression.
-#              : $R_RANGE        : Ping range regular expression.
+#              : $R_IPV4         : IPv4 address regular expression.
+#              : $R_RANGE_IPV4   : IPv4 ping range regular expression.
+#              : $R_HEXTET       : Fore hexadecimal digits.
+#              : $R_IPV6         : IPv6 address regular expression.
+#              : $R_RANGE_IPV6   : IPv6 ping range regular expression.
 #              : $R_FQDN         : FQDN regular expression.
 #   Return     : Number of active IP on network interfaces.
 #
 _ping_range() {
     local -r net_iface="${1}"
-    local -r srv_ip="${2}"
-    local -r srv_ips="^\\(${3// /\\|}\\)$"
+    local -r srv_ipv4="${2}"
+    local -r srv_ipv6="${3}"
+    local -r ips_regex="^\\(${4// /\\|}\\)$"
 
     local ip_list=()
     local pinglist_array=()
+
     local -r empty="No IP addresses specified"
+    local -r v4_c="${srv_ipv4%.*}"
+
+    if [[ "${srv_ipv6}" =~ ((%${R_IFACE})|(${R_IPV4}))$ ]]; then
+        local -r v6_c=""
+    elif [[ "${srv_ipv6}" =~ ^((${R_HEXTET}:){6}${R_HEXTET})::$ ]]; then
+        local -r v6_c="${BASH_REMATCH[1]}"
+    else
+        local -r v6_c="${srv_ipv6%:*}"
+    fi
 
     [ "${DEBUG}" == "true" ] && {
         _log "DEBUG: INTERFACE: ${net_iface}"
-        _log "DEBUG: ADRESSES TO EXTRACT: ${srv_ips}"
-        _log "DEBUG: CLASS: ${srv_ip%.*}"
+        _log "DEBUG: ADRESSES TO EXTRACT: ${ips_regex}"
+        _log "DEBUG: IPv4 CLASS: ${v4_c:-N/A}"
+        _log "DEBUG: IPv6 CLASS: ${v6_c:-N/A}"
         _log "DEBUG: PINGLIST: ${PINGLIST:-N/A}"
         _log "DEBUG: RANGE: ${RANGE:-N/A}"; }
 
     local key="${PINGLIST:-"${net_iface}"}"
-    if [ -z "${PINGLIST_IFACE["${key}"]:-}" ]; then
+    [ -z "${PINGLIST_IFACE["${key}"]:-}" ] && {
         [ "${DEBUG}" == "true" ] &&
             _log "DEBUG: Generating new PINGLIST_IFACE[${key}]"
 
-        if [ -n "${PINGLIST:-}" ]; then
+        if [ -n "${PINGLIST}" ]; then
             mapfile -t ip_list < "${PINGLIST}"
         else
             for rg in ${RANGE//,/ }; do
-                if [[ "${rg}" =~ ^(${R_IFACE})[:] &&
+                if [[ "${rg}" =~ ^(${R_IFACE})[@] &&
                         "${BASH_REMATCH[1]}" != "${net_iface}" ]]; then
                     continue
-                elif [[ "${rg}" =~ \
-                            ^(${R_IFACE}[:])?((${R_OCTET})|(${R_IP}))$ ]]; then
+
+                elif [[ "${rg}" =~ ^(${R_IFACE}[@])?(${R_FQDN})$ ]]; then
                     mapfile -t -O "${#ip_list[@]}" ip_list <<< \
-                        "${BASH_REMATCH[4]:-"${srv_ip%.*}."}${BASH_REMATCH[3]}"
-                elif [[ "${rg}" =~ ^(${R_IFACE}[:])?(${R_RANGE})$ ]]; then
+                        "${BASH_REMATCH[2]}"
+
+                elif [[ -n "${srv_ipv4}" && "${rg}" =~ \
+                        ^(${R_IFACE}[@])?((${R_OCTET})|(${R_IPV4}))$ ]]; then
+                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
+                        "${BASH_REMATCH[4]:-"${v4_c}."}${BASH_REMATCH[3]}"
+                elif [[ -n "${srv_ipv4}" &&
+                        "${rg}" =~ ^(${R_IFACE}[@])?(${R_RANGE_IPV4})$ ]]; then
                     local min="${BASH_REMATCH[7]}" max="${BASH_REMATCH[8]}"
                     [ "${BASH_REMATCH[8]}" -lt "${BASH_REMATCH[7]}" ] && {
                         min="${BASH_REMATCH[8]}"; max="${BASH_REMATCH[7]}"; }
                     mapfile -t -O "${#ip_list[@]}" ip_list < <(
-                        seq -f "${BASH_REMATCH[3]:-"${srv_ip%.*}."}%g" \
+                        seq -f "${BASH_REMATCH[3]:-"${v4_c}."}%g" \
                             "${min}" "${max}")
-                elif [[ "${rg}" =~ ^(${R_IFACE}[:])?(${R_FQDN})$ ]]; then
-                    mapfile -t -O "${#ip_list[@]}" ip_list <<< \
-                        "${BASH_REMATCH[2]}"
+
+                elif [[ -n "${srv_ipv6}" && "${rg}" =~ \
+                        ^(${R_IFACE}[@])?((0[xX](${R_HEXTET}))|(${R_IPV6}))$ ]]
+                then
+                    mapfile -t -O "${#ip_list[@]}" ip_list < <(
+                        awk '{sub(/::0$/,"::",$0); print tolower($0)}' <<< \
+                            "$(printf "${BASH_REMATCH[5]:-"${v6_c}:"}%x\\n" \
+                                "$((16#${BASH_REMATCH[4]}))")")
+                elif [[ -n "${srv_ipv6}" && "${rg}" =~ \
+                        ^(${R_IFACE}[@])?(${R_RANGE_IPV6})$ ]]; then
+                    local min="${BASH_REMATCH[20]}" max="${BASH_REMATCH[22]}"
+                    [ $((16#${BASH_REMATCH[22]})) -lt \
+                            $((16#${BASH_REMATCH[20]})) ] && {
+                        min="${BASH_REMATCH[22]}"; max="${BASH_REMATCH[20]}"; }
+                    mapfile -t -O "${#ip_list[@]}" ip_list < <(
+                        awk '{sub(/::0$/,"::",$0); print tolower($0)}' <<< \
+                            "$(printf "${BASH_REMATCH[3]:-"${v6_c}:"}%x\\n" \
+                                $(seq $((16#${min})) $((16#${max}))))")
                 fi
             done
         fi
         PINGLIST_IFACE["${key}"]="$(
             printf '%s\n' "${ip_list[@]}" |
-            sort -t . -k 3,3n -k 4,4n | uniq |
-            grep -v "${srv_ips}")"
-    fi
+            awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
+            awk -Fz '/:/{print $2}!/:/{print}' |
+            grep -v "${ips_regex,,}")"; }
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
 
     [ "${DEBUG}" == "true" ] &&
-        _log "DEBUG: pinglist_array: ${pinglist_array[*]:-"${empty}"}"
+        local pinglist_subset; while read -r pinglist_subset; do
+            _log "DEBUG: pinglist_array${cont:-}: ${pinglist_subset}"
+            local cont=" continued"
+        done < <(xargs -n 2048 <<< "${pinglist_array[*]}")
 
-    [[ "${pinglist_array[0]}" == "${empty}" ]] && {
+    [ "${pinglist_array[0]}" == "${empty}" ] && {
         _log "INFO: No IP addresses specified for: ${net_iface} -> next check"
         return 0; }
 
     _log "INFO: Retrieve list of active IPs for: ${net_iface}"
     local -r fping_result="$(LC_ALL=C
-        fping --iface="${net_iface}" --quiet --alive --retry=1 \
-              --addr "${pinglist_array[@]}" |
-        grep -v "${srv_ips}" || true)"
+        xargs fping --iface="${net_iface}" --quiet --alive \
+                    --retry=1 --addr <<< "${pinglist_array[*]}" |
+        grep -v "${ips_regex,,}" || true)"
 
     [ -z "${fping_result}" ] && {
         _log "INFO: No active IPs found in the specified range -> next check"
@@ -165,7 +237,8 @@ _ping_range() {
 
     local active_ip; while read -r active_ip; do
         _log "INFO: ${active_ip} is active"
-    done < <(sort -t . -k 3,3n -k 4,4n <<< "${fping_result}")
+    done < <(awk '/:/{print "z"$0}!/:/{print}' <<< "${fping_result}" |
+             sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')
 
     _log "INFO: Active IPs found in the specified range -> no shutdown"
     return "$(wc -l <<< "${fping_result}")"
@@ -177,8 +250,8 @@ _ping_range() {
 #   Name       : _shutdown
 #   Parameters : None
 #   Globals    : $SHUTDOWNCOMMAND : The shutdown command to use.
-#              : $FAKE            : Are we in fake mode and hence do not run
-#                                   the real shutdown command just stop.
+#              : $FAKE            : In fake mode do not run the shutdown
+#                                   command just stop.
 #   Return     : None, script exit point.
 #
 _shutdown() {
@@ -208,7 +281,7 @@ _shutdown() {
 #
 _check_processes() {
     # Check for each given command name in LOADPROCNAMES if it is currently
-    # stated active in "top". If the proceess has been found, there are
+    # stated active in "top". If the process has been found, there are
     # processes that are always present in "ps" or "top" output (This could be
     # due to the "daemon" mechanism.) So to identify if is something happening
     # with these processes, is to check if "top" states them active hence the
@@ -245,14 +318,12 @@ _check_processes() {
                 awk -v regex="^${process}$" -v count=0 \
                     '$NF ~ regex {count++} END{print count}')"
             # If there is no process with top, try "pgrep", but not in.tftpd.
-            [ "${tp_result}" -eq 0 ] &&
-                if [ "${process}" != "in.tftpd" ]; then
-                    tp_result="$(LC_ALL=C pgrep -fc "${process}")"
-                else
-                    [ "${DEBUG}" == "true" ] && {
+            [ "${tp_result}" -eq 0 ] && {
+                [ "${process}" == "in.tftpd" ] && {
+                    [ "${DEBUG}" == "true" ] &&
                         _log "DEBUG: Temp processes: Skipping 'in.tftpd'"
-                        break; }
-                fi
+                    break; }
+                tp_result="$(LC_ALL=C pgrep -fc "${process}")"; }
             tp=$((tp | tp_result))
             t_proc=$((t_proc + tp_result))
         done
@@ -283,11 +354,11 @@ _check_processes() {
 #              : 1 : If file specified by the plugin has been found.
 #
 # With this plugin-system we can check if a specific file exists. If it exists,
-# the machine won't shutdown. You find sample plugins in: /etc/autoshutdown.d
+# the machine won't shutdown.
 #
 _check_plugin() {
     local foundvalue=0
-    for plugin in /etc/autoshutdown.d/*; do
+    for plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${plugin}" ] && {
             [ "${DEBUG}" == "true" ] &&
                 _log "DEBUG: Ignoring: ${plugin} as is it not a plugin file"
@@ -378,36 +449,42 @@ _check_loadaverage() {
 ###############################################################################
 #
 #   Name       : _check_net_status
-#   Parameters : $1 : Network interface under test.
-#              : $2 : The network interface IP address.
+#   Parameters : $1 : IP addresses found for all network interfaces.
 #   Globals    : $NSOCKETNUMBERS    : Socket number to check for activity.
-#              : $NSOCKETIGNORESELF : If set will ignore the network interface
-#                                     IP address as a connection.
+#              : $NSOCKETIGNORESELF : If set will ignore all network interfaces
+#                                     IPv4/IPv6 addresses.
 #   Return     : 0         : If no active socket has been found, shutdown.
 #              : 1 or more : If an active socket has been found, no shutdown.
 #
 _check_net_status() {
-    local -r net_iface="${1}"
-    local -r server_ip="${2}"
+    local -r ips_regex="${1// /|}"
+
+    local -r regex_s="[[]?(::(ffff|FFFF):)?"
+    local -r regex_e="[]]?([%][^ /]+)?"
 
     local active=0
-    local -r empty="Found no active connections"
-
-    _log "INFO: Check connections for: ${net_iface}"
 
     # For each socket see if it is stated active using ss command.
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
         local lines; lines="$(LC_ALL=C
             ss -n |
-            awk -v regex="^([[]::ffff:)?${server_ip}[]]?:${nsocket}$" \
+            awk -v regex="^${regex_s}(${ips_regex})${regex_e}:${nsocket}$" \
+                -v ips_regex="^${regex_s}(${ips_regex})${regex_e}:[0-9]+$" \
                 -v ignore_self="${NSOCKETIGNORESELF}" \
-                -v server_ip="${server_ip}" \
                 "(ignore_self == \"false\") ? \
                     \$2 ~ /^ESTAB$/ && \$5 ~ regex : \
-                    \$2 ~ /^ESTAB$/ && \$5 ~ regex && \$6 !~ server_ip")"
+                    \$2 ~ /^ESTAB$/ && \$5 ~ regex && \$6 !~ ips_regex")"
 
-        [ "${DEBUG}" == "true" ] &&
-            _log "DEBUG: Port ${nsocket}: ${lines:-"${empty}"}"
+        [ "${DEBUG}" == "true" ] && {
+            local msg="DEBUG: Port ${nsocket}: "
+            if [ -n "${lines}" ]; then
+                _log "${msg}Found active connections"
+                local line; while read -r line; do
+                    _log "DEBUG: $(sed 's:\s\s*: :g' <<< "${line}")"
+                done <<< "${lines}";
+            else
+                _log "${msg}Found no active connections"
+            fi; }
 
         # No active connection found.
         [ -z "${lines}" ] && continue
@@ -416,9 +493,12 @@ _check_net_status() {
         ((active+="${no_lines}"))
 
         local conips; conips="$(
-            awk '{gsub(/^([[]::ffff:)?/,"",$6);
-                  gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${lines}" |
-            sort -t . -k 3,3n -k 4,4n | uniq)"
+            awk -v regex_start="^${regex_s}" \
+                -v regex_end="${regex_e}:[0-9]+$" \
+                '{gsub(regex_start,"",$6);
+                  gsub(regex_end,"",$6); print $6}' <<< "${lines}" |
+            awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
+            awk -Fz '/:/{print $2}!/:/{print}')"
 
         # Set portprotocol - Only default ports are defined here.
         local portprotocol
@@ -440,10 +520,10 @@ _check_net_status() {
             *)       portprotocol="unknown" ;;
         esac
 
-        _log "INFO: Found ${no_lines} active connection on port ${nsocket} (${portprotocol}) from: ${conips//$'\n'/, }"
+        _log "INFO: Found ${no_lines} active connection(s) on port ${nsocket} (${portprotocol}) from: ${conips//$'\n'/, }"
     done
 
-    _log "INFO: Found ${active} active socket(s) on ${net_iface}, from port(s): ${NSOCKETNUMBERS}"
+    _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
 
     # Return the number of active sockets found.
     return "${active}"
@@ -491,18 +571,18 @@ _check_docker_status() {
             local lines; lines="$(LC_ALL=C
                 nsenter -t "${info[0]}" -n ss -n |
                 awk -v \
-                    regex="^([[]::ffff:)?${info[1]}[]]?:${p_map[${target}]}$" \
+                    regex="^[[]?(::(ffff|FFFF):)?${info[1]}[]]?:${p_map[${target}]}$" \
                     '$2 ~ /^ESTAB$/ && $5 ~ regex' ||
                 true)"
             local con_ips; con_ips="$(
-                awk '{gsub(/^([[]::ffff:)?/,"",$6);
-                      gsub(/[]]?:[0-9]+$/,"",$6);
-                      print $6}' <<< "${lines}" |
-                sort -t . -k 3,3n -k 4,4n | uniq)"
+                awk '{gsub(/^[[]?{::(ffff|FFFF):)?/,"",$6);
+                      gsub(/[]]?:[0-9]+$/,"",$6); print $6}' <<< "${lines}" |
+                awk '/:/{print "z"$0}!/:/{print}' | sort -Vu |
+                awk -Fz '/:/{print $2}!/:/{print}')"
             [ -n "${lines}" ] &&
                 { local no_lines; no_lines="$(wc -l <<< "${lines}")"
                   ((active+="${no_lines}"))
-                  _log "INFO: Found ${no_lines} active connection on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
+                  _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
     _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}"
@@ -550,8 +630,8 @@ _check_users_status() {
 #   Name       : _check_smb_status
 #   Parameters : None
 #   Globals    : None
-#   Return     : 0 : If there are no smb client connected, ready for shutdown.
-#              : 1 : If there are smb client connected, no shutdown.
+#   Return     : 0 : If there are no SMB client connected, ready for shutdown.
+#              : 1 : If there are SMB client connected, no shutdown.
 #
 _check_smb_status() {
     local -r smb_conns="$(LC_ALL=C smbstatus --brief | awk 'NR>4')"
@@ -675,17 +755,16 @@ _check_ul_dl_rate() {
 #
 _check_clock() {
     local -r epoch_sec="${EPOCHSECONDS}"
-    local -r current_time="$(date -d @"${epoch_sec}" "+%R")"
+    local -r current_time="$(date --date @"${epoch_sec}" "+%R")"
 
-    local -r overide_uphours="${OVERRIDEUPHOURS:-}"
     local up_hours="${UPHOURS}"
-    for override in ${overide_uphours//,/ }; do
+    for override in ${OVERRIDEUPHOURS//,/ }; do
         local o_hours="${override#*:}"
-        local o_start; o_start="$(date -f - "+%R" <<< "${o_hours%..*}")"
-        local o_end; o_end="$(date -f - "+%R" <<< "${o_hours#*..}")"
-        [[ "$(date "+%a")" == "${override%%:*}" ||
-           ("$(date "+%a" -d "1 day ago")" == "${override%%:*}" &&
-            "${o_start}" > "${o_end}" &&
+        local o_start; o_start="$(date --file - "+%R" <<< "${o_hours%..*}")"
+        local o_end; o_end="$(date --file - "+%R" <<< "${o_hours#*..}")"
+        [[ "$(date --date @"${epoch_sec}" "+%a")" == "${override%%:*}" ||
+           ("$(date --date @$((epoch_sec - 86400)) "+%a")" == \
+                "${override%%:*}" && "${o_start}" > "${o_end}" &&
             ( "${current_time}" < "${o_end}" ||
               "${current_time}" == "${o_end}" )) ]] && {
                 up_hours="${o_hours}"
@@ -693,29 +772,27 @@ _check_clock() {
                 break; }
     done
 
-    local -r range_start="$(date -f - "+%R" <<< "${up_hours%..*}")"
-    local -r range_end="$(date -f - "+%R" <<< "${up_hours#*..}")"
+    local -r range_start="$(date --file - "+%R" <<< "${up_hours%..*}")"
+    local -r range_end="$(date --file - "+%R" <<< "${up_hours#*..}")"
 
-    local epoch_start; epoch_start="$(date -f - "+%s" <<< \
-            "$(date -d @"$((epoch_sec))" "+%D") ${range_start}")"
-    local epoch_end; epoch_end="$(date -f - "+%s" <<< \
-            "$(date -d @"$((epoch_sec))" "+%D") ${range_end}")"
+    local epoch_start; epoch_start="$(date --file - "+%s" <<< \
+            "$(date --date @"${epoch_sec}" "+%D") ${range_start}")"
+    local epoch_end; epoch_end="$(date --file - "+%s" <<< \
+            "$(date --date @"${epoch_sec}" "+%D") ${range_end}")"
     # Allow epoch to wrapped around midnight using a lexicographic comparison.
     [[ "${range_start}" > "${range_end}" ]] &&
         if [[ "${current_time}" > "${range_start}" ||
               "${current_time}" == "${range_start}" ||
               "${current_time}" > "${range_end}" ||
               "${current_time}" == "${range_end}" ]]; then
-            epoch_end="$(date -f - "+%s" <<< \
-                "$(date -d @"$((epoch_sec + 86400))" "+%D") ${range_end}")"
+            epoch_end=$((epoch_end + 86400))
         else
-            epoch_start="$(date -f - "+%s" <<< \
-                "$(date -d @"$((epoch_sec - 86400))" "+%D") ${range_start}")"
+            epoch_start=$((epoch_start - 86400))
         fi
 
     # If it negative or zero we already in the shutdown window.
-    local seconds_to_sleep="$((epoch_end - epoch_sec))"
-    local msg; msg="DEBUG: Current time: $(date -d @"${epoch_sec}"), "
+    local seconds_to_sleep=$((epoch_end - epoch_sec))
+    local msg; msg="DEBUG: Current time: $(date --date @"${epoch_sec}"), "
           msg+="Stay up range - start: ${range_start}, end: ${range_end} -> "
     [[ "${epoch_sec}" -lt "${epoch_start}" ||
           "${epoch_sec}" -ge "${epoch_end}" ||
@@ -726,10 +803,59 @@ _check_clock() {
 
     [ "${DEBUG}" == "true" ] && _log "${msg}stay up"
     _log "INFO: System is in stay up range. Sleeping until: $(
-            date -d @"$((epoch_sec + seconds_to_sleep))"
+            date --date @$((epoch_sec + seconds_to_sleep))
                 ) -> ${seconds_to_sleep}s"
     sleep "${seconds_to_sleep}"
     return 1
+}
+
+
+###############################################################################
+#
+#   Name       : _set_wakealarm
+#   Parameters : None
+#   Globals    : $WAKEALARM         : The time the system should wake up. (24
+#                                     hour clock value)
+#              : $OVERRIDEWAKEALARM : Overriding default $WAKEALARM for days
+#                                     of the week. e.g. Sat:06:30,Sun:06:30
+#              : $FAKE              : In fake mode do not set a real wakealarm.
+#   Return     : 0 on success.
+#
+_set_wakealarm() {
+    local wakealarm="${WAKEALARM}"
+    local alarm_time; alarm_time="$(date --date "today ${wakealarm}" "+%s")"
+    [ "${EPOCHSECONDS}" -ge "${alarm_time}" ] &&
+        alarm_time="$(date --date "tomorrow ${wakealarm}" "+%s")"
+
+    for override in ${OVERRIDEWAKEALARM//,/ }; do
+        [[ "$(date --date @"${alarm_time}" "+%a")" == "${override%%:*}" ]] && {
+                wakealarm="${override#*:}"
+                alarm_time="$(date --date "${override/:/ }" "+%s")"
+                _log "INFO: OVERRIDEWAKEALARM found applying: ${override}"
+                break; }
+    done
+
+    [[ "$(LC_ALL=C timedatectl |
+            awk '/RTC in local TZ/{print $NF}')" == 'yes' ]] &&
+        alarm_time="$(date --utc --file - "+%s" <<< \
+                        "$(date --date @"${alarm_time}" "+c")")"
+
+    if [ "${FAKE}" == "false" ]; then
+        echo 0 > "/sys/class/rtc/${RTC}/wakealarm"
+        echo "${alarm_time}" > "/sys/class/rtc/${RTC}/wakealarm"
+    else
+        _log "INFO: Wakealarm will not be set in FAKE-Mode" force
+    fi
+
+    _log "INFO: Wake alarm set: ${wakealarm}, RTC time: ${alarm_time} -> $(
+            date --utc --date @"${alarm_time}")"
+    [ "${DEBUG}" == "true" ] && {
+        _log "DEBUG: Output from: /proc/driver/rtc"
+        local line; while read -r line; do
+            _log "DEBUG: ${line}"
+        done < "/proc/driver/rtc"; }
+
+    return 0
 }
 
 
@@ -916,7 +1042,7 @@ _check_config() {
     [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
         _log "WARNING: FAKE must be set to: 'true' or 'false'"
-        _log "WARNING: FAKE set to true -> Test-mode, with VERBOSE -> true"
+        _log "WARNING: FAKE set to true -> FAKE-mode, with VERBOSE -> true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
     [[ "${VERBOSE}" == "true" || "${VERBOSE}" == "false" ]] || {
@@ -954,10 +1080,13 @@ _check_config() {
     # Validate *CHECK* variables.
     local var; while read -r var; do
         __check_value "${var}" "^(true|false)$" "set to: 'true' or 'false'"
-    done < <(awk -F= '$0 !~ /^#/ && /.*CHECK.*/{print $1}' "${DEFAULT_CONFIG}")
+    done < <(awk -F= '$0 !~ /^[ ]*#/ && /(.*CHECK.*|.*_SET)/{print $1}' \
+                "${DEFAULT_CONFIG}")
+
+    local -r regex_hours="(2[0-3]|[01]?[0-9])((:[0-5]?[0-9])?)"
+    local -r short_days="$(locale abday | sed 's:;:|:g')"
 
     if [ "${CHECKCLOCKACTIVE}" == "true" ]; then
-        local -r regex_hours="([0-1]?[0-9]|[2][0-3])((:[0-5][0-9])?)"
         local -r regex_uphours="(${regex_hours})[.]{2}(${regex_hours})"
         [[ "${UPHOURS}" =~ ^(${regex_uphours})$ &&
            "${BASH_REMATCH[2]}" != "${BASH_REMATCH[6]}" ]] || {
@@ -966,26 +1095,67 @@ _check_config() {
             _log "WARNING: UPHOURS set to default: ${DEFAULT_UPHOURS}"
             UPHOURS="${DEFAULT_UPHOURS}"; }
 
-        if [ -n "${OVERRIDEUPHOURS:-}" ]; then
-            local -r short_days="$(locale abday | sed 's:;:|:g')"
+        [ -n "${OVERRIDEUPHOURS}" ] && {
             local -r regex_o="(${short_days}):(${regex_uphours})"
             if [[ ! "${OVERRIDEUPHOURS}" =~ ^${regex_o}(,${regex_o})*$ ]]; then
                 _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
-                unset OVERRIDEUPHOURS
+                _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
+                OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
             else
                 for override in ${OVERRIDEUPHOURS//,/ }; do
-                    [[ "${override}" =~ ^(${short_days}):(${regex_uphours})$ &&
-                        "${BASH_REMATCH[3]}" == "${BASH_REMATCH[7]}" ]] && {
+                    [[ "${override}" =~ ^${regex_o}$ &&
+                        "${BASH_REMATCH[3]}" != "${BASH_REMATCH[7]}" ]] || {
                             _log "WARNING: OVERRIDEUPHOURS invalid at: ${override}"
-                            unset OVERRIDEUPHOURS
+                            _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
+                            OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
                             break; }
                 done
-            fi
-            [ -z "${OVERRIDEUPHOURS:-}" ] &&
-                _log "WARNING: Unset OVERRIDEUPHOURS"
-        fi
+            fi; }
     else
         _log "WARNING: CHECKCLOCKACTIVE set false not validating: UPHOURS and OVERRIDEUPHOURS"
+    fi
+
+    [ -f "/sys/class/rtc/${RTC}/wakealarm" ] &&
+        _log "INFO: ${RTC} supports: wakealarm"
+    if [ "${WAKEALARM_SET}" == "true" ]; then
+        [ -f "/sys/class/rtc/${RTC}/wakealarm" ] || {
+            _log "ERROR ${RTC} does not support wakealarm but it is set"
+            exit 140; }
+
+        __check_value "WAKEALARM_UPHOURS" "^(true|false)$" \
+            "set to: 'true' or 'false'"
+
+        [ "${WAKEALARM_UPHOURS}" == "true" ] && {
+            [ "${CHECKCLOCKACTIVE}" == "true" ] || {
+                _log "ERROR: WAKEALARM_UPHOURS is set but CHECKCLOCKACTIVE is not"
+                exit 140; }
+
+            _log "INFO: Setting WAKEALARM and OVERRIDEWAKEALARM using UPHOURS and OVERRIDEUPHOURS start times"
+            WAKEALARM="${UPHOURS%..*}"
+            OVERRIDEWAKEALARM="$(
+                sed -E "s/[.]{2}${regex_hours}//g" <<< "${OVERRIDEUPHOURS}")"; }
+
+        __check_value "WAKEALARM" "^${regex_hours}$" \
+            "a valid 24 hour clock time" "false"
+
+        [ -n "${OVERRIDEWAKEALARM}" ] && {
+            local -r regex_a_o="(${short_days}):(${regex_hours})"
+            if [[ ! "${OVERRIDEWAKEALARM}" =~ \
+                        ^${regex_a_o}(,${regex_a_o})*$ ]]; then
+                _log "WARNING: OVERRIDEWAKEALARM is invalid: ${OVERRIDEWAKEALARM}"
+                _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
+                OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
+            else
+                for override in ${OVERRIDEWAKEALARM//,/ }; do
+                    [[ "${override}" =~ ^${regex_a_o}$ ]] || {
+                        _log "WARNING: OVERRIDEWAKEALARM invalid at: ${override}"
+                        _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
+                        OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
+                        break; }
+                done
+            fi; }
+    else
+        _log "WARNING: WAKEALARM_SET set false not validating: WAKEALARM and OVERRIDEWAKEALARM"
     fi
 
     if [ "${CHECKPROCNAMES}" == "true" ]; then
@@ -1017,29 +1187,35 @@ _check_config() {
         _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS and NSOCKETIGNORESELF"
     fi
 
-    # PINGLIST OR RANGE set-up.
-    local -r regex_ipcheck="(${R_IFACE}[:])?((${R_OCTET})|(${R_IP})|(${R_RANGE})|(${R_FQDN}))"
-    if [[ -n "${PINGLIST:-}" && -f "${PINGLIST}" ]]; then
+    # PINGLIST or RANGE set-up.
+    local regex_ipcheck="(${R_IFACE}[@])?"
+    regex_ipcheck+="((${R_OCTET})|(${R_IPV4})|(${R_RANGE_IPV4})|"
+    regex_ipcheck+="(0[xX]${R_HEXTET})|(${R_IPV6})|(${R_RANGE_IPV6})|(${R_FQDN}))"
+    local -r regex_ipcheck="${regex_ipcheck}"
+    if [[ -n "${PINGLIST}" && -f "${PINGLIST}" ]]; then
         _log "INFO: PINGLIST is set, reading IPs from: ${PINGLIST}"
         _log "INFO: Overidding IPCHECK to: 'true'"
         unset RANGE
         IPCHECK="true"
-    elif [[ -n "${PINGLIST:-}" && ! -f "${PINGLIST}" ]]; then
+    elif [[ -n "${PINGLIST}" && ! -f "${PINGLIST}" ]]; then
         _log "WARNING: PINGLIST is set, but file not found: ${PINGLIST}"
         _log "WARNING: Set IPCHECK to: 'false'"
         IPCHECK="false"
     elif [ "${IPCHECK}" == "false" ]; then
         _log "WARNING: IPCHECK set false not validating: RANGE"
-    elif [[ "${RANGE}" == "-" ]]; then
+    elif [ "${RANGE}" == "-" ]; then
         _log "WARNING: RANGE is set to '${RANGE}' -> no IP-Check"
         IPCHECK="false"
     elif [[ ! "${RANGE}" =~ ^(${regex_ipcheck})(,(${regex_ipcheck}))*$ ]]; then
         _log "WARNING: RANGE not set properly: ${RANGE}"
         _log "WARNING: The 'RANGE' should be a comma delimited list of the following:"
-        _log "WARNING: Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-        _log "WARNING: Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-        _log "WARNING: Define by FQDN: fqdn | iface:fqdn"
-        _log "WARNING: If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used"
+        _log "WARNING: Define an IPv4 range: <START>..<END> | iface@<START>..<END> | www.xxx.yyy.<START>..<END> | iface@xxx.yyy.zzz.<START>..<END>"
+        _log "WARNING: Define a single IPv4: Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz"
+        _log "WARNING: Define an IPv6 range: 0x<START>..0x<END> | iface@0x<START>..0x<END> | s:t:u:v:w:x:y:0x<START>..0x<END> | ifaces@s:t:u:v:w:x:y:0x<START>..0x<END>"
+        _log "WARNING: Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z"
+        _log "WARNING: Define by FQDN: fqdn | iface@fqdn"
+        _log "WARNING: If '<START>..<END>' or 'Last octet of IPv4' is set the first three octets of the iface IPv4 address is used"
+        _log "WARNING: If '0x<START>..0x<END>' or 'Last hextet of IPv6' is set the first seven hextets of the iface IPv6 address is used"
         _log "WARNING: Setting RANGE to default: ${DEFAULT_RANGE}"
         RANGE="${DEFAULT_RANGE}"
     fi
@@ -1105,46 +1281,64 @@ _check_config() {
 #
 #   Name       : _check_networkconfig
 #   Parameters : None
-#   Globals    : $FORCE_NIC : Force network interface lookup using a space
-#                             delimited list of network interface or partial
-#                             interface names to be checked.
-#              : $NIC_TO_IP : Associative array for storing network interface
-#                             to IP address mappings.
-#              : $R_IP      : IP address regular expression.
+#   Globals    : $FORCE_NIC  : Force network interface lookup using a space
+#                              delimited list of network interface or partial
+#                              interface names to be checked.
+#              : $NICS       : Array for storing active network interface
+#                              names.
+#              : $NIC_2_IPV4 : Associative array for storing network interface
+#                              to IPv4 address mappings.
+#              : $NIC_2_IPV6 : Associative array for storing network interface
+#                              to IPv6 address mappings.
+#              : $R_IPV4     : IPv4 address regular expression.
+#              : $R_IPV6     : IPv6 address regular expression.
 #   Return     : 0 on success.
 #
 _check_networkconfig() {
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: Find available network interfaces and their IPv4 addresses"
+    _log "INFO: Find available network interfaces and their IP addresses"
 
     local net_iface; while read -r net_iface; do
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
             local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
-            local ip; ip="$(LC_ALL=C ip -br -4 addr show dev "${net_iface}" |
-                            awk '{sub(/\/[0-9]+/,"",$3); print $3}')"
+            local ipv4; ipv4="$(LC_ALL=C
+                ip -br -4 addr show dev "${net_iface}" |
+                awk '{sub(/\/[0-9]+/,"",$3); print $3}')"
             local ipv4_valid="true"
-            [[ "${ip}" =~ ^(${R_IP})$ ]] || ipv4_valid="false"
+            [[ "${ipv4}" =~ ^(${R_IPV4})$ ]] || ipv4_valid="false"
+            local ipv6; ipv6="$(LC_ALL=C
+                ip -br -6 addr show dev "${net_iface}" |
+                awk '{sub(/\/[0-9]+/,"",$3); print $3}')"
+            local ipv6_valid="true"
+            [[ "${ipv6}" =~ ^(${R_IPV6})$ ]] || ipv6_valid="false"
 
             [ "${DEBUG}" == "true" ] && {
                 _log "DEBUG: Network interfaces: ${net_iface}"
                 _log "DEBUG: Network interfaces status: ${state}"
-                _log "DEBUG: Network interfaces IPv4 address: ${ip:-N/A}"
-                _log "DEBUG: Network interfaces address valid: ${ipv4_valid}"; }
+                _log "DEBUG: Network interfaces IPv4 address: ${ipv4:-N/A}"
+                _log "DEBUG: Network interfaces IPv4 address valid: ${ipv4_valid}"
+                _log "DEBUG: Network interfaces IPv6 address: ${ipv6:-N/A}"
+                _log "DEBUG: Network interfaces IPv6 address valid: ${ipv6_valid}"; }
 
-            [[ "${ipv4_valid}" == "true" &&
-                "${state}" =~ ^(unknown|dormant|up)$ ]] && {
-                _log "INFO: '${net_iface}' has IPv4 address: ${ip}"
-                NIC_TO_IP["${net_iface}"]="${ip}"
+            [[ ( "${ipv4_valid}" == "true" || "${ipv6_valid}" == "true" ) &&
+               "${state}" =~ ^(unknown|dormant|up)$ ]] && {
+                [ "${ipv4_valid}" == "true" ] && {
+                    _log "INFO: '${net_iface}' has IPv4 address: ${ipv4}"
+                    NIC_2_IPV4["${net_iface}"]="${ipv4}"; }
+                [ "${ipv6_valid}" == "true" ] && {
+                    _log "INFO: '${net_iface}' has IPv6 address: ${ipv6}"
+                    NIC_2_IPV6["${net_iface}"]="${ipv6}"; }
+                NICS+=("${net_iface}")
                 break; }
 
-            _log "INFO: '${net_iface}' status: ${state}, IPv4 address: ${ip:-N/A}, retrying in ${NET_IFACE_SLEEP}s ..."
+            _log "INFO: '${net_iface}' status: ${state}, IPv4 address: ${ipv4:-N/A}, IPv6 address: ${ipv6:-N/A}, retrying in ${NET_IFACE_SLEEP}s ..."
             sleep "${NET_IFACE_SLEEP}"
         done
     done < <(LC_ALL=C ip -br link show |
                 awk -v regex="^(${FORCE_NIC// /|})" \
                     '$1 ~ regex && !/SLAVE/{sub(/@.*/,"",$1); print $1}')
 
-    [ -z "${!NIC_TO_IP[*]}" ] && {
+    [ "${#NICS[@]}" -eq 0 ] && {
         _log "ERR: No valid network interface found, exiting ..."
         exit 138; }
     return 0
@@ -1155,33 +1349,40 @@ _check_networkconfig() {
 #
 #   Name       : _check_system_active
 #   Parameters : None
-#   Globals    : $*         : All options as defined in $CONFIG for validation.
-#              : $NIC_TO_IP : Associative array storing interface to IP map.
+#   Globals    : $*          : All options defined in $CONFIG for validation.
+#              : $NICS       : Array for storing active network interface
+#                              names.
+#              : $NIC_2_IPV4 : Associative array for storing network interface
+#                              to IPv4 address mappings.
+#              : $NIC_2_IPV6 : Associative array for storing network interface
+#                              to IPv6 address mappings.
 #   Return     : 0 : If no active host has been found.
 #              : 1 : If at least one active host has been found, no shutdown.
 #
 _check_system_active() {
+    local ips="${NIC_2_IPV4[*]:+" ${NIC_2_IPV4[*]}"}"
+          ips+="${NIC_2_IPV6[*]:+" ${NIC_2_IPV6[*]}"}"
+          ips="${ips:1}"
+
     # PRIO 0: Check if time is within the STAYUP range e.g. 06:00 - 20:00.
     [ "${CHECKCLOCKACTIVE}" == "true" ] && {
         [ "${DEBUG}" == "true" ] && _log "DEBUG: Calling: _check_clock()"
         _check_clock || true; }
 
-    for net_iface in "${!NIC_TO_IP[@]}"; do
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Running on: ${net_iface}"
-
+    for net_iface in "${NICS[@]}"; do
         # PRIO 1: Ping IP address specified across active network interfaces.
         [ "${IPCHECK}" == "true" ] && {
             [ "${DEBUG}" == "true" ] && _log "DEBUG: Calling: _ping_range()"
             _ping_range "${net_iface}" \
-                        "${NIC_TO_IP["${net_iface}"]}" \
-                        "${NIC_TO_IP[*]}" || return 1; }
-
-        # PRIO 2: Do a check for active network sockets.
-        [ "${CHECKSOCKETS}" == "true" ] && {
-            [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_net_status()"
-            _check_net_status "${net_iface}" "${NIC_TO_IP["${net_iface}"]}" ||
-                return 1; }
+                        "${NIC_2_IPV4["${net_iface}"]:-}" \
+                        "${NIC_2_IPV6["${net_iface}"]:-}" \
+                        "${ips}" || return 1; }
     done
+
+    # PRIO 2: Do a check for active network sockets.
+    [ "${CHECKSOCKETS}" == "true" ] && {
+        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_net_status()"
+        _check_net_status "${ips}" || return 1; }
 
     # PRIO 2: Do a check docker sockets for active network sockets.
     [ "${CHECKSOCKETS}" == "true" ] && {
@@ -1198,7 +1399,7 @@ _check_system_active() {
         [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_smb_status()"
         _check_smb_status || return 1; }
 
-    for net_iface in "${!NIC_TO_IP[@]}"; do
+    for net_iface in "${NICS[@]}"; do
         # PRIO 3: Do a check for ul-dl-rate across active network interfaces.
         [ "${ULDLCHECK}" == "true" ] && {
             [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_ul_dl_rate()"
@@ -1271,19 +1472,20 @@ _check_config
     for var in "FAKE:N/A" "VERBOSE:N/A" "SYSLOG:N/A" "CYCLES:N/A" "SLEEP:N/A" \
                "FORCE_NIC:N/A" "NET_IFACE_RETRY:N/A" "NET_IFACE_SLEEP:N/A" \
                "SHUTDOWNCOMMAND:N/A" "CHECKCLOCKACTIVE:N/A" "UPHOURS:N/A" \
-               "OVERRIDEUPHOURS:N/A" "IPCHECK:N/A" "PINGLIST:N/A" "RANGE:N/A" \
-               "CHECKSOCKETS:N/A" "NSOCKETNUMBERS:N/A" \
-               "NSOCKETIGNORESELF:N/A" "CHECK_SAMBA:N/A" "CHECK_CLI:N/A" \
-               "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" "SMARTCHECK:N/A" \
-               "ULDLCHECK:N/A" "ULDLRATE:N/A" "LOADAVERAGECHECK:N/A" \
-               "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
+               "OVERRIDEUPHOURS:N/A" "WAKEALARM_SET:N/A" "WAKEALARM:N/A" \
+               "OVERRIDEWAKEALARM:N/A" "WAKEALARM_UPHOURS:N/A"  "RTC:N/A" \
+               "IPCHECK:N/A" "PINGLIST:N/A" "RANGE:N/A" "CHECKSOCKETS:N/A" \
+               "NSOCKETNUMBERS:N/A" "NSOCKETIGNORESELF:N/A" "CHECK_SAMBA:N/A" \
+               "CHECK_CLI:N/A" "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" \
+               "SMARTCHECK:N/A" "ULDLCHECK:N/A" "ULDLRATE:N/A" \
+               "LOADAVERAGECHECK:N/A" "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
                "LOADPROCNAMES:disabled" "LPREPEAT:N/A" \
                "TEMPPROCNAMES:disabled" "TPREPEAT:N/A" "PLUGINCHECK:N/A"; do
         value="${var%:*}"
         _log "DEBUG: ${value}: ${!value:-${var#*:}}"
     done
-    _log "DEBUG: Available plugins found in: /etc/autoshutdown.d"
-    for _plugin in /etc/autoshutdown.d/*; do
+    _log "DEBUG: Available plugins found in: ${PLUGIN_DIR}"
+    for _plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"
     done; }
 
@@ -1295,39 +1497,44 @@ _log "INFO: --------------- Initialise states --------------------"
     _log "ERR: Initialising _check_hddio(): Check using verbose mode"
     exit 141; }
 
-for net_iface in "${!NIC_TO_IP[@]}"; do
+for net_iface in "${NICS[@]}"; do
     [ "${ULDLCHECK}" == "true" ] && ! _check_ul_dl_rate "${net_iface}" && {
-        _log "ERR: Initialising _check_ul_dl_rate(): check using verbose mode"
+        _log "ERR: Initialising _check_ul_dl_rate(): Check using verbose mode"
         exit 141; }
 done
 
 _log "INFO: ---------------- Script started ----------------------"
 
+_log "INFO: Registered trap on signal EXIT"
+trap  '{ _log "INFO: Calling signal EXIT trap" &&
+         [ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm; }' EXIT
+
 [ "${FAKE}" == "true" ] && { sleep_time=1; sleep_string="second"; }
 _log "INFO: Waiting ${sleep_time:-5} ${sleep_string:-"minutes"} until the first check"
 sleep "${sleep_time:-5m}"
 
-for net_iface in "${!NIC_TO_IP[@]}"; do
-    _log "INFO: Checking network interface: ${net_iface} - ${NIC_TO_IP[${net_iface}]}"
+for net_iface in "${NICS[@]}"; do
+    ips="${NIC_2_IPV4[${net_iface}]:+", IPv4: ${NIC_2_IPV4[${net_iface}]}"}"
+    ips+="${NIC_2_IPV6[${net_iface}]:+", IPv6: ${NIC_2_IPV6[${net_iface}]}"}"
+    _log "INFO: Checking network interface: ${net_iface} - ${ips:2}"
 done
 
 _log "INFO: ${CYCLES} cycles until shutdown is issued"
 # Initialise the loop counter.
 FCNT="${CYCLES}"
-while : ; do
+while [ "${FCNT}" -ne 0 ]; do
     _log "INFO: ------------------------------------------------------"
     _log "INFO: New supervision cycle started, checking system activity"
-    # Check _check_system_active, to decide if we should shutdown or not.
-    if _check_system_active; then
-        # Nothing found so subtract one for FCNT and check if we can shutdown.
-        FCNT=$((FCNT - 1))
-        _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
-        [ "${FCNT}" -eq 0 ] && _shutdown
-    else
-        # Reset count.
-        FCNT="${CYCLES}"
-    fi
-    # Wait before checking again.
-    _log "INFO: Sleep for ${SLEEP}s"
-    sleep "${SLEEP}"
+    _check_system_active || FCNT=$((CYCLES + 1))
+    FCNT=$((FCNT - 1))
+    [ "${FCNT}" -ne 0 ] && {
+        [ "${FCNT}" -ne "${CYCLES}" ] &&
+            _log "INFO: All active checks passed, ${FCNT} cycles until shutdown..."
+        # Wait before checking again.
+        _log "INFO: Sleep for ${SLEEP}s"
+        sleep "${SLEEP}"; }
 done
+_log "INFO: Shutting down system..."
+[ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm
+trap - EXIT
+_shutdown
