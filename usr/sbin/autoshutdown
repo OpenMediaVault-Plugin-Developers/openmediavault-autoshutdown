@@ -144,7 +144,7 @@ _ping_range() {
 
     if [[ "${srv_ipv6}" =~ ((%${R_IFACE})|(${R_IPV4}))$ ]]; then
         local -r v6_c=""
-    elif [[ "${srv_ipv6}" =~ ^((${R_HEXTET}:){6}${R_HEXTET})::$ ]]; then
+    elif [[ "${srv_ipv6}" =~ ^((${R_HEXTET}:?){1,7})::$ ]]; then
         local -r v6_c="${BASH_REMATCH[1]}"
     else
         local -r v6_c="${srv_ipv6%:*}"

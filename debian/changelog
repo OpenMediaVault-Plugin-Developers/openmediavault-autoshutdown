@@ -3,6 +3,7 @@ openmediavault-autoshutdown (5.1.18) stable; urgency=low
   * Fix typo in GUI
   * Clean-up futher the script main loop
   * Rework debug in _check_net_status
+  * Improve ipv6 service IP regex used in _ping_range
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Apr 2021 12:47:53 +0100
 
