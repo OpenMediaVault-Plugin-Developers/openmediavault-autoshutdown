@@ -215,15 +215,15 @@ _ping_range() {
             grep -v "${ips_regex,,}")"; }
     mapfile -t pinglist_array <<< "${PINGLIST_IFACE["${key}"]:-${empty}}"
 
+    [ "${pinglist_array[0]}" == "${empty}" ] && {
+        _log "INFO: No IP addresses specified for: ${net_iface} -> next check"
+        return 0; }
+
     [ "${DEBUG}" == "true" ] &&
         local pinglist_subset; while read -r pinglist_subset; do
             _log "DEBUG: pinglist_array${cont:-}: ${pinglist_subset}"
             local cont=" continued"
         done < <(xargs -n 2048 <<< "${pinglist_array[*]}")
-
-    [ "${pinglist_array[0]}" == "${empty}" ] && {
-        _log "INFO: No IP addresses specified for: ${net_iface} -> next check"
-        return 0; }
 
     _log "INFO: Retrieve list of active IPs for: ${net_iface}"
     local -r fping_result="$(LC_ALL=C
