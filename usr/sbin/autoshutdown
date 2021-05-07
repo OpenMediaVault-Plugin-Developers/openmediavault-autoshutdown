@@ -1029,7 +1029,7 @@ _check_config() {
                 exit 140; }
 
             local -r default_var="DEFAULT_${var}"
-            _log "WARNING: ${var} set to default: ${!default_var}"
+            _log "WARNING: ${var} set to default: ${!default_var:-\"\"}"
             declare -g "${var}"="${!default_var}"; }
     }
 
@@ -1088,26 +1088,22 @@ _check_config() {
         [[ "${UPHOURS}" =~ ^(${regex_uphours})$ &&
            "${BASH_REMATCH[2]}" != "${BASH_REMATCH[6]}" ]] || {
             _log "WARNING: UPHOURS not set properly: ${UPHOURS}"
-            _log "WARNING: UPHOURS must be in the format: [hour1..hour2] and hour1 != hour2"
+            _log "WARNING: UPHOURS must be in the format: <start 24h>..<end 24h> and start != end"
             _log "WARNING: UPHOURS set to default: ${DEFAULT_UPHOURS}"
             UPHOURS="${DEFAULT_UPHOURS}"; }
 
         [ -n "${OVERRIDEUPHOURS}" ] && {
             local -r regex_o="(${short_days}):(${regex_uphours})"
-            if [[ ! "${OVERRIDEUPHOURS}" =~ ^${regex_o}(,${regex_o})*$ ]]; then
-                _log "WARNING: OVERRIDEUPHOURS is invalid: ${OVERRIDEUPHOURS}"
-                _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
-                OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
-            else
-                for override in ${OVERRIDEUPHOURS//,/ }; do
-                    [[ "${override}" =~ ^${regex_o}$ &&
-                        "${BASH_REMATCH[3]}" != "${BASH_REMATCH[7]}" ]] || {
-                            _log "WARNING: OVERRIDEUPHOURS invalid at: ${override}"
-                            _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS}"
-                            OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
-                            break; }
-                done
-            fi; }
+            __check_value "OVERRIDEUPHOURS" "^${regex_o}(,${regex_o})*$" \
+                "in the format: <shot day>:<start 24h>..<end 24h>,<next..> and start != end"
+            for override in ${OVERRIDEUPHOURS//,/ }; do
+                [[ "${override}" =~ ^${regex_o}$ &&
+                   "${BASH_REMATCH[3]}" != "${BASH_REMATCH[7]}" ]] || {
+                    _log "WARNING: OVERRIDEUPHOURS invalid at: ${override}"
+                    _log "WARNING: OVERRIDEUPHOURS set to default: ${DEFAULT_OVERRIDEUPHOURS:-\"\"}"
+                    OVERRIDEUPHOURS="${DEFAULT_OVERRIDEUPHOURS}"
+                    break; }
+            done; }
     else
         _log "WARNING: CHECKCLOCKACTIVE set false not validating: UPHOURS and OVERRIDEUPHOURS"
     fi
@@ -1137,20 +1133,8 @@ _check_config() {
 
         [ -n "${OVERRIDEWAKEALARM}" ] && {
             local -r regex_a_o="(${short_days}):(${regex_hours})"
-            if [[ ! "${OVERRIDEWAKEALARM}" =~ \
-                        ^${regex_a_o}(,${regex_a_o})*$ ]]; then
-                _log "WARNING: OVERRIDEWAKEALARM is invalid: ${OVERRIDEWAKEALARM}"
-                _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
-                OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
-            else
-                for override in ${OVERRIDEWAKEALARM//,/ }; do
-                    [[ "${override}" =~ ^${regex_a_o}$ ]] || {
-                        _log "WARNING: OVERRIDEWAKEALARM invalid at: ${override}"
-                        _log "WARNING: OVERRIDEWAKEALARM set to default: ${DEFAULT_OVERRIDEWAKEALARM}"
-                        OVERRIDEWAKEALARM="${DEFAULT_OVERRIDEWAKEALARM}"
-                        break; }
-                done
-            fi; }
+            __check_value "OVERRIDEWAKEALARM" "^${regex_a_o}(,${regex_a_o})*$"\
+                "in the format: <shot day>:<time 24h>,<next..>"; }
     else
         _log "WARNING: WAKEALARM_SET set false not validating: WAKEALARM and OVERRIDEWAKEALARM"
     fi
