@@ -4,7 +4,7 @@ debian-autoshutdown plugin
 This is a fork from the awesome openmediavault-auotshutdown-plugin
 -------------------------------------------------------------------
 I do not take any credit for the work, I just try and make it usable on a standard Debian/Ubuntu System.
-Pleas go check them out [here](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown)
+Please go check them out [here](https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown)
 
 
 Installation
