@@ -1300,12 +1300,12 @@ _check_networkconfig() {
             local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
             local ipv4; ipv4="$(LC_ALL=C
                 ip -br -4 addr show dev "${net_iface}" |
-                awk '{sub(/\/[0-9]+/,"",$3); print $3}')"
+                awk '{sub(/\/[0-9]+$/,"",$3); print $3}')"
             local ipv4_valid="true"
             [[ "${ipv4}" =~ ^(${R_IPV4})$ ]] || ipv4_valid="false"
             local ipv6; ipv6="$(LC_ALL=C
                 ip -br -6 addr show dev "${net_iface}" |
-                awk '{sub(/\/[0-9]+/,"",$3); print $3}')"
+                awk '{sub(/\/[0-9]+$/,"",$3); print $3}')"
             local ipv6_valid="true"
             [[ "${ipv6}" =~ ^(${R_IPV6})$ ]] || ipv6_valid="false"
 
