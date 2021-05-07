@@ -16,8 +16,6 @@ if [ $USER != 'root' ] #check if script is run as root, if not exit
     exit
 fi
 
-# copy files to their destination
-cd debian-autoshutdown-master
 
 sudo cp -R etc/* /etc/
 sudo cp -R usr/* /usr/
@@ -25,14 +23,14 @@ sudo cp -R lib/* /lib/
 sudo cp autoshutdown.service /etc/systemd/system/autoshutdown.service
 
 # check if there is an existing autoshutdown.conf if so the skip copying.
-if [ -f "/etc/autoshutdown.conf"];
+if [ -f "/etc/autoshutdown.conf" ]
   then
     echo "" && echo "" && echo ""
     echo "configuration file exists, skipping creation of default configuration."
-    $EXISTCONF=1
+    EXISTCONF=1
   else  
     sudo cp /etc/autoshutdown.default /etc/autoshutdown.conf
-    $EXISTCONF=0
+    EXISTCONF=0
 fi
 
 echo ""
@@ -51,7 +49,7 @@ sudo systemctl daemon-reload
 echo "***********************  DONE! ***********************************************"
 echo "" && echo "" && echo ""
 echo "" && echo "" && echo ""
-if [ $EXISTCONF -eq 1] ;
+if [ $EXISTCONF -eq 1 ]
   then
     echo "Autoshutdown is updated to the latest version."
     echo "" && echo ""
