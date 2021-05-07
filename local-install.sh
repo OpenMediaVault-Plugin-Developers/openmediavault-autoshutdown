@@ -51,7 +51,7 @@ sudo systemctl daemon-reload
 echo "***********************  DONE! ***********************************************"
 echo "" && echo "" && echo ""
 echo "" && echo "" && echo ""
-if [ $EXISTCONF -eq 1] 
+if [ $EXISTCONF -eq 1] ;
   then
     echo "Autoshutdown is updated to the latest version."
     echo "" && echo ""
