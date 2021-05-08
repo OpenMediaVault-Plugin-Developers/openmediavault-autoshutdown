@@ -7,6 +7,7 @@ openmediavault-autoshutdown (5.1.18) stable; urgency=low
   * _ping_range check for empty addresses before output
   * Tweak _check_networkconfig regex IP address extraction
   * Remove dead code and clean-up _check_config
+  * Refactor _check_system_active
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Apr 2021 12:47:53 +0100
 

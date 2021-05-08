@@ -1341,76 +1341,55 @@ _check_networkconfig() {
 #              : 1 : If at least one active host has been found, no shutdown.
 #
 _check_system_active() {
+    __run_check() {
+        [ "${1}" == "true" ] || return 0
+        [ "${DEBUG}" == "true" ] && _log "DEBUG: Calling: ${2}()"
+        "${2}" "${@:3}"
+    }
+
     local ips="${NIC_2_IPV4[*]:+" ${NIC_2_IPV4[*]}"}"
           ips+="${NIC_2_IPV6[*]:+" ${NIC_2_IPV6[*]}"}"
           ips="${ips:1}"
 
     # PRIO 0: Check if time is within the STAYUP range e.g. 06:00 - 20:00.
-    [ "${CHECKCLOCKACTIVE}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Calling: _check_clock()"
-        _check_clock || true; }
+    __run_check "${CHECKCLOCKACTIVE}" _check_clock || true
 
     for net_iface in "${NICS[@]}"; do
         # PRIO 1: Ping IP address specified across active network interfaces.
-        [ "${IPCHECK}" == "true" ] && {
-            [ "${DEBUG}" == "true" ] && _log "DEBUG: Calling: _ping_range()"
-            _ping_range "${net_iface}" \
-                        "${NIC_2_IPV4["${net_iface}"]:-}" \
-                        "${NIC_2_IPV6["${net_iface}"]:-}" \
-                        "${ips}" || return 1; }
+        __run_check "${IPCHECK}" _ping_range "${net_iface}" \
+            "${NIC_2_IPV4["${net_iface}"]:-}" \
+            "${NIC_2_IPV6["${net_iface}"]:-}" \
+            "${ips}" || return 1
     done
 
     # PRIO 2: Do a check for active network sockets.
-    [ "${CHECKSOCKETS}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_net_status()"
-        _check_net_status "${ips}" || return 1; }
-
+    __run_check "${CHECKSOCKETS}" _check_net_status "${ips}" || return 1
     # PRIO 2: Do a check docker sockets for active network sockets.
-    [ "${CHECKSOCKETS}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_docker_status()"
-        _check_docker_status || return 1; }
-
+    __run_check "${CHECKSOCKETS}" _check_docker_status || return 1
     # PRIO 2: Check for connected users on the CLI.
-    [ "${CHECK_CLI}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_users_status()"
-        _check_users_status || return 1; }
-
+    __run_check "${CHECK_CLI}" _check_users_status || return 1
     # PRIO 2: Check Samba for connected clients.
-    [ "${CHECK_SAMBA}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_smb_status()"
-        _check_smb_status || return 1; }
+    __run_check "${CHECK_SAMBA}" _check_smb_status || return 1
 
     for net_iface in "${NICS[@]}"; do
         # PRIO 3: Do a check for ul-dl-rate across active network interfaces.
-        [ "${ULDLCHECK}" == "true" ] && {
-            [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_ul_dl_rate()"
-            _check_ul_dl_rate "${net_iface}" || return 1; }
+        __run_check "${ULDLCHECK}" _check_ul_dl_rate "${net_iface}" ||
+            return 1
     done
 
     # PRIO 4: Do a hdd io check.
-    [ "${HDDIOCHECK}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_hddio()"
-        _check_hddio || return 1; }
-
+    __run_check "${HDDIOCHECK}" _check_hddio || return 1
     # PRIO 4: Do a hdd check to see if S.M.A.R.T. tests are running.
-    [ "${SMARTCHECK}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_smart()"
-        _check_smart || return 1; }
+    __run_check "${SMARTCHECK}" _check_smart || return 1
 
     # PRIO 5: Do a check for some active processes.
-    [ "${CHECKPROCNAMES}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_processes()"
-        _check_processes || return 1; }
+    __run_check "${CHECKPROCNAMES}" _check_processes || return 1
 
     # PRIO 6: Do a load average check.
-    [ "${LOADAVERAGECHECK}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_loadaverage()"
-        _check_loadaverage || return 1; }
+    __run_check "${LOADAVERAGECHECK}" _check_loadaverage || return 1
 
     # PRIO 7: Do a PlugIn-Check for any existing files, setup in plugins.
-    [ "${PLUGINCHECK}" == "true" ] && {
-        [ "${DEBUG}" == "true" ] && _log "DEBUG: Call: _check_plugin()"
-        _check_plugin || return 1; }
+    __run_check "${PLUGINCHECK}" _check_plugin || return 1
 
     return 0
 }
