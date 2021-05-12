@@ -1282,38 +1282,35 @@ _check_networkconfig() {
 
     local net_iface; while read -r net_iface; do
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
+            local msg=""
             local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
-            local ipv4; ipv4="$(LC_ALL=C
-                ip -br -4 addr show dev "${net_iface}" |
-                awk '{sub(/\/[0-9]+$/,"",$3); print $3}')"
-            local ipv4_valid="true"
-            [[ "${ipv4}" =~ ^(${R_IPV4})$ ]] || ipv4_valid="false"
-            local ipv6; ipv6="$(LC_ALL=C
-                ip -br -6 addr show dev "${net_iface}" |
-                awk '{sub(/\/[0-9]+$/,"",$3); print $3}')"
-            local ipv6_valid="true"
-            [[ "${ipv6}" =~ ^(${R_IPV6})$ ]] || ipv6_valid="false"
-
             [ "${DEBUG}" == "true" ] && {
                 _log "DEBUG: Network interfaces: ${net_iface}"
-                _log "DEBUG: Network interfaces status: ${state}"
-                _log "DEBUG: Network interfaces IPv4 address: ${ipv4:-N/A}"
-                _log "DEBUG: Network interfaces IPv4 address valid: ${ipv4_valid}"
-                _log "DEBUG: Network interfaces IPv6 address: ${ipv6:-N/A}"
-                _log "DEBUG: Network interfaces IPv6 address valid: ${ipv6_valid}"; }
+                _log "DEBUG: Network interfacesa status: ${state}"; }
+            for ip_type in ipv4 ipv6; do
+                local valid="false" regex="R_${ip_type^^}"
+                local ip; ip="$(LC_ALL=C
+                    ip -br -"${ip_type: -1}" addr show dev "${net_iface}" |
+                    awk '{sub(/\/[0-9]+$/,"",$3); print $3}')"
+                msg+="IPv${ip_type: -1} address: ${ip:-N/A}, "
+                [[ "${ip}" =~ ^(${!regex})$ ]] && {
+                    [[ "${state}" =~ ^(unknown|dormant|up)$ ]] && {
+                        declare -n ip_ref="NIC_2_${ip_type^^}[${net_iface}]"
+                        # shellcheck disable=SC2034
+                        ip_ref="${ip}"; }
+                    valid="true"; }
+                [ "${DEBUG}" == "true" ] && {
+                    _log "DEBUG: Network interfaces IPv${ip_type: -1} address: ${ip:-N/A}"
+                    _log "DEBUG: Network interfaces IPv${ip_type: -1} address valid: ${valid}"; }
+            done
 
-            [[ ( "${ipv4_valid}" == "true" || "${ipv6_valid}" == "true" ) &&
-               "${state}" =~ ^(unknown|dormant|up)$ ]] && {
-                [ "${ipv4_valid}" == "true" ] && {
-                    _log "INFO: '${net_iface}' has IPv4 address: ${ipv4}"
-                    NIC_2_IPV4["${net_iface}"]="${ipv4}"; }
-                [ "${ipv6_valid}" == "true" ] && {
-                    _log "INFO: '${net_iface}' has IPv6 address: ${ipv6}"
-                    NIC_2_IPV6["${net_iface}"]="${ipv6}"; }
+            [[ -n "${NIC_2_IPV4["${net_iface}"]:-}" ||
+               -n "${NIC_2_IPV6["${net_iface}"]:-}" ]] && {
+                _log "INFO: '${net_iface}' has ${msg::-2}"
                 NICS+=("${net_iface}")
                 break; }
 
-            _log "INFO: '${net_iface}' status: ${state}, IPv4 address: ${ipv4:-N/A}, IPv6 address: ${ipv6:-N/A}, retrying in ${NET_IFACE_SLEEP}s ..."
+            _log "INFO: '${net_iface}' status: ${state}, ${msg}retrying in ${NET_IFACE_SLEEP}s ..."
             sleep "${NET_IFACE_SLEEP}"
         done
     done < <(LC_ALL=C ip -br link show |
