@@ -14,7 +14,7 @@
 set -euo pipefail
 
 ######## STORAGE DEFINITIONS #########
-declare -a NICS           # Array for storing active _check_networkconfig
+declare -a NICS=()        # Array for storing active _check_networkconfig
                           # network interface names.
 declare -A NIC_2_IPV4     # Associative array for storing _check_networkconfig
                           # network interface to IPv4 address mappings.
