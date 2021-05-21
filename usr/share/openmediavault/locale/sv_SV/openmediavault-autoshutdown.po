@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Jonatan Nyberg <jonatan.nyberg.karl@gmail.com>, 2018,2021
+# Jonatan Nyberg <jonatan@autistici.org>, 2018,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-15 09:35-0500\n"
-"PO-Revision-Date: 2021-04-15 14:35+0000\n"
+"POT-Creation-Date: 2021-05-21 09:56-0500\n"
+"PO-Revision-Date: 2021-05-21 14:57+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -74,14 +74,14 @@ msgid ""
 "Define an IPv4 range: &lt;START&gt;..&lt;END&gt; | "
 "iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | "
 "iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;"
-msgstr ""
+msgstr "Definiera ett IPv4-intervall: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;"
 
 msgid ""
 "Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; | "
 "iface@0x&lt;START&gt;..0x&lt;END&gt; | "
 "s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | "
 "iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;"
-msgstr ""
+msgstr "Definiera ett IPv6-intervall: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;"
 
 msgid "Define by FQDN: fqdn | iface@fqdn"
 msgstr "Definiera av FQDN: fqdn | iface@fqdn"
@@ -93,7 +93,7 @@ msgid "Enable"
 msgstr "Aktivera"
 
 msgid "Enable wake alarm on system."
-msgstr ""
+msgstr "Aktivera väckarlarm på systemet."
 
 msgid "End:&nbsp;&ensp;&emsp;Hour"
 msgstr "Slut:&nbsp;&ensp;&emsp;Timme"
@@ -134,7 +134,7 @@ msgid "Hybrid Sleep"
 msgstr ""
 
 msgid "IP Range"
-msgstr ""
+msgstr "IP-intervall"
 
 msgid ""
 "If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first "
@@ -159,13 +159,13 @@ msgid "List of Ports"
 msgstr "Lista över portar"
 
 msgid "Load Average"
-msgstr ""
+msgstr "Belastningsgenomsnitt"
 
 msgid "Load Processes"
-msgstr ""
+msgstr "Belastningsprocesser"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Logga till Syslog"
 
 msgid "Message"
 msgstr "Meddelande"
@@ -236,16 +236,16 @@ msgid "Temp Processes"
 msgstr ""
 
 msgid "The IP-Range should be a comma delimited list of the following:"
-msgstr ""
+msgstr "IP-intervallet bör vara en kommaavgränsad lista med följande:"
 
-msgid "This only avalible if forced uptime is enabled."
+msgid "This is only avalible if forced uptime is enabled."
 msgstr ""
 
 msgid "This only works if S.M.A.R.T. is supported directly."
-msgstr ""
+msgstr "Detta fungerar bara om S.M.A.R.T. stöds direkt."
 
 msgid "Time:&emsp;Hour"
-msgstr ""
+msgstr "Tid:&emsp;Timme"
 
 msgid "Type"
 msgstr "Typ"
