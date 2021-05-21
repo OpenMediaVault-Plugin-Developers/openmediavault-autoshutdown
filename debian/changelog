@@ -1,3 +1,20 @@
+openmediavault-autoshutdown (5.1.18) stable; urgency=low
+
+  * Fix typo in GUI
+  * Clean-up futher the script main loop
+  * Rework debug in _check_net_status
+  * Improve ipv6 service IP regex used in _ping_range
+  * _ping_range check for empty addresses before output
+  * Tweak _check_networkconfig regex IP address extraction
+  * Remove dead code and clean-up _check_config
+  * Refactor _check_system_active
+  * Add missing initialisation to NICS
+  * Stop using eval for shutdown command execution
+  * Refactor _check_networkconfig
+  * General script clean-up
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Apr 2021 12:47:53 +0100
+
 openmediavault-autoshutdown (5.1.17) stable; urgency=low
 
   * Re-work disable default so they are always defined
