@@ -639,11 +639,20 @@ _check_smb_status() {
         _log "INFO: No SMB clients connected with locks -> next check"
         return 0; }
 
+    local clients="false"
     _log "INFO: SMB client(s) with locks:"
     local pid user host prot; while read -r pid user host prot; do
         [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] &&
-            _log "INFO: HOST: ${host} PID: ${pid} USER: ${user} PROTO: ${prot}"
+            [ "${CHECK_SAMBA_CLIENTS}" == "true" ] && {
+                local state="/offline"
+                ! LC_ALL=C fping --quiet --retry=1 "${host}" || {
+                    state="/online"; clients="true"; } ; }
+            _log "INFO: HOST: ${host}${state:-} PID: ${pid} USER: ${user} PROTO: ${prot}"
     done < <(awk '{print $1 " " $2":"$3 " " $4 " " $6}' <<< "${smb_conns}")
+
+    [[ "${CHECK_SAMBA_CLIENTS}" == "true" && "${clients}" == "false" ]] && {
+        _log "INFO: SMB clients with locks are offline -> next check"
+        return 0; }
 
     _log "INFO: SMB clients with locks connected -> no shutdown"
     return 1

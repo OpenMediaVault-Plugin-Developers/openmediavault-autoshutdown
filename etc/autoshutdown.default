@@ -259,6 +259,15 @@ FAKE="false"
 
 # -----------------------------------------------------------------------------
 
+CHECK_SAMBA_CLIENTS="false"
+    # Check if the SMB client is online or offline by sending a ping test to
+    # the client. For this to work all SMB client must respond to ping traffic
+    # or the test used will incorrectly classify the client as offline. This
+    # changes the script having to relying on the SMB lock timeout expiring
+    # before a shutdown is triggered on the server. (default="false)
+
+# -----------------------------------------------------------------------------
+
 LPREPEAT=5
     # Number of test cycles for finding and active LOADPROCNAMES-Process
     # allowed 1 - 999. (default=5)
