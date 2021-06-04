@@ -99,6 +99,9 @@ NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     #   49152 = UPnP
     #   51413 = Bittorrent
 
+    # Docker mapped ports can be used to check for activaty. To used the docker
+    # set-up the docker host port must be specified in NSOCKETNUMBERS.
+
 # -----------------------------------------------------------------------------
 
 ULDLCHECK="true"
@@ -253,6 +256,15 @@ FAKE="false"
 
 # You should know, what you are doing. Add these settings to the "Expert
 # Settings" textfield in the OMV-GUI.
+
+# -----------------------------------------------------------------------------
+
+CHECK_SAMBA_CLIENTS="false"
+    # Check if the SMB client is online or offline by sending a ping test to
+    # the client. For this to work all SMB client must respond to ping traffic
+    # or the test used will incorrectly classify the client as offline. This
+    # changes the script having to relying on the SMB lock timeout expiring
+    # before a shutdown is triggered on the server. (default="false)
 
 # -----------------------------------------------------------------------------
 

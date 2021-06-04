@@ -264,8 +264,8 @@ _shutdown() {
         exit 0; }
 
     # Write everything to disk/stick and shutdown, hibernate, ....
-    mapfile -t shutdowncommand <<< "${SHUTDOWNCOMMAND// /$'\n'}"
-    sync && "${shutdowncommand[@]}" && exit 0
+    local shutdowncmd; mapfile -t shutdowncmd <<< "${SHUTDOWNCOMMAND// /$'\n'}"
+    sync && "${shutdowncmd[@]}" && exit 0
     _log "ERR: Shutdown failed. Exiting ..." force
     exit 142
 }
@@ -539,17 +539,19 @@ _check_net_status() {
 _check_docker_status() {
     command -v docker &>/dev/null || return 0
     local active=0
+    local nsocketnums; mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
     for container in $(docker ps --format "{{ .Names }}"); do
         local info; read -ra info <<< "$(LC_ALL=C docker inspect --format \
-            '{{ .State.Pid }} {{ .NetworkSettings.IPAddress }}
-             {{- ""}} {{ range $key, $value := .NetworkSettings.Ports }}
-                {{- ""}}{{ range . }}{{ .HostPort }}:{{ index (split $key "/") 0 }}
-                {{- ""}}{{ end }}
-             {{- ""}} {{ end }}' \
+            '{{.State.Pid}} {{.NetworkSettings.IPAddress}}
+             {{- ""}} {{range $key, $value := .NetworkSettings.Ports}}
+                {{- ""}}{{if $value}}
+                    {{- ""}} {{(index $value 0).HostPort}}:
+                        {{- ""}}{{index (split $key "/") 0}}
+                {{- ""}}{{end}}
+             {{- ""}}{{end}}' \
             "${container}")"
         [[ "${#info[@]}" -eq 0 || ! ("${info[*]}" =~ :) ]] && continue
-        local nsocketnums p_map=()
-        mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
+        local p_map=()
         for ports in "${info[@]: -2}"; do
             [[ "${ports}" =~ (.*)-(.*):(.*)-(.*) ]] && {
                 local h_map; mapfile -t h_map < <(
@@ -573,7 +575,7 @@ _check_docker_status() {
                     '$2 ~ /^ESTAB$/ && $5 ~ regex' ||
                 true)"
             local con_ips; con_ips="$(
-                awk '{sub(/^[[]?{::(ffff|FFFF):)?/,"",$6);
+                awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$6);
                       sub(/[]]?:[0-9]+$/,"",$6)}
                       $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
                 sort -Vu |  awk -Fz '/:/{print $2}!/:/{print}')"
@@ -637,11 +639,20 @@ _check_smb_status() {
         _log "INFO: No SMB clients connected with locks -> next check"
         return 0; }
 
+    local clients="false"
     _log "INFO: SMB client(s) with locks:"
     local pid user host prot; while read -r pid user host prot; do
         [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] &&
-            _log "INFO: HOST: ${host} PID: ${pid} USER: ${user} PROTO: ${prot}"
+            [ "${CHECK_SAMBA_CLIENTS}" == "true" ] && {
+                local state="/offline"
+                ! LC_ALL=C fping --quiet --retry=1 "${host}" || {
+                    state="/online"; clients="true"; } ; }
+            _log "INFO: HOST: ${host}${state:-} PID: ${pid} USER: ${user} PROTO: ${prot}"
     done < <(awk '{print $1 " " $2":"$3 " " $4 " " $6}' <<< "${smb_conns}")
+
+    [[ "${CHECK_SAMBA_CLIENTS}" == "true" && "${clients}" == "false" ]] && {
+        _log "INFO: SMB clients with locks are offline -> next check"
+        return 0; }
 
     _log "INFO: SMB clients with locks connected -> no shutdown"
     return 1
@@ -1107,7 +1118,7 @@ _check_config() {
         _log "INFO: ${RTC} supports: wakealarm"
     if [ "${WAKEALARM_SET}" == "true" ]; then
         [ -f "/sys/class/rtc/${RTC}/wakealarm" ] || {
-            _log "ERROR ${RTC} does not support wakealarm but it is set"
+            _log "ERR: ${RTC} does not support wakealarm but it is set"
             exit 140; }
 
         __check_value "WAKEALARM_UPHOURS" "^(true|false)$" \
@@ -1115,7 +1126,7 @@ _check_config() {
 
         [ "${WAKEALARM_UPHOURS}" == "true" ] && {
             [ "${CHECKCLOCKACTIVE}" == "true" ] || {
-                _log "ERROR: WAKEALARM_UPHOURS is set but CHECKCLOCKACTIVE is not"
+                _log "ERR: WAKEALARM_UPHOURS is set but CHECKCLOCKACTIVE is not"
                 exit 140; }
 
             _log "INFO: Setting WAKEALARM and OVERRIDEWAKEALARM using UPHOURS and OVERRIDEUPHOURS start times"
@@ -1421,21 +1432,12 @@ _check_config
 
 [ "${DEBUG}" == "true" ] && {
     _log "DEBUG: -----------------------------------------------------"
-    for var in "FAKE:N/A" "VERBOSE:N/A" "SYSLOG:N/A" "CYCLES:N/A" "SLEEP:N/A" \
-               "FORCE_NIC:N/A" "NET_IFACE_RETRY:N/A" "NET_IFACE_SLEEP:N/A" \
-               "SHUTDOWNCOMMAND:N/A" "CHECKCLOCKACTIVE:N/A" "UPHOURS:N/A" \
-               "OVERRIDEUPHOURS:N/A" "WAKEALARM_SET:N/A" "WAKEALARM:N/A" \
-               "OVERRIDEWAKEALARM:N/A" "WAKEALARM_UPHOURS:N/A"  "RTC:N/A" \
-               "IPCHECK:N/A" "PINGLIST:N/A" "RANGE:N/A" "CHECKSOCKETS:N/A" \
-               "NSOCKETNUMBERS:N/A" "NSOCKETIGNORESELF:N/A" "CHECK_SAMBA:N/A" \
-               "CHECK_CLI:N/A" "HDDIOCHECK:N/A" "HDDIO_RATE:N/A" \
-               "SMARTCHECK:N/A" "ULDLCHECK:N/A" "ULDLRATE:N/A" \
-               "LOADAVERAGECHECK:N/A" "LOADAVERAGE:N/A" "CHECKPROCNAMES:N/A" \
-               "LOADPROCNAMES:disabled" "LPREPEAT:N/A" \
-               "TEMPPROCNAMES:disabled" "TPREPEAT:N/A" "PLUGINCHECK:N/A"; do
-        value="${var%:*}"
-        _log "DEBUG: ${value}: ${!value:-${var#*:}}"
-    done
+    while read -r var; do
+        value="N/A"
+        [[ "${var}" == "LOADPROCNAMES" || "${var}" == "TEMPPROCNAMES" ]] &&
+            value="disabled"
+        _log "DEBUG: ${var}: ${!var:-${value}}"
+    done < <(awk -F= '$0!~/^[ ]*#/ && $0!~/^$/ {print $1}' "${DEFAULT_CONFIG}")
     _log "DEBUG: Available plugins found in: ${PLUGIN_DIR}"
     for _plugin in "${PLUGIN_DIR}"/*; do
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"

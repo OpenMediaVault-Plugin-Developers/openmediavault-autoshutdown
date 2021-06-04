@@ -1,3 +1,13 @@
+openmediavault-autoshutdown (5.1.19) stable; urgency=low
+
+  * Correct check_config RTC error output
+  * Rework debug variable output
+  * Small clean-up of shutdown command
+  * Fix _docker_status_check
+  * Check if the SMB client is online or offline
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 04 Jun 2021 14:39:51 +0100
+
 openmediavault-autoshutdown (5.1.18) stable; urgency=low
 
   * Fix typo in GUI
