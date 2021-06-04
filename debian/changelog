@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (5.1.19) stable; urgency=low
 
   * Correct check_config RTC error output
+  * Rework debug variable output
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 04 Jun 2021 14:39:51 +0100
 
