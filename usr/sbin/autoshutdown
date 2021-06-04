@@ -1107,7 +1107,7 @@ _check_config() {
         _log "INFO: ${RTC} supports: wakealarm"
     if [ "${WAKEALARM_SET}" == "true" ]; then
         [ -f "/sys/class/rtc/${RTC}/wakealarm" ] || {
-            _log "ERROR ${RTC} does not support wakealarm but it is set"
+            _log "ERR: ${RTC} does not support wakealarm but it is set"
             exit 140; }
 
         __check_value "WAKEALARM_UPHOURS" "^(true|false)$" \
@@ -1115,7 +1115,7 @@ _check_config() {
 
         [ "${WAKEALARM_UPHOURS}" == "true" ] && {
             [ "${CHECKCLOCKACTIVE}" == "true" ] || {
-                _log "ERROR: WAKEALARM_UPHOURS is set but CHECKCLOCKACTIVE is not"
+                _log "ERR: WAKEALARM_UPHOURS is set but CHECKCLOCKACTIVE is not"
                 exit 140; }
 
             _log "INFO: Setting WAKEALARM and OVERRIDEWAKEALARM using UPHOURS and OVERRIDEUPHOURS start times"
