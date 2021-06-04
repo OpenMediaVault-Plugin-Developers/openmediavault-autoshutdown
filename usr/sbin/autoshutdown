@@ -264,8 +264,8 @@ _shutdown() {
         exit 0; }
 
     # Write everything to disk/stick and shutdown, hibernate, ....
-    mapfile -t shutdowncommand <<< "${SHUTDOWNCOMMAND// /$'\n'}"
-    sync && "${shutdowncommand[@]}" && exit 0
+    local shutdowncmd; mapfile -t shutdowncmd <<< "${SHUTDOWNCOMMAND// /$'\n'}"
+    sync && "${shutdowncmd[@]}" && exit 0
     _log "ERR: Shutdown failed. Exiting ..." force
     exit 142
 }
