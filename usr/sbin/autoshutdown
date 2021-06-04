@@ -539,17 +539,19 @@ _check_net_status() {
 _check_docker_status() {
     command -v docker &>/dev/null || return 0
     local active=0
+    local nsocketnums; mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
     for container in $(docker ps --format "{{ .Names }}"); do
         local info; read -ra info <<< "$(LC_ALL=C docker inspect --format \
-            '{{ .State.Pid }} {{ .NetworkSettings.IPAddress }}
-             {{- ""}} {{ range $key, $value := .NetworkSettings.Ports }}
-                {{- ""}}{{ range . }}{{ .HostPort }}:{{ index (split $key "/") 0 }}
-                {{- ""}}{{ end }}
-             {{- ""}} {{ end }}' \
+            '{{.State.Pid}} {{.NetworkSettings.IPAddress}}
+             {{- ""}} {{range $key, $value := .NetworkSettings.Ports}}
+                {{- ""}}{{if $value}}
+                    {{- ""}} {{(index $value 0).HostPort}}:
+                        {{- ""}}{{index (split $key "/") 0}}
+                {{- ""}}{{end}}
+             {{- ""}}{{end}}' \
             "${container}")"
         [[ "${#info[@]}" -eq 0 || ! ("${info[*]}" =~ :) ]] && continue
-        local nsocketnums p_map=()
-        mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
+        local p_map=()
         for ports in "${info[@]: -2}"; do
             [[ "${ports}" =~ (.*)-(.*):(.*)-(.*) ]] && {
                 local h_map; mapfile -t h_map < <(
@@ -573,7 +575,7 @@ _check_docker_status() {
                     '$2 ~ /^ESTAB$/ && $5 ~ regex' ||
                 true)"
             local con_ips; con_ips="$(
-                awk '{sub(/^[[]?{::(ffff|FFFF):)?/,"",$6);
+                awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$6);
                       sub(/[]]?:[0-9]+$/,"",$6)}
                       $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
                 sort -Vu |  awk -Fz '/:/{print $2}!/:/{print}')"

@@ -99,6 +99,9 @@ NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     #   49152 = UPnP
     #   51413 = Bittorrent
 
+    # Docker mapped ports can be used to check for activaty. To used the docker
+    # set-up the docker host port must be specified in NSOCKETNUMBERS.
+
 # -----------------------------------------------------------------------------
 
 ULDLCHECK="true"
