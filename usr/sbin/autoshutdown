@@ -585,7 +585,7 @@ _check_docker_status() {
                   _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
-    _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}"
+    _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
     return "${active}"
 }
 
