@@ -585,7 +585,7 @@ _check_docker_status() {
                   _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
-    _log "INFO: Found ${active} active socket(s), from port(s): ${NSOCKETNUMBERS}"
+    _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
     return "${active}"
 }
 
@@ -626,7 +626,7 @@ _check_users_status() {
 #
 #   Name       : _check_smb_status
 #   Parameters : None
-#   Globals    : None
+#   Globals    : CHECK_SAMBA_CLIENTS : If true check, if the client is online.
 #   Return     : 0 : If there are no SMB client connected, ready for shutdown.
 #              : 1 : If there are SMB client connected, no shutdown.
 #
@@ -642,12 +642,12 @@ _check_smb_status() {
     local clients="false"
     _log "INFO: SMB client(s) with locks:"
     local pid user host prot; while read -r pid user host prot; do
-        [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] &&
+        [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] && {
             [ "${CHECK_SAMBA_CLIENTS}" == "true" ] && {
                 local state="/offline"
                 ! LC_ALL=C fping --quiet --retry=1 "${host}" || {
-                    state="/online"; clients="true"; } ; }
-            _log "INFO: HOST: ${host}${state:-} PID: ${pid} USER: ${user} PROTO: ${prot}"
+                    state="/online"; clients="true"; }; }
+            _log "INFO: HOST: ${host}${state:-} PID: ${pid} USER: ${user} PROTO: ${prot}"; }
     done < <(awk '{print $1 " " $2":"$3 " " $4 " " $6}' <<< "${smb_conns}")
 
     [[ "${CHECK_SAMBA_CLIENTS}" == "true" && "${clients}" == "false" ]] && {
