@@ -580,10 +580,10 @@ _check_docker_status() {
                       sub(/[]]?:[0-9]+$/,"",$6)}
                       $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
                 sort -Vu |  awk -Fz '/:/{print $2}!/:/{print}')"
-            [ -n "${lines}" ] &&
-                { local no_lines; no_lines="$(wc -l <<< "${lines}")"
-                  ((active+="${no_lines}"))
-                  _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
+            [ -n "${lines}" ] && {
+                local no_lines; no_lines="$(wc -l <<< "${lines}")"
+                ((active+="${no_lines}"))
+                _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
         done
     done
     _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
