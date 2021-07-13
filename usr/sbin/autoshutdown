@@ -540,8 +540,9 @@ _check_docker_status() {
     command -v docker &>/dev/null || return 0
     local active=0
     local nsocketnums; mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
-    for container in $(docker ps --format "{{ .Names }}"); do
-        local info; read -ra info <<< "$(LC_ALL=C docker inspect --format \
+    for container in $(docker container ls --format "{{ .Names }}"); do
+        local info; read -ra info <<< "$(LC_ALL=C
+            docker container inspect --format \
             '{{.State.Pid}} {{.NetworkSettings.IPAddress}}
              {{- ""}} {{range $key, $value := .NetworkSettings.Ports}}
                 {{- ""}}{{if $value}}
