@@ -1,0 +1,281 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
+# 
+# Translators:
+# zubr139, 2013
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-autoshutdown\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-07 08:30-0500\n"
+"PO-Revision-Date: 2021-05-21 14:57+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"Language-Team: Ukrainian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+msgid "&emsp;Minute"
+msgstr ""
+
+msgid "Active Processes"
+msgstr ""
+
+msgid "AutoShutdown"
+msgstr ""
+
+msgid "Autoshutdown"
+msgstr ""
+
+msgid "Begin:&emsp;Hour"
+msgstr ""
+
+msgid "Check Clock to identify forced uptime."
+msgstr ""
+
+msgid "Check SMB status for connected clients."
+msgstr ""
+
+msgid "Check for connected users."
+msgstr ""
+
+msgid "Check for users defined plugins."
+msgstr ""
+
+msgid "Check if S.M.A.R.T. tests are running."
+msgstr ""
+
+msgid "Clock"
+msgstr ""
+
+msgid "Cycles"
+msgstr "Цикли"
+
+msgid "Date & Time"
+msgstr "Дата і Час"
+
+msgid "Define a range of IPs which should be scanned."
+msgstr ""
+
+msgid ""
+"Define a single IPv4: Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz |"
+" iface@www.xxx.yyy.zzz"
+msgstr ""
+
+msgid ""
+"Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz  | "
+"s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z"
+msgstr ""
+
+msgid ""
+"Define an IPv4 range: &lt;START&gt;..&lt;END&gt; | "
+"iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | "
+"iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;"
+msgstr ""
+
+msgid ""
+"Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; | "
+"iface@0x&lt;START&gt;..0x&lt;END&gt; | "
+"s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | "
+"iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;"
+msgstr ""
+
+msgid "Define by FQDN: fqdn | iface@fqdn"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
+
+msgid "Enable"
+msgstr "Увімкнути"
+
+msgid "Enable wake alarm on system."
+msgstr ""
+
+msgid "End:&nbsp;&ensp;&emsp;Hour"
+msgstr ""
+
+msgid ""
+"Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
+"means a loadaverage of 2.20"
+msgstr ""
+
+msgid "Expert Settings"
+msgstr "Налаштування для експертів"
+
+msgid "Extra Options"
+msgstr ""
+
+msgid "Fake"
+msgstr ""
+
+msgid "Fake/Test mode."
+msgstr ""
+
+msgid "Forced Uptime"
+msgstr ""
+
+msgid "Function"
+msgstr ""
+
+msgid "General settings"
+msgstr "Загальні налаштування"
+
+msgid "HDDIO Rate"
+msgstr ""
+
+msgid "Hibernate"
+msgstr ""
+
+msgid "Hybrid Sleep"
+msgstr ""
+
+msgid "IP Range"
+msgstr ""
+
+msgid ""
+"If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first "
+"three octets of the iface IPv4 address is used."
+msgstr ""
+
+msgid ""
+"If '0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the "
+"first seven hextets of the iface IPv6 address is used."
+msgstr ""
+
+msgid ""
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr ""
+
+msgid ""
+"If the load average of the server is above this value, then no shutdown."
+msgstr ""
+
+msgid "List of Ports"
+msgstr "Список портів"
+
+msgid "Load Average"
+msgstr ""
+
+msgid "Load Processes"
+msgstr ""
+
+msgid "Log to Syslog"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr ""
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
+msgstr ""
+
+msgid "Numbers of seconds between each cycle."
+msgstr "Кількість секунд між кожним циклом."
+
+msgid "Please check"
+msgstr ""
+
+msgid "Please make sure to leave 1 and 255 out of the IPv4 range!"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
+
+msgid ""
+"Set the number of cycles with no result (no PC online, etc) before shutdown."
+msgstr ""
+
+msgid "Set wake alarm using force uptime settings."
+msgstr ""
+
+msgid "Settings"
+msgstr "Налаштування"
+
+msgid "Shutdown"
+msgstr ""
+
+msgid "Shutdown Command"
+msgstr ""
+
+msgid "Sleep"
+msgstr "Cпати"
+
+msgid "Smart Tests"
+msgstr ""
+
+msgid "Socket number to check for activity."
+msgstr "Номер роз'єму для перевірки активності."
+
+msgid "Sockets"
+msgstr "Розєми"
+
+msgid "Supervision Configuration"
+msgstr ""
+
+msgid "Suspend"
+msgstr ""
+
+msgid "Suspend then Hibernate"
+msgstr ""
+
+msgid "Syslog Configuration"
+msgstr "Конфігурація Syslog"
+
+msgid "Temp Processes"
+msgstr ""
+
+msgid "The IP-Range should be a comma delimited list of the following:"
+msgstr ""
+
+msgid "This is only avalible if forced uptime is enabled."
+msgstr ""
+
+msgid "This only works if S.M.A.R.T. is supported directly."
+msgstr ""
+
+msgid "Time:&emsp;Hour"
+msgstr ""
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Uphours"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "Verbose"
+msgstr "Докладний"
+
+msgid "Verbose mode."
+msgstr "Докладний режим."
+
+msgid "WakeAlarm"
+msgstr ""
+
+msgid "WakeAlarm from Uphours"
+msgstr ""
+
+msgid "Write log informations to system logs."
+msgstr ""
+
+msgid "autoshutdown.default"
+msgstr ""
+
+msgid "for more details."
+msgstr "для більш докладної інформації."
