@@ -147,7 +147,7 @@ HDDIO_RATE=401
 # -----------------------------------------------------------------------------
 
 SMARTCHECK="false"
-    # Do a HDD check to see if S.M.A.R.T tests are running and if they are
+    # Do a HDD check to see if S.M.A.R.T. tests are running and if they are
     # running block shutdown. Note this will only work if smart is supported
     # directly. For example this will not work with a HPE smart array.
     # (default="false")

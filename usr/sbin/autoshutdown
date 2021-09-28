@@ -979,7 +979,7 @@ _check_hddio() {
 #   Return     : 1 : If any HDD is running smart tests then no shutdown.
 #              : 0 : If no HDD is running smart tests.
 #
-# This checks if a device is running smart tests, if S.M.A.R.T is supported
+# This checks if a device is running smart tests, if S.M.A.R.T. is supported
 # directly by the device and its controller. For example this will not work on
 # a HPE smart array. If smart tests are running on a supported device then
 # no shutdown. If no smart tests or device/controller is not supported go to

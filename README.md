@@ -20,7 +20,7 @@ priority from 0 = highest to 6 = lowest:
    Samba status check  
 3. UL/DL-Rate in kB/s over active network interfaces
 4. HDD IO rate check in kB/s  
-   Check if S.M.A.R.T tests are running  
+   Check if S.M.A.R.T. tests are running  
 5. Check for active processes
 6. Check for user plugins
 
