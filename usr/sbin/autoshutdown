@@ -90,11 +90,9 @@ readonly R_RANGE_IPV6
 _log() {
     local -r user="$(id -nu "$(< "/proc/self/loginuid")" 2>/dev/null || true)"
     local -r tag="$(basename "${0}")"
+    local -r priority="${1%%: *}"
 
-    [[ "${1}" =~ ^([A-Za-z]*):\ *(.*) ]] && {
-       local -r priority=${BASH_REMATCH[1]}
-       local message="${FUNCNAME[1]}(): ${BASH_REMATCH[2]}"; }
-
+    local message="${FUNCNAME[1]}(): ${1#*: }"
     [ "${FAKE:-}" == "true" ] && message="FAKE-Mode: ${message}"
     local -r message="${user:-${USER}}: ${priority}: '${message}'"
 
