@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (5.1.21) stable; urgency=low
 
   * Correct typo on S.M.A.R.T.
+  * Small update to README.md
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 28 Sep 2021 11:32:28 +0100
 
