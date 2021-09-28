@@ -90,11 +90,9 @@ readonly R_RANGE_IPV6
 _log() {
     local -r user="$(id -nu "$(< "/proc/self/loginuid")" 2>/dev/null || true)"
     local -r tag="$(basename "${0}")"
+    local -r priority="${1%%: *}"
 
-    [[ "${1}" =~ ^([A-Za-z]*):\ *(.*) ]] && {
-       local -r priority=${BASH_REMATCH[1]}
-       local message="${FUNCNAME[1]}(): ${BASH_REMATCH[2]}"; }
-
+    local message="${FUNCNAME[1]}(): ${1#*: }"
     [ "${FAKE:-}" == "true" ] && message="FAKE-Mode: ${message}"
     local -r message="${user:-${USER}}: ${priority}: '${message}'"
 
@@ -560,11 +558,12 @@ _check_docker_status() {
                 local c_map; mapfile -t c_map < <(
                     seq "${BASH_REMATCH[3]}" "${BASH_REMATCH[4]}")
                 for index in "${!h_map[@]}"; do
-                    [[ " ${nsocketnums[*]} " =~ \ ${h_map["${index}"]}\  ]] &&
+                    [[ " ${nsocketnums[*]} " =~ \
+                            [[:blank:]]${h_map["${index}"]}[[:blank:]] ]] &&
                         p_map["${h_map["${index}"]}"]="${c_map["${index}"]}"
                 done
                 continue; }
-            [[ " ${nsocketnums[*]} " =~ \ ${ports%:*}\  ]] &&
+            [[ " ${nsocketnums[*]} " =~ [[:blank:]]${ports%:*}[[:blank:]] ]] &&
                 p_map["${ports%:*}"]="${ports#*:}"
         done
         [ "${#p_map[@]}" -eq 0 ] && continue
@@ -643,7 +642,7 @@ _check_smb_status() {
     local clients="false"
     _log "INFO: SMB client(s) with locks:"
     local pid user host prot; while read -r pid user host prot; do
-        [[ " ${smb_lock_pids[*]} " =~ \ ${pid}\  ]] && {
+        [[ " ${smb_lock_pids[*]} " =~ [[:blank:]]${pid}[[:blank:]] ]] && {
             [ "${CHECK_SAMBA_CLIENTS}" == "true" ] && {
                 local state="/offline"
                 ! LC_ALL=C fping --quiet --retry=1 "${host}" || {
@@ -979,7 +978,7 @@ _check_hddio() {
 #   Return     : 1 : If any HDD is running smart tests then no shutdown.
 #              : 0 : If no HDD is running smart tests.
 #
-# This checks if a device is running smart tests, if S.M.A.R.T is supported
+# This checks if a device is running smart tests, if S.M.A.R.T. is supported
 # directly by the device and its controller. For example this will not work on
 # a HPE smart array. If smart tests are running on a supported device then
 # no shutdown. If no smart tests or device/controller is not supported go to
@@ -1247,11 +1246,11 @@ _check_config() {
         SHUTDOWNCOMMAND="${DEFAULT_SHUTDOWNCOMMAND}"
     # Check, if shutdown hybrid-sleep, suspend and hibernate are supported.
     elif ( [[ "${SHUTDOWNCOMMAND}" =~ \
-                    ^systemctl\ +(hybrid-sleep|suspend|hibernate)$ ]] &&
+                    ^systemctl[[:blank:]]+(hybrid-sleep|suspend|hibernate)$ ]] &&
               ! pm-is-supported \
                     "${pm_map["${BASH_REMATCH[1]}"]%:*}" 2>/dev/null ) ||
          ( [[  "${SHUTDOWNCOMMAND}" =~ \
-                    ^systemctl\ +suspend-then-hibernate$ ]] &&
+                    ^systemctl[[:blank:]]+suspend-then-hibernate$ ]] &&
                ( ! pm-is-supported --suspend 2>/dev/null ||
                  ! pm-is-supported --hibernate 2>/dev/null ) ); then
         _log "WARNING: SHUTDOWNCOMMAND not supported: ${SHUTDOWNCOMMAND}"
