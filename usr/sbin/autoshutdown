@@ -1013,8 +1013,7 @@ _check_smart() {
 #
 #   Name       : _validate_config
 #   Parameters : None
-#   Globals    : $CONFIG    : The autoshutdown configuration.
-#              : $*         : All options as defined in $CONFIG for validation.
+#   Globals    : $*         : All options as defined in $CONFIG for validation.
 #              : $DEFAULT_* : All options as defined in $DEFAULT_CONFIG for
 #                             default value reset in case of error.
 #              : $R_*       : Global regular expression's for validation.
@@ -1038,9 +1037,6 @@ _validate_config() {
             _log "WARNING: ${var} set to default: ${!default_var:-\"\"}"
             declare -g "${var}"="${!default_var}"; }
     }
-
-    _log "INFO: ------------------------------------------------------"
-    _log "INFO: Checking config: ${CONFIG}"
 
     [[ "${FAKE}" =~ ^(true|false)$ ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
@@ -1286,9 +1282,6 @@ _validate_config() {
 #   Return     : 0 on success.
 #
 _get_network_details() {
-    _log "INFO: ------------------------------------------------------"
-    _log "INFO: Find available network interfaces and their IP addresses"
-
     local net_iface; while read -r net_iface; do
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
             local msg=""
@@ -1427,6 +1420,8 @@ _log "INFO: ${CONFIG} loaded" force
 [ "${FAKE:-}" == "true" ] && VERBOSE="true"
 DEBUG="${VERBOSE:-"${DEFAULT_VERBOSE}"}"
 
+_log "INFO: ---------------- Validate config ---------------------"
+_log "INFO: Checking config: ${CONFIG}"
 _validate_config
 
 # Enable / disable check here.
@@ -1447,6 +1442,8 @@ _validate_config
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"
     done; }
 
+_log "INFO: ---------------- Network details ---------------------"
+_log "INFO: Find active network interfaces and their IP addresses"
 _get_network_details
 
 _log "INFO: --------------- Initialise states --------------------"
