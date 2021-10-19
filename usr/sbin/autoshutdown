@@ -1266,7 +1266,7 @@ _validate_config() {
 
 ###############################################################################
 #
-#   Name       : _check_networkconfig
+#   Name       : _get_network_details
 #   Parameters : None
 #   Globals    : $FORCE_NIC       : Force network interface lookup using a
 #                                   space delimited list of network interface
@@ -1285,7 +1285,7 @@ _validate_config() {
 #              : $R_IPV6          : IPv6 address regular expression.
 #   Return     : 0 on success.
 #
-_check_networkconfig() {
+_get_network_details() {
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Find available network interfaces and their IP addresses"
 
@@ -1447,7 +1447,7 @@ _validate_config
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"
     done; }
 
-_check_networkconfig
+_get_network_details
 
 _log "INFO: --------------- Initialise states --------------------"
 
