@@ -1268,17 +1268,21 @@ _check_config() {
 #
 #   Name       : _check_networkconfig
 #   Parameters : None
-#   Globals    : $FORCE_NIC  : Force network interface lookup using a space
-#                              delimited list of network interface or partial
-#                              interface names to be checked.
-#              : $NICS       : Array for storing active network interface
-#                              names.
-#              : $NIC_2_IPV4 : Associative array for storing network interface
-#                              to IPv4 address mappings.
-#              : $NIC_2_IPV6 : Associative array for storing network interface
-#                              to IPv6 address mappings.
-#              : $R_IPV4     : IPv4 address regular expression.
-#              : $R_IPV6     : IPv6 address regular expression.
+#   Globals    : $FORCE_NIC       : Force network interface lookup using a
+#                                   space delimited list of network interface
+#                                   or partial interface names to be checked.
+#              : $NICS            : Array for storing active network interface
+#                                   names.
+#              : $NET_IFACE_RETRY : How many times to retry the interface to
+#                                   check if it is online.
+#              : $NET_IFACE_SLEEP : The amount of time to sleep between
+#                                   re-checking if the interface is online.
+#              : $NIC_2_IPV4      : Associative array for storing network
+#                                   interface to IPv4 address mappings.
+#              : $NIC_2_IPV6      : Associative array for storing network
+#                                 : interface to IPv6 address mappings.
+#              : $R_IPV4          : IPv4 address regular expression.
+#              : $R_IPV6          : IPv6 address regular expression.
 #   Return     : 0 on success.
 #
 _check_networkconfig() {
@@ -1291,7 +1295,7 @@ _check_networkconfig() {
             local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
             [ "${DEBUG}" == "true" ] && {
                 _log "DEBUG: Network interfaces: ${net_iface}"
-                _log "DEBUG: Network interfacesa status: ${state}"; }
+                _log "DEBUG: Network interfaces status: ${state}"; }
             for ip_type in ipv4 ipv6; do
                 local valid="false" regex="R_${ip_type^^}"
                 local ip; ip="$(LC_ALL=C
@@ -1380,7 +1384,7 @@ _check_system_active() {
             return 1
     done
 
-    # PRIO 4: Do a hdd io check.
+    # PRIO 4: Do a hdd IO check.
     __run_check "${HDDIOCHECK}" _check_hddio || return 1
     # PRIO 4: Do a hdd check to see if S.M.A.R.T. tests are running.
     __run_check "${SMARTCHECK}" _check_smart || return 1
