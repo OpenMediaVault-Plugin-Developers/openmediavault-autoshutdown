@@ -1011,7 +1011,7 @@ _check_smart() {
 
 ###############################################################################
 #
-#   Name       : _check_config
+#   Name       : _validate_config
 #   Parameters : None
 #   Globals    : $CONFIG    : The autoshutdown configuration.
 #              : $*         : All options as defined in $CONFIG for validation.
@@ -1020,7 +1020,7 @@ _check_smart() {
 #              : $R_*       : Global regular expression's for validation.
 #   Return     : 0 on success.
 #
-_check_config() {
+_validate_config() {
     __check_value() {
         local -r var="${1}"
         local -r regex="${2}"
@@ -1427,7 +1427,7 @@ _log "INFO: ${CONFIG} loaded" force
 [ "${FAKE:-}" == "true" ] && VERBOSE="true"
 DEBUG="${VERBOSE:-"${DEFAULT_VERBOSE}"}"
 
-_check_config
+_validate_config
 
 # Enable / disable check here.
 [ "${ENABLE}" == "false" ] && {
