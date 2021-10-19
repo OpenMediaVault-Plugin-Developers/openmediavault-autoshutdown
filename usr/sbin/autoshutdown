@@ -1042,13 +1042,13 @@ _check_config() {
     _log "INFO: ------------------------------------------------------"
     _log "INFO: Checking config: ${CONFIG}"
 
-    [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
+    [[ "${FAKE}" =~ ^(true|false)$ ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
         _log "WARNING: FAKE must be set to: 'true' or 'false'"
         _log "WARNING: FAKE set to true -> FAKE-mode, with VERBOSE -> true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
-    [[ "${VERBOSE}" == "true" || "${VERBOSE}" == "false" ]] || {
+    [[ "${VERBOSE}" =~ ^(true|false)$ ]] || {
         _log "WARNING: VERBOSE not set properly: ${VERBOSE}"
         _log "WARNING: VERBOSE must be set to: 'true' or 'false'"
         _log "WARNING: VERBOSE set to default: ${DEFAULT_VERBOSE}"

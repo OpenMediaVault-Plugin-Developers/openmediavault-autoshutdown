@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (6.0.0) UNRELEASED; urgency=low
+
+  * Simplify and align some configuration checks
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Oct 2021 20:50:22 +0100
+
 openmediavault-autoshutdown (5.1.21) stable; urgency=low
 
   * Correct typo on S.M.A.R.T.
