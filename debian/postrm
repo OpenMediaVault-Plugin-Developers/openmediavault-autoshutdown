@@ -4,7 +4,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2013-2021 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,13 +25,15 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 remove_action() {
-    dpkg-trigger update-fixperms
+    # Activate trigger to rebuild workbench configuration files.
+    dpkg-trigger update-workbench
 }
 
 case "${1}" in
     purge)
         remove_action
         # Remove the configuration data
+        echo "Cleaning up configuration database ..."
         omv_config_delete "/config/services/autoshutdown"
     ;;
     remove)

@@ -1,0 +1,8 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/autoshutdown"
+  title: _("AutoShutdown")
+  editing: true
+  notificationTitle: _("Updated AutoShutdown settings.")
+  component: omv-services-autoshutdown-form-page

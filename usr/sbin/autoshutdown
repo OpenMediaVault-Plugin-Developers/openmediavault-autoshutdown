@@ -1011,16 +1011,15 @@ _check_smart() {
 
 ###############################################################################
 #
-#   Name       : _check_config
+#   Name       : _validate_config
 #   Parameters : None
-#   Globals    : $CONFIG    : The autoshutdown configuration.
-#              : $*         : All options as defined in $CONFIG for validation.
+#   Globals    : $*         : All options as defined in $CONFIG for validation.
 #              : $DEFAULT_* : All options as defined in $DEFAULT_CONFIG for
 #                             default value reset in case of error.
 #              : $R_*       : Global regular expression's for validation.
 #   Return     : 0 on success.
 #
-_check_config() {
+_validate_config() {
     __check_value() {
         local -r var="${1}"
         local -r regex="${2}"
@@ -1039,16 +1038,13 @@ _check_config() {
             declare -g "${var}"="${!default_var}"; }
     }
 
-    _log "INFO: ------------------------------------------------------"
-    _log "INFO: Checking config: ${CONFIG}"
-
-    [[ "${FAKE}" == "true" || "${FAKE}" == "false" ]] || {
+    [[ "${FAKE}" =~ ^(true|false)$ ]] || {
         _log "WARNING: FAKE not set properly: ${FAKE}"
         _log "WARNING: FAKE must be set to: 'true' or 'false'"
         _log "WARNING: FAKE set to true -> FAKE-mode, with VERBOSE -> true"
         FAKE="true"; VERBOSE="true"; DEBUG="true"; }
 
-    [[ "${VERBOSE}" == "true" || "${VERBOSE}" == "false" ]] || {
+    [[ "${VERBOSE}" =~ ^(true|false)$ ]] || {
         _log "WARNING: VERBOSE not set properly: ${VERBOSE}"
         _log "WARNING: VERBOSE must be set to: 'true' or 'false'"
         _log "WARNING: VERBOSE set to default: ${DEFAULT_VERBOSE}"
@@ -1166,7 +1162,7 @@ _check_config() {
 
     if [ "${CHECKSOCKETS}" == "true" ]; then
         __check_value "NSOCKETNUMBERS" "^([0-9]{2,5})(,[0-9]{2,5})*$" \
-            "at least 2 digit in the format: [nsocket1,nsocket2,...,nsocketN]"
+            "at least 2 to 5 digits in the format: [nsocket1,nsocket2,...,nsocketN]"
 
         __check_value "NSOCKETIGNORESELF" "^(true|false)$" \
             "set to: 'true' or 'false'"
@@ -1266,32 +1262,33 @@ _check_config() {
 
 ###############################################################################
 #
-#   Name       : _check_networkconfig
+#   Name       : _get_network_details
 #   Parameters : None
-#   Globals    : $FORCE_NIC  : Force network interface lookup using a space
-#                              delimited list of network interface or partial
-#                              interface names to be checked.
-#              : $NICS       : Array for storing active network interface
-#                              names.
-#              : $NIC_2_IPV4 : Associative array for storing network interface
-#                              to IPv4 address mappings.
-#              : $NIC_2_IPV6 : Associative array for storing network interface
-#                              to IPv6 address mappings.
-#              : $R_IPV4     : IPv4 address regular expression.
-#              : $R_IPV6     : IPv6 address regular expression.
+#   Globals    : $FORCE_NIC       : Force network interface lookup using a
+#                                   space delimited list of network interface
+#                                   or partial interface names to be checked.
+#              : $NICS            : Array for storing active network interface
+#                                   names.
+#              : $NET_IFACE_RETRY : How many times to retry the interface to
+#                                   check if it is online.
+#              : $NET_IFACE_SLEEP : The amount of time to sleep between
+#                                   re-checking if the interface is online.
+#              : $NIC_2_IPV4      : Associative array for storing network
+#                                   interface to IPv4 address mappings.
+#              : $NIC_2_IPV6      : Associative array for storing network
+#                                 : interface to IPv6 address mappings.
+#              : $R_IPV4          : IPv4 address regular expression.
+#              : $R_IPV6          : IPv6 address regular expression.
 #   Return     : 0 on success.
 #
-_check_networkconfig() {
-    _log "INFO: ------------------------------------------------------"
-    _log "INFO: Find available network interfaces and their IP addresses"
-
+_get_network_details() {
     local net_iface; while read -r net_iface; do
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
             local msg=""
             local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
             [ "${DEBUG}" == "true" ] && {
                 _log "DEBUG: Network interfaces: ${net_iface}"
-                _log "DEBUG: Network interfacesa status: ${state}"; }
+                _log "DEBUG: Network interfaces status: ${state}"; }
             for ip_type in ipv4 ipv6; do
                 local valid="false" regex="R_${ip_type^^}"
                 local ip; ip="$(LC_ALL=C
@@ -1380,7 +1377,7 @@ _check_system_active() {
             return 1
     done
 
-    # PRIO 4: Do a hdd io check.
+    # PRIO 4: Do a hdd IO check.
     __run_check "${HDDIOCHECK}" _check_hddio || return 1
     # PRIO 4: Do a hdd check to see if S.M.A.R.T. tests are running.
     __run_check "${SMARTCHECK}" _check_smart || return 1
@@ -1423,7 +1420,9 @@ _log "INFO: ${CONFIG} loaded" force
 [ "${FAKE:-}" == "true" ] && VERBOSE="true"
 DEBUG="${VERBOSE:-"${DEFAULT_VERBOSE}"}"
 
-_check_config
+_log "INFO: ---------------- Validate config ---------------------"
+_log "INFO: Checking config: ${CONFIG}"
+_validate_config
 
 # Enable / disable check here.
 [ "${ENABLE}" == "false" ] && {
@@ -1443,7 +1442,9 @@ _check_config
         [ ! -f "${_plugin}" ] || _log "DEBUG: Plugin: ${_plugin}"
     done; }
 
-_check_networkconfig
+_log "INFO: ---------------- Network details ---------------------"
+_log "INFO: Find active network interfaces and their IP addresses"
+_get_network_details
 
 _log "INFO: --------------- Initialise states --------------------"
 

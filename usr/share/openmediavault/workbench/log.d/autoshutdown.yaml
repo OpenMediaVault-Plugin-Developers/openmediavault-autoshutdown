@@ -1,0 +1,28 @@
+version: "1.0"
+type: log
+data:
+  id: "autoshutdown"
+  text: _("AutoShutdown")
+  columns:
+  - name: _("Date & Time")
+    sortable: true
+    prop: date
+    cellTemplateName: localeDateTime
+    flexGrow: 1
+  - name: _("Type")
+    sortable: true
+    prop: type
+    flex: 1
+  - name: _("Function")
+    sortable: true
+    prop: function
+    flex: 1
+  - name: _("Message")
+    sortable: true
+    prop: message
+    flex: 2
+  request:
+    service: LogFile
+    method: getList
+    params:
+      id: autoshutdown
