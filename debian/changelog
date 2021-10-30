@@ -1,4 +1,4 @@
-openmediavault-autoshutdown (6.0.0) UNRELEASED; urgency=low
+openmediavault-autoshutdown (6.0.0) stable; urgency=low
 
   * Simplify and align some configuration checks
   * Add missing globals and correct typos
@@ -8,7 +8,7 @@ openmediavault-autoshutdown (6.0.0) UNRELEASED; urgency=low
   * Small improvement to error output for socket checks
   * Update for omv 6.x
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Oct 2021 20:50:22 +0100
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 30 Oct 2021 12:01:19 -0500
 
 openmediavault-autoshutdown (5.1.21) stable; urgency=low
 
