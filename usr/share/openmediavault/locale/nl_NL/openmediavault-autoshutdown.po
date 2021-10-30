@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-30 12:00-0500\n"
-"PO-Revision-Date: 2021-10-30 17:00+0000\n"
+"POT-Creation-Date: 2021-10-30 16:59-0500\n"
+"PO-Revision-Date: 2021-10-30 22:00+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -19,5 +19,206 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Active Processes"
+msgstr ""
+
 msgid "AutoShutdown"
 msgstr "Automatische uitschakeling"
+
+msgid "Begin hour"
+msgstr ""
+
+msgid "Begin minute"
+msgstr ""
+
+msgid "Check SMB status for connected clients."
+msgstr ""
+
+msgid "Check for connected users."
+msgstr ""
+
+msgid "Check for users defined plugins. (see <a href="
+msgstr ""
+
+msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be"
+msgstr ""
+
+msgid "Check the system clock to identify forced uptime."
+msgstr ""
+
+msgid "Cycles"
+msgstr ""
+
+msgid "Date & Time"
+msgstr ""
+
+msgid "Define a range of IPs which should be scanned. The IP-Range"
+msgstr ""
+
+msgid "Define the network traffic in kB/s."
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "End hour"
+msgstr ""
+
+msgid "End minute"
+msgstr ""
+
+msgid "Expert Settings"
+msgstr ""
+
+msgid "Extra Options"
+msgstr ""
+
+msgid "Fake"
+msgstr ""
+
+msgid "Fake/Test mode."
+msgstr ""
+
+msgid "Forced Uptime"
+msgstr ""
+
+msgid "Function"
+msgstr ""
+
+msgid "General Settings"
+msgstr ""
+
+msgid "HDD-IO"
+msgstr ""
+
+msgid "Hibernate"
+msgstr ""
+
+msgid "Hour"
+msgstr ""
+
+msgid "Hybrid Sleep"
+msgstr ""
+
+msgid "IP-Range"
+msgstr ""
+
+msgid "If the HDD-IO-average of the server is above this value in"
+msgstr ""
+
+msgid "If the load average of the server is above this value, then no"
+msgstr ""
+
+msgid "Load Average"
+msgstr ""
+
+msgid "Load average"
+msgstr ""
+
+msgid "Load processes"
+msgstr ""
+
+msgid "Log to Syslog"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Minute"
+msgstr ""
+
+msgid "Names of processes only started when active. Set to '-' to"
+msgstr ""
+
+msgid "Names of processes with load dependent children. Set to '-' to"
+msgstr ""
+
+msgid "Numbers of seconds between each cycle."
+msgstr ""
+
+msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
+msgstr ""
+
+msgid "Please see <a href="
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Process names must be in the format:"
+msgstr ""
+
+msgid "SMB Status"
+msgstr ""
+
+msgid "Seconds"
+msgstr ""
+
+msgid "Set a wake alarm on the system."
+msgstr ""
+
+msgid "Set the number of cycles with no result (no PC online, etc) before"
+msgstr ""
+
+msgid "Set using 'Forced Uptime' begin time"
+msgstr ""
+
+msgid "Shutdown"
+msgstr ""
+
+msgid "Shutdown command"
+msgstr ""
+
+msgid "Smart Tests"
+msgstr ""
+
+msgid "Socket number to check for activity (see <a href="
+msgstr ""
+
+msgid "Sockets"
+msgstr ""
+
+msgid "Sockets must be 2 to 5 digits in the format:"
+msgstr ""
+
+msgid "Supervision Configuration"
+msgstr ""
+
+msgid "Suspend"
+msgstr ""
+
+msgid "Suspend then Hibernate"
+msgstr ""
+
+msgid "Syslog Configuration"
+msgstr ""
+
+msgid "Temp processes"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "ULDL Rate"
+msgstr ""
+
+msgid "Updated AutoShutdown settings."
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "Verbose"
+msgstr ""
+
+msgid "Verbose mode."
+msgstr ""
+
+msgid "Wake Alarm"
+msgstr ""
+
+msgid "Write log informations to system logs."
+msgstr ""
+
+msgid "kB/s"
+msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-30 12:00-0500\n"
+"POT-Creation-Date: 2021-10-30 16:59-0500\n"
 "PO-Revision-Date: 2021-10-30 17:00+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: English (United States) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/en_US/)\n"
@@ -17,5 +17,206 @@ msgstr ""
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Active Processes"
+msgstr "Active Processes"
+
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
+
+msgid "Begin hour"
+msgstr "Begin hour"
+
+msgid "Begin minute"
+msgstr "Begin minute"
+
+msgid "Check SMB status for connected clients."
+msgstr "Check SMB status for connected clients."
+
+msgid "Check for connected users."
+msgstr "Check for connected users."
+
+msgid "Check for users defined plugins. (see <a href="
+msgstr "Check for users defined plugins. (see <a href="
+
+msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be"
+msgstr "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be"
+
+msgid "Check the system clock to identify forced uptime."
+msgstr "Check the system clock to identify forced uptime."
+
+msgid "Cycles"
+msgstr "Cycles"
+
+msgid "Date & Time"
+msgstr "Date & Time"
+
+msgid "Define a range of IPs which should be scanned. The IP-Range"
+msgstr "Define a range of IPs which should be scanned. The IP-Range"
+
+msgid "Define the network traffic in kB/s."
+msgstr "Define the network traffic in kB/s."
+
+msgid "Enable"
+msgstr "Enable"
+
+msgid "End hour"
+msgstr "End hour"
+
+msgid "End minute"
+msgstr "End minute"
+
+msgid "Expert Settings"
+msgstr "Expert Settings"
+
+msgid "Extra Options"
+msgstr "Extra Options"
+
+msgid "Fake"
+msgstr "Fake"
+
+msgid "Fake/Test mode."
+msgstr "Fake/Test mode."
+
+msgid "Forced Uptime"
+msgstr "Forced Uptime"
+
+msgid "Function"
+msgstr "Function"
+
+msgid "General Settings"
+msgstr "General Settings"
+
+msgid "HDD-IO"
+msgstr "HDD-IO"
+
+msgid "Hibernate"
+msgstr "Hibernate"
+
+msgid "Hour"
+msgstr "Hour"
+
+msgid "Hybrid Sleep"
+msgstr "Hybrid Sleep"
+
+msgid "IP-Range"
+msgstr "IP-Range"
+
+msgid "If the HDD-IO-average of the server is above this value in"
+msgstr "If the HDD-IO-average of the server is above this value in"
+
+msgid "If the load average of the server is above this value, then no"
+msgstr "If the load average of the server is above this value, then no"
+
+msgid "Load Average"
+msgstr "Load Average"
+
+msgid "Load average"
+msgstr "Load average"
+
+msgid "Load processes"
+msgstr "Load processes"
+
+msgid "Log to Syslog"
+msgstr "Log to Syslog"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Minute"
+msgstr "Minute"
+
+msgid "Names of processes only started when active. Set to '-' to"
+msgstr "Names of processes only started when active. Set to '-' to"
+
+msgid "Names of processes with load dependent children. Set to '-' to"
+msgstr "Names of processes with load dependent children. Set to '-' to"
+
+msgid "Numbers of seconds between each cycle."
+msgstr "Numbers of seconds between each cycle."
+
+msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
+msgstr "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
+
+msgid "Please see <a href="
+msgstr "Please see <a href="
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Process names must be in the format:"
+msgstr "Process names must be in the format:"
+
+msgid "SMB Status"
+msgstr "SMB Status"
+
+msgid "Seconds"
+msgstr "Seconds"
+
+msgid "Set a wake alarm on the system."
+msgstr "Set a wake alarm on the system."
+
+msgid "Set the number of cycles with no result (no PC online, etc) before"
+msgstr "Set the number of cycles with no result (no PC online, etc) before"
+
+msgid "Set using 'Forced Uptime' begin time"
+msgstr "Set using 'Forced Uptime' begin time"
+
+msgid "Shutdown"
+msgstr "Shutdown"
+
+msgid "Shutdown command"
+msgstr "Shutdown command"
+
+msgid "Smart Tests"
+msgstr "Smart Tests"
+
+msgid "Socket number to check for activity (see <a href="
+msgstr "Socket number to check for activity (see <a href="
+
+msgid "Sockets"
+msgstr "Sockets"
+
+msgid "Sockets must be 2 to 5 digits in the format:"
+msgstr "Sockets must be 2 to 5 digits in the format:"
+
+msgid "Supervision Configuration"
+msgstr "Supervision Configuration"
+
+msgid "Suspend"
+msgstr "Suspend"
+
+msgid "Suspend then Hibernate"
+msgstr "Suspend then Hibernate"
+
+msgid "Syslog Configuration"
+msgstr "Syslog Configuration"
+
+msgid "Temp processes"
+msgstr "Temp processes"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "ULDL Rate"
+msgstr "ULDL Rate"
+
+msgid "Updated AutoShutdown settings."
+msgstr "Updated AutoShutdown settings."
+
+msgid "Users"
+msgstr "Users"
+
+msgid "Verbose"
+msgstr "Verbose"
+
+msgid "Verbose mode."
+msgstr "Verbose mode."
+
+msgid "Wake Alarm"
+msgstr "Wake Alarm"
+
+msgid "Write log informations to system logs."
+msgstr "Write log informations to system logs."
+
+msgid "kB/s"
+msgstr "kB/s"
