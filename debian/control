@@ -3,14 +3,14 @@ Section: misc
 XB-Plugin-Section: utilities
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Build-Depends: debhelper (>= 10)
+Build-Depends: debhelper (>= 12)
 Standards-Version: 4.3.0
 Homepage: http://omv-extras.org
 
 Package: openmediavault-autoshutdown
 Architecture: all
 Depends: fping,
-         openmediavault (>= 5.5.12),
+         openmediavault (>= 6.0),
          pm-utils,
          sysstat,
          net-tools,

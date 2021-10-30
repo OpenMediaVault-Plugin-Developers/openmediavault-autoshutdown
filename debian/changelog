@@ -6,6 +6,7 @@ openmediavault-autoshutdown (6.0.0) UNRELEASED; urgency=low
   * Rename _check_networkconfig -> _get_network_details
   * Remove unnecessary logging from functions and place in main
   * Small improvement to error output for socket checks
+  * Update for omv 6.x
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 19 Oct 2021 20:50:22 +0100
 

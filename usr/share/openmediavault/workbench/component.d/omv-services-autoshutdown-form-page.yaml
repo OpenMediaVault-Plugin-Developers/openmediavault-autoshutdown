@@ -1,0 +1,522 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-autoshutdown-form-page
+  type: formPage
+  config:
+    request:
+      service: AutoShutdown
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: divider
+        title: _("General Settings")
+      - type: checkbox
+        name: enable
+        label: _("Enable")
+        value: false
+      - type: numberInput
+        name: cycles
+        label: _("Cycles")
+        value: 6
+        hint: >
+          _("Set the number of cycles with no result (no PC online, etc) before
+          shutdown.")
+        validators:
+          min: 1
+          max: 999
+          patterType: integer
+          required: true
+      - type: numberInput
+        name: sleep
+        label: _("Seconds")
+        value: 100
+        hint: _("Numbers of seconds between each cycle.")
+        validators:
+          min: 1
+          max: 9999
+          patterType: integer
+          required: true
+      - type: select
+        name: shutdowncommand
+        label: _("Shutdown command")
+        value: 0
+        store:
+          data:
+            - [ 0, _("Shutdown") ]
+            - [ 1, _("Hibernate") ]
+            - [ 2, _("Suspend") ]
+            - [ 3, _("Hybrid Sleep") ]
+            - [ 4, _("Suspend then Hibernate") ]
+
+      - type: divider
+        title: _("Forced Uptime")
+      - type: container
+        fields:
+          - type: checkbox
+            name: checkclockactive
+            label: _("Forced Uptime")
+            value: false
+            hint: _("Check the system clock to identify forced uptime.")
+          - type: numberInput
+            name: uphours_begin
+            label: _("Begin hour")
+            value: 6
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checkclockactive
+            validators:
+              min: 0
+              max: 23
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checkclockactive
+          - type: numberInput
+            name: upmins_begin
+            label: _("Begin minute")
+            value: 0
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checkclockactive
+            validators:
+              min: 0
+              max: 59
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checkclockactive
+      - type: container
+        fields:
+          - type: paragraph
+          - type: numberInput
+            name: uphours_end
+            label: _("End hour")
+            value: 6
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checkclockactive
+            validators:
+              min: 0
+              max: 23
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checkclockactive
+          - type: numberInput
+            name: upmins_end
+            label: _("End minute")
+            value: 0
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checkclockactive
+            validators:
+              min: 0
+              max: 59
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checkclockactive
+
+      - type: divider
+        title: _("Wake Alarm")
+      - type: container
+        fields:
+          - type: checkbox
+            name: wakealarm_set
+            label: _("Wake Alarm")
+            value: false
+            hint: _("Set a wake alarm on the system.")
+          - type: numberInput
+            name: wakealarm_hour
+            label: _("Hour")
+            value: 8
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: and
+                  arg0:
+                    operator: truthy
+                    arg0:
+                      prop: wakealarm_set
+                  arg1:
+                    operator: falsy
+                    arg0:
+                      prop: wakealarm_uphours
+            validators:
+              min: 0
+              max: 23
+              patterType: integer
+              requiredIf:
+                operator: and
+                arg0:
+                  operator: truthy
+                  arg0:
+                    prop: wakealarm_set
+                arg1:
+                  operator: falsy
+                  arg0:
+                    prop: wakealarm_uphours
+          - type: numberInput
+            name: wakealarm_mins
+            label: _("Minute")
+            value: 0
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: and
+                  arg0:
+                    operator: truthy
+                    arg0:
+                      prop: wakealarm_set
+                  arg1:
+                    operator: falsy
+                    arg0:
+                      prop: wakealarm_uphours
+            validators:
+              min: 0
+              max: 59
+              patterType: integer
+              requiredIf:
+                operator: and
+                arg0:
+                  operator: truthy
+                  arg0:
+                    prop: wakealarm_set
+                arg1:
+                  operator: falsy
+                  arg0:
+                    prop: wakealarm_uphours
+      - type: checkbox
+        name: wakealarm_uphours
+        label: _("Set using 'Forced Uptime' begin time")
+        value: false
+        modifiers:
+          - type: enabled
+            constraint:
+              operator: and
+              arg0:
+                operator: truthy
+                arg0:
+                  prop: wakealarm_set
+              arg1:
+                operator: truthy
+                arg0:
+                  prop: checkclockactive
+          - type: unchecked
+            constraint:
+              operator: if
+              arg0:
+                operator: and
+                arg0:
+                  operator: truthy
+                  arg0:
+                    prop: wakealarm_set
+                arg1:
+                  operator: truthy
+                  arg0:
+                    prop: checkclockactive
+              arg1:
+                true
+        hint: >
+          _("Only available if 'Forced Uptime' in 'Wake Alarm' are enabled.")
+
+      - type: divider
+        title: _("Supervision Configuration")
+      - type: container
+        fields:
+          - type: checkbox
+            name: ipcheck
+            label: _("IP-Range")
+            value: true
+            flex: 17
+          - type: textarea
+            name: range
+            value: 2..254,0x0..0xFFFF
+            rows: 1
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: ipcheck
+            validators:
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: ipcheck
+            hint: >
+              _("Define a range of IPs which should be scanned. The IP-Range
+              should be a comma delimited list of the following:<br />
+              - Define an IPv4 range: &lt;START&gt;..&lt;END&gt; |
+              iface@&lt;START&gt;..&lt;END&gt; |
+              www.xxx.yyy.&lt;START&gt;..&lt;END&gt; |
+              iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />
+              - Define a single IPv4: Last octet of IPv4 zzz |
+              iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />
+              - Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; |
+              iface@0x&lt;START&gt;..0x&lt;END&gt; |
+              s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; |
+              iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />
+              - Define a single IPv6: Last hextet of IPv6 0xzzzz |
+              iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />
+              - Define by FQDN: fqdn | iface@fqdn<br />
+              If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set
+              the first three octets of the iface IPv4 address is used.<br />
+              If '0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is
+              set the first seven hextets of the iface IPv6 address is
+              used.<br />
+              Please make sure to leave 1 and 255 out of the IPv4 range!")
+      - type: container
+        fields:
+          - type: checkbox
+            name: checksockets
+            label: _("Sockets")
+            value: true
+            flex: 17
+          - type: textarea
+            name: nsocketnumbers
+            value: 21,22,80,3689,6991,9091,49152
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checksockets
+            validators:
+              pattern:
+                pattern: ^([0-9]{2,5})(,[0-9]{2,5})*$
+                errorData: >
+                  _("Sockets must be 2 to 5 digits in the format:
+                  [socket1,socket2,...,socketN]")
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checksockets
+            rows: 1
+            hint: >
+              _("Socket number to check for activity (see <a href=
+              'http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers'
+              target='_blank'>List of port numbers</a>).")
+      - type: container
+        fields:
+          - type: checkbox
+            name: uldlcheck
+            label: _("ULDL Rate")
+            value: true
+            flex: 17
+          - type: numberInput
+            name: uldlrate
+            label: _("kB/s")
+            value: 50
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: uldlcheck
+            validators:
+              min: 0
+              max: 9999
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: uldlcheck
+            hint: _("Define the network traffic in kB/s.")
+      - type: container
+        fields:
+          - type: checkbox
+            name: hddiocheck
+            label: _("HDD-IO")
+            value: true
+            flex: 17
+          - type: numberInput
+            name: hddiorate
+            label: _("kB/s")
+            value: 401
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: hddiocheck
+            validators:
+              min: 0
+              max: 9999
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: hddiocheck
+            hint: >
+              _("If the HDD-IO-average of the server is above this value in
+              kB/s, then no shutdown.")
+      - type: container
+        fields:
+          - type: checkbox
+            name: loadaveragecheck
+            label: _("Load Average")
+            value: false
+            flex: 17
+          - type: numberInput
+            name: loadaverage
+            label: _("Load average")
+            value: 40
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: loadaveragecheck
+            validators:
+              min: 0
+              max: 9999
+              patterType: integer
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: loadaveragecheck
+            hint: >
+              _("If the load average of the server is above this value, then no
+              shutdown.<br />
+              Example: 50 means a load average of 0.50, 8 means a load average of
+              0.08, 220 means a load average of 2.20.")
+      - type: container
+        fields:
+          - type: checkbox
+            name: checkprocnames
+            label: _("Active Processes")
+            value: true
+            flex: 17
+          - type: textarea
+            name: loadprocnames
+            label: _("Load processes")
+            value: smbd,nfsd,mt-daapd,forked-daapd
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checkprocnames
+            validators:
+              pattern:
+                pattern: ^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$
+                errorData: >
+                  _("Process names must be in the format:
+                  [proc1,proc2,...,procN]")
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checkprocnames
+            rows: 1
+            hint: >
+              _("Names of processes with load dependent children. Set to '-' to
+              disable.")
+      - type: container
+        fields:
+          - type: paragraph
+            flex: 17
+          - type: textarea
+            name: tempprocnames
+            label: _("Temp processes")
+            value: in.tftpd
+            modifiers:
+              - type: enabled
+                constraint:
+                  operator: truthy
+                  arg0:
+                    prop: checkprocnames
+            validators:
+              pattern:
+                pattern: ^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$
+                errorData: >
+                  _("Process names must be in the format:
+                  [proc1,proc2,...,procN]")
+              requiredIf:
+                operator: truthy
+                arg0:
+                  prop: checkprocnames
+            rows: 1
+            hint: >
+              _("Names of processes only started when active. Set to '-' to
+              disable.")
+      - type: checkbox
+        name: checksamba
+        label: _("SMB Status")
+        value: true
+        hint: _("Check SMB status for connected clients.")
+      - type: checkbox
+        name: checkcli
+        label: _("Users")
+        value: true
+        hint: _("Check for connected users.")
+      - type: checkbox
+        name: smartcheck
+        label: _("Smart Tests")
+        value: false
+        hint: >
+          _("Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be
+          supported).")
+      - type: checkbox
+        name: plugincheck
+        label: _("Plugins")
+        value: true
+        hint: >
+          _("Check for users defined plugins. (see <a href=
+          'https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default'
+          target='_blank'>autoshutdown.default</a>).")
+
+      - type: divider
+        title: _("Syslog Configuration")
+      - type: checkbox
+        name: syslog
+        label: _("Log to Syslog")
+        value: true
+        hint: _("Write log informations to system logs.")
+      - type: checkbox
+        name: verbose
+        label: _("Verbose")
+        value: false
+        hint: _("Verbose mode.")
+      - type: checkbox
+        name: "fake"
+        label: _("Fake")
+        value: false
+        hint: _("Fake/Test mode.")
+
+      - type: divider
+        title: _("Expert Settings")
+      - type: textarea
+        name: extraoptions
+        label: _("Extra Options")
+        value: ""
+        rows: 5
+        hint: >
+          _("Please see <a href=
+          'https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default'
+          target='_blank'>autoshutdown.default</a>.")
+    buttons:
+      - template: submit
+      - template: cancel
+        execute:
+          type: url
+          url: "/services"
