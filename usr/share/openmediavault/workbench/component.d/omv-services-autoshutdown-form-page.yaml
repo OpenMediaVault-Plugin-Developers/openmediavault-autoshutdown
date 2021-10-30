@@ -64,17 +64,17 @@ data:
             name: uphours_begin
             label: _("Begin hour")
             value: 6
-            modifiers:
+            modifiers: &clock_active_modifiers
               - type: enabled
                 constraint:
                   operator: truthy
                   arg0:
                     prop: checkclockactive
-            validators:
+            validators: &clock_active_validator_hour
               min: 0
               max: 23
               patterType: integer
-              requiredIf:
+              requiredIf: &clock_active_requiredIf
                 operator: truthy
                 arg0:
                   prop: checkclockactive
@@ -82,20 +82,12 @@ data:
             name: upmins_begin
             label: _("Begin minute")
             value: 0
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: truthy
-                  arg0:
-                    prop: checkclockactive
-            validators:
+            modifiers: *clock_active_modifiers
+            validators: &clock_active_validator_minute
               min: 0
               max: 59
               patterType: integer
-              requiredIf:
-                operator: truthy
-                arg0:
-                  prop: checkclockactive
+              requiredIf: *clock_active_requiredIf
       - type: container
         fields:
           - type: paragraph
@@ -103,38 +95,14 @@ data:
             name: uphours_end
             label: _("End hour")
             value: 6
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: truthy
-                  arg0:
-                    prop: checkclockactive
-            validators:
-              min: 0
-              max: 23
-              patterType: integer
-              requiredIf:
-                operator: truthy
-                arg0:
-                  prop: checkclockactive
+            modifiers: *clock_active_modifiers
+            validators: *clock_active_validator_hour
           - type: numberInput
             name: upmins_end
             label: _("End minute")
             value: 0
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: truthy
-                  arg0:
-                    prop: checkclockactive
-            validators:
-              min: 0
-              max: 59
-              patterType: integer
-              requiredIf:
-                operator: truthy
-                arg0:
-                  prop: checkclockactive
+            modifiers: *clock_active_modifiers
+            validators: *clock_active_validator_minute
 
       - type: divider
         title: _("Wake Alarm")
@@ -149,7 +117,7 @@ data:
             name: wakealarm_hour
             label: _("Hour")
             value: 8
-            modifiers:
+            modifiers: &wake_alarm_modifiers
               - type: enabled
                 constraint:
                   operator: and
@@ -165,7 +133,7 @@ data:
               min: 0
               max: 23
               patterType: integer
-              requiredIf:
+              requiredIf: &wake_alarm_requiredIf
                 operator: and
                 arg0:
                   operator: truthy
@@ -179,32 +147,12 @@ data:
             name: wakealarm_mins
             label: _("Minute")
             value: 0
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: and
-                  arg0:
-                    operator: truthy
-                    arg0:
-                      prop: wakealarm_set
-                  arg1:
-                    operator: falsy
-                    arg0:
-                      prop: wakealarm_uphours
+            modifiers: *wake_alarm_modifiers
             validators:
               min: 0
               max: 59
               patterType: integer
-              requiredIf:
-                operator: and
-                arg0:
-                  operator: truthy
-                  arg0:
-                    prop: wakealarm_set
-                arg1:
-                  operator: falsy
-                  arg0:
-                    prop: wakealarm_uphours
+              requiredIf: *wake_alarm_requiredIf
       - type: checkbox
         name: wakealarm_uphours
         label: _("Set using 'Forced Uptime' begin time")
