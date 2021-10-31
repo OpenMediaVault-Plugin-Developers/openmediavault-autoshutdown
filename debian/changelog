@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (6.0.1) stable; urgency=low
 
   * Applying yaml tags to simplify some of the time referencing
+  * Rework to address multi-line locales
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 30 Oct 2021 19:48:15 +0100
 
