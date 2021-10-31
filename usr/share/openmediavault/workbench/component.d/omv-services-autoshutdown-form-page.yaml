@@ -21,9 +21,7 @@ data:
         name: cycles
         label: _("Cycles")
         value: 6
-        hint: >
-          _("Set the number of cycles with no result (no PC online, etc) before
-          shutdown.")
+        hint: _("Set the number of cycles with no result (no PC online, etc) before shutdown.")
         validators:
           min: 1
           max: 999
@@ -64,17 +62,17 @@ data:
             name: uphours_begin
             label: _("Begin hour")
             value: 6
-            modifiers:
+            modifiers: &clock_active_modifiers
               - type: enabled
                 constraint:
                   operator: truthy
                   arg0:
                     prop: checkclockactive
-            validators:
+            validators: &clock_active_validator_hour
               min: 0
               max: 23
               patterType: integer
-              requiredIf:
+              requiredIf: &clock_active_requiredIf
                 operator: truthy
                 arg0:
                   prop: checkclockactive
@@ -82,20 +80,12 @@ data:
             name: upmins_begin
             label: _("Begin minute")
             value: 0
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: truthy
-                  arg0:
-                    prop: checkclockactive
-            validators:
+            modifiers: *clock_active_modifiers
+            validators: &clock_active_validator_minute
               min: 0
               max: 59
               patterType: integer
-              requiredIf:
-                operator: truthy
-                arg0:
-                  prop: checkclockactive
+              requiredIf: *clock_active_requiredIf
       - type: container
         fields:
           - type: paragraph
@@ -103,38 +93,14 @@ data:
             name: uphours_end
             label: _("End hour")
             value: 6
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: truthy
-                  arg0:
-                    prop: checkclockactive
-            validators:
-              min: 0
-              max: 23
-              patterType: integer
-              requiredIf:
-                operator: truthy
-                arg0:
-                  prop: checkclockactive
+            modifiers: *clock_active_modifiers
+            validators: *clock_active_validator_hour
           - type: numberInput
             name: upmins_end
             label: _("End minute")
             value: 0
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: truthy
-                  arg0:
-                    prop: checkclockactive
-            validators:
-              min: 0
-              max: 59
-              patterType: integer
-              requiredIf:
-                operator: truthy
-                arg0:
-                  prop: checkclockactive
+            modifiers: *clock_active_modifiers
+            validators: *clock_active_validator_minute
 
       - type: divider
         title: _("Wake Alarm")
@@ -149,7 +115,7 @@ data:
             name: wakealarm_hour
             label: _("Hour")
             value: 8
-            modifiers:
+            modifiers: &wake_alarm_modifiers
               - type: enabled
                 constraint:
                   operator: and
@@ -165,7 +131,7 @@ data:
               min: 0
               max: 23
               patterType: integer
-              requiredIf:
+              requiredIf: &wake_alarm_requiredIf
                 operator: and
                 arg0:
                   operator: truthy
@@ -179,32 +145,12 @@ data:
             name: wakealarm_mins
             label: _("Minute")
             value: 0
-            modifiers:
-              - type: enabled
-                constraint:
-                  operator: and
-                  arg0:
-                    operator: truthy
-                    arg0:
-                      prop: wakealarm_set
-                  arg1:
-                    operator: falsy
-                    arg0:
-                      prop: wakealarm_uphours
+            modifiers: *wake_alarm_modifiers
             validators:
               min: 0
               max: 59
               patterType: integer
-              requiredIf:
-                operator: and
-                arg0:
-                  operator: truthy
-                  arg0:
-                    prop: wakealarm_set
-                arg1:
-                  operator: falsy
-                  arg0:
-                    prop: wakealarm_uphours
+              requiredIf: *wake_alarm_requiredIf
       - type: checkbox
         name: wakealarm_uphours
         label: _("Set using 'Forced Uptime' begin time")
@@ -236,8 +182,7 @@ data:
                     prop: checkclockactive
               arg1:
                 true
-        hint: >
-          _("Only available if 'Forced Uptime' in 'Wake Alarm' are enabled.")
+        hint: _("Only available if 'Forced Uptime' in 'Wake Alarm' are enabled.")
 
       - type: divider
         title: _("Supervision Configuration")
@@ -264,27 +209,7 @@ data:
                 arg0:
                   prop: ipcheck
             hint: >
-              _("Define a range of IPs which should be scanned. The IP-Range
-              should be a comma delimited list of the following:<br />
-              - Define an IPv4 range: &lt;START&gt;..&lt;END&gt; |
-              iface@&lt;START&gt;..&lt;END&gt; |
-              www.xxx.yyy.&lt;START&gt;..&lt;END&gt; |
-              iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />
-              - Define a single IPv4: Last octet of IPv4 zzz |
-              iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />
-              - Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; |
-              iface@0x&lt;START&gt;..0x&lt;END&gt; |
-              s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; |
-              iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />
-              - Define a single IPv6: Last hextet of IPv6 0xzzzz |
-              iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />
-              - Define by FQDN: fqdn | iface@fqdn<br />
-              If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set
-              the first three octets of the iface IPv4 address is used.<br />
-              If '0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is
-              set the first seven hextets of the iface IPv6 address is
-              used.<br />
-              Please make sure to leave 1 and 255 out of the IPv4 range!")
+              _("Define a range of IPs which should be scanned. The IP-Range should be a comma delimited list of the following:<br />- Define an IPv4 range: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Define a single IPv4: Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Define an IPv6 range: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Define a single IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- Define by FQDN: fqdn | iface@fqdn<br />If '&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first three octets of the iface IPv4 address is used.<br />If '0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first seven hextets of the iface IPv6 address is used.<br />Please make sure to leave 1 and 255 out of the IPv4 range!")
       - type: container
         fields:
           - type: checkbox
@@ -305,17 +230,14 @@ data:
               pattern:
                 pattern: ^([0-9]{2,5})(,[0-9]{2,5})*$
                 errorData: >
-                  _("Sockets must be 2 to 5 digits in the format:
-                  [socket1,socket2,...,socketN]")
+                  _("Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]")
               requiredIf:
                 operator: truthy
                 arg0:
                   prop: checksockets
             rows: 1
             hint: >
-              _("Socket number to check for activity (see <a href=
-              'http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers'
-              target='_blank'>List of port numbers</a>).")
+              _("Socket number to check for activity (see <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>List of port numbers</a>).")
       - type: container
         fields:
           - type: checkbox
@@ -367,9 +289,7 @@ data:
                 operator: truthy
                 arg0:
                   prop: hddiocheck
-            hint: >
-              _("If the HDD-IO-average of the server is above this value in
-              kB/s, then no shutdown.")
+            hint: _("If the HDD-IO-average of the server is above this value in kB/s, then no shutdown.")
       - type: container
         fields:
           - type: checkbox
@@ -396,10 +316,7 @@ data:
                 arg0:
                   prop: loadaveragecheck
             hint: >
-              _("If the load average of the server is above this value, then no
-              shutdown.<br />
-              Example: 50 means a load average of 0.50, 8 means a load average of
-              0.08, 220 means a load average of 2.20.")
+              _("If the load average of the server is above this value, then no shutdown.<br />Example: 50 means a load average of 0.50, 8 means a load average of 0.08, 220 means a load average of 2.20.")
       - type: container
         fields:
           - type: checkbox
@@ -421,16 +338,13 @@ data:
               pattern:
                 pattern: ^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$
                 errorData: >
-                  _("Process names must be in the format:
-                  [proc1,proc2,...,procN]")
+                  _("Process names must be in the format: [proc1,proc2,...,procN]")
               requiredIf:
                 operator: truthy
                 arg0:
                   prop: checkprocnames
             rows: 1
-            hint: >
-              _("Names of processes with load dependent children. Set to '-' to
-              disable.")
+            hint: _("Names of processes with load dependent children. Set to '-' to disable.")
       - type: container
         fields:
           - type: paragraph
@@ -449,16 +363,13 @@ data:
               pattern:
                 pattern: ^([A-Za-z0-9_.-]+)(,[A-Za-z0-9_.-]+)*$
                 errorData: >
-                  _("Process names must be in the format:
-                  [proc1,proc2,...,procN]")
+                  _("Process names must be in the format: [proc1,proc2,...,procN]")
               requiredIf:
                 operator: truthy
                 arg0:
                   prop: checkprocnames
             rows: 1
-            hint: >
-              _("Names of processes only started when active. Set to '-' to
-              disable.")
+            hint: _("Names of processes only started when active. Set to '-' to disable.")
       - type: checkbox
         name: checksamba
         label: _("SMB Status")
@@ -473,17 +384,13 @@ data:
         name: smartcheck
         label: _("Smart Tests")
         value: false
-        hint: >
-          _("Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be
-          supported).")
+        hint: _("Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported).")
       - type: checkbox
         name: plugincheck
         label: _("Plugins")
         value: true
         hint: >
-          _("Check for users defined plugins. (see <a href=
-          'https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default'
-          target='_blank'>autoshutdown.default</a>).")
+          _("Check for users defined plugins. (see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>).")
 
       - type: divider
         title: _("Syslog Configuration")
@@ -511,9 +418,7 @@ data:
         value: ""
         rows: 5
         hint: >
-          _("Please see <a href=
-          'https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default'
-          target='_blank'>autoshutdown.default</a>.")
+          _("Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>.")
     buttons:
       - template: submit
       - template: cancel
