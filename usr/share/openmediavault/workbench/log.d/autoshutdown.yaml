@@ -12,15 +12,15 @@ data:
   - name: _("Type")
     sortable: true
     prop: type
-    flex: 1
+    flexGrow: 1
   - name: _("Function")
     sortable: true
     prop: function
-    flex: 1
+    flexGrow: 1
   - name: _("Message")
     sortable: true
     prop: message
-    flex: 2
+    flexGrow: 1
   request:
     service: LogFile
     method: getList
