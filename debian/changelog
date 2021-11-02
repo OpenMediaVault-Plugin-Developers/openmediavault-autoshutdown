@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (6.0.2) stable; urgency=low
+
+  * Allow logging to be more readable in the GUI
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 02 Nov 2021 12:52:44 +0000
+
 openmediavault-autoshutdown (6.0.1) stable; urgency=low
 
   * Applying yaml tags to simplify some of the time referencing
