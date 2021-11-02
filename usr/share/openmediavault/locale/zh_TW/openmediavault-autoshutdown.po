@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-31 16:19-0500\n"
-"PO-Revision-Date: 2021-10-31 21:19+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2021-11-01 18:37+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,41 +19,41 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "啟用之進程"
 
 msgid "AutoShutdown"
-msgstr "AutoShutdown"
+msgstr "自動關機"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "開始小時"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "開始分鐘"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "檢查已連接用戶之 SMB 狀態。"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "檢查已連接之用戶。"
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers"
 "/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "檢查用戶定義的插件。（請參閱 <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>）。"
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "檢查是否 S.M.A.R.T. 測試正在執行中（必須有 S.M.A.R.T. 支援）。"
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "檢查系統時鐘來確認強制運行時間。"
 
 msgid "Cycles"
-msgstr ""
+msgstr "循環次數"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "日期與時間"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -73,186 +73,186 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "定義一個應該被檢視的 IP 範圍。此 IP-範圍應該是用逗號分隔之以下各項列表：<br />- 定義一份 IPv4 範圍：&lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- 定義單一 IPv4：IPv4 的最後八位元 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- 定義一份 IPv6 範圍：0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- 定義單一 IPv6：IPv6 的最後十六位元 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- 用完整網域名稱 FQDN 來定義：fqdn | iface@fqdn<br />若使用 '&lt;START&gt;..&lt;END&gt;' 或 'IPv4 的最後八位元' 設定，則 iface IPv4 地址的前三個八位元組會被用上。<br />若使用 '0x&lt;START&gt;..0x&lt;END&gt;' 或 'LIPv6 的最後十六位元' 設定，則 iface IPv6 地址的前七個十六位元組會被用上。<br />請確定 IPv4 範圍中不包含 1 和 255！"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "以 kB/s 來定義網路流量"
 
 msgid "Enable"
-msgstr ""
+msgstr "啟用"
 
 msgid "End hour"
-msgstr ""
+msgstr "結束小時"
 
 msgid "End minute"
-msgstr ""
+msgstr "結束分鐘"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "專家設定"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "額外選項"
 
 msgid "Fake"
-msgstr ""
+msgstr "假執行"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "假執行/測試模式"
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "強制運行時間"
 
 msgid "Function"
-msgstr ""
+msgstr "功能"
 
 msgid "General Settings"
-msgstr ""
+msgstr "一般設定"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "硬碟輸出入"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "冬眠"
 
 msgid "Hour"
-msgstr ""
+msgstr "小時"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "混合式休眠"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP-範圍"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "如果伺服器的 HDD-IO-average 在這個 kB/s 數值以上，則不做關機。"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "若伺服器的負載平均高於此數值，則不會關機。<br />例如：50 表示負載平均為 0.50，8 表示負載平均為 0.08，220 表示負載平均為 2.20。"
 
 msgid "Load Average"
-msgstr ""
+msgstr "負載平均"
 
 msgid "Load average"
-msgstr ""
+msgstr "負載平均"
 
 msgid "Load processes"
-msgstr ""
+msgstr "負載進程"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "記錄日誌到 Syslog"
 
 msgid "Message"
-msgstr ""
+msgstr "訊息"
 
 msgid "Minute"
-msgstr ""
+msgstr "分鐘"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "進程名稱，只有啟用的才會被啟動。設成 '-' 來停用。"
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "進程名稱，有負載相依的子進程。設成 '-' 來停用。"
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "每個循環之間的秒數。"
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "只有當 '喚醒鬧鐘' 內的 '強制運行時間' 被啟用時才有效。"
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "詳情請見 <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>。"
 
 msgid "Plugins"
-msgstr ""
+msgstr "插件"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "進程名稱的格式必須是：[proc1,proc2,...,procN]"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB 狀態"
 
 msgid "Seconds"
-msgstr ""
+msgstr "秒"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "在系統上設定喚醒鬧鐘。"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "設定在關機之前，必須經過幾個沒結果（無電腦在線上...等等）的循環次數。"
 
 msgid "Set using 'Forced Uptime' begin time"
-msgstr ""
+msgstr "設定成使用 '強制運行' 的開始時間"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "關機"
 
 msgid "Shutdown command"
-msgstr ""
+msgstr "關機指令"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Smart 檢驗"
 
 msgid ""
 "Socket number to check for activity (see <a "
 "href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
 "target='_blank'>List of port numbers</a>)."
-msgstr ""
+msgstr "需檢查是否有活動的插口號碼（請參見 <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>通訊埠號碼列表</a>）。"
 
 msgid "Sockets"
-msgstr ""
+msgstr "插口"
 
 msgid ""
 "Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
-msgstr ""
+msgstr "插口必須是 2 到 5 位數字，格式為：[socket1,socket2,...,socketN]"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "監督設置"
 
 msgid "Suspend"
-msgstr ""
+msgstr "懸置"
 
 msgid "Suspend then Hibernate"
-msgstr ""
+msgstr "懸置然後冬眠"
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Syslog 設置"
 
 msgid "Temp processes"
-msgstr ""
+msgstr "暫時進程"
 
 msgid "Type"
-msgstr ""
+msgstr "型式"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "上傳下載速率"
 
 msgid "Updated AutoShutdown settings."
-msgstr ""
+msgstr "已更新自動關機設定。"
 
 msgid "Users"
-msgstr ""
+msgstr "用戶"
 
 msgid "Verbose"
-msgstr ""
+msgstr "詳盡"
 
 msgid "Verbose mode."
-msgstr ""
+msgstr "詳盡模式。"
 
 msgid "Wake Alarm"
-msgstr ""
+msgstr "喚醒鬧鐘"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "將日誌資訊寫到系統日誌中。"
 
 msgid "kB/s"
-msgstr ""
+msgstr "kB/s"
