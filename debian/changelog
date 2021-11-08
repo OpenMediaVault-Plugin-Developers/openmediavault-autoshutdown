@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (6.0.3) stable; urgency=low
+
+  * Update for new iostat output in Debuan 11
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 08 Nov 2021 20:33:11 +0000
+
 openmediavault-autoshutdown (6.0.2) stable; urgency=low
 
   * Allow logging to be more readable in the GUI
