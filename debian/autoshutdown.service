@@ -12,7 +12,7 @@ User=root
 Type=simple
 Restart=always
 RestartSec=3
-RestartPreventExitStatus=0 138 139 140 141 142
+RestartPreventExitStatus=0 138 139 140 141 142 143
 PIDFile=/run/autoshutdown.pid
 ExecStart=/usr/sbin/autoshutdown
 
