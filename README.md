@@ -82,6 +82,7 @@ meaning, see [autoshutdown.default](https://github.com/OpenMediaVault-Plugin-Dev
 Exit code details:
 -------------------
 0 - Script completed successfully.  
+143 - Script error detected in supervision cycle.  
 142 - Shutdown mechanism failed to run correctly.  
 141 - Initialisation failed for a component.  
 140 - Invalid configuration value where no default is available.  
