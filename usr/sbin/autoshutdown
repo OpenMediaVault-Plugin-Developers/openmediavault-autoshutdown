@@ -1013,9 +1013,11 @@ _check_smart() {
 #
 #   Name       : _validate_config
 #   Parameters : None
-#   Globals    : $*         : All options as defined in $CONFIG for validation.
-#              : $DEFAULT_* : All options as defined in $DEFAULT_CONFIG for
-#                             default value reset in case of error.
+#   Globals    : DEFAULT_CONFIG : Location of the $DEFAULT_CONFIG.
+#              : $*             : All options as defined in $CONFIG for
+#                                 validation.
+#              : $DEFAULT_*     : All options as defined in $DEFAULT_CONFIG for
+#                                 default value reset in case of error.
 #              : $R_*       : Global regular expression's for validation.
 #   Return     : 0 on success.
 #
