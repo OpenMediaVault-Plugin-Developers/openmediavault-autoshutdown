@@ -1258,6 +1258,10 @@ _validate_config() {
         _log "INFO: SHUTDOWNCOMMAND is set to: ${SHUTDOWNCOMMAND}"
     fi
 
+    # Set all vars defined in DEFAULT_CONFIG to readonly.
+    . <(awk -F= '$0!~/^[ ]*#/ && $0!~/^$/ {print "readonly "$1}' \
+            "${DEFAULT_CONFIG}")
+
     return 0
 }
 
@@ -1409,7 +1413,8 @@ _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
     _log "ERR: Default file not found! Check ${DEFAULT_CONFIG} exits ..." force
     exit 139; }
 . "${DEFAULT_CONFIG}"
-. <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "DEFAULT_"$0}' "${DEFAULT_CONFIG}")
+. <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "readonly DEFAULT_"$0}' \
+        "${DEFAULT_CONFIG}")
 _log "INFO: ${DEFAULT_CONFIG} loaded" force
 
 [ ! -f "${CONFIG}" ] && {
