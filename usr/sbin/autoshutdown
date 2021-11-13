@@ -1013,9 +1013,11 @@ _check_smart() {
 #
 #   Name       : _validate_config
 #   Parameters : None
-#   Globals    : $*         : All options as defined in $CONFIG for validation.
-#              : $DEFAULT_* : All options as defined in $DEFAULT_CONFIG for
-#                             default value reset in case of error.
+#   Globals    : DEFAULT_CONFIG : Location of the $DEFAULT_CONFIG.
+#              : $*             : All options as defined in $CONFIG for
+#                                 validation.
+#              : $DEFAULT_*     : All options as defined in $DEFAULT_CONFIG for
+#                                 default value reset in case of error.
 #              : $R_*       : Global regular expression's for validation.
 #   Return     : 0 on success.
 #
@@ -1256,6 +1258,10 @@ _validate_config() {
         _log "INFO: SHUTDOWNCOMMAND is set to: ${SHUTDOWNCOMMAND}"
     fi
 
+    # Set all vars defined in DEFAULT_CONFIG to readonly.
+    . <(awk -F= '$0!~/^[ ]*#/ && $0!~/^$/ {print "readonly "$1}' \
+            "${DEFAULT_CONFIG}")
+
     return 0
 }
 
@@ -1407,7 +1413,8 @@ _log "INFO: Script md5sum: $(md5sum "${0}" | awk '{print $1}')" force
     _log "ERR: Default file not found! Check ${DEFAULT_CONFIG} exits ..." force
     exit 139; }
 . "${DEFAULT_CONFIG}"
-. <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "DEFAULT_"$0}' "${DEFAULT_CONFIG}")
+. <(awk '$0 !~ /^[ ]*#/ && $0 !~ /^$/{print "readonly DEFAULT_"$0}' \
+        "${DEFAULT_CONFIG}")
 _log "INFO: ${DEFAULT_CONFIG} loaded" force
 
 [ ! -f "${CONFIG}" ] && {
@@ -1475,20 +1482,19 @@ for net_iface in "${NICS[@]}"; do
 done
 
 _log "INFO: ${CYCLES} cycles until shutdown is issued"
-FCNT=$((CYCLES + 1))
-while [ "${FCNT}" -ne 0 ]; do
+fcnt="${CYCLES}"
+while : ; do
     _log "INFO: ------------------------------------------------------"
     _log "INFO: New supervision cycle started, checking system activity"
-    _check_system_active || FCNT=$((CYCLES + 1))
-    FCNT=$((FCNT - 1))
-    [ "${FCNT}" -ne 0 ] && {
-        [ "${FCNT}" -ne "${CYCLES}" ] &&
-            _log "INFO: All active checks passed, ${FCNT} cycles until shutdown ..."
-        # Wait before checking again.
-        _log "INFO: Sleep for ${SLEEP}s"
-        sleep "${SLEEP}"; }
+    fcnt=$((fcnt - 1))
+    msg="All active checks passed"
+    _check_system_active || { fcnt="${CYCLES}"; msg="Active check failed"; }
+    [ "${fcnt}" -eq 0 ] && break
+    _log "INFO: ${msg}, ${fcnt} cycles until shutdown ..."
+    _log "INFO: Sleep for ${SLEEP}s"
+    sleep "${SLEEP}"
 done
-[ "${FCNT}" -ne 0 ] && {
+[ "${fcnt}" -ne 0 ] && {
     _log "ERR: Script error detected in supervision cycle"
     exit 143; }
 
