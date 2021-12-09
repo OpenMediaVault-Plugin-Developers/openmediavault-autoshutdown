@@ -897,7 +897,7 @@ _check_hddio() {
             local line; while read -r line; do
                 _log "DEBUG: ${line}"
             done < <(blkid -s LABEL -s UUID | grep "${hdd}")
-            _log "DEBUG: Actual: kB_read: ${hdd_in}, kB_wrtn: ${hdd_out}"; }
+            _log "DEBUG: Actual: Read kB: ${hdd_in}, Write kB: ${hdd_out}"; }
 
         [[ "${rvalue}" -eq 1 || "${last_checked_sec}" -eq 0 ||
               -z "${P_HDDIO_DEVS["epoch_sec"]:-}" ||
@@ -912,7 +912,7 @@ _check_hddio() {
             continue; }
 
         [ "${DEBUG}" == "true" ] &&
-            _log "DEBUG: Previous: kB_read: ${P_HDDIO_DEVS["${hdd}_r"]}, kB_wrtn: ${P_HDDIO_DEVS["${hdd}_w"]}"
+            _log "DEBUG: Previous: Read kB: ${P_HDDIO_DEVS["${hdd}_r"]}, Write kB: ${P_HDDIO_DEVS["${hdd}_w"]}"
 
         # Calculate threshold limit (defined kB/s multiplied with second since
         # last checked) to get the total value of kB over the 'last checked
@@ -950,8 +950,8 @@ _check_hddio() {
         P_HDDIO_DEVS["${hdd}_w"]="${hdd_out}"
 
         local msg="INFO: Device: ${hdd} (last ${last_checked_sec}s) "
-              msg+="kB_read/s: ${last_hddio_read_rate}, "
-              msg+="kB_wrtn/s: ${last_hddio_write_rate}"
+              msg+="Read: ${last_hddio_read_rate} kB/s, "
+              msg+="Write: ${last_hddio_write_rate} kB/s"
 
         if [[ "${hdd_in}" -gt "${t_hddio_read}" ||
               "${hdd_out}" -gt "${t_hddio_write}" ]]; then

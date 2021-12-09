@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (6.0.5) stable; urgency=low
 
   * Small correction to README.md
+  * Align output from _check_hddio with _check_ul_dl_rate
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 09 Dec 2021 19:17:21 +0000
 
