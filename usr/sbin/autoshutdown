@@ -569,20 +569,18 @@ _check_docker_status() {
         [ "${#p_map[@]}" -eq 0 ] && continue
         for target in "${!p_map[@]}"; do
             local lines; lines="$(LC_ALL=C
-                nsenter -t "${info[0]}" -n ss -n |
-                awk -v \
-                    regex="^[[]?(::(ffff|FFFF):)?${info[1]}[]]?:${p_map[${target}]}$" \
-                    '$2 ~ /^ESTAB$/ && $5 ~ regex' ||
-                true)"
+                nsenter --target "${info[0]}" --net \
+                    ss state established --no-header --numeric \
+                        sport "${p_map[${target}]}" src "${info[1]}" || true )"
+            [ -z "${lines}" ] && continue
             local con_ips; con_ips="$(
-                awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$6);
-                      sub(/[]]?:[0-9]+$/,"",$6)}
-                      $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
-                sort -Vu |  awk -Fz '/:/{print $2}!/:/{print}')"
-            [ -n "${lines}" ] && {
-                local no_lines; no_lines="$(wc -l <<< "${lines}")"
-                ((active+="${no_lines}"))
-                _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"; }
+                awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$5);
+                      sub(/[]]?([%][^ /]+)?:[0-9]+$/,"",$5)}
+                      $5~/:/{print "z"$5} $5!~/:/{print $5}' <<< "${lines}" |
+                sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')"
+            local no_lines; no_lines="$(wc -l <<< "${lines}")"
+            ((active+="${no_lines}"))
+            _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"
         done
     done
     _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
