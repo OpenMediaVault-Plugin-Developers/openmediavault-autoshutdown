@@ -17,6 +17,8 @@ shopt -s extglob
 ######## STORAGE DEFINITIONS #########
 declare -a NICS=()        # Array for storing active _check_networkconfig
                           # network interface names.
+declare -A PORT_MAP=()    # Associative array for storing _check_net_status
+                          # custom port to service mappings.
 declare -A NIC_2_IPV4     # Associative array for storing _check_networkconfig
                           # network interface to IPv4 address mappings.
 declare -A NIC_2_IPV6     # Associative array for storing _check_networkconfig
@@ -450,30 +452,34 @@ _check_loadaverage() {
 #
 #   Name       : _check_net_status
 #   Parameters : $1 : IP addresses found for all network interfaces.
-#   Globals    : $NSOCKETNUMBERS    : Socket number to check for activity.
+#   Globals    : $PORT_MAP          : Associative array for custom port to
+#                                     service mappings.
+#              : $NSOCKETPORTMAP    : User defined port to service mappings.
+#              : $NSOCKETNUMBERS    : Socket number to check for activity.
 #              : $NSOCKETIGNORESELF : If set will ignore all network interfaces
 #                                     IPv4/IPv6 addresses.
 #   Return     : 0         : If no active socket has been found, shutdown.
 #              : 1 or more : If an active socket has been found, no shutdown.
 #
 _check_net_status() {
-    local -r ips_regex="${1// /|}"
+    local -r ips_filter="${1// / or src }"
 
-    local -r regex_s="[[]?(::(ffff|FFFF):)?"
-    local -r regex_e="[]]?([%][^ /]+)?"
+    [ "${NSOCKETIGNORESELF}" == "true" ] &&
+        local -r ips_ignore="and not ( dst ${1// / or dst } )"
 
     local active=0
+
+    [[ "${#PORT_MAP[@]}" -eq 0 && -n "${NSOCKETPORTMAP}" ]] && {
+        local map; while read -r map; do
+            PORT_MAP["${map%%:*}"]="${map#*:}"
+        done <<< "${NSOCKETPORTMAP//,/$'\n'}"; }
 
     # For each socket see if it is stated active using ss command.
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
         local lines; lines="$(LC_ALL=C
-            ss -n |
-            awk -v regex="^${regex_s}(${ips_regex})${regex_e}:${nsocket}$" \
-                -v ips_regex="^${regex_s}(${ips_regex})${regex_e}:[0-9]+$" \
-                -v ignore_self="${NSOCKETIGNORESELF}" \
-                "(ignore_self == \"false\") ? \
-                    \$2 ~ /^ESTAB$/ && \$5 ~ regex : \
-                    \$2 ~ /^ESTAB$/ && \$5 ~ regex && \$6 !~ ips_regex")"
+            ss state established --no-header \
+                "( sport ${nsocket} and ( src ${ips_filter} ) \
+                    ${ips_ignore:-} )" )"
 
         local msg="DEBUG: Port ${nsocket}: Found "
         [ -z "${lines}" ] && {
@@ -486,37 +492,19 @@ _check_net_status() {
                 _log "DEBUG: ${line//+([[:space:]])/ }"
             done <<< "${lines}"; }
 
+        local service; service="${PORT_MAP[${nsocket}]:-}"
+            [ -z "${service}" ] && service="$(
+            awk 'NR==1 && $4!~/:[0-9]*$/{gsub(/.*:/,"",$4);print toupper($4)}
+                 NR==1 && $4~/:[0-9]*$/{print "UNKNOWN"}' <<< "${lines}")"
+        local conips; conips="$(
+            awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$5);
+                  sub(/[]]?([%][^ /]+)?:[0-9]+$/,"",$5)}
+                  $5~/:/{print "z"$5} $5!~/:/{print $5}' <<< "${lines}" |
+            sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')"
         local no_lines; no_lines="$(wc -l <<< "${lines}")"
         ((active+="${no_lines}"))
 
-        local conips; conips="$(
-            awk -v regex_start="^${regex_s}" \
-                -v regex_end="${regex_e}:[0-9]+$" \
-                '{sub(regex_start,"",$6); sub(regex_end,"",$6)}
-                  $6~/:/{print "z"$6} $6!~/:/{print $6}' <<< "${lines}" |
-            sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')"
-
-        # Set portprotocol - Only default ports are defined here.
-        local portprotocol
-        case "${nsocket}" in
-            80|8080) portprotocol="HTTP" ;;
-            22)      portprotocol="SSH" ;;
-            21)      portprotocol="FTP" ;;
-            139|445) portprotocol="SMB/CIFS" ;;
-            443)     portprotocol="HTTPS" ;;
-            548)     portprotocol="AFP" ;;
-            873)     portprotocol="RSYNC" ;;
-            3306)    portprotocol="MYSQL" ;;
-            3689)    portprotocol="DAAP" ;;
-            6991)    portprotocol="BITTORRENT" ;;
-            9091)    portprotocol="BITTORRENT_WEBIF" ;;
-            32400)   portprotocol="PLEXMEDIASERVER" ;;
-            49152)   portprotocol="UPNP" ;;
-            51413)   portprotocol="BITTORRENT" ;;
-            *)       portprotocol="unknown" ;;
-        esac
-
-        _log "INFO: Found ${no_lines} active connection(s) on port ${nsocket} (${portprotocol}) from: ${conips//$'\n'/, }"
+        _log "INFO: Found ${no_lines} active connection(s) on port ${nsocket} (${service}) from: ${conips//$'\n'/, }"
     done
 
     _log "INFO: Found ${active} active socket(s) from port(s): ${NSOCKETNUMBERS}"
@@ -1164,10 +1152,14 @@ _validate_config() {
         __check_value "NSOCKETNUMBERS" "^([0-9]{2,5})(,[0-9]{2,5})*$" \
             "at least 2 to 5 digits in the format: [nsocket1,nsocket2,...,nsocketN]"
 
+        __check_value "NSOCKETPORTMAP" "^((([0-9]{2,5}:[^,]+)(,[0-9]{2,5}:[^,]+)*)|)$" \
+            "a port of 2 to 5 digits with an associated service name in the format: [<port1>:<service1>,<port2>:<service2>,...,<portN>:<serviceN>]" \
+            "false"
+
         __check_value "NSOCKETIGNORESELF" "^(true|false)$" \
             "set to: 'true' or 'false'"
     else
-        _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS and NSOCKETIGNORESELF"
+        _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS, NSOCKETPORTMAP and NSOCKETIGNORESELF"
     fi
 
     # PINGLIST or RANGE set-up.
