@@ -85,19 +85,17 @@ NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     # Useful Ports:
     #   21 = FTP
     #   22 = SSH
-    #   80|8080 = Web
+    #   80|8080 = HTTP
     #   139 = NetBIOS
     #   443 = HTTPS
-    #   445 = Samba-Filesharing
+    #   445 = Microsoft-DS (Directory Services) SMB file sharing
     #   548 = AFP
     #   873 = Rsync
     #   3306 = MYSQL
     #   3689 = iTunes, DAAP
     #   6991 = Bittorrent
     #   9091 = Bittorrent_WebIF
-    #   32400 = Plex Media Server
     #   49152 = UPnP
-    #   51413 = Bittorrent
 
     # Docker mapped ports can be used to check for activaty. To used the docker
     # set-up the docker host port must be specified in NSOCKETNUMBERS.
@@ -277,6 +275,15 @@ LPREPEAT=5
 TPREPEAT=5
     # Number of test cycles for finding and active TEMPPROCNAMES-Process
     # allowed 1 - 999. (default=5)
+
+# -----------------------------------------------------------------------------
+
+NSOCKETPORTMAP=""
+    # If set allow the used to define a string to be associated with a port if
+    # the port is found to be active. The port should be 2 to 5 digits as
+    # specified in $NSOCKETNUMBERS with an associated service name in the
+    # format: [<port1>:<service1>,<port2>:<service2>,...,<portN>:<serviceN>].
+    # (default="")
 
 # -----------------------------------------------------------------------------
 

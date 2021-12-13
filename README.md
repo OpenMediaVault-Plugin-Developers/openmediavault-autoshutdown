@@ -67,7 +67,7 @@ negative, next check.
 __Prio 3:__ UL/DL-Rate  
 Maybe a DL is running with 238 kB/s over the last minute. The check is
 positive, no more checks needed.
-Autoshutdown goes to sleep for x seconds.
+Autoshutdown goes to sleep for 180 seconds.
 
 __Prio 4 and 6:__  
 Not needed, because a check with a higher priority is positive.
