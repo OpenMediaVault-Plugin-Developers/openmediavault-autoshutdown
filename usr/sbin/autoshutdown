@@ -259,7 +259,7 @@ _shutdown() {
     _log "INFO: Shutdown issued: ${SHUTDOWNCOMMAND}" force
 
     [ "${FAKE}" == "true" ] && {
-        _log "INFO: Shutdown command not executed in FAKE-Mode" force
+        _log "WARNING: Shutdown command not executed in FAKE-Mode" force
         _log "INFO: Autoshutdown will end here"
         exit 0; }
 
@@ -836,7 +836,7 @@ _set_wakealarm() {
         echo 0 > "/sys/class/rtc/${RTC}/wakealarm"
         echo "${alarm_time}" > "/sys/class/rtc/${RTC}/wakealarm"
     else
-        _log "INFO: Wakealarm will not be set in FAKE-Mode" force
+        _log "WARNING: Wakealarm will not be set in FAKE-Mode" force
     fi
 
     _log "INFO: Wake alarm set: ${wakealarm}, RTC time: ${alarm_time} -> $(
