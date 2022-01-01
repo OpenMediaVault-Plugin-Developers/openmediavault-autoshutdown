@@ -237,16 +237,16 @@ PLUGINCHECK="false"
 SYSLOG="true"
     # Activate write to syslog. (default="true")
 
-VERBOSE="false"
+VERBOSE="true"
     # Use the verbose mode, with additional output on the command line
-    # (default="false") verbose includes DEBUG-Mode.
+    # (default="true") verbose includes DEBUG-Mode.
 
-FAKE="false"
+FAKE="true"
     # Set it to "true" for a Fake-Mode: The script runs dry: You can test what
     # happens, without shutting down your PC. This mode includes VERBOSE-output
     # automatically, even if VERBOSE is set to "false". With Fake-Mode ON, the
     # script does not sleep 5 minutes after it starts, so you can see what
-    # happens immediately. (default="false")
+    # happens immediately. (default="true")
 
 
 ###############################################################################
