@@ -1,3 +1,10 @@
+openmediavault-autoshutdown (6.0.6) stable; urgency=low
+
+  * Change fake-mode info messages to warnings
+  * Rework Debug and Verbose mode output
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 31 Dec 2021 13:48:18 +0000
+
 openmediavault-autoshutdown (6.0.5) stable; urgency=low
 
   * Small correction to README.md
