@@ -36,7 +36,7 @@ readonly CONFIG="${1:-/etc/autoshutdown.conf}"
                           # Autoshutdown default configuration.
 readonly DEFAULT_CONFIG="${2:-/etc/autoshutdown.default}"
                           # Directory containing plugin checks.
-readonly PLUGIN_DIR="/etc/autoshutdown.d"
+readonly PLUGIN_DIR="${3:-/etc/autoshutdown.d}"
 
 ### REGULAR EXPRESSION DEFINITIONS ###
                           # Network interface name regular expression.
@@ -371,8 +371,9 @@ _check_plugin() {
         for var in "enabled:true" "folder:N/A" "file:N/A" "content:N/A"; do
             local value="${var%:*}"
             declare "${value}"="$(
-                awk -F= -v regex="${var%:*}=" \
-                    '$0 ~ regex {gsub(/["]/,"",$2);print $2}' "${plugin}")"
+                awk -F= -v regex="^${var%:*}=" \
+                    '$0 ~ regex {gsub(/^["'\'']|["'\'']$/,"",$2);print $2}' \
+                    "${plugin}")"
             _log "DEBUG: ${name}: ${value}: ${!value:-"${var#*:}"}"
         done
 
@@ -382,8 +383,9 @@ _check_plugin() {
             continue; }
 
         # shellcheck disable=SC2154
-        [ -z "$(find "${folder}" -regextype posix-egrep \
-                    -regex ".*${file}" 2>/dev/null)" ] && {
+        [ -z "$(find "${folder}" -maxdepth 1 -type f \
+                    -execdir basename {} ';' 2>/dev/null |
+                sed -En "/${file}/p")" ] && {
             _log "INFO: ${name}: File not found -> next check"
             continue; }
 
@@ -391,7 +393,7 @@ _check_plugin() {
         if [ -z "${content}" ]; then
             _log "INFO: ${name}: File found -> no shutdown"
             ((foundvalue+=1))
-        elif grep -q "${content}" "${folder}/${file}"; then
+        elif grep -qe "${content}" "${folder}/${file}"; then
             _log "INFO: ${name}: Content found (${content}) -> no shutdown"
             ((foundvalue+=1))
         else
@@ -456,10 +458,10 @@ _check_loadaverage() {
 #              : 1 or more : If an active socket has been found, no shutdown.
 #
 _check_net_status() {
-    local -r ips_filter="${1// / or src }"
+    local -r ips_filter="${1// /] or src [}"
 
     [ "${NSOCKETIGNORESELF}" == "true" ] &&
-        local -r ips_ignore="and not ( dst ${1// / or dst } )"
+        local -r ips_ignore="and not ( dst [${1// /] or dst [}] )"
 
     local active=0
 
@@ -472,7 +474,7 @@ _check_net_status() {
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
         local lines; lines="$(LC_ALL=C
             ss state established --no-header \
-                "( sport ${nsocket} and ( src ${ips_filter} ) \
+                "( sport ${nsocket} and ( src [${ips_filter}] ) \
                     ${ips_ignore:-} )" )"
 
         local msg="DEBUG: Port ${nsocket}: Found "
@@ -552,7 +554,7 @@ _check_docker_status() {
             local lines; lines="$(LC_ALL=C
                 nsenter --target "${info[0]}" --net \
                     ss state established --no-header --numeric \
-                        sport "${p_map[${target}]}" src "${info[1]}" || true )"
+                        sport "${p_map[${target}]}" src "[${info[1]}]" || true )"
             [ -z "${lines}" ] && continue
             local con_ips; con_ips="$(
                 awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$5);

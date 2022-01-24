@@ -1,0 +1,11 @@
+# Autoshutdown plugin-file for openmediavault-usbbackup
+# This plugin assumes there have been no default overrides.
+
+# In which folder is the file to look for.
+folder="/run"
+
+# Enable or disable this plugin.
+enabled="true"
+
+# Filename regex.
+file="^openmediavault-usbbackup-[a-f0-9]{32}$"
