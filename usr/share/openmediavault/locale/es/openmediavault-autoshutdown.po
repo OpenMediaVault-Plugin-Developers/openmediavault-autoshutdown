@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
-"PO-Revision-Date: 2021-10-31 21:19+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2022-01-11 11:52+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,41 +19,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Procesos activos"
 
 msgid "AutoShutdown"
 msgstr "Apagado Automático"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "Hora de inicio"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "Minuto de inicio"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "Revisar el estado SMB de los clientes conectados."
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Revisar si hay usuarios conectados"
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "Revisar plugins definidos por el usuario. (ver <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "Revisar si hay activo algún test  S.M.A.R.T.  (S.M.A.R.T. debe estar soportado)."
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "Revisar hora del sistema para identificar tiempo en marcha."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Ciclos"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Fecha y Hora"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -73,186 +73,186 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "Defina un rango de direcciones IP que se deben escanear. El rango de IP debe ser una lista delimitada por comas de lo siguiente: <br />- Defina un rango de IPv4: & lt; START & gt; .. & lt; END & gt; | iface @ & lt; START & gt; .. & lt; END & gt; | www.xxx.yyy. & lt; INICIO & gt; .. & lt; FIN & gt; | iface@xxx.yyy.zzz.&lt; START & gt; .. & lt; END & gt; <br />- Definir un solo IPv4: Último octeto de IPv4 zzz | iface @ zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz: <br />defina un rango de IPv6: 0x & lt; START & gt; .. 0x & lt; END & gt; | iface @ 0x & lt; START & gt; .. 0x & lt; END & gt; | s: t: u: v: w: x: y: 0x & lt; START & gt; .. 0x & lt; END & gt; | iface @ s: t: u: v: w: x: y: 0x & lt; START & gt; .. 0x & lt; END & gt; <br /> - Definir un solo IPv6: Último hexteto de IPv6 0xzzzz | iface @ 0xzzzz | s: t: u: v: w: x: y: z | iface @ s: t: u: v: w: x: y: z <br />- Definir por FQDN: fqdn | iface @ fqdnIf <br /> si '& lt; INICIO & gt; .. & lt; FIN & gt;' o \"Último octeto de IPv4\", se utilizan los primeros tres octetos de la dirección IPv4 de iface. <br />Si \"0x & lt; START & gt; .. 0x & lt; END & gt;\" o 'Último hexteto de IPv6' se configuran los primeros siete hextetos de la dirección IPv6 de iface. <br />¡Asegúrese de dejar 1 y 255 fuera del rango de IPv4!"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Tráfico de red en kB/s."
 
 msgid "Enable"
-msgstr ""
+msgstr "Habilitar"
 
 msgid "End hour"
-msgstr ""
+msgstr "Hora fin"
 
 msgid "End minute"
-msgstr ""
+msgstr "Minuto fin"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Más Opciones"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Opciones Extras"
 
 msgid "Fake"
-msgstr ""
+msgstr "prueba"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Modo prueba/test."
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Tiempo en funcionamiento"
 
 msgid "Function"
-msgstr ""
+msgstr "Función"
 
 msgid "General Settings"
-msgstr ""
+msgstr "Opciones"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "HDD-IO"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Hibernar"
 
 msgid "Hour"
-msgstr ""
+msgstr "Hora"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Dormir Hibrido"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP-Rango"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Si el valor medio de E/S del HDD está por encima de este valor, entonces NO apagar."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "Si la carga de trabajo media del servidor está por encima de este valor, entonces NO apagar.Ej: 50 significa una carga media de 0.50, 8 significa una carga media de 0.08, 220 significa una carga media de 2.20."
 
 msgid "Load Average"
-msgstr ""
+msgstr "Carga media"
 
 msgid "Load average"
-msgstr ""
+msgstr "Carga media"
 
 msgid "Load processes"
-msgstr ""
+msgstr "Carga de procesos"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Log a Syslog"
 
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 msgid "Minute"
-msgstr ""
+msgstr "Minuto"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "Los nombres de los procesos solo arrancaran cuando estén activos, usar '-' para deshabilitar."
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "Los nombres de los procesos con carga dependiente de sus hijos, usar '-' para deshabilitar."
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Numero de segundos entre cada ciclo."
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "Solo está disponible si se habilita 'Tiempo en funcionamiento' en 'Hora de alarma'"
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "Por favor revisar <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
 
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "Los nombres de los procesos deben estar en el formato: [proc1,proc2,...,procN]"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "Estado SMB"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Segundos"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "Definir una alarma de inicio en el sistema."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Definir el nº de ciclos sin resultado ( sin carga de trabajo, etc...) antes de apagar"
 
 msgid "Set using 'Forced Uptime' begin time"
-msgstr ""
+msgstr "Establecer usando la hora de inicio del 'Tiempo de actividad forzado'"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Apagado"
 
 msgid "Shutdown command"
-msgstr ""
+msgstr "Comando de apagado"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Test Inteligentes"
 
 msgid ""
 "Socket number to check for activity (see <a "
 "href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
 "target='_blank'>List of port numbers</a>)."
-msgstr ""
+msgstr "numero del socket a mirar por actividad  (ver<a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>Listado de números de puertos mas comunes</a>)."
 
 msgid "Sockets"
-msgstr ""
+msgstr "Sockets"
 
 msgid ""
 "Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
-msgstr ""
+msgstr "Los sockets deben ser números entre 2 y 5 dígitos en el formato:  [socket1,socket2,...,socketN]"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Configuración de supervisión"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Suspender"
 
 msgid "Suspend then Hibernate"
-msgstr ""
+msgstr "Suspender y luego Hibernar"
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Configuración de SysLog"
 
 msgid "Temp processes"
-msgstr ""
+msgstr "procesos temporales"
 
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "Velocidad de descarga / carga"
 
 msgid "Updated AutoShutdown settings."
-msgstr ""
+msgstr "Actualizadas las opciones de auto apagado"
 
 msgid "Users"
-msgstr ""
+msgstr "Usuarios"
 
 msgid "Verbose"
-msgstr ""
+msgstr "Info. ampliada"
 
 msgid "Verbose mode."
-msgstr ""
+msgstr "Modo de información ampliada."
 
 msgid "Wake Alarm"
-msgstr ""
+msgstr "Alarma para despertarse"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "Escriba información de registro en los registros del sistema."
 
 msgid "kB/s"
-msgstr ""
+msgstr "kB/s"

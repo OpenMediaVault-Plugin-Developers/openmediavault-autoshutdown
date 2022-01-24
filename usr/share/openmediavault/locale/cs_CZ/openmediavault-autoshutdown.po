@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Pavel Borecki <pavel.borecki@gmail.com>, 2015-2017
+# Pavel Borecki <pavel.borecki@gmail.com>, 2015-2017,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
-"PO-Revision-Date: 2021-10-31 21:19+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2021-12-14 14:24+0000\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,41 +19,41 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Aktivní procesy"
 
 msgid "AutoShutdown"
 msgstr "Odstavení při nepotřebnosti"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "Hodina začátku"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "Minuta začátku"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "Zkontrolovat stav SMB, zda jsou připojení uživatelé."
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Dokud jsou k systému připojení uživatelé."
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "Zkontrolovat uživatelsky určené zásuvné moduly. (viz <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "Zkontrolovat, zda jsou v běhu testy S.M.A.R.T. (pokud je podporováno)."
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "Po níže nastavenou denní dobu nebude stroj s OpenMediaVault automaticky odstavován z provozu."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Kolikanásobně se ujišťovat"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum a čas"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -76,57 +76,57 @@ msgid ""
 msgstr ""
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Dokud se síťový provoz na serveru pohybuje nad touto hodnotou (v kB/s), nebude odstaven z provozu."
 
 msgid "Enable"
-msgstr ""
+msgstr "Používat tuto funkci"
 
 msgid "End hour"
-msgstr ""
+msgstr "Hodina konce"
 
 msgid "End minute"
-msgstr ""
+msgstr "Minuta konce"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Pokročilá nastavení"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Rozšířené předvolby"
 
 msgid "Fake"
-msgstr ""
+msgstr "Jen simulovat"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Režim simulace/testování – pouze vypisovat do záznamu událostí, server ale neodstavovat."
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Kdy nikdy neodstavovat"
 
 msgid "Function"
-msgstr ""
+msgstr "Funkce"
 
 msgid "General Settings"
-msgstr ""
+msgstr "Obecná nastavení"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "Diskový vstup/výstup"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Uspat na disk"
 
 msgid "Hour"
-msgstr ""
+msgstr "Hodina"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Uspat do paměti i na disk"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "Dosažitelnost IP adres klientských počítačů:"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Dokud se průměrný vstupně/výstupní provoz na discích serveru pohybuje nad touto hodnotou (v kB/s), nebude odstaven z provozu."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
@@ -135,22 +135,22 @@ msgid ""
 msgstr ""
 
 msgid "Load Average"
-msgstr ""
+msgstr "Průměrné vytížení"
 
 msgid "Load average"
-msgstr ""
+msgstr "Průměrné vytížení"
 
 msgid "Load processes"
-msgstr ""
+msgstr "Vytížení procesů"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Používat Syslog"
 
 msgid "Message"
-msgstr ""
+msgstr "Zpráva"
 
 msgid "Minute"
-msgstr ""
+msgstr "Minuta"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
 msgstr ""
@@ -178,10 +178,10 @@ msgid "Process names must be in the format: [proc1,proc2,...,procN]"
 msgstr ""
 
 msgid "SMB Status"
-msgstr ""
+msgstr "Stav SMB"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Sekund"
 
 msgid "Set a wake alarm on the system."
 msgstr ""
@@ -225,16 +225,16 @@ msgid "Suspend then Hibernate"
 msgstr ""
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Nastavení pro Syslog"
 
 msgid "Temp processes"
-msgstr ""
+msgstr "Dočasné procesy"
 
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "Intenzita odesílání/příjmu"
 
 msgid "Updated AutoShutdown settings."
 msgstr ""
