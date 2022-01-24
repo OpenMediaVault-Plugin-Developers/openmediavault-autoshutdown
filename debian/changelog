@@ -1,6 +1,7 @@
 openmediavault-autoshutdown (6.0.7) stable; urgency=low
 
   * Fix ss filter to correctly allow IPv6 addresses
+  * Add robustness fixed for script plugins
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 24 Jan 2022 14:27:22 +0000
 
