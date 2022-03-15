@@ -932,8 +932,9 @@ _check_hddio() {
             _log "${msg} under: ${HDDIO_RATE} kB/s -> next check"
         fi
 
-    done < <(LC_ALL=C iostat -kdyNz |
-             awk 'NR>3 && !/^$/{print $1 " " $6 " " $7}')
+    done < <(LC_ALL=C iostat -kdyNz -o JSON |
+             jq -r '.sysstat.hosts[].statistics[].disk[] |
+                    "\(.disk_device) \(.kB_read) \(.kB_wrtn)"');
 
     P_HDDIO_DEVS["epoch_sec"]="${epoch_sec}"
     _log "INFO: All checks complete"
