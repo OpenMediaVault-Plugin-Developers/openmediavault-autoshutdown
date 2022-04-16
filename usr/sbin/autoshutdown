@@ -511,19 +511,22 @@ _check_net_status() {
 
 ###############################################################################
 #
-#   Name       : _check_docker_status
-#   Parameters : None
+#   Name       : _check_container_status
+#   Parameters : $1 : Name of the container engine to use with a compatible
+#                     Docker API/Interface.
 #   Globals    : $NSOCKETNUMBERS : Socket number to check for activity.
 #   Return     : 0         : If no active socket has been found, shutdown.
 #              : 1 or more : If an active socket is found, no shutdown.
 #
-_check_docker_status() {
-    command -v docker &>/dev/null || return 0
+_check_container_status() {
+    local -r engine="${1}"
+    command -v "${engine}" &>/dev/null || return 0
+    _log "INFO: Check status of container engine: ${engine}"
     local active=0
     local nsocketnums; mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
-    for container in $(docker container ls --format "{{ .Names }}"); do
-        local info; read -ra info <<< "$(LC_ALL=C
-            docker container inspect --format \
+    for container in $("${engine}" container ls --format "{{ .Names }}"); do
+        local info; read -ra info <<< "$(# shellcheck disable=SC2016
+            LC_ALL=C "${engine}" container inspect --format \
             '{{.State.Pid}} {{.NetworkSettings.IPAddress}}
              {{- ""}} {{range $key, $value := .NetworkSettings.Ports}}
                 {{- ""}}{{if $value}}
@@ -1337,7 +1340,9 @@ _check_system_active() {
     # PRIO 2: Do a check for active network sockets.
     __run_check "${CHECKSOCKETS}" _check_net_status "${ips}" || return 1
     # PRIO 2: Do a check docker sockets for active network sockets.
-    __run_check "${CHECKSOCKETS}" _check_docker_status || return 1
+    __run_check "${CHECKSOCKETS}" _check_container_status "docker" || return 1
+    # PRIO 2: Do a check podman sockets for active network sockets.
+    __run_check "${CHECKSOCKETS}" _check_container_status "podman" || return 1
     # PRIO 2: Check for connected users on the CLI.
     __run_check "${CHECK_CLI}" _check_users_status || return 1
     # PRIO 2: Check Samba for connected clients.

@@ -2,6 +2,7 @@ openmediavault-autoshutdown (6.0.8) stable; urgency=low
 
   * Robust iostat output parsing
   * Fix some typos in autoshutdown.default
+  * Generalise _check_docker_status to support Podman
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 15 Mar 2022 10:34:05 +0000
 

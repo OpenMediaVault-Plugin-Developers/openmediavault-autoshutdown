@@ -97,8 +97,9 @@ NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
     #   9091 = Bittorrent_WebIF
     #   49152 = UPnP
 
-    # Docker mapped ports can be used to check for activaty. To used the docker
-    # set-up the docker host port must be specified in NSOCKETNUMBERS.
+    # Docker/Podman mapped ports can be used to check for activity. To used the
+    # set-up the container engine host port to be tested must be specified in
+    # NSOCKETNUMBERS.
 
 # -----------------------------------------------------------------------------
 

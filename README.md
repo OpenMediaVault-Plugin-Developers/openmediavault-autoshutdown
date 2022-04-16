@@ -15,7 +15,7 @@ priorities from 0 = highest to 6 = lowest:
 0. Stay up-range: UPHOURS (Server in the time range, where it should be online)
 1. Check for active IPs over network interfaces
 2. Ports (Network sockets) over network interfaces  
-   Ports (Docker host ports)  
+   Ports (Docker/Podman host ports)  
    Check for logged in users  
    Samba status check  
 3. UL/DL-Rate in kB/s over active network interfaces
