@@ -78,7 +78,7 @@ CHECKSOCKETS="true"
     # (default="true")
 
 NSOCKETNUMBERS="21,22,80,3689,6991,9091,49152"
-    # Socket numbers to check for activity. see form more details:
+    # Socket numbers to check for activity. See for more details:
     # https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
     # (default="21,22,80,3689,6991,9091,49152")
     #
@@ -253,7 +253,7 @@ FAKE="true"
 # Expert Settings
 
 # You should know, what you are doing. Add these settings to the "Expert
-# Settings" textfield in the OMV-GUI.
+# Settings" text-field in the OMV-GUI.
 
 # -----------------------------------------------------------------------------
 
@@ -329,7 +329,7 @@ FORCE_NIC="en eth wlan bond br usb"
     # to select all related interfaces i.e. eth will select eth0, eth1, ...
     # This setting can also be used to optimise script start-up time so that
     # only the relevant network interface are scanned, rather that the script
-    # having to scan all interface and wait for a valid respnce or timeout.
+    # having to scan all interface and wait for a valid response or timeout.
     # (default="en eth wlan bond br usb")
 
 # -----------------------------------------------------------------------------
