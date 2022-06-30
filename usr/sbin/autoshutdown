@@ -448,12 +448,14 @@ _check_loadaverage() {
 #
 #   Name       : _check_net_status
 #   Parameters : $1 : IP addresses found for all network interfaces.
-#   Globals    : $PORT_MAP          : Associative array for custom port to
-#                                     service mappings.
-#              : $NSOCKETPORTMAP    : User defined port to service mappings.
-#              : $NSOCKETNUMBERS    : Socket number to check for activity.
-#              : $NSOCKETIGNORESELF : If set will ignore all network interfaces
-#                                     IPv4/IPv6 addresses.
+#   Globals    : $PORT_MAP            : Associative array for custom port to
+#                                       service mappings.
+#              : $NSOCKETPORTMAP      : User defined port to service mappings.
+#              : $NSOCKETNUMBERS      : Socket number to check for activity.
+#              : $NSOCKETIGNORESELF   : If set will ignore all network
+#                                       interfaces IPv4/IPv6 addresses.
+#              : NSOCKETSCLIENTSCHECK : If true check, if the client connected
+#                                       to the socket is online.
 #   Return     : 0         : If no active socket has been found, shutdown.
 #              : 1 or more : If an active socket has been found, no shutdown.
 #
@@ -469,6 +471,9 @@ _check_net_status() {
         local map; while read -r map; do
             PORT_MAP["${map%%:*}"]="${map#*:}"
         done <<< "${NSOCKETPORTMAP//,/$'\n'}"; }
+
+    local -r reg_s="^[[]?(::(ffff|FFFF):)?"
+    local -r reg_e="[]]?([%][^ /]+)?:[0-9]+$"
 
     # For each socket see if it is stated active using ss command.
     for nsocket in ${NSOCKETNUMBERS//,/ }; do
@@ -492,11 +497,22 @@ _check_net_status() {
             awk 'NR==1 && $4!~/:[0-9]*$/{gsub(/.*:/,"",$4);print toupper($4)}
                  NR==1 && $4~/:[0-9]*$/{print "UNKNOWN"}' <<< "${lines}")"
         local conips; conips="$(
-            awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$5);
-                  sub(/[]]?([%][^ /]+)?:[0-9]+$/,"",$5)}
+            awk -v reg_s="${reg_s}" -v reg_e="${reg_e}" \
+                '{sub(reg_s,"",$5); sub(reg_e,"",$5)}
                   $5~/:/{print "z"$5} $5!~/:/{print $5}' <<< "${lines}" |
             sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')"
-        local no_lines; no_lines="$(wc -l <<< "${lines}")"
+
+        [ "${NSOCKETSCLIENTSCHECK}" == "true" ] && {
+            local online; online="$(LC_ALL=C
+                fping --quiet --retry=1 --alive <<< "${conips}")"
+            conips="$(awk -v regex="^${online//$'\n'/|}$" \
+                          '$0 ~ regex {print $0 "/online"}
+                           $0 !~ regex {print $0 "/offline"}' <<< "${conips}")"
+            lines="$(awk -v regex="${reg_s}(${online//$'\n'/|})${reg_e}" \
+                         '$5 ~ regex' <<< "${lines}")"; }
+
+        local no_lines=0;
+        [ -n "${lines}" ] && no_lines="$(wc -l <<< "${lines}")"
         ((active+="${no_lines}"))
 
         _log "INFO: Found ${no_lines} active connection(s) on port ${nsocket} (${service}) from: ${conips//$'\n'/, }"
@@ -514,7 +530,9 @@ _check_net_status() {
 #   Name       : _check_container_status
 #   Parameters : $1 : Name of the container engine to use with a compatible
 #                     Docker API/Interface.
-#   Globals    : $NSOCKETNUMBERS : Socket number to check for activity.
+#   Globals    : $NSOCKETNUMBERS      : Socket number to check for activity.
+#              : NSOCKETSCLIENTSCHECK : If true check, if the client connected
+#                                       to the socket is online.
 #   Return     : 0         : If no active socket has been found, shutdown.
 #              : 1 or more : If an active socket is found, no shutdown.
 #
@@ -524,6 +542,8 @@ _check_container_status() {
     _log "INFO: Check status of container engine: ${engine}"
     local active=0
     local nsocketnums; mapfile -t nsocketnums <<< "${NSOCKETNUMBERS//,/$'\n'}"
+    local -r reg_s="^[[]?(::(ffff|FFFF):)?"
+    local -r reg_e="[]]?([%][^ /]+)?:[0-9]+$"
     for container in $("${engine}" container ls --format "{{ .Names }}"); do
         local info; read -ra info <<< "$(# shellcheck disable=SC2016
             LC_ALL=C "${engine}" container inspect --format \
@@ -560,11 +580,22 @@ _check_container_status() {
                         sport "${p_map[${target}]}" src "[${info[1]}]" || true )"
             [ -z "${lines}" ] && continue
             local con_ips; con_ips="$(
-                awk '{sub(/^[[]?(::(ffff|FFFF):)?/,"",$5);
-                      sub(/[]]?([%][^ /]+)?:[0-9]+$/,"",$5)}
+                awk -v reg_s="${reg_s}" -v reg_e="${reg_e}" \
+                    '{sub(reg_s,"",$5); sub(reg_e,"",$5)}
                       $5~/:/{print "z"$5} $5!~/:/{print $5}' <<< "${lines}" |
                 sort -Vu | awk -Fz '/:/{print $2}!/:/{print}')"
-            local no_lines; no_lines="$(wc -l <<< "${lines}")"
+            [ "${NSOCKETSCLIENTSCHECK}" == "true" ] && {
+                local online; online="$(LC_ALL=C
+                    nsenter --target "${info[0]}" --net \
+                        fping --quiet --retry=1 --alive <<< "${con_ips}")"
+                con_ips="$(awk -v regex="^${online//$'\n'/|}$" \
+                               '$0 ~ regex {print $0 "/online"}
+                                $0 !~ regex {print $0 "/offline"}' <<< \
+                           "${con_ips}")"
+                lines="$(awk -v regex="${reg_s}(${online//$'\n'/|})${reg_e}" \
+                             '$5 ~ regex' <<< "${lines}")"; }
+            local no_lines=0;
+            [ -n "${lines}" ] && no_lines="$(wc -l <<< "${lines}")"
             ((active+="${no_lines}"))
             _log "INFO: Found ${no_lines} active connection(s) on port ${target} (${container}) from: ${con_ips//$'\n'/, }"
         done
@@ -1139,8 +1170,11 @@ _validate_config() {
 
         __check_value "NSOCKETIGNORESELF" "^(true|false)$" \
             "set to: 'true' or 'false'"
+
+        __check_value "NSOCKETSCLIENTSCHECK" "^(true|false)$" \
+            "set to: 'true' or 'false'"
     else
-        _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS, NSOCKETPORTMAP and NSOCKETIGNORESELF"
+        _log "WARNING: CHECKSOCKETS set false not validating: NSOCKETNUMBERS, NSOCKETPORTMAP, NSOCKETIGNORESELF and NSOCKETSCLIENTSCHECK"
     fi
 
     # PINGLIST or RANGE set-up.
