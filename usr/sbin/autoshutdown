@@ -547,7 +547,8 @@ _check_container_status() {
     for container in $("${engine}" container ls --format "{{ .Names }}"); do
         local info; read -ra info <<< "$(# shellcheck disable=SC2016
             LC_ALL=C "${engine}" container inspect --format \
-            '{{.State.Pid}} {{.NetworkSettings.IPAddress}}
+            '{{.State.Pid}}
+             {{- ""}} {{range.NetworkSettings.Networks}}{{.IPAddress}},{{end}}
              {{- ""}} {{range $key, $value := .NetworkSettings.Ports}}
                 {{- ""}}{{if $value}}
                     {{- ""}} {{(index $value 0).HostPort}}:
@@ -573,11 +574,14 @@ _check_container_status() {
                 p_map["${ports%:*}"]="${ports#*:}"
         done
         [ "${#p_map[@]}" -eq 0 ] && continue
+        local ips_filter="${info[1]::-1}"
+        ips_filter="${ips_filter//,/] or src [}"
         for target in "${!p_map[@]}"; do
             local lines; lines="$(LC_ALL=C
                 nsenter --target "${info[0]}" --net \
                     ss state established --no-header --numeric \
-                        sport "${p_map[${target}]}" src "[${info[1]}]" || true )"
+                        "sport ${p_map[${target}]} and \
+                            ( src [${ips_filter}] )" || true )"
             [ -z "${lines}" ] && continue
             local con_ips; con_ips="$(
                 awk -v reg_s="${reg_s}" -v reg_e="${reg_e}" \
