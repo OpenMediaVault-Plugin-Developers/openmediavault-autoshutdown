@@ -271,8 +271,6 @@ LPREPEAT=5
     # Number of test cycles for finding and active LOADPROCNAMES-Process
     # allowed 1 - 999. (default=5)
 
-# -----------------------------------------------------------------------------
-
 TPREPEAT=5
     # Number of test cycles for finding and active TEMPPROCNAMES-Process
     # allowed 1 - 999. (default=5)
@@ -286,11 +284,17 @@ NSOCKETPORTMAP=""
     # format: [<port1>:<service1>,<port2>:<service2>,...,<portN>:<serviceN>].
     # (default="")
 
-# -----------------------------------------------------------------------------
-
 NSOCKETIGNORESELF="false"
     # If set to "true" _check_net_status will ignore any sockets connected on
     # the network interface being tested. (default="false")
+
+NSOCKETSCLIENTSCHECK="false"
+    # Check if a client connected to a sockets is online or offline by sending
+    # a ping test to the client. For this to work all client must respond to
+    # ping traffic or the test used will incorrectly classify the client as
+    # offline. This changes the script having to relying on the client with
+    # long connection timeout that will have to expire before a shutdown is
+    # triggered on the server. (default="false)
 
 # -----------------------------------------------------------------------------
 
