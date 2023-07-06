@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Jonatan Nyberg <jonatan@autistici.org>, 2018,2021
+# Jonatan Nyberg, 2023
+# Jonatan Nyberg, 2018,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Jonatan Nyberg <jonatan@autistici.org>, 2018,2021\n"
-"Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
+"Last-Translator: Jonatan Nyberg, 2023\n"
+"Language-Team: Swedish (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,41 +20,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Aktiva processer"
 
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "Starttimme"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "Startminut"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "Kontrollera SMB-status för anslutna klienter."
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Kontrollera om det finns anslutna användare."
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "Kontrollera efter användardefinierade insticksmoduler. (se <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "Kontrollera om S.M.A.R.T. tester körs (S.M.A.R.T. måste stödas)."
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "Kontrollera systemklockan för att identifiera tvingad drifttid."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Cyklar"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum & tid"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -73,134 +74,134 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "Definiera ett intervall av IP-adresser som ska skannas. IP-intervallet bör vara en kommaavgränsad lista med följande:<br />- Definiera ett IPv4-intervall: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Definiera en enda IPv4: Sista oktetten av IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Definiera ett IPv6-intervall: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Definiera en enda IPv6: Sista hextet av IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z- Definiera med FQDN: fqdn | iface@fqdn<br />Om '&lt;START&gt;..&lt;END&gt;' eller 'Sista oktetten av IPv4' ställs in, används de tre första oktterna av iface IPv4-adressen.<br />Om '0x&lt;START&gt;..0x&lt;END&gt;' eller 'Sista hextet av IPv6' ställs in, de första sju hexteterna i iface IPv6-adressen används.<br />Se till att lämna 1 och 255 utanför IPv4-intervallet!"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Definiera nätverkstrafiken i kB/s."
 
 msgid "Enable"
-msgstr ""
+msgstr "Aktivera"
 
 msgid "End hour"
-msgstr ""
+msgstr "Sluttimme"
 
 msgid "End minute"
-msgstr ""
+msgstr "Slutminut"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Expertinställningar"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Extra alternativ"
 
 msgid "Fake"
-msgstr ""
+msgstr "Falsk"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Falskt/test-läge."
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Tvingad drifttid"
 
 msgid "Function"
-msgstr ""
+msgstr "Funktion"
 
 msgid "General Settings"
-msgstr ""
+msgstr "Allmänna Inställningar"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "HDD-IO"
 
 msgid "Hibernate"
 msgstr ""
 
 msgid "Hour"
-msgstr ""
+msgstr "Timme"
 
 msgid "Hybrid Sleep"
 msgstr ""
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP-intervall"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Om HDD-IO-genomsnittet för servern är över detta värde i kB/s, då ingen avstängning."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "Om belastningsgenomsnittet för servern är över detta värde, då ingen avstängning.<br />Exempel: 50 betyder ett belastningsmedelvärde på 0,50, 8 betyder ett belastningsmedelvärde på 0,08, 220 betyder ett belastningsmedelvärde på 2,20."
 
 msgid "Load Average"
-msgstr ""
+msgstr "Belastningsgenomsnitt"
 
 msgid "Load average"
-msgstr ""
+msgstr "Genomsnittlig belastning"
 
 msgid "Load processes"
-msgstr ""
+msgstr "Belastningsprocesser"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Logga till Syslog"
 
 msgid "Message"
-msgstr ""
+msgstr "Meddelande"
 
 msgid "Minute"
-msgstr ""
+msgstr "Minut"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "Namn på processer startade endast när de är aktiva. Ställ in på '-' för att inaktivera."
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "Namn på processer med belastningsberoende underprocesser. Ställ in på '-' för att inaktivera."
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Antal sekunder mellan varje cykel."
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "Endast tillgängligt om \"Tvingad drifttid\" i \"Väckningslarm\" är aktiverat."
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "Se <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
 
 msgid "Plugins"
-msgstr ""
+msgstr "Insticksmoduler"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "Processnamn måste ha formatet: [proc1,proc2,...,procN]"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB-status"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Sekunder"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "Ställ in ett väckningslarm på systemet."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Ställ in antalet cykler utan resultat (ingen PC online, etc.) före avstängning.\n "
 
 msgid "Set using 'Forced Uptime' begin time"
-msgstr ""
+msgstr "Ställ in med \"Tvingad drifttid\" starttid"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Stäng av"
 
 msgid "Shutdown command"
-msgstr ""
+msgstr "Avstängningskommando"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Smarta tester"
 
 msgid ""
 "Socket number to check for activity (see <a "
@@ -216,7 +217,7 @@ msgid ""
 msgstr ""
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Övervakningskonfiguration"
 
 msgid "Suspend"
 msgstr ""
@@ -225,22 +226,22 @@ msgid "Suspend then Hibernate"
 msgstr ""
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Syslog-konfiguration"
 
 msgid "Temp processes"
 msgstr ""
 
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "ULDL-hastighet"
 
 msgid "Updated AutoShutdown settings."
-msgstr ""
+msgstr "Uppdaterade AutoShutdown-inställningar."
 
 msgid "Users"
-msgstr ""
+msgstr "Användare"
 
 msgid "Verbose"
 msgstr ""
@@ -249,10 +250,10 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Wake Alarm"
-msgstr ""
+msgstr "Väckningslarm"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "Skriv logginformation till systemloggar."
 
 msgid "kB/s"
-msgstr ""
+msgstr "kB/s"

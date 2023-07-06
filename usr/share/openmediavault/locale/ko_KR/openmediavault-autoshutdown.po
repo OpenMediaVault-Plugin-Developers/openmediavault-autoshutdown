@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
+# Brandon Han, 2023
 # Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014,2016
 msgid ""
 msgstr ""
@@ -10,8 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014,2016\n"
-"Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
+"Last-Translator: Brandon Han, 2023\n"
+"Language-Team: Korean (Korea) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,41 +20,41 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "활성화된 프로세스"
 
 msgid "AutoShutdown"
 msgstr "AutoShutdown"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "시작 시"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "시작 분"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "연결된 클라이언트에 대해 SMB 상태를 확인합니다"
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "연결된 사용자를 확인합니다"
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "사용자 정의 플러그인을 확인합니다 (<a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>를 보세요)"
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "S.M.A.R.T. 시험이 진행중인지 확인합니다 (S.M.A.R.T.가 반드시 지원되어야 합니다)"
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "작동시간 설정을 위해 시스템 시간을 확인합니다"
 
 msgid "Cycles"
-msgstr ""
+msgstr "사이클 수"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "날짜와 시간"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -79,34 +80,34 @@ msgid "Define the network traffic in kB/s."
 msgstr ""
 
 msgid "Enable"
-msgstr ""
+msgstr "활성화"
 
 msgid "End hour"
-msgstr ""
+msgstr "종료 시"
 
 msgid "End minute"
-msgstr ""
+msgstr "종료 분"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "전문가 설정"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "추가 옵션"
 
 msgid "Fake"
-msgstr ""
+msgstr "거짓"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "거짓/시험 모드"
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "작동시간 지정"
 
 msgid "Function"
 msgstr ""
 
 msgid "General Settings"
-msgstr ""
+msgstr "일반 설정"
 
 msgid "HDD-IO"
 msgstr ""
@@ -115,42 +116,42 @@ msgid "Hibernate"
 msgstr ""
 
 msgid "Hour"
-msgstr ""
+msgstr "시"
 
 msgid "Hybrid Sleep"
 msgstr ""
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP 범위"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "이 서버의 HDD-IO-평균값이 이 kB/s 값을 초과할 경우, 시스템을 종료하지 않습니다"
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "서버의 부하 평균이 이 값을 초과할 경우, 시스템을 종료하지 않습니다<br />예시: 50을 입력할 경우 이는 0.50의 부하 평균을 의미하며, 8은 0.08의 부하 평균을, 220은 2.20의 부하 평균을 의미합니다"
 
 msgid "Load Average"
-msgstr ""
+msgstr "부하 평균"
 
 msgid "Load average"
-msgstr ""
+msgstr "부하 평균"
 
 msgid "Load processes"
 msgstr ""
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Syslog에 기록"
 
 msgid "Message"
-msgstr ""
+msgstr "메시지"
 
 msgid "Minute"
-msgstr ""
+msgstr "분"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
 msgstr ""
@@ -160,10 +161,10 @@ msgid ""
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "각 사이클 간의 시간을 초 단위로 설정하십시오"
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "'깨우기 알람'의 '작동시간 지정'이 활성화 되어있을 경우에만 사용이 가능합니다"
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
@@ -178,13 +179,13 @@ msgid "Process names must be in the format: [proc1,proc2,...,procN]"
 msgstr ""
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB 상태"
 
 msgid "Seconds"
-msgstr ""
+msgstr "초"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "시스템에 대해 깨우기 알람을 설정합니다"
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
@@ -194,13 +195,13 @@ msgid "Set using 'Forced Uptime' begin time"
 msgstr ""
 
 msgid "Shutdown"
-msgstr ""
+msgstr "시스템 종료"
 
 msgid "Shutdown command"
-msgstr ""
+msgstr "시스템 종료 명령"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Smart 시험"
 
 msgid ""
 "Socket number to check for activity (see <a "
@@ -231,7 +232,7 @@ msgid "Temp processes"
 msgstr ""
 
 msgid "Type"
-msgstr ""
+msgstr "종류"
 
 msgid "ULDL Rate"
 msgstr ""
@@ -249,10 +250,10 @@ msgid "Verbose mode."
 msgstr ""
 
 msgid "Wake Alarm"
-msgstr ""
+msgstr "깨우기 알람"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "로그 정보를 시스템 로그에 기록합니다"
 
 msgid "kB/s"
 msgstr ""
