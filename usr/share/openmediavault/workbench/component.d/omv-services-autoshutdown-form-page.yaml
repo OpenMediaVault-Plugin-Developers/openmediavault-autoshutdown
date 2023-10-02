@@ -192,7 +192,7 @@ data:
             name: ipcheck
             label: _("IP-Range")
             value: true
-            flex: 17
+            flex: 20
           - type: textarea
             name: range
             value: 2..254,0x0..0xFFFF
@@ -216,7 +216,7 @@ data:
             name: checksockets
             label: _("Sockets")
             value: true
-            flex: 17
+            flex: 20
           - type: textarea
             name: nsocketnumbers
             value: 21,22,80,3689,6991,9091,49152
@@ -244,7 +244,7 @@ data:
             name: uldlcheck
             label: _("ULDL Rate")
             value: true
-            flex: 17
+            flex: 20
           - type: numberInput
             name: uldlrate
             label: _("kB/s")
@@ -270,7 +270,7 @@ data:
             name: hddiocheck
             label: _("HDD-IO")
             value: true
-            flex: 17
+            flex: 20
           - type: numberInput
             name: hddiorate
             label: _("kB/s")
@@ -296,7 +296,7 @@ data:
             name: loadaveragecheck
             label: _("Load Average")
             value: false
-            flex: 17
+            flex: 20
           - type: numberInput
             name: loadaverage
             label: _("Load average")
@@ -323,7 +323,7 @@ data:
             name: checkprocnames
             label: _("Active Processes")
             value: true
-            flex: 17
+            flex: 20
           - type: textarea
             name: loadprocnames
             label: _("Load processes")
@@ -348,7 +348,7 @@ data:
       - type: container
         fields:
           - type: paragraph
-            flex: 17
+            flex: 20
           - type: textarea
             name: tempprocnames
             label: _("Temp processes")
