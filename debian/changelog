@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (6.0.10) stable; urgency=low
+
+  * Fix identation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 03 Oct 2023 19:30:07 -0500
+
 openmediavault-autoshutdown (6.0.9) stable; urgency=low
 
   * Check if a client connected to a sockets is online/offline
