@@ -3,7 +3,7 @@ Section: misc
 XB-Plugin-Section: utilities
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Build-Depends: debhelper (>= 12)
+Build-Depends: debhelper (>= 13)
 Standards-Version: 4.3.0
 Homepage: http://omv-extras.org
 
@@ -12,7 +12,7 @@ Architecture: all
 Depends: fping,
          jq,
          net-tools,
-         openmediavault (>= 6.7.0),
+         openmediavault (>= 7),
          pm-utils,
          sysstat,
          ${misc:Depends}
