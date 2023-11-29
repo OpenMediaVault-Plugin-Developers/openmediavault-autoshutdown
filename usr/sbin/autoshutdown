@@ -1307,7 +1307,7 @@ _get_network_details() {
                 local valid="false" regex="R_${ip_type^^}"
                 local ip; ip="$(LC_ALL=C
                     ip -br -"${ip_type: -1}" addr show dev "${net_iface}" | sed 's/.*  //' |
-                    awk '{tolower($0);gsub(/\/[0-9]+/,""); sub(" fe80.* ",""); $1=$1; print}')"
+                    awk '{tolower($0);gsub(/\/[0-9]+/,"");gsub(/ metric [0-9]+/,"");sub(" fe80.* ",""); $1=$1; print}')"
                 msg+="IPv${ip_type: -1} address: ${ip:-N/A}, "
                 [[ "${state}" =~ ^(unknown|dormant|up)$ ]] && {
                     declare -n ip_ref="NIC_2_${ip_type^^}[${net_iface}]"
