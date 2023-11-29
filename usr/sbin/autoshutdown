@@ -1306,15 +1306,14 @@ _get_network_details() {
             for ip_type in ipv4 ipv6; do
                 local valid="false" regex="R_${ip_type^^}"
                 local ip; ip="$(LC_ALL=C
-                    ip -br -"${ip_type: -1}" addr show dev "${net_iface}" |
-                    awk '{sub(/\/[0-9]+$/,"",$3); print $3}')"
+                    ip -br -"${ip_type: -1}" addr show dev "${net_iface}" | sed 's/.*  //' |
+                    awk '{tolower($0);gsub(/\/[0-9]+/,"");gsub(/ metric [0-9]+/,"");sub(" fe80.* ",""); $1=$1; print}')"
                 msg+="IPv${ip_type: -1} address: ${ip:-N/A}, "
-                [[ "${ip}" =~ ^(${!regex})$ ]] && {
-                    [[ "${state}" =~ ^(unknown|dormant|up)$ ]] && {
-                        declare -n ip_ref="NIC_2_${ip_type^^}[${net_iface}]"
-                        # shellcheck disable=SC2034
-                        ip_ref="${ip}"; }
-                    valid="true"; }
+                [[ "${state}" =~ ^(unknown|dormant|up)$ ]] && {
+                    declare -n ip_ref="NIC_2_${ip_type^^}[${net_iface}]"
+                    # shellcheck disable=SC2034
+                    ip_ref="${ip}"; }
+                valid="true";
                 _log "DEBUG: Network interfaces IPv${ip_type: -1} address: ${ip:-N/A}"
                 _log "DEBUG: Network interfaces IPv${ip_type: -1} address valid: ${valid}"
             done
@@ -1371,7 +1370,7 @@ _check_system_active() {
         # PRIO 1: Ping IP address specified across active network interfaces.
         __run_check "${IPCHECK}" _ping_range "${net_iface}" \
             "${NIC_2_IPV4["${net_iface}"]:-}" \
-            "${NIC_2_IPV6["${net_iface}"]:-}" \
+            "${NIC_2_IPV6["${net_iface}"]%% *}" \
             "${ips}" || return 1
     done
 
