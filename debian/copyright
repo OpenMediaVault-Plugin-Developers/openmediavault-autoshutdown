@@ -3,7 +3,7 @@ Upstream-Contact: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 Source: https://github.com/OMV-Plugins/openmediavault-autoshutdown
 
 Files: *
-Copyright: 2013-2021 OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Copyright: 2013-2024 OpenMediaVault Plugin Developers <plugins@omv-extras.org>
            2011-2012 Marcel Beck <marcel.beck@mbeck.org>
 License: GPL-3
 
