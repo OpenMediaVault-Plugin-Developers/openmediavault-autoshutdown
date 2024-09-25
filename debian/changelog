@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (7.0.1) stable; urgency=low
+
+  * Fix device path for smartctl
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 25 Sep 2024 17:41:10 -0500
+
 openmediavault-autoshutdown (7.0) stable; urgency=low
 
   * Update for OMV 7.x
