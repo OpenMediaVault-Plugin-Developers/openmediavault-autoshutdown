@@ -999,7 +999,7 @@ _check_smart() {
         _log "DEBUG: Checking device for running smart tests: ${hdd}"
 
         local smart_output; smart_output="$(LC_ALL=C
-            smartctl --all --nocheck=standby "${hdd}" || true)"
+            smartctl --all --nocheck=standby "/dev/${hdd}" || true)"
 
         _log "DEBUG: Smartctl output: ${hdd}"
         local line; while read -r line; do
