@@ -1009,7 +1009,7 @@ _check_smart() {
         grep -q "in[ _]progress" <<< "${smart_output}" && {
             _log "INFO: Device ${hdd} is running SMART tests -> no shutdown"
             return 1; }
-    done < <(LC_ALL=C lsblk --nodeps --noheadings --output "name,type" |
+    done < <(LC_ALL=C lsblk --nodeps --noheadings --paths --output "name,type" |
              awk '/disk/{print $1}');
 
     _log "INFO: No supported device is running SMART tests -> next check"
