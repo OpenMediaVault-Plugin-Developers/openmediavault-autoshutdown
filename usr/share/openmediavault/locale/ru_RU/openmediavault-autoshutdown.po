@@ -6,15 +6,16 @@
 # Alexander Bedarev <bedarev69@gmail.com>, 2022
 # Alexander Savchenko, 2013
 # Alexander Savchenko, 2014
-# Артур Мудрых <arturmon82@gmail.com>, 2017,2019
+# Asdfgr Wertyu, 2024
+# Artur Mudrykh <arturmon82@gmail.com>, 2017,2019
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Alexander Bedarev <bedarev69@gmail.com>, 2022\n"
-"Language-Team: Russian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ru/)\n"
+"Last-Translator: Asdfgr Wertyu, 2024\n"
+"Language-Team: Russian (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -76,10 +77,10 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "Определите диапазон IP-адресов, которые должны быть просканированы. IP-диапазон должен представлять собой список, разделенный запятыми, из следующего:<br />- Определите диапазон IPv4: &lt;START&gt;...&lt;END&gt; | iface@&lt;START&gt;...&lt;END&gt; | www.xxx.yyy.&lt;START&gt;.... &lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;...&lt;END&gt;<br />- Определите один IPv4: последний октет IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Определите диапазон IPv6: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;. 0x&lt;END&gt;<br />- Определение одного IPv6: последний гекстет IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- Определение по FQDN: fqdn | iface@fqdnIf<br /> '&lt;START&gt;. .&lt;END&gt;\" или 'Последний октет IPv4'<br /> используются первые три октета IPv4-адреса iface.Если '0x&lt;START&gt;..0x&lt;END&gt;' или 'Последний гекстет IPv6' используются первые семь гекстетов IPv6-адреса iface.<br />Пожалуйста, убедитесь, что 1 и 255 не входят в диапазон IPv4!"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Определите сетевой трафик в кБ/с."
 
 msgid "Enable"
 msgstr "Включить"
@@ -100,7 +101,7 @@ msgid "Fake"
 msgstr "Ненастоящий"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Режим подделки/тестирования."
 
 msgid "Forced Uptime"
 msgstr "Принудительное время работы"
@@ -112,7 +113,7 @@ msgid "General Settings"
 msgstr "Основные настройки"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "HDD-IO"
 
 msgid "Hibernate"
 msgstr "Гибернация"
@@ -121,7 +122,7 @@ msgid "Hour"
 msgstr "Час"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Гибридный сон"
 
 msgid "IP-Range"
 msgstr "IP-диапазон"
@@ -129,13 +130,13 @@ msgstr "IP-диапазон"
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Если среднее значение HDD-IO сервера выше этого значения в кБ/с, то отключение не производится."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "Если средняя нагрузка на сервер выше этого значения, то отключение не производится.<br />Пример: 50 означает среднюю нагрузку 0,50, 8 означает среднюю нагрузку 0,08, 220 означает среднюю нагрузку 2,20."
 
 msgid "Load Average"
 msgstr "Средняя нагрузка"
@@ -147,7 +148,7 @@ msgid "Load processes"
 msgstr "Загрузка процессов"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Вести журнал в Syslog"
 
 msgid "Message"
 msgstr "Сообщение"
@@ -156,29 +157,29 @@ msgid "Minute"
 msgstr "Минуты"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "Названия процессов, запускаемых только в активном состоянии. Установите значение '-', чтобы отключить."
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "Названия процессов с дочерними процессами, зависящими от нагрузки. Установите значение '-', чтобы отключить."
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Число секунд между каждым циклом."
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "Доступно только в том случае, если включены опции ''Принудительное время работы'' и ''Будильник''."
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "Смотрите файл autoshutdown.default."
 
 msgid "Plugins"
 msgstr "Плагины"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "Имена процессов должны быть в формате: [proc1,proc2,...,procN]."
 
 msgid "SMB Status"
 msgstr "SMB статус"
@@ -187,14 +188,14 @@ msgid "Seconds"
 msgstr "Секунды"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "Установите на системе будильник."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Установите количество циклов без результата (ПК не подключен к сети и т.д.) перед выключением."
 
 msgid "Set using 'Forced Uptime' begin time"
-msgstr ""
+msgstr "Установите время начала работы в режиме 'Принудительное время работы'"
 
 msgid "Shutdown"
 msgstr "Выключить"
@@ -203,20 +204,20 @@ msgid "Shutdown command"
 msgstr "Команда выключения"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Умные тесты"
 
 msgid ""
 "Socket number to check for activity (see <a "
 "href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
 "target='_blank'>List of port numbers</a>)."
-msgstr ""
+msgstr "Номер сокета для проверки активности (см. <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>Список номеров портов</a>)."
 
 msgid "Sockets"
 msgstr "Сокеты"
 
 msgid ""
 "Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
-msgstr ""
+msgstr "Сокеты должны содержать от 2 до 5 цифр в формате: [socket1,socket2,...,socketN]."
 
 msgid "Supervision Configuration"
 msgstr "Конфигурация контроля"

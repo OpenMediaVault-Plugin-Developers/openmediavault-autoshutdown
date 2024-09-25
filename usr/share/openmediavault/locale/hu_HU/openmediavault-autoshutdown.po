@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
+# Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024
 # Grawens <szabolcs.szanyi@gmail.com>, 2019
 msgid ""
 msgstr ""
@@ -10,8 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Grawens <szabolcs.szanyi@gmail.com>, 2019\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/hu_HU/)\n"
+"Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024\n"
+"Language-Team: Hungarian (Hungary) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,41 +20,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Aktív folyamatok"
 
 msgid "AutoShutdown"
 msgstr "Automatikus leállítás"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "Kezdő óra"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "Kezdő perc"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "A csatlakoztatott kliensek SMB-állapotának ellenőrzése."
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Csatlakozott felhasználók ellenőrzése."
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "A felhasználók által definiált bővítmények ellenőrzése. (lásd <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "S.M.A.R.T. tesztek futásának ellenőrzése (a S.M.A.R.T. teszteknek támogatottaknak kell lenniük)."
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "A rendszeróra ellenőrzése kényszerített üzemidő azonosításához."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Ciklusok"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Dátum és idő"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -73,115 +74,115 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "Határozza meg a vizsgálandó IP-címek tartományát. Az IP-tartománynak egy vesszővel elválasztott listának kell lennie a következőkből:<br />- IPv4-tartomány meghatározása: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;... &lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Egyetlen IPv4 definiálása: IPv4 utolsó oktettje zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- IPv6 tartomány definiálása: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;... 0x&lt;END&gt;<br />- Egyetlen IPv6 definiálása: Az IPv6 utolsó hextettje 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- FQDN szerinti definiálás: fqdn | iface@fqdn <br />Ha '&lt;START&gt;. .&lt;END&gt;' vagy 'Az IPv4 utolsó oktettje' beállítása esetén az iface IPv4 cím első három oktettjét használjuk.<br />Ha '0x&lt;START&gt;..0x&lt;END&gt;' vagy 'Az IPv6 utolsó hextettje' beállítása esetén az iface IPv6 cím első hét hextettjét használjuk.<br />Kérjük, ügyeljen arra, hogy az IPv4 tartományból hagyja ki az 1 és 255 értékeket!"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Hálózati forgalom meghatározása kB/s-ban."
 
 msgid "Enable"
-msgstr ""
+msgstr "Engedélyezés"
 
 msgid "End hour"
-msgstr ""
+msgstr "Befejező óra"
 
 msgid "End minute"
-msgstr ""
+msgstr "Befejező perc"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Szakértői beállítások"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Extra beállítások"
 
 msgid "Fake"
-msgstr ""
+msgstr "Hamis"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Hamis/Teszt mód."
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Kényszerített üzemidő"
 
 msgid "Function"
-msgstr ""
+msgstr "Funkció"
 
 msgid "General Settings"
-msgstr ""
+msgstr "Általános beállítások"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "HDD-IO"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Hibernálás"
 
 msgid "Hour"
-msgstr ""
+msgstr "Óra"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Hibrid alvás"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP-tartomány"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Ha a kiszolgáló HDD-IO-átlaga ezen kB/s-ban megadott érték felett van, akkor ne álljon le."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "Ha a kiszolgáló átlagos terhelése meghaladja ezt az értéket, akkor ne álljon le.<br />Példa: az „50” 0,50-es átlagos terhelést jelent, a „8” 0,08-as átlagos terhelést, a „220” pedig 2,20 átlagos terhelést."
 
 msgid "Load Average"
-msgstr ""
+msgstr "Terhelési átlag"
 
 msgid "Load average"
-msgstr ""
+msgstr "Terhelési átlag"
 
 msgid "Load processes"
-msgstr ""
+msgstr "Betöltési folyamatok"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Naplózás a syslogba"
 
 msgid "Message"
-msgstr ""
+msgstr "Üzenet"
 
 msgid "Minute"
-msgstr ""
+msgstr "Perc"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "A csak aktív állapotban indított folyamatok nevei. A letiltáshoz állítsa be a „-” értéket."
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
 msgstr ""
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Az egyes ciklusok közötti másodpercek száma."
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "Csak akkor érhető el, ha a „Kényszerített üzemidő” az „Ébresztő riasztás”-ban engedélyezve van."
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "Lásd:<a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
 
 msgid "Plugins"
-msgstr ""
+msgstr "Bővítmények"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "A folyamatneveknek a következő formátumúaknak kell lenniük: [proc1,proc2,...,procN]"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB-státusz"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Másodper"
 
 msgid "Set a wake alarm on the system."
 msgstr ""
@@ -194,13 +195,13 @@ msgid "Set using 'Forced Uptime' begin time"
 msgstr ""
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Leállítás"
 
 msgid "Shutdown command"
-msgstr ""
+msgstr "Leállítási parancs"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Okosteszt"
 
 msgid ""
 "Socket number to check for activity (see <a "
@@ -209,50 +210,50 @@ msgid ""
 msgstr ""
 
 msgid "Sockets"
-msgstr ""
+msgstr "Foglalatok"
 
 msgid ""
 "Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
 msgstr ""
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Felügyeleti konfiguráció"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Felfüggesztés"
 
 msgid "Suspend then Hibernate"
-msgstr ""
+msgstr "Felfüggesztés, aztán hibernálás"
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Rendszernapló konfiguráció"
 
 msgid "Temp processes"
-msgstr ""
+msgstr "Ideiglenes folyamatok"
 
 msgid "Type"
-msgstr ""
+msgstr "Típus"
 
 msgid "ULDL Rate"
 msgstr ""
 
 msgid "Updated AutoShutdown settings."
-msgstr ""
+msgstr "AutoShutdown beállítások frissítve."
 
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 msgid "Verbose"
-msgstr ""
+msgstr "Részletes"
 
 msgid "Verbose mode."
-msgstr ""
+msgstr "Részletes mód."
 
 msgid "Wake Alarm"
-msgstr ""
+msgstr "Ébresztő riasztás"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "Naplóinformációk írása a rendszer naplóiba."
 
 msgid "kB/s"
-msgstr ""
+msgstr "kB/s"

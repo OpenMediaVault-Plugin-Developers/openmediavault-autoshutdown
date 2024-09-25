@@ -1,37 +1,53 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014
+# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014,2016,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-11 12:42-0500\n"
-"PO-Revision-Date: 2014-11-16 10:00+0000\n"
-"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
-"Language-Team: Spanish (Spain) (http://www.transifex.com/projects/p/openmediavault-autoshutdown/language/es_ES/)\n"
+"POT-Creation-Date: 2021-12-13 06:59-0600\n"
+"PO-Revision-Date: 2013-10-28 14:43+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>, 2014,2016,2021\n"
+"Language-Team: Spanish (Spain) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+msgid "Active Processes"
+msgstr "Procesos activos"
 
 msgid "AutoShutdown"
 msgstr "Apagado Automático"
 
-msgid "Autoshutdown"
-msgstr "Apagado Automático"
+msgid "Begin hour"
+msgstr "Hora de inicio"
 
-msgid "Begin"
-msgstr "Comenzar"
+msgid "Begin minute"
+msgstr "Minuto de inicio"
 
-msgid "Check Clock"
-msgstr "Revisar reloj"
+msgid "Check SMB status for connected clients."
+msgstr "Revisar el estado SMB de los clientes conectados."
 
-msgid "Check Clock to identify forced uptime."
-msgstr "Revisar reloj para conocer el tiempo en marcha."
+msgid "Check for connected users."
+msgstr "Revisar si hay usuarios conectados"
+
+msgid ""
+"Check for users defined plugins. (see <a "
+"href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
+"Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
+"target='_blank'>autoshutdown.default</a>)."
+msgstr "Revisar plugins definidos por el usuario. (ver <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
+
+msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
+msgstr "Revisar si hay activo algún test  S.M.A.R.T.  (S.M.A.R.T. debe estar soportado)."
+
+msgid "Check the system clock to identify forced uptime."
+msgstr "Revisar hora del sistema para identificar tiempo en marcha."
 
 msgid "Cycles"
 msgstr "Ciclos"
@@ -39,97 +55,165 @@ msgstr "Ciclos"
 msgid "Date & Time"
 msgstr "Fecha y Hora"
 
-msgid "Define a range of IPs which should be scanned."
-msgstr "Defina el rango de IP que deben ser escaneada."
+msgid ""
+"Define a range of IPs which should be scanned. The IP-Range should be a "
+"comma delimited list of the following:<br />- Define an IPv4 range: "
+"&lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | "
+"www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | "
+"iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Define a single IPv4: "
+"Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | "
+"iface@www.xxx.yyy.zzz<br />- Define an IPv6 range: "
+"0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | "
+"s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | "
+"iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Define a single "
+"IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | "
+"iface@s:t:u:v:w:x:y:z<br />- Define by FQDN: fqdn | iface@fqdn<br />If "
+"'&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first three "
+"octets of the iface IPv4 address is used.<br />If "
+"'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
+"seven hextets of the iface IPv6 address is used.<br />Please make sure to "
+"leave 1 and 255 out of the IPv4 range!"
+msgstr "Defina un rango de direcciones IP que se deben escanear. El rango de IP debe ser una lista delimitada por comas de lo siguiente: <br />- Defina un rango de IPv4: & lt; START & gt; .. & lt; END & gt; | iface @ & lt; START & gt; .. & lt; END & gt; | www.xxx.yyy. & lt; INICIO & gt; .. & lt; FIN & gt; | iface@xxx.yyy.zzz.&lt; START & gt; .. & lt; END & gt; <br />- Definir un solo IPv4: Último octeto de IPv4 zzz | iface @ zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz: <br />defina un rango de IPv6: 0x & lt; START & gt; .. 0x & lt; END & gt; | iface @ 0x & lt; START & gt; .. 0x & lt; END & gt; | s: t: u: v: w: x: y: 0x & lt; START & gt; .. 0x & lt; END & gt; | iface @ s: t: u: v: w: x: y: 0x & lt; START & gt; .. 0x & lt; END & gt; <br /> - Definir un solo IPv6: Último hexteto de IPv6 0xzzzz | iface @ 0xzzzz | s: t: u: v: w: x: y: z | iface @ s: t: u: v: w: x: y: z <br />- Definir por FQDN: fqdn | iface @ fqdnIf <br /> si '& lt; INICIO & gt; .. & lt; FIN & gt;' o \"Último octeto de IPv4\", se utilizan los primeros tres octetos de la dirección IPv4 de iface. <br />Si \"0x & lt; START & gt; .. 0x & lt; END & gt;\" o 'Último hexteto de IPv6' se configuran los primeros siete hextetos de la dirección IPv6 de iface. <br />¡Asegúrese de dejar 1 y 255 fuera del rango de IPv4!"
 
-msgid "Define the network traffic in kB/s"
-msgstr "Definir trafico de red en kB/s"
+msgid "Define the network traffic in kB/s."
+msgstr "Tráfico de red en kB/s."
 
 msgid "Enable"
 msgstr "Habilitar"
 
-msgid "End"
-msgstr "Fin"
+msgid "End hour"
+msgstr "Hora fin"
 
-msgid ""
-"Example: 50 means a loadaverage of 0.50, 8 means a loadaverage of 0.08, 220 "
-"means a loadaverage of 2.20"
-msgstr "Ejemplo: 50 significa una carga media de 0,50 , 8 significa una carga media de 0,08 y 220 significa una carga media de 2,20"
+msgid "End minute"
+msgstr "Minuto fin"
 
 msgid "Expert Settings"
-msgstr "Configuración experta"
+msgstr "Más Opciones"
 
-msgid "Extra options"
-msgstr "Opciones extra"
+msgid "Extra Options"
+msgstr "Opciones Extras"
 
 msgid "Fake"
-msgstr "Falso"
+msgstr "prueba"
 
 msgid "Fake/Test mode."
-msgstr "Modo Test/Falso"
+msgstr "Modo prueba/test."
 
 msgid "Forced Uptime"
-msgstr "Tiempo arrancado"
+msgstr "Tiempo en funcionamiento"
 
-msgid "General settings"
+msgid "Function"
+msgstr "Función"
+
+msgid "General Settings"
 msgstr "Opciones"
+
+msgid "HDD-IO"
+msgstr "HDD-IO"
 
 msgid "Hibernate"
 msgstr "Hibernar"
 
+msgid "Hour"
+msgstr "Hora"
+
+msgid "Hybrid Sleep"
+msgstr "Dormir Hibrido"
+
 msgid "IP-Range"
-msgstr "Rango de IP"
+msgstr "IP-Rango"
 
 msgid ""
-"If the HDD-IO-average of the server is above this value, then no shutdown."
-msgstr "Si el valor medio de E/S del Disco Duro está por encima de este valor, entonces no se ejecutará el apagado."
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr "Si el valor medio de E/S del HDD está por encima de este valor, entonces NO apagar."
 
 msgid ""
-"If the load average of the server is above this value, then no shutdown."
-msgstr "Si la carga media del servidor está por encima de este valor, entonces no apagar."
+"If the load average of the server is above this value, then no shutdown.<br "
+"/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
+"220 means a load average of 2.20."
+msgstr "Si la carga de trabajo media del servidor está por encima de este valor, entonces NO apagar.Ej: 50 significa una carga media de 0.50, 8 significa una carga media de 0.08, 220 significa una carga media de 2.20."
 
-msgid "List of Ports"
-msgstr "Lista de puertos"
+msgid "Load Average"
+msgstr "Carga media"
 
-msgid "Log"
-msgstr "Log"
+msgid "Load average"
+msgstr "Carga media"
+
+msgid "Load processes"
+msgstr "Carga de procesos"
 
 msgid "Log to Syslog"
-msgstr "Log to Syslog"
+msgstr "Log a Syslog"
+
+msgid "Message"
+msgstr "Mensaje"
+
+msgid "Minute"
+msgstr "Minuto"
+
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr "Los nombres de los procesos solo arrancaran cuando estén activos, usar '-' para deshabilitar."
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
+msgstr "Los nombres de los procesos con carga dependiente de sus hijos, usar '-' para deshabilitar."
 
 msgid "Numbers of seconds between each cycle."
 msgstr "Numero de segundos entre cada ciclo."
 
-msgid "Please check the"
-msgstr "Por favor revise el"
+msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
+msgstr "Solo está disponible si se habilita 'Tiempo en funcionamiento' en 'Hora de alarma'"
 
-msgid "Please make sure to leave 1 and 255 out of the list!"
-msgstr "Por favor asegurese de que el 1 y el 255, no estén incluidos en la lista"
+msgid ""
+"Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
+"Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
+"target='_blank'>autoshutdown.default</a>."
+msgstr "Por favor revisar <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
 
-msgid "README"
-msgstr "Leame"
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Process names must be in the format: [proc1,proc2,...,procN]"
+msgstr "Los nombres de los procesos deben estar en el formato: [proc1,proc2,...,procN]"
+
+msgid "SMB Status"
+msgstr "Estado SMB"
+
+msgid "Seconds"
+msgstr "Segundos"
+
+msgid "Set a wake alarm on the system."
+msgstr "Definir una alarma de inicio en el sistema."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Fijar el número de ciclos sin resultado (PC apagado, etc...) antes del apagado."
+msgstr "Definir el nº de ciclos sin resultado ( sin carga de trabajo, etc...) antes de apagar"
 
-msgid "Settings"
-msgstr "Configuraciones"
+msgid "Set using 'Forced Uptime' begin time"
+msgstr "Establecer usando la hora de inicio del 'Tiempo de actividad forzado'"
 
 msgid "Shutdown"
-msgstr "Apagar"
+msgstr "Apagado"
 
-msgid "Shutdown Command"
-msgstr "Orden de Apagado"
+msgid "Shutdown command"
+msgstr "Comando de apagado"
 
-msgid "Sleep"
-msgstr "Dormir"
+msgid "Smart Tests"
+msgstr "Test Inteligentes"
 
-msgid "Socket number to check for activity."
-msgstr "Número de socket a revisar su actividad."
+msgid ""
+"Socket number to check for activity (see <a "
+"href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
+"target='_blank'>List of port numbers</a>)."
+msgstr "numero del socket a mirar por actividad  (ver<a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>Listado de números de puertos mas comunes</a>)."
 
 msgid "Sockets"
 msgstr "Sockets"
+
+msgid ""
+"Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
+msgstr "Los sockets deben ser números entre 2 y 5 dígitos en el formato:  [socket1,socket2,...,socketN]"
 
 msgid "Supervision Configuration"
 msgstr "Configuración de supervisión"
@@ -137,32 +221,38 @@ msgstr "Configuración de supervisión"
 msgid "Suspend"
 msgstr "Suspender"
 
-msgid "Syslog Configuration"
-msgstr "Configuración del Syslog (log del sistema)"
+msgid "Suspend then Hibernate"
+msgstr "Suspender y luego Hibernar"
 
-msgid "The IP-Range should be comma delimited list of the following:"
-msgstr "El rango de IP debe ser una lista delimitada por comas de lo siguiente:"
+msgid "Syslog Configuration"
+msgstr "Configuración de SysLog"
+
+msgid "Temp processes"
+msgstr "procesos temporales"
 
 msgid "Type"
 msgstr "Tipo"
 
+msgid "ULDL Rate"
+msgstr "Velocidad de descarga / carga"
+
+msgid "Updated AutoShutdown settings."
+msgstr "Actualizadas las opciones de auto apagado"
+
+msgid "Users"
+msgstr "Usuarios"
+
 msgid "Verbose"
-msgstr "Info ampliada"
+msgstr "Info. ampliada"
 
 msgid "Verbose mode."
-msgstr "Modo info ampliada."
+msgstr "Modo de información ampliada."
+
+msgid "Wake Alarm"
+msgstr "Alarma para despertarse"
 
 msgid "Write log informations to system logs."
-msgstr "Esccribir los Logs en el Log del sistema."
+msgstr "Escriba información de registro en los registros del sistema."
 
-msgid "If 'start..end' or 'Last octet of IP' is set the first three octets of the iface IP address are used."
-msgstr "Si se configura 'inicial..final' o 'Últim octet d'IP', se utilizan los primeros tres octetos de la dirección IP de iface."
-
-msgid "Define a single IP: Last octet of IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-msgstr "Definiu una única IP: Últim octet d'IP zzz | www.xxx.yyy.zzz | iface:www.xxx.yyy.zzz"
-
-msgid "Define an IP range: start..end | iface:start..end | www.xxx.yyy.start..end | iface:xxx.yyy.zzz.start..end"
-msgstr "Defina un rango de IP: inicial..final | iface:inicial..final | www.xxx.yyy.inicial..final | iface:xxx.yyy.zzz.inicial..final"
-
-msgid "for more details."
-msgstr "para mas detalles."
+msgid "kB/s"
+msgstr "kB/s"
