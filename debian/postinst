@@ -53,7 +53,7 @@ case "${1}" in
 
         # Deploy the configuration for autoshutdown services.
         echo "Deploying autoshutdown service configuration"
-        LANG=C.UTF-8 omv-salt deploy run --no-color --quiet autoshutdown
+        LC_ALL=C.UTF-8 omv-salt deploy run --no-color --quiet autoshutdown
 
         # Force a reload/cache update in the GUI.
         if dpkg --compare-versions "${2}" lt-nl "5.1.16"; then
