@@ -21,7 +21,7 @@
 \OMV\System\LogFileSpec::registerSpecification("autoshutdown", [
     "filename" => "autoshutdown.log",
     "filepath" => "/var/log/autoshutdown.log",
-    "regex"    => "/^(\S+\s+\d+\s+\d+:\d+:\d+)\s+\S+\s+autoshutdown\[\d+\]:\s+root:\s+(\S+):\s+'(\S+):\s+(.*)'$/",
+    "regex"    => "/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\S+\s+omv autoshutdown\[\d+\]:\s+root:\s+(\S+):\s+'(\S+):\s+(.*)'$/",
     "columns"  => [
         "date"  => [
             "index" => 1,
