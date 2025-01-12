@@ -6,7 +6,8 @@
 # Axel Cantenys, 2017
 # Christophe Lherieau <skimpax@gmail.com>, 2015
 # Etienne V, 2021
-# Julien ROCH <jroch74@live.fr>, 2017
+# 16656aeb055cb4e08f295d808875eb1a_b46dfc2 <2f6d0e52c28329f5e3c8bb65d09c52f6_466277>, 2017
+# Kevin Leclercq <nuklearstriker@gmail.com>, 2024
 # niko2 <nicolas@zosk.fr>, 2017
 # Zacharie ARNAISE <spacebrain.damage@gmail.com>, 2013-2014
 msgid ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-13 06:59-0600\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Etienne V, 2021\n"
-"Language-Team: French (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/fr/)\n"
+"Last-Translator: Kevin Leclercq <nuklearstriker@gmail.com>, 2024\n"
+"Language-Team: French (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,41 +25,41 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Processus actif"
 
 msgid "AutoShutdown"
 msgstr "Arrêt automatique"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "Heure de début"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "Minute de début"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "Vérifier l'état SMB des utilisateurs connectés."
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Vérifier les utilisateurs connectés."
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "Vérifiez les plugins définis par les utilisateurs. (voir <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "Vérifier si les test S.M.A.R.T. sont en cours (S.M.A.R.T. doit être supporté)."
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "Vérifier l'horloge pour identifier un temps d'activité forcé."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Cycles"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Date & Heure"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -78,125 +79,125 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "Définir une plage d'IPs qui sera scanné. La plage d'IP doit être une liste délimitée par des points virgule comme suit:<br />- Définition d'une plage d'IPv4: &lt;DEBUT&gt;..&lt;FIN&gt; | iface@&lt;DEBUT&gt;..&lt;FIN&gt; | www.xxx.yyy.&lt;DEBUT&gt;..&lt;FIN&gt; | iface@xxx.yyy.zzz.&lt;DEBUT&gt;..&lt;FIN&gt;<br />- Définition d'une simple IPv4: Dernier octet de l'IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Définition d'une plage d'IPv6: 0x&lt;DEBUT&gt;..0x&lt;FIN&gt; | iface@0x&lt;DEBUT&gt;..0x&lt;FIN&gt; | s:t:u:v:w:x:y:0x&lt;DEBUT&gt;..0x&lt;FIN&gt; | iface@s:t:u:v:w:x:y:0x&lt;DEBUT&gt;..0x&lt;FIN&gt;<br />- Définition d'une simple IPv6: Dernier hextet de l'IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- Définition par FQDN: fqdn | iface@fqdn<br />Si '&lt;DEBUT&gt;..&lt;FIN&gt;' ou 'Dernier octet de l'IPv4' est positionné les trois premiers octets de l'adresse IPv4 sont utilisés.<br />Si '0x&lt;DEBUT&gt;..0x&lt;FIN&gt;' ou 'Dernier hextet de l'IPv6' est positionné les sept premiers hextets de l'adresse IPv6 sont utilisés.<br />Assurez vous de laisser 1 et 255 en dehors de la plage d'IPv4!"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Définissez le trafic du réseau en Ko/s"
 
 msgid "Enable"
-msgstr ""
+msgstr "Activer"
 
 msgid "End hour"
-msgstr ""
+msgstr "Heure de fin"
 
 msgid "End minute"
-msgstr ""
+msgstr "Minute de fin"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Paramètres avancés"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Options supplémentaires"
 
 msgid "Fake"
-msgstr ""
+msgstr "Simulation"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Mode simulation/test."
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Temps d'activité forcé."
 
 msgid "Function"
-msgstr ""
+msgstr "Fonction"
 
 msgid "General Settings"
-msgstr ""
+msgstr "Paramètres généraux"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "HDD-IO"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Hiberner"
 
 msgid "Hour"
-msgstr ""
+msgstr "Heure"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Sommeil hybride"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "Plage d'IP"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Si la moyenne des entrées-sorties du disque du serveur est au dessus de cette valeur en Ko/s, alors ne pas arrêter."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "Si la charge moyenne du serveur est supérieure à cette valeur, alors ne pas arrêter.<br />Exemple: 50 équivaut à une charge moyenne de 0.50, 8 équivaut à une charge moyenne de 0.08 et 220 équivaut à une charge moyenne de 2.20"
 
 msgid "Load Average"
-msgstr ""
+msgstr "Charge moyenne"
 
 msgid "Load average"
-msgstr ""
+msgstr "Charge moyenne"
 
 msgid "Load processes"
-msgstr ""
+msgstr "Processus de chargement"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Enregistrer dans le journal système."
 
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 msgid "Minute"
-msgstr ""
+msgstr "Minutes"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "Noms des processus démarrés uniquement lorsqu'ils sont actifs. Réglez sur '-' pour désactiver."
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "Noms des processus avec des enfants dépendants de la charge. Réglez sur '-' pour désactiver."
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Nombre de secondes entre chaque cycle."
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "Uniquement disponible si 'Temps d'activité forcé' dans 'Réveil' est activé."
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "Voir <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
 
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "Les noms des processus doivent êtres dans le format: [proc1,proc2,...,procN]"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "Etat SMB"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Secondes"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "Programmer un réveil du système."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Définissez le nombre de cycles sans résultat (aucun ordinateur en ligne, etc) avant l'arrêt."
 
 msgid "Set using 'Forced Uptime' begin time"
-msgstr ""
+msgstr "Paramétrer l'heure de début en utilisant 'Temps d'activité forcé'"
 
 msgid "Shutdown"
 msgstr ""
