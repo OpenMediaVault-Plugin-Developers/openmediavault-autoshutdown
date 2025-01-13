@@ -25,7 +25,7 @@
     "columns"  => [
         "date"  => [
             "index" => 1,
-            "func"  => function($v) { return strpdate($v,"M j G:i:s"); }
+            "func"  => function($v) { return strpdate($v,"Y-m-d?G:i:s"); }
          ],
         "type"  => 2,
         "function" => 3,
