@@ -1314,8 +1314,8 @@ _get_network_details() {
                 [[ "${state}" =~ ^(unknown|dormant|up)$ ]] && {
                     declare -n ip_ref="NIC_2_${ip_type^^}[${net_iface}]"
                     # shellcheck disable=SC2034
-                    ip_ref="${ip}"; }
-                valid="true";
+                    ip_ref="${ip}"
+                    valid="true"; }
                 _log "DEBUG: Network interfaces IPv${ip_type: -1} address: ${ip:-N/A}"
                 _log "DEBUG: Network interfaces IPv${ip_type: -1} address valid: ${valid}"
             done
