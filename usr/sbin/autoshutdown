@@ -1299,7 +1299,13 @@ _validate_config() {
 #   Return     : 0 on success.
 #
 _get_network_details() {
-    local net_iface; while read -r net_iface; do
+    local _already="_"
+    local net_iface; while true; do
+        local _alldevices; _alldevices=$(LC_ALL=C ip -br link show |
+                awk -v regex="^(${FORCE_NIC// /|})" \
+                    '$1 ~ regex && !/SLAVE/{sub(/@.*/,"",$1); print $1}')
+        net_iface=$(echo -e "$_alldevices" | awk -v regex="${_already// /|}" '$1 !~ regex  { print $1; exit }')
+        [ -z "$net_iface" ] && break
         for (( n=0; n < NET_IFACE_RETRY; n++ )); do
             local msg=""
             local state; state="$(< "/sys/class/net/${net_iface}/operstate")"
@@ -1314,8 +1320,8 @@ _get_network_details() {
                 [[ "${state}" =~ ^(unknown|dormant|up)$ ]] && {
                     declare -n ip_ref="NIC_2_${ip_type^^}[${net_iface}]"
                     # shellcheck disable=SC2034
-                    ip_ref="${ip}"; }
-                valid="true";
+                    ip_ref="${ip}"
+                    valid="true"; }
                 _log "DEBUG: Network interfaces IPv${ip_type: -1} address: ${ip:-N/A}"
                 _log "DEBUG: Network interfaces IPv${ip_type: -1} address valid: ${valid}"
             done
@@ -1329,9 +1335,8 @@ _get_network_details() {
             _log "INFO: '${net_iface}' status: ${state}, ${msg}retrying in ${NET_IFACE_SLEEP}s ..."
             sleep "${NET_IFACE_SLEEP}"
         done
-    done < <(LC_ALL=C ip -br link show |
-                awk -v regex="^(${FORCE_NIC// /|})" \
-                    '$1 ~ regex && !/SLAVE/{sub(/@.*/,"",$1); print $1}')
+        _already+=" $net_iface"
+    done
 
     [ "${#NICS[@]}" -eq 0 ] && {
         _log "ERR: No valid network interface found, exiting ..."
