@@ -1480,10 +1480,6 @@ _log "INFO: Registered trap on signal EXIT"
 trap  '{ _log "INFO: Calling signal EXIT trap" &&
          [ "${WAKEALARM_SET}" == "true" ] && _set_wakealarm; }' EXIT
 
-[ "${FAKE}" == "true" ] && { sleep_time=1; sleep_string="second"; }
-_log "INFO: Waiting ${sleep_time:-5} ${sleep_string:-"minutes"} until the first check"
-sleep "${sleep_time:-5m}"
-
 for net_iface in "${NICS[@]}"; do
     ips="${NIC_2_IPV4[${net_iface}]:+", IPv4: ${NIC_2_IPV4[${net_iface}]}"}"
     ips+="${NIC_2_IPV6[${net_iface}]:+", IPv6: ${NIC_2_IPV6[${net_iface}]}"}"
@@ -1494,14 +1490,14 @@ _log "INFO: ${CYCLES} cycles until shutdown is issued"
 fcnt="${CYCLES}"
 while : ; do
     _log "INFO: ------------------------------------------------------"
-    _log "INFO: New supervision cycle started, checking system activity"
+    [ "${FAKE}" == "true" ] && [ "${fcnt}" -eq "${CYCLES}" ] && seconds=1 || seconds="${SLEEP}"
+    _log "INFO: New supervision cycle started, waiting ${seconds}s until checking system activity"
+    sleep "${seconds}"
     fcnt=$((fcnt - 1))
     msg="All active checks passed"
     _check_system_active || { fcnt="${CYCLES}"; msg="Active check failed"; }
     [ "${fcnt}" -eq 0 ] && break
     _log "INFO: ${msg}, ${fcnt} cycles until shutdown ..."
-    _log "INFO: Sleep for ${SLEEP}s"
-    sleep "${SLEEP}"
 done
 [ "${fcnt}" -ne 0 ] && {
     _log "ERR: Script error detected in supervision cycle"
