@@ -5,7 +5,7 @@
 # Translators:
 # Axel Cantenys, 2017
 # Christophe Lherieau <skimpax@gmail.com>, 2015
-# Etienne V, 2021
+# ba445a6451a8788fc2cde279bf16c086_ad8d9e9, 2021
 # 16656aeb055cb4e08f295d808875eb1a_b46dfc2 <2f6d0e52c28329f5e3c8bb65d09c52f6_466277>, 2017
 # Kevin Leclercq <nuklearstriker@gmail.com>, 2024
 # niko2 <nicolas@zosk.fr>, 2017
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-13 06:59-0600\n"
+"POT-Creation-Date: 2025-11-15 22:57+0000\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
 "Last-Translator: Kevin Leclercq <nuklearstriker@gmail.com>, 2024\n"
 "Language-Team: French (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/fr/)\n"

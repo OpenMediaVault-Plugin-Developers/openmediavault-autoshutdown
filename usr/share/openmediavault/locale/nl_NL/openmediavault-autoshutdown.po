@@ -5,13 +5,14 @@
 # Translators:
 # okpail <okpail@gmail.com>, 2014,2016
 # Varkentjes, 2020
+# Stephan Paternotte <stephan@paternottes.net>, 2025
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-13 06:59-0600\n"
+"POT-Creation-Date: 2025-11-15 22:57+0000\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Varkentjes, 2020\n"
+"Last-Translator: Stephan Paternotte <stephan@paternottes.net>, 2025\n"
 "Language-Team: Dutch (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,41 +21,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Active Processes"
-msgstr ""
+msgstr "Actieve processen"
 
 msgid "AutoShutdown"
-msgstr "Automatische uitschakeling"
+msgstr "Autom. uitschakeling"
 
 msgid "Begin hour"
-msgstr ""
+msgstr "Begin uur"
 
 msgid "Begin minute"
-msgstr ""
+msgstr "Begin minuut"
 
 msgid "Check SMB status for connected clients."
-msgstr ""
+msgstr "Controleer de SMB-status voor verbonden clients."
 
 msgid "Check for connected users."
-msgstr ""
+msgstr "Controleren op verbonden gebruikers."
 
 msgid ""
 "Check for users defined plugins. (see <a "
 "href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>)."
-msgstr ""
+msgstr "Controleren op door gebruikers gedefinieerde plug-ins. (zie <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr ""
+msgstr "Controleren of S.M.A.R.T.-tests worden uitgevoerd (S.M.A.R.T. moet ondersteund zijn)."
 
 msgid "Check the system clock to identify forced uptime."
-msgstr ""
+msgstr "Controleer de systeemklok om geforceerde bedrijfstijd te bepalen."
 
 msgid "Cycles"
-msgstr ""
+msgstr "Cycli"
 
 msgid "Date & Time"
-msgstr ""
+msgstr "Datum & Tijd"
 
 msgid ""
 "Define a range of IPs which should be scanned. The IP-Range should be a "
@@ -74,186 +75,186 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr ""
+msgstr "Definieer een reeks IP's die moeten worden gescand. Het IP-bereik moet een door komma's gescheiden lijst zijn van het volgende:<br />- Een IPv4-bereik definiëren: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Een enkele IPv4: definiëren Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Een IPv6-bereik  definiëren: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Een enkele IPv6 definiëren: Laatste hextet van IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- Definiëren d.m.v. FQDN: fqdn | iface@fqdn<br />Als '&lt;START&gt;..&lt;END&gt;' of 'Laatste octet van IPv4' is ingesteld worden de eerste drie octetten van het iface IPv4-adres gebruikt.Als '0x&lt;START&gt;..0x&lt;END&gt;' of 'Laatste hextet van IPv6' is ingesteld, worden de eerste zeven hextets van het iface IPv6-adres gebruikt.<br />Zorg ervoor dat 1 en 255 buiten het IPv4-bereik worden gelaten!"
 
 msgid "Define the network traffic in kB/s."
-msgstr ""
+msgstr "Het netwerkverkeer definiëren in kB/s."
 
 msgid "Enable"
-msgstr ""
+msgstr "Inschakelen"
 
 msgid "End hour"
-msgstr ""
+msgstr "Einde uur"
 
 msgid "End minute"
-msgstr ""
+msgstr "Einde minuut"
 
 msgid "Expert Settings"
-msgstr ""
+msgstr "Expert-instellingen"
 
 msgid "Extra Options"
-msgstr ""
+msgstr "Extra opties"
 
 msgid "Fake"
-msgstr ""
+msgstr "Nep"
 
 msgid "Fake/Test mode."
-msgstr ""
+msgstr "Nep/Test-modus"
 
 msgid "Forced Uptime"
-msgstr ""
+msgstr "Geforceerde bedrijfstijd"
 
 msgid "Function"
-msgstr ""
+msgstr "Functie"
 
 msgid "General Settings"
-msgstr ""
+msgstr "Algemene instellingen"
 
 msgid "HDD-IO"
-msgstr ""
+msgstr "HDD-IO"
 
 msgid "Hibernate"
-msgstr ""
+msgstr "Slaapstand"
 
 msgid "Hour"
-msgstr ""
+msgstr "Uur"
 
 msgid "Hybrid Sleep"
-msgstr ""
+msgstr "Hybride slaapstand"
 
 msgid "IP-Range"
-msgstr ""
+msgstr "IP-bereik"
 
 msgid ""
 "If the HDD-IO-average of the server is above this value in kB/s, then no "
 "shutdown."
-msgstr ""
+msgstr "Als het HDD-IO-gemiddelde van de server in kB/s boven deze waarde ligt, dan geen uitschakeling."
 
 msgid ""
 "If the load average of the server is above this value, then no shutdown.<br "
 "/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
 "220 means a load average of 2.20."
-msgstr ""
+msgstr "Als de gemiddelde belasting van de server boven deze waarde ligt, dan geen uitschakeling.<br />Voorbeeld: 50 betekent een belastingsgemiddelde van 0,50, 8 betekent een gemiddelde belasting van 0,08, 220 betekent een gemiddelde belasting van 2,20."
 
 msgid "Load Average"
-msgstr ""
+msgstr "Gemiddelde belasting"
 
 msgid "Load average"
-msgstr ""
+msgstr "Gemiddelde belasting"
 
 msgid "Load processes"
-msgstr ""
+msgstr "Belastingsprocessen"
 
 msgid "Log to Syslog"
-msgstr ""
+msgstr "Opslaan in systeemlogboek"
 
 msgid "Message"
-msgstr ""
+msgstr "Bericht"
 
 msgid "Minute"
-msgstr ""
+msgstr "Minuut"
 
 msgid "Names of processes only started when active. Set to '-' to disable."
-msgstr ""
+msgstr "Namen van processen die alleen zijn gestart als ze actief zijn. Stel in op '-' om uit te schakelen."
 
 msgid ""
 "Names of processes with load dependent children. Set to '-' to disable."
-msgstr ""
+msgstr "Namen van processen met belastingsafhankelijke kinderen. Stel in op '-' om uit te schakelen."
 
 msgid "Numbers of seconds between each cycle."
-msgstr ""
+msgstr "Aantal seconden tussen elke cyclus."
 
 msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
-msgstr ""
+msgstr "Alleen beschikbaar als 'Geforceerde bedrijfstijd' in 'Wekalarm' is ingeschakeld."
 
 msgid ""
 "Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
 "Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
 "target='_blank'>autoshutdown.default</a>."
-msgstr ""
+msgstr "Zie <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
 
 msgid "Plugins"
-msgstr ""
+msgstr "Plug-ins"
 
 msgid "Process names must be in the format: [proc1,proc2,...,procN]"
-msgstr ""
+msgstr "Procesnamen moeten in het formaat zijn: [proc1,proc2,...,procN]"
 
 msgid "SMB Status"
-msgstr ""
+msgstr "SMB-status"
 
 msgid "Seconds"
-msgstr ""
+msgstr "Seconden"
 
 msgid "Set a wake alarm on the system."
-msgstr ""
+msgstr "Stel een wekalarm in op het systeem."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr ""
+msgstr "Stel het aantal cycli in zonder resultaat (geen PC online, enz.) vóór het afsluiten."
 
 msgid "Set using 'Forced Uptime' begin time"
-msgstr ""
+msgstr "Begintijd instellen met behulp van 'Geforceerde bedrijfstijd'"
 
 msgid "Shutdown"
-msgstr ""
+msgstr "Uitschakelen"
 
 msgid "Shutdown command"
-msgstr ""
+msgstr "Uitschakelopdracht"
 
 msgid "Smart Tests"
-msgstr ""
+msgstr "Smart-testen"
 
 msgid ""
 "Socket number to check for activity (see <a "
 "href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
 "target='_blank'>List of port numbers</a>)."
-msgstr ""
+msgstr "Socketnummer om te controleren op activiteit (zie <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>Lijst met poortnummers</a>)."
 
 msgid "Sockets"
-msgstr ""
+msgstr "Sockets"
 
 msgid ""
 "Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
-msgstr ""
+msgstr "Sockets moeten cijfers 2 tot 5 in de opmaak hebben: [socket1,socket2,...,socketN]"
 
 msgid "Supervision Configuration"
-msgstr ""
+msgstr "Supervisie Configuratie"
 
 msgid "Suspend"
-msgstr ""
+msgstr "Opschorten"
 
 msgid "Suspend then Hibernate"
-msgstr ""
+msgstr "Opschorten en daarna slaapstand"
 
 msgid "Syslog Configuration"
-msgstr ""
+msgstr "Syslog Configuratie"
 
 msgid "Temp processes"
-msgstr ""
+msgstr "Tijdelijke processen"
 
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 msgid "ULDL Rate"
-msgstr ""
+msgstr "ULDL-snelheid"
 
 msgid "Updated AutoShutdown settings."
-msgstr ""
+msgstr "Instellingen voor Autom. uitschakeling bijgewerkt."
 
 msgid "Users"
-msgstr ""
+msgstr "Gebruikers"
 
 msgid "Verbose"
-msgstr ""
+msgstr "Uitgebreid"
 
 msgid "Verbose mode."
-msgstr ""
+msgstr "Uitgebreide modus."
 
 msgid "Wake Alarm"
-msgstr ""
+msgstr "Wekalarm"
 
 msgid "Write log informations to system logs."
-msgstr ""
+msgstr "Logboekinformatie opslaan in systeemlogboek."
 
 msgid "kB/s"
-msgstr ""
+msgstr "kB/s"
