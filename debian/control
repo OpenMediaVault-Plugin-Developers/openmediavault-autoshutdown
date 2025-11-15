@@ -12,7 +12,7 @@ Architecture: all
 Depends: fping,
          jq,
          net-tools,
-         openmediavault (>= 7),
+         openmediavault (>= 8),
          pm-utils,
          sysstat,
          ${misc:Depends}

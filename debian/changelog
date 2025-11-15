@@ -1,3 +1,9 @@
+openmediavault-autoshutdown (8.0) stable; urgency=low
+
+  * Update for omv 8
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 15 Nov 2025 22:56:48 +0000
+
 openmediavault-autoshutdown (7.0.5) stable; urgency=low
 
   * Fix log regex round 4
