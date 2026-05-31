@@ -1,0 +1,257 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the openmediavault-autoshutdown package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-autoshutdown\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-31 00:55+0000\n"
+"PO-Revision-Date: 2013-10-28 14:43+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lao (Laos) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/lo_LA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lo_LA\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Active Processes"
+msgstr "ໂປຣເຊສທີ່ກຳລັງເຮັດວຽກ"
+
+msgid "AutoShutdown"
+msgstr "ປິດເຄື່ອງອັດຕະໂນມັດ"
+
+msgid "Begin hour"
+msgstr "ຊົ່ວໂມງເລີ່ມຕົ້ນ"
+
+msgid "Begin minute"
+msgstr "ນາທີເລີ່ມຕົ້ນ"
+
+msgid "Check SMB status for connected clients."
+msgstr "ກວດສອບສະຖານະ SMB ສຳລັບເຄື່ອງລູກຂ່າຍທີ່ເຊື່ອມຕໍ່."
+
+msgid "Check for connected users."
+msgstr "ກວດສອບຜູ້ໃຊ້ທີ່ເຊື່ອມຕໍ່."
+
+msgid ""
+"Check for users defined plugins. (see <a "
+"href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
+"Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
+"target='_blank'>autoshutdown.default</a>)."
+msgstr "ກວດສອບປັກອິນທີ່ຜູ້ໃຊ້ກຳນົດ. (ເບິ່ງ <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
+
+msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
+msgstr "ກວດສອບວ່າການທົດສອບ S.M.A.R.T. ກຳລັງເຮັດວຽກຢູ່ຫຼືບໍ່ (ຕ້ອງຮອງຮັບ S.M.A.R.T.)."
+
+msgid "Check the system clock to identify forced uptime."
+msgstr "ກວດສອບໂມງຂອງລະບົບເພື່ອລະບຸເວລາເປີດເຄື່ອງທີ່ບັງຄັບໄວ້."
+
+msgid "Cycles"
+msgstr "ຮອບວຽນ"
+
+msgid "Date & Time"
+msgstr "ວັນທີ ແລະ ເວລາ"
+
+msgid ""
+"Define a range of IPs which should be scanned. The IP-Range should be a "
+"comma delimited list of the following:<br />- Define an IPv4 range: "
+"&lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | "
+"www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | "
+"iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Define a single IPv4: "
+"Last octet of IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | "
+"iface@www.xxx.yyy.zzz<br />- Define an IPv6 range: "
+"0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | "
+"s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | "
+"iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Define a single "
+"IPv6: Last hextet of IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | "
+"iface@s:t:u:v:w:x:y:z<br />- Define by FQDN: fqdn | iface@fqdn<br />If "
+"'&lt;START&gt;..&lt;END&gt;' or 'Last octet of IPv4' is set the first three "
+"octets of the iface IPv4 address is used.<br />If "
+"'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
+"seven hextets of the iface IPv6 address is used.<br />Please make sure to "
+"leave 1 and 255 out of the IPv4 range!"
+msgstr "ກຳນົດຊ່ວງໄອພີ (IP) ທີ່ຈະໃຫ້ສະແກນ. ຊ່ວງໄອພີຄວນເປັນລາຍການທີ່ຂັ້ນດ້ວຍຈຸດດັ່ງນີ້:<br />- ກຳນົດຊ່ວງ IPv4: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- ກຳນົດ IPv4 ດ່ຽວ: ຕົວເລກຊຸດສຸດທ້າຍຂອງ IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- ກຳນົດຊ່ວງ IPv6: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- ກຳນົດ IPv6 ດ່ຽວ: ຕົວເລກຊຸດສຸດທ້າຍຂອງ IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z<br />- ກຳນົດໂດຍ FQDN: fqdn | iface@fqdn<br />ຖ້າຕັ້ງຄ່າ '&lt;START&gt;..&lt;END&gt;' ຫຼື 'ຕົວເລກຊຸດສຸດທ້າຍຂອງ IPv4', ຕົວເລກສາມຊຸດທຳອິດຂອງທີ່ຢູ່ IPv4 ຂອງ iface ຈະຖືກນຳມາໃຊ້.<br />ຖ້າຕັ້ງຄ່າ '0x&lt;START&gt;..0x&lt;END&gt;' ຫຼື 'ຕົວເລກຊຸດສຸດທ້າຍຂອງ IPv6', ຕົວເລກເຈັດຊຸດທຳອິດຂອງທີ່ຢູ່ IPv6 ຂອງ iface ຈະຖືກນຳມາໃຊ້.<br />ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ເວັ້ນເລກ 1 ແລະ 255 ອອກຈາກຊ່ວງ IPv4 ແລ້ວ!"
+
+msgid "Define the network traffic in kB/s."
+msgstr "ກຳນົດປະລິມານການຮັບສົ່ງຂໍ້ມູນເຄືອຂ່າຍເປັນ kB/s."
+
+msgid "Enable"
+msgstr "ເປີດໃຊ້ງານ"
+
+msgid "End hour"
+msgstr "ຊົ່ວໂມງສິ້ນສຸດ"
+
+msgid "End minute"
+msgstr "ນາທີສິ້ນສຸດ"
+
+msgid "Expert Settings"
+msgstr "ການຕັ້ງຄ່າຂັ້ນສູງ"
+
+msgid "Extra Options"
+msgstr "ຕົວເລືອກເພີ່ມເຕີມ"
+
+msgid "Fake"
+msgstr "ຈຳລອງ"
+
+msgid "Fake/Test mode."
+msgstr "ໂໝດຈຳລອງ/ທົດສອບ."
+
+msgid "Forced Uptime"
+msgstr "ບັງຄັບເວລາເປີດເຄື່ອງ"
+
+msgid "Function"
+msgstr "ຟັງຊັນ"
+
+msgid "General Settings"
+msgstr "ການຕັ້ງຄ່າທົ່ວໄປ"
+
+msgid "HDD-IO"
+msgstr "ການຮັບສົ່ງຂໍ້ມູນຮາດດິດ (HDD-IO)"
+
+msgid "Hibernate"
+msgstr "ຈຳສິນ (Hibernate)"
+
+msgid "Hour"
+msgstr "ຊົ່ວໂມງ"
+
+msgid "Hybrid Sleep"
+msgstr "ໂໝດນອນຫຼັບໄຮບຣິດ (Hybrid Sleep)"
+
+msgid "IP-Range"
+msgstr "ຊ່ວງໄອພີ (IP-Range)"
+
+msgid ""
+"If the HDD-IO-average of the server is above this value in kB/s, then no "
+"shutdown."
+msgstr "ຖ້າຄ່າສະເລ່ຍ HDD-IO ຂອງເຊີເວີສູງກວ່າຄ່ານີ້ (ເປັນ kB/s), ຈະບໍ່ມີການປິດເຄື່ອງ."
+
+msgid ""
+"If the load average of the server is above this value, then no shutdown.<br "
+"/>Example: 50 means a load average of 0.50, 8 means a load average of 0.08, "
+"220 means a load average of 2.20."
+msgstr "ຖ້າຄ່າສະເລ່ຍການເຮັດວຽກ (load average) ຂອງເຊີເວີສູງກວ່າຄ່ານີ້, ຈະບໍ່ມີການປິດເຄື່ອງ.<br />ຕົວຢ່າງ: 50 ໝາຍເຖິງຄ່າສະເລ່ຍ 0.50, 8 ໝາຍເຖິງຄ່າສະເລ່ຍ 0.08, 220 ໝາຍເຖິງຄ່າສະເລ່ຍ 2.20."
+
+msgid "Load Average"
+msgstr "ຄ່າສະເລ່ຍການເຮັດວຽກ (Load Average)"
+
+msgid "Load average"
+msgstr "ຄ່າສະເລ່ຍການເຮັດວຽກ"
+
+msgid "Load processes"
+msgstr "ໂປຣເຊສທີ່ໂຫຼດຢູ່"
+
+msgid "Log to Syslog"
+msgstr "ບັນທຶກລົງ Syslog"
+
+msgid "Message"
+msgstr "ຂໍ້ຄວາມ"
+
+msgid "Minute"
+msgstr "ນາທີ"
+
+msgid "Names of processes only started when active. Set to '-' to disable."
+msgstr "ຊື່ຂອງໂປຣເຊສທີ່ຈະເລີ່ມເຮັດວຽກເມື່ອມີການເຄື່ອນໄຫວເທົ່ານັ້ນ. ຕັ້ງເປັນ '-' ເພື່ອປິດການໃຊ້ງານ."
+
+msgid ""
+"Names of processes with load dependent children. Set to '-' to disable."
+msgstr "ຊື່ຂອງໂປຣເຊສທີ່ມີໂປຣເຊສຍ່ອຍຂຶ້ນກັບການໂຫຼດ. ຕັ້ງເປັນ '-' ເພື່ອປິດການໃຊ້ງານ."
+
+msgid "Numbers of seconds between each cycle."
+msgstr "ຈຳນວນວິນາທີລະຫວ່າງແຕ່ລະຮອບວຽນ."
+
+msgid "Only available if 'Forced Uptime' in 'Wake Alarm' are enabled."
+msgstr "ໃຊ້ໄດ້ສະເພາະເມື່ອເປີດໃຊ້ງານ 'ບັງຄັບເວລາເປີດເຄື່ອງ' ໃນ 'ປຸກເຄື່ອງ (Wake Alarm)' ເທົ່ານັ້ນ."
+
+msgid ""
+"Please see <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-"
+"Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' "
+"target='_blank'>autoshutdown.default</a>."
+msgstr "ກະລຸນາເບິ່ງ <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>."
+
+msgid "Plugins"
+msgstr "ປັກອິນ"
+
+msgid "Process names must be in the format: [proc1,proc2,...,procN]"
+msgstr "ຊື່ໂປຣເຊສຕ້ອງຢູ່ໃນຮູບແບບ: [proc1,proc2,...,procN]"
+
+msgid "SMB Status"
+msgstr "ສະຖານະ SMB"
+
+msgid "Seconds"
+msgstr "ວິນາທີ"
+
+msgid "Set a wake alarm on the system."
+msgstr "ຕັ້ງເວລາປຸກເຄື່ອງໃນລະບົບ."
+
+msgid ""
+"Set the number of cycles with no result (no PC online, etc) before shutdown."
+msgstr "ກຳນົດຈຳນວນຮອບວຽນທີ່ບໍ່ມີຜົນ (ບໍ່ມີຄອມພິວເຕີອອນໄລນ໌, ແລະອື່ນໆ) ກ່ອນຈະປິດເຄື່ອງ."
+
+msgid "Set using 'Forced Uptime' begin time"
+msgstr "ຕັ້ງຄ່າໂດຍໃຊ້ເວລາເລີ່ມຕົ້ນຂອງ 'ບັງຄັບເວລາເປີດເຄື່ອງ'"
+
+msgid "Shutdown"
+msgstr "ປິດເຄື່ອງ"
+
+msgid "Shutdown command"
+msgstr "ຄຳສັ່ງປິດເຄື່ອງ"
+
+msgid "Smart Tests"
+msgstr "ການທົດສອບ SMART"
+
+msgid ""
+"Socket number to check for activity (see <a "
+"href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' "
+"target='_blank'>List of port numbers</a>)."
+msgstr "ເລກຊັອກເກັດ (Socket) ທີ່ຈະກວດສອບການເຄື່ອນໄຫວ (ເບິ່ງ <a href='http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers' target='_blank'>ລາຍການເລກພອດ</a>)."
+
+msgid "Sockets"
+msgstr "ຊັອກເກັດ"
+
+msgid ""
+"Sockets must be 2 to 5 digits in the format: [socket1,socket2,...,socketN]"
+msgstr "ເລກຊັອກເກັດຕ້ອງມີ 2 ຫາ 5 ຫຼັກ ໃນຮູບແບບ: [socket1,socket2,...,socketN]"
+
+msgid "Supervision Configuration"
+msgstr "ການກຳນົດຄ່າການກວດກາ"
+
+msgid "Suspend"
+msgstr "ພັກເຄື່ອງ (Suspend)"
+
+msgid "Suspend then Hibernate"
+msgstr "ພັກເຄື່ອງແລ້ວຈຳສິນ"
+
+msgid "Syslog Configuration"
+msgstr "ການກຳນົດຄ່າ Syslog"
+
+msgid "Temp processes"
+msgstr "ໂປຣເຊສຊົ່ວຄາວ"
+
+msgid "Type"
+msgstr "ປະເພດ"
+
+msgid "ULDL Rate"
+msgstr "ອັດຕາການອັບໂຫຼດ/ດາວໂຫຼດ (ULDL)"
+
+msgid "Updated AutoShutdown settings."
+msgstr "ອັບເດດການຕັ້ງຄ່າການປິດເຄື່ອງອັດຕະໂນມັດແລ້ວ."
+
+msgid "Users"
+msgstr "ຜູ້ໃຊ້"
+
+msgid "Verbose"
+msgstr "ສະແດງລາຍລະອຽດ"
+
+msgid "Verbose mode."
+msgstr "ໂໝດສະແດງລາຍລະອຽດ."
+
+msgid "Wake Alarm"
+msgstr "ປຸກເຄື່ອງ (Wake Alarm)"
+
+msgid "Write log informations to system logs."
+msgstr "ບັນທຶກຂໍ້ມູນລົງໃນລັອກຂອງລະບົບ."
+
+msgid "kB/s"
+msgstr "kB/s"

@@ -5,12 +5,12 @@
 # Translators:
 # Damtux, 2013
 # Giovanni Scafora <scafora.giovanni@gmail.com>, 2025
-# Paolo Velati <paolo.velati@gmail.com>, 2014-2016
+# d5316b6b4d283a9cbe4ea704ae8abe02_b972f24 <bd82b27c045fcb3aa6bd04640e5224c5_36908>, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-15 22:57+0000\n"
+"POT-Creation-Date: 2026-05-31 00:55+0000\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
 "Last-Translator: Giovanni Scafora <scafora.giovanni@gmail.com>, 2025\n"
 "Language-Team: Italian (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/it/)\n"

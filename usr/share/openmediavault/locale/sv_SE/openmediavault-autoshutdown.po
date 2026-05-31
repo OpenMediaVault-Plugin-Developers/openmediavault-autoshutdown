@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
-# Daniel, 2023
-# Daniel, 2018,2021
+# Karl Jonatan Nyberg, 2026
+# Karl Jonatan Nyberg, 2023
+# Karl Jonatan Nyberg, 2018,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-15 22:57+0000\n"
+"POT-Creation-Date: 2026-05-31 00:55+0000\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Daniel, 2023\n"
+"Last-Translator: Karl Jonatan Nyberg, 2026\n"
 "Language-Team: Swedish (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +75,7 @@ msgid ""
 "'0x&lt;START&gt;..0x&lt;END&gt;' or 'Last hextet of IPv6' is set the first "
 "seven hextets of the iface IPv6 address is used.<br />Please make sure to "
 "leave 1 and 255 out of the IPv4 range!"
-msgstr "Definiera ett intervall av IP-adresser som ska skannas. IP-intervallet bör vara en kommaavgränsad lista med följande:<br />- Definiera ett IPv4-intervall: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Definiera en enda IPv4: Sista oktetten av IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Definiera ett IPv6-intervall: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Definiera en enda IPv6: Sista hextet av IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z- Definiera med FQDN: fqdn | iface@fqdn<br />Om '&lt;START&gt;..&lt;END&gt;' eller 'Sista oktetten av IPv4' ställs in, används de tre första oktterna av iface IPv4-adressen.<br />Om '0x&lt;START&gt;..0x&lt;END&gt;' eller 'Sista hextet av IPv6' ställs in, de första sju hexteterna i iface IPv6-adressen används.<br />Se till att lämna 1 och 255 utanför IPv4-intervallet!"
+msgstr "Definiera ett intervall av IP-adresser som ska skannas. IP-intervallet bör vara en kommaavgränsad lista med följande:<br />- Definiera ett IPv4-intervall: &lt;START&gt;..&lt;END&gt; | iface@&lt;START&gt;..&lt;END&gt; | www.xxx.yyy.&lt;START&gt;..&lt;END&gt; | iface@xxx.yyy.zzz.&lt;START&gt;..&lt;END&gt;<br />- Definiera en enda IPv4: Sista oktetten av IPv4 zzz | iface@zzz | www.xxx.yyy.zzz | iface@www.xxx.yyy.zzz<br />- Definiera ett IPv6-intervall: 0x&lt;START&gt;..0x&lt;END&gt; | iface@0x&lt;START&gt;..0x&lt;END&gt; | s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt; | iface@s:t:u:v:w:x:y:0x&lt;START&gt;..0x&lt;END&gt;<br />- Definiera en enda IPv6: Sista hextet av IPv6 0xzzzz | iface@0xzzzz | s:t:u:v:w:x:y:z | iface@s:t:u:v:w:x:y:z-<br />Definiera med FQDN: fqdn | iface@fqdn<br />Om '&lt;START&gt;..&lt;END&gt;' eller 'Sista oktetten av IPv4' ställs in, används de tre första oktterna av iface IPv4-adressen.<br />Om '0x&lt;START&gt;..0x&lt;END&gt;' eller 'Sista hextet av IPv6' ställs in, de första sju hexteterna i iface IPv6-adressen används.<br />Se till att lämna 1 och 255 utanför IPv4-intervallet!"
 
 msgid "Define the network traffic in kB/s."
 msgstr "Definiera nätverkstrafiken i kB/s."
@@ -189,7 +190,7 @@ msgstr "Ställ in ett väckningslarm på systemet."
 
 msgid ""
 "Set the number of cycles with no result (no PC online, etc) before shutdown."
-msgstr "Ställ in antalet cykler utan resultat (ingen PC online, etc.) före avstängning.\n "
+msgstr "Ställ in antalet cykler utan resultat (ingen PC online, etc.) före avstängning."
 
 msgid "Set using 'Forced Uptime' begin time"
 msgstr "Ställ in med \"Tvingad drifttid\" starttid"

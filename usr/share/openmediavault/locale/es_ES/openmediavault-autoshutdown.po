@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the openmediavault-autoshutdown package.
 # 
 # Translators:
+# Chente OMV, 2026
 # Raul Fernandez Garcia <raulfg3@gmail.com>, 2014,2016,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-autoshutdown\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-15 22:57+0000\n"
+"POT-Creation-Date: 2026-05-31 00:55+0000\n"
 "PO-Revision-Date: 2013-10-28 14:43+0000\n"
-"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>, 2014,2016,2021\n"
+"Last-Translator: Chente OMV, 2026\n"
 "Language-Team: Spanish (Spain) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-autoshutdown/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgid ""
 msgstr "Revisar plugins definidos por el usuario. (ver <a href='https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/openmediavault-autoshutdown/master/etc/autoshutdown.default' target='_blank'>autoshutdown.default</a>)."
 
 msgid "Check if S.M.A.R.T. tests are running (S.M.A.R.T. must be supported)."
-msgstr "Revisar si hay activo algún test  S.M.A.R.T.  (S.M.A.R.T. debe estar soportado)."
+msgstr "Revisar si hay activa alguna prueba S.M.A.R.T. (S.M.A.R.T. debe estar soportado)."
 
 msgid "Check the system clock to identify forced uptime."
 msgstr "Revisar hora del sistema para identificar tiempo en marcha."
