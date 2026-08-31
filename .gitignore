@@ -44,3 +44,4 @@ debian/*substvars
 
 # PyCharm
 /.idea/
+.claude/
